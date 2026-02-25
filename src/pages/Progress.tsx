@@ -4,17 +4,20 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage } from "@/hooks/useLanguage";
 import { StickerCollection } from "@/components/StickerReward";
 import { surahs } from "@/data/surahs";
-import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby } from "lucide-react";
+import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby, Layers } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { loadQuizStats } from "@/pages/Quiz";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import { useNavigate } from "react-router-dom";
+import { juzData, getSurahsInJuz } from "@/data/juzData";
 
 export default function Progress() {
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
   const { t } = useLanguage();
   const xp = useXP();
+  const navigate = useNavigate();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
@@ -127,6 +130,25 @@ export default function Progress() {
             <StickerCollection stickers={stickers} />
           </motion.div>
         )}
+
+        {/* Juz Progress */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          <button
+            onClick={() => navigate("/juz")}
+            className="w-full flex items-center justify-between bg-card border border-border rounded-2xl p-4 active:scale-[0.98] transition-transform"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Layers size={20} className="text-primary" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-card-foreground">{t("juz.progress")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("juz.viewAll")}</p>
+              </div>
+            </div>
+            <span className="text-muted-foreground text-lg">→</span>
+          </button>
+        </motion.div>
 
         <div>
           <h3 className="text-sm font-semibold text-foreground mb-3">{t("progress.details")}</h3>

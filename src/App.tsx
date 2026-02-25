@@ -10,7 +10,9 @@ import Learn from "./pages/Learn";
 import LearnDetail from "./pages/LearnDetail";
 import Quran from "./pages/Quran";
 import Prayers from "./pages/Prayers";
+import PrayerSettings from "./pages/PrayerSettings";
 import Progress from "./pages/Progress";
+import Juz from "./pages/Juz";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
@@ -35,7 +37,9 @@ const App = () => (
               <Route path="/quran" element={<Quran />} />
               <Route path="/recitation" element={<Quran />} />
               <Route path="/prayers" element={<Prayers />} />
+              <Route path="/prayer-settings" element={<PrayerSettings />} />
               <Route path="/progress" element={<Progress />} />
+              <Route path="/juz" element={<Juz />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

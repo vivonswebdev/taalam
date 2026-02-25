@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
+import { usePrayerSettings } from "@/hooks/usePrayerSettings";
+import { usePrayerNotifications } from "@/hooks/usePrayerNotifications";
 import { useQibla } from "@/hooks/useQibla";
 import { useChildMode } from "@/hooks/useChildMode";
-import { Clock, Compass, MapPin, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle } from "lucide-react";
 
 const PRAYER_ICONS: Record<string, string> = {
   Fajr: "🌅",
@@ -13,21 +16,42 @@ const PRAYER_ICONS: Record<string, string> = {
   Isha: "🌙",
 };
 
+const PRAYER_NAMES_LIST = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
+
 export default function Prayers() {
   const { t } = useLanguage();
-  const { times, loading, nextPrayer } = usePrayerTimes();
+  const navigate = useNavigate();
+  const { settings } = usePrayerSettings();
+  const { times, loading, nextPrayer, cityName } = usePrayerTimes(settings);
   const { needleRotation, permissionGranted, requestPermission, qiblaAngle } = useQibla();
   const { isChildMode } = useChildMode();
 
+  const displayCity = cityName || (settings.source === "city" && settings.city ? settings.city : "GPS");
+
+  const notif = usePrayerNotifications(times, displayCity !== "GPS" ? displayCity : undefined);
+
   return (
     <div className="min-h-screen pb-24">
-      <div className="px-6 pt-14 pb-4">
+      <div className="px-6 pt-14 pb-4 flex items-center justify-between">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
           {t("prayers.title")}
         </motion.h1>
+        <button
+          onClick={() => navigate("/prayer-settings")}
+          className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full active:scale-[0.97] transition-transform"
+        >
+          <Settings2 size={14} />
+          {t("prayers.settings.button")}
+        </button>
       </div>
 
       <div className="px-6 space-y-5">
+        {/* Location badge */}
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <MapPin size={12} />
+          <span>{t("prayers.horairesPour")} <strong className="text-foreground">{displayCity}</strong></span>
+        </div>
+
         {/* Next Prayer Countdown */}
         {nextPrayer && (
           <motion.div
@@ -47,6 +71,84 @@ export default function Prayers() {
             </div>
           </motion.div>
         )}
+
+        {/* Notifications */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="bg-card border border-border rounded-2xl p-5"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <Bell size={16} className="text-primary" />
+            <h3 className="text-sm font-semibold text-card-foreground">{t("prayers.notif.title")}</h3>
+          </div>
+
+          {!notif.supported ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <AlertTriangle size={14} />
+              <span>{t("prayers.notif.unsupported")}</span>
+            </div>
+          ) : notif.permissionState === "denied" ? (
+            <p className="text-xs text-destructive">{t("prayers.notif.denied")}</p>
+          ) : (
+            <>
+              {/* Toggle global */}
+              <button
+                onClick={() => {
+                  if (!notif.config.enabled && notif.permissionState !== "granted") {
+                    notif.requestPermission();
+                  } else {
+                    notif.updateConfig({ enabled: !notif.config.enabled });
+                  }
+                }}
+                className="w-full flex items-center justify-between mb-3"
+              >
+                <span className="text-xs font-medium text-foreground">{t("prayers.notif.enable")}</span>
+                <div className={`w-10 h-6 rounded-full transition-colors relative ${notif.config.enabled ? "bg-primary" : "bg-muted"}`}>
+                  <motion.div
+                    animate={{ x: notif.config.enabled ? 16 : 2 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="absolute top-0.5 w-5 h-5 rounded-full bg-card shadow-md"
+                  />
+                </div>
+              </button>
+
+              {notif.config.enabled && (
+                <div className="space-y-1.5">
+                  {PRAYER_NAMES_LIST.map((name) => (
+                    <button
+                      key={name}
+                      onClick={() => notif.togglePrayer(name)}
+                      className="w-full flex items-center justify-between py-1.5"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{PRAYER_ICONS[name]}</span>
+                        <span className="text-xs text-foreground">{t(`prayers.${name.toLowerCase()}` as any)}</span>
+                      </div>
+                      {notif.config.prayers[name] ? (
+                        <Bell size={14} className="text-primary" />
+                      ) : (
+                        <BellOff size={14} className="text-muted-foreground" />
+                      )}
+                    </button>
+                  ))}
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border">
+                    <input
+                      type="number"
+                      min={1}
+                      max={60}
+                      value={notif.config.offsetMinutes}
+                      onChange={(e) => notif.updateConfig({ offsetMinutes: Math.max(1, Math.min(60, Number(e.target.value))) })}
+                      className="w-14 bg-muted rounded-lg px-2 py-1 text-xs text-center text-foreground outline-none"
+                    />
+                    <span className="text-xs text-muted-foreground">{t("prayers.notif.offset")}</span>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </motion.div>
 
         {/* Qibla Compass */}
         <motion.div
@@ -70,14 +172,11 @@ export default function Prayers() {
               </button>
             ) : (
               <div className="relative w-48 h-48">
-                {/* Compass ring */}
                 <div className="absolute inset-0 rounded-full border-4 border-muted" />
-                {/* N/S/E/W markers */}
                 <span className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold text-muted-foreground">N</span>
                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold text-muted-foreground">S</span>
                 <span className="absolute right-1 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">E</span>
                 <span className="absolute left-1 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">W</span>
-                {/* Qibla needle */}
                 <motion.div
                   className="absolute inset-0 flex items-center justify-center"
                   animate={{ rotate: needleRotation }}
@@ -88,7 +187,6 @@ export default function Prayers() {
                     <span className="text-lg mt-1">🕌</span>
                   </div>
                 </motion.div>
-                {/* Center dot */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-3 h-3 bg-secondary rounded-full" />
                 </div>
@@ -116,7 +214,7 @@ export default function Prayers() {
             </div>
           ) : times ? (
             <div className="space-y-2">
-              {(["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const).map((name, i) => {
+              {PRAYER_NAMES_LIST.map((name, i) => {
                 const isNext = nextPrayer?.name === name;
                 return (
                   <motion.div
