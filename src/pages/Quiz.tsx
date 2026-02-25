@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby } from "lucide-react";
@@ -6,6 +6,8 @@ import { quizQuestions, getQuizByCategory, type QuizCategory, type QuizQuestion 
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
+import { useXP } from "@/hooks/useXP";
+import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 
 // Persist quiz stats in localStorage
 const QUIZ_STATS_KEY = "quranEasyQuizStats";
@@ -46,6 +48,8 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [finished, setFinished] = useState(false);
+  const xp = useXP();
+  const xpAwardedRef = useRef(false);
 
   const questions = category ? getQuizByCategory(category) : [];
   const question = questions[current];
@@ -87,6 +91,7 @@ export default function Quiz() {
             setLevel(level as "easy" | "medium" | "hard", finalScore);
           }
           setFinished(true);
+          xpAwardedRef.current = false;
         }
       }, 1000);
     },
@@ -187,6 +192,16 @@ export default function Quiz() {
   if (finished) {
     const finalScore = score;
     const percentage = Math.round((finalScore / questions.length) * 100);
+
+    // Award XP once
+    if (!xpAwardedRef.current) {
+      xpAwardedRef.current = true;
+      const xpGain = category === "kids" ? finalScore * 5
+        : category === "tajweed" ? finalScore * 3
+        : finalScore * 3;
+      if (xpGain > 0) xp.addXP(xpGain);
+    }
+
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }} className="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center mb-6">
@@ -198,7 +213,21 @@ export default function Quiz() {
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="text-muted-foreground mt-2">
           {t("quiz.score")} : {finalScore}/{questions.length} ({percentage}%)
         </motion.p>
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex gap-3 mt-8">
+
+        {/* XP Progress Bar */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="w-full mt-6">
+          <ProgressBarDuolingo
+            level={xp.level}
+            xpInLevel={xp.xpInLevel}
+            xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal}
+            xpToday={xp.xpToday}
+            streakDays={xp.streakDays}
+            lastGain={xp.lastGain}
+          />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex gap-3 mt-6">
           <button onClick={handleBackToCategories} className="bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
             Autres quiz
           </button>

@@ -6,11 +6,14 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
+import { useXP } from "@/hooks/useXP";
+import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 
 export default function Home() {
   const navigate = useNavigate();
   const { progress, getMasteredCount } = useProgress();
   const { t } = useLanguage();
+  const xp = useXP();
   const mastered = getMasteredCount();
   const hasLevel = progress.level !== null;
 
@@ -41,6 +44,19 @@ export default function Home() {
       </div>
 
       <div className="px-6 space-y-5">
+        {/* XP Progress Bar Duolingo */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          <ProgressBarDuolingo
+            level={xp.level}
+            xpInLevel={xp.xpInLevel}
+            xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal}
+            xpToday={xp.xpToday}
+            streakDays={xp.streakDays}
+            lastGain={xp.lastGain}
+          />
+        </motion.div>
+
         {/* Progress Card */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-2xl p-5">
           <div className="flex items-center gap-3 mb-3">
