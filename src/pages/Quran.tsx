@@ -20,11 +20,12 @@ import AudioPlayer from "@/components/AudioPlayer";
 import ReadOnlyMode from "@/components/ReadOnlyMode";
 import HifzControl from "@/components/HifzControl";
 import TahaddiMode from "@/components/TahaddiMode";
+import FindAyah from "@/components/FindAyah";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi";
+type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah";
 
 interface AyaScore {
   ayaIndex: number;
@@ -591,7 +592,7 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="bg-card border border-border rounded-2xl p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">{t("dictation.title")}</p>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 onClick={() => setRecitationMode("aya")}
                 className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
@@ -624,7 +625,7 @@ export default function Quran() {
                 <Award size={14} />
                 {t("hifz.modeLabel")}
               </button>
-              <button
+                <button
                 onClick={() => setRecitationMode("tahaddi")}
                 className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   recitationMode === "tahaddi" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
@@ -632,11 +633,63 @@ export default function Quran() {
                 <Target size={14} />
                 {t("tahaddi.modeLabel")}
               </button>
+              <button
+                onClick={() => setRecitationMode("findAyah")}
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "findAyah" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
+                }`}>
+                <Search size={14} />
+                {t("findAyah.modeLabel")}
+              </button>
             </div>
           </motion.div>
         </div>
       )}
 
+      {/* ═══ FIND AYAH MODE ═══ */}
+      {recitationMode === "findAyah" && !selectedSurah && (
+        <FindAyah
+          onBack={() => setRecitationMode("aya")}
+          onOpenSurah={async (surahNumber, ayahNumber) => {
+            // Load the surah and switch to readOnly mode
+            const local = surahs.find(s => s.number === surahNumber);
+            if (local) {
+              handleSelectSurah(local);
+              setRecitationMode("readOnly");
+            } else {
+              setLoadingSurah(true);
+              try {
+                const full = await fetchFullSurah(surahNumber);
+                handleSelectSurah(full);
+                setRecitationMode("readOnly");
+              } catch (e) {
+                console.error("Failed to load surah", e);
+              } finally {
+                setLoadingSurah(false);
+              }
+            }
+          }}
+          onStartHifz={async (surahNumber) => {
+            const local = surahs.find(s => s.number === surahNumber);
+            if (local) {
+              handleSelectSurah(local);
+              setRecitationMode("hifz");
+            } else {
+              setLoadingSurah(true);
+              try {
+                const full = await fetchFullSurah(surahNumber);
+                handleSelectSurah(full);
+                setRecitationMode("hifz");
+              } catch (e) {
+                console.error("Failed to load surah", e);
+              } finally {
+                setLoadingSurah(false);
+              }
+            }
+          }}
+          isChildMode={isChildMode}
+        />
+      )}
       {/* ═══ DICTATION MODE ═══ */}
       {selectedSurah && recitationMode === "dictation" && !surahFinished && (
         <div className="px-6">
