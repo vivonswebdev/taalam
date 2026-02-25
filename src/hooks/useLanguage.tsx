@@ -1042,6 +1042,7 @@ const translations = {
   "lb.members": { fr: "membres", en: "members", nl: "leden", ar: "أعضاء" },
   "lb.noClasses": { fr: "Crée ou rejoins une classe", en: "Create or join a class", nl: "Maak of neem deel aan een klas", ar: "أنشئ أو انضم إلى فصل" },
   "lb.emptyClass": { fr: "Aucun membre dans cette classe", en: "No members in this class", nl: "Geen leden in deze klas", ar: "لا يوجد أعضاء في هذا الفصل" },
+  "lb.shareCode": { fr: "Partager le code", en: "Share code", nl: "Code delen", ar: "مشاركة الرمز" },
 
   // Announcements
   "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },
