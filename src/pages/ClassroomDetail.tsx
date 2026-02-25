@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut } from "lucide-react";
+import { toast } from "sonner";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -24,6 +25,73 @@ interface ChatMessage {
   author_name: string;
   message: string;
   created_at: string;
+}
+
+function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
+  classId: string; isTeacher: boolean; user: any; classroomName: string; onLeft: () => void;
+}) {
+  const [confirm, setConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLeave = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      if (isTeacher) {
+        // Delete entire class + members
+        await supabase.from("classroom_members").delete().eq("classroom_id", classId);
+        await supabase.from("class_messages").delete().eq("classroom_id", classId);
+        await supabase.from("class_weekly_challenges").delete().eq("class_id", classId);
+        await supabase.from("classrooms").delete().eq("id", classId);
+        toast.success("Classe supprimée");
+      } else {
+        // Just remove membership
+        await supabase.from("classroom_members").delete().eq("classroom_id", classId).eq("user_id", user.id);
+        toast.success("Vous avez quitté le groupe");
+      }
+      onLeft();
+    } catch (err: any) {
+      toast.error(err.message || "Erreur");
+    } finally {
+      setLoading(false);
+      setConfirm(false);
+    }
+  };
+
+  if (confirm) {
+    return (
+      <div className="mx-4 mt-3 bg-destructive/10 border border-destructive/30 rounded-xl p-4 space-y-3">
+        <p className="text-sm font-semibold text-destructive">
+          {isTeacher
+            ? `Vous êtes le professeur. Supprimer la classe "${classroomName}" complètement ?`
+            : `Quitter le groupe "${classroomName}" ?`}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {isTeacher ? "Tous les membres seront retirés et les données supprimées." : "Vous pourrez rejoindre à nouveau avec le code."}
+        </p>
+        <div className="flex gap-2">
+          <button onClick={() => setConfirm(false)} className="flex-1 py-2 text-sm rounded-lg bg-muted font-medium">
+            Non
+          </button>
+          <button onClick={handleLeave} disabled={loading} className="flex-1 py-2 text-sm rounded-lg bg-destructive text-destructive-foreground font-semibold disabled:opacity-50">
+            {loading ? "..." : "Oui, confirmer"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-4 mt-3">
+      <button
+        onClick={() => setConfirm(true)}
+        className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-destructive bg-destructive/10 rounded-xl border border-destructive/20"
+      >
+        <LogOut size={16} />
+        {isTeacher ? "Supprimer la classe" : "Quitter le groupe"}
+      </button>
+    </div>
+  );
 }
 
 export default function ClassroomDetail() {
@@ -196,6 +264,20 @@ export default function ClassroomDetail() {
           <Share2 size={16} className="text-primary" />
         </button>
       </div>
+
+      {/* Leave / Delete button */}
+      <LeaveClassButton
+        classId={classId!}
+        isTeacher={!!isTeacherFinal}
+        user={user}
+        classroomName={classroom?.name || ""}
+        onLeft={() => {
+          // Remove from local storage
+          const stored = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
+          localStorage.setItem("quranEasyClassrooms", JSON.stringify(stored.filter((c: any) => c.id !== classId)));
+          navigate("/classrooms", { replace: true });
+        }}
+      />
 
       <Tabs defaultValue="challenge" className="px-4 py-3">
         <TabsList className="w-full grid grid-cols-3">
