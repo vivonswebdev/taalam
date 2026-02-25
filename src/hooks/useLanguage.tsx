@@ -439,6 +439,77 @@ const translations = {
     fr: "Prières", en: "Prayers", nl: "Gebeden", ar: "الصلوات",
   },
 
+  // Dictation mode
+  "dictation.title": {
+    fr: "Mode dictée", en: "Dictation mode", nl: "Dicteermodus", ar: "وضع الإملاء",
+  },
+  "dictation.serverMode": {
+    fr: "Mode serveur (fallback)", en: "Server mode (fallback)", nl: "Servermodus (fallback)", ar: "وضع الخادم (احتياطي)",
+  },
+  "dictation.webSpeechMode": {
+    fr: "Reconnaissance vocale", en: "Voice recognition", nl: "Spraakherkenning", ar: "التعرف على الصوت",
+  },
+  "dictation.showText": {
+    fr: "Afficher le texte", en: "Show text", nl: "Tekst tonen", ar: "عرض النص",
+  },
+  "dictation.instructions": {
+    fr: "Récitez la sourate entière de mémoire", en: "Recite the entire surah from memory", nl: "Reciteer de volledige soera uit het hoofd", ar: "اتلُ السورة كاملة من الذاكرة",
+  },
+  "dictation.instructionsHint": {
+    fr: "Les mots corrects apparaîtront en vert, les erreurs en rouge", en: "Correct words will appear in green, errors in red", nl: "Correcte woorden worden groen, fouten rood", ar: "ستظهر الكلمات الصحيحة بالأخضر والأخطاء بالأحمر",
+  },
+  "dictation.startReciting": {
+    fr: "Commencer à réciter", en: "Start reciting", nl: "Begin met reciteren", ar: "ابدأ التلاوة",
+  },
+  "dictation.listening": {
+    fr: "J'écoute votre récitation...", en: "Listening to your recitation...", nl: "Luisteren naar je recitatie...", ar: "...أستمع لتلاوتك",
+  },
+  "dictation.rawTranscript": {
+    fr: "Transcription brute :", en: "Raw transcript:", nl: "Ruwe transcriptie:", ar: "النص الخام:",
+  },
+  "dictation.stopReciting": {
+    fr: "Arrêter et voir les résultats", en: "Stop and see results", nl: "Stoppen en resultaten zien", ar: "توقف وشاهد النتائج",
+  },
+  "dictation.excellent": {
+    fr: "Excellent ! Macha Allah ! 🌟", en: "Excellent! Masha Allah! 🌟", nl: "Uitstekend! Masha Allah! 🌟", ar: "ممتاز! ماشاء الله! 🌟",
+  },
+  "dictation.good": {
+    fr: "Bien ! Continuez 💪", en: "Good! Keep going 💪", nl: "Goed! Ga zo door 💪", ar: "جيد! واصل 💪",
+  },
+  "dictation.needsWork": {
+    fr: "À retravailler 📖", en: "Needs more practice 📖", nl: "Meer oefening nodig 📖", ar: "يحتاج مزيدًا من التدريب 📖",
+  },
+  "dictation.wordsCorrect": {
+    fr: "mots corrects", en: "words correct", nl: "woorden correct", ar: "كلمات صحيحة",
+  },
+  "dictation.legendCorrect": {
+    fr: "Correct", en: "Correct", nl: "Correct", ar: "صحيح",
+  },
+  "dictation.legendIncorrect": {
+    fr: "Incorrect", en: "Incorrect", nl: "Incorrect", ar: "خطأ",
+  },
+  "dictation.legendMissing": {
+    fr: "Manquant", en: "Missing", nl: "Ontbreekt", ar: "مفقود",
+  },
+  "dictation.legendExtra": {
+    fr: "En trop", en: "Extra", nl: "Overbodig", ar: "زائد",
+  },
+  "dictation.ayahBreakdown": {
+    fr: "Détail par aya", en: "Per-aya breakdown", nl: "Detail per aya", ar: "تفصيل لكل آية",
+  },
+  "dictation.restart": {
+    fr: "Recommencer", en: "Restart", nl: "Opnieuw", ar: "إعادة",
+  },
+  "dictation.retryErrors": {
+    fr: "Retravailler les erreurs", en: "Retry errors", nl: "Fouten herhalen", ar: "إعادة الأخطاء",
+  },
+  "dictation.modeAya": {
+    fr: "Aya par aya", en: "Aya by aya", nl: "Aya per aya", ar: "آية بآية",
+  },
+  "dictation.modeSurah": {
+    fr: "Sourate complète", en: "Full surah", nl: "Volledige soera", ar: "سورة كاملة",
+  },
+
   // Prayers
   "prayers.title": {
     fr: "Prières", en: "Prayers", nl: "Gebeden", ar: "الصلوات",
