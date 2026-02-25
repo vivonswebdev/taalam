@@ -426,6 +426,47 @@ const translations = {
   "nav.quran": {
     fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن",
   },
+  "nav.prayers": {
+    fr: "Prières", en: "Prayers", nl: "Gebeden", ar: "الصلوات",
+  },
+
+  // Prayers
+  "prayers.title": {
+    fr: "Prières", en: "Prayers", nl: "Gebeden", ar: "الصلوات",
+  },
+  "prayers.next": {
+    fr: "Prochaine prière", en: "Next prayer", nl: "Volgend gebed", ar: "الصلاة القادمة",
+  },
+  "prayers.qibla": {
+    fr: "Direction de la Qibla", en: "Qibla Direction", nl: "Qibla-richting", ar: "اتجاه القبلة",
+  },
+  "prayers.enableCompass": {
+    fr: "Activer la boussole", en: "Enable compass", nl: "Kompas inschakelen", ar: "تفعيل البوصلة",
+  },
+  "prayers.fromNorth": {
+    fr: "depuis le Nord", en: "from North", nl: "vanaf het Noorden", ar: "من الشمال",
+  },
+  "prayers.times": {
+    fr: "Horaires du jour", en: "Today's times", nl: "Tijden vandaag", ar: "مواعيد اليوم",
+  },
+  "prayers.error": {
+    fr: "Impossible de charger les horaires", en: "Could not load times", nl: "Kon tijden niet laden", ar: "تعذّر تحميل المواعيد",
+  },
+  "prayers.fajr": {
+    fr: "Fajr", en: "Fajr", nl: "Fajr", ar: "الفجر",
+  },
+  "prayers.dhuhr": {
+    fr: "Dhuhr", en: "Dhuhr", nl: "Dhuhr", ar: "الظهر",
+  },
+  "prayers.asr": {
+    fr: "Asr", en: "Asr", nl: "Asr", ar: "العصر",
+  },
+  "prayers.maghrib": {
+    fr: "Maghrib", en: "Maghrib", nl: "Maghrib", ar: "المغرب",
+  },
+  "prayers.isha": {
+    fr: "Isha", en: "Isha", nl: "Isha", ar: "العشاء",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;
