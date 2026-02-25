@@ -1,72 +1,131 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Users, UserPlus, CheckCircle2, AlertCircle } from "lucide-react";
-import { useClassrooms } from "@/hooks/useClassrooms";
-import { useChildProfiles } from "@/hooks/useChildProfiles";
+import { ArrowLeft, Users, UserPlus, CheckCircle2, AlertCircle, LogIn, Loader2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
-const AVATAR_EMOJIS = ["👦", "👧", "🧒", "👶", "🧒🏽", "👦🏾", "👧🏻", "🧕"];
+interface DbClassroom {
+  id: string;
+  name: string;
+  join_code: string;
+  teacher_id: string;
+}
 
 export default function JoinClassroom() {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { classrooms, addMember, getMembersForClass } = useClassrooms();
-  const { profiles, addProfile } = useChildProfiles();
+  const { user } = useAuth();
 
-  const [childName, setChildName] = useState("");
-  const [childAge, setChildAge] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState(AVATAR_EMOJIS[0]);
-  const [selectedExistingChild, setSelectedExistingChild] = useState<string | null>(null);
-  const [mode, setMode] = useState<"choose" | "new" | "existing">("choose");
+  const [classroom, setClassroom] = useState<DbClassroom | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [memberCount, setMemberCount] = useState(0);
+  const [teacherName, setTeacherName] = useState("");
+  const [alreadyMember, setAlreadyMember] = useState(false);
+  const [joining, setJoining] = useState(false);
   const [joined, setJoined] = useState(false);
-  const [error, setError] = useState("");
 
-  const classroom = classrooms.find(
-    (c) => c.joinCode.toUpperCase() === (code || "").toUpperCase()
-  );
+  // Fetch classroom from DB by join_code
+  useEffect(() => {
+    if (!code) { setNotFound(true); setLoading(false); return; }
 
-  // Check if already joined
-  const alreadyJoinedChildIds = classroom
-    ? getMembersForClass(classroom.id)
-    : [];
+    (async () => {
+      const { data } = await supabase
+        .from("classrooms")
+        .select("id, name, join_code, teacher_id")
+        .eq("join_code", code.toUpperCase())
+        .maybeSingle();
 
-  const availableProfiles = profiles.filter(
-    (p) => !alreadyJoinedChildIds.includes(p.id)
-  );
+      if (!data) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
 
-  const handleJoinWithNew = () => {
-    const trimmed = childName.trim();
-    if (!trimmed) {
-      setError(t("join.errorName"));
+      setClassroom(data as DbClassroom);
+
+      // Fetch member count
+      const { count } = await supabase
+        .from("classroom_members")
+        .select("id", { count: "exact", head: true })
+        .eq("classroom_id", data.id);
+      setMemberCount(count || 0);
+
+      // Fetch teacher name
+      const { data: teacherProfile } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_emoji")
+        .eq("user_id", data.teacher_id)
+        .maybeSingle();
+      if (teacherProfile) {
+        setTeacherName(`${teacherProfile.avatar_emoji} ${teacherProfile.display_name}`);
+      }
+
+      // Check if current user is already a member
+      if (user) {
+        const { data: membership } = await supabase
+          .from("classroom_members")
+          .select("id")
+          .eq("classroom_id", data.id)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (membership || data.teacher_id === user.id) {
+          setAlreadyMember(true);
+        }
+      }
+
+      setLoading(false);
+    })();
+  }, [code, user]);
+
+  const handleJoin = async () => {
+    if (!user || !classroom) return;
+    setJoining(true);
+
+    // Also save to localStorage for local hook compatibility
+    try {
+      const stored = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
+      if (!stored.find((c: any) => c.id === classroom.id)) {
+        stored.push({
+          id: classroom.id,
+          name: classroom.name,
+          teacherName: teacherName,
+          teacherId: classroom.teacher_id,
+          joinCode: classroom.join_code,
+          createdAt: new Date().toISOString(),
+        });
+        localStorage.setItem("quranEasyClassrooms", JSON.stringify(stored));
+      }
+    } catch {}
+
+    const { error } = await supabase
+      .from("classroom_members")
+      .insert({ classroom_id: classroom.id, user_id: user.id });
+
+    if (error && error.code !== "23505") {
+      console.error(error);
+      setJoining(false);
       return;
     }
-    if (trimmed.length > 50) {
-      setError(t("join.errorNameLong"));
-      return;
-    }
-    if (!classroom) return;
 
-    const age = childAge ? parseInt(childAge, 10) : undefined;
-    if (childAge && (isNaN(age!) || age! < 1 || age! > 99)) {
-      setError(t("join.errorAge"));
-      return;
-    }
-
-    const profile = addProfile(trimmed, selectedAvatar, age);
-    addMember(classroom.id, profile.id);
     setJoined(true);
+    setJoining(false);
   };
 
-  const handleJoinWithExisting = () => {
-    if (!selectedExistingChild || !classroom) return;
-    addMember(classroom.id, selectedExistingChild);
-    setJoined(true);
-  };
+  // Loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
 
-  // ─── Class not found ─────────────────────────────────
-  if (!classroom) {
+  // Not found
+  if (notFound || !classroom) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6">
         <motion.div
@@ -90,7 +149,7 @@ export default function JoinClassroom() {
     );
   }
 
-  // ─── Success ──────────────────────────────────────────
+  // Success
   if (joined) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6">
@@ -101,215 +160,101 @@ export default function JoinClassroom() {
         >
           <CheckCircle2 size={48} className="text-primary mx-auto mb-4" />
           <h2 className="text-lg font-bold text-foreground mb-2">{t("join.success")}</h2>
-          <p className="text-sm text-muted-foreground mb-1">
-            {t("join.successDesc")}
-          </p>
+          <p className="text-sm text-muted-foreground mb-1">{t("join.successDesc")}</p>
           <p className="font-semibold text-primary mb-6">"{classroom.name}"</p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/classrooms/${classroom.id}`)}
             className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold"
           >
-            {t("join.backHome")}
+            Voir la classe
           </button>
         </motion.div>
       </div>
     );
   }
 
-  // ─── Join form ────────────────────────────────────────
+  // Main view — show class info
   return (
-    <div className="min-h-screen pb-24">
-      <div className="px-6 pt-14 pb-4">
-        <button
-          onClick={() => navigate("/")}
-          className="w-9 h-9 rounded-full bg-muted flex items-center justify-center mb-4"
-        >
-          <ArrowLeft size={18} />
-        </button>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-6"
-        >
+    <div className="min-h-screen flex flex-col items-center justify-center px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full space-y-5"
+      >
+        {/* Class info */}
+        <div className="text-center">
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
             <Users size={32} className="text-primary" />
           </div>
-          <h1 className="text-xl font-bold text-foreground">{t("join.title")}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{classroom.name}</p>
-          {classroom.teacherName && (
-            <p className="text-xs text-muted-foreground">
-              {t("join.teacher")}: {classroom.teacherName}
+          <h1 className="text-xl font-bold text-foreground">{classroom.name}</h1>
+          {teacherName && (
+            <p className="text-sm text-muted-foreground mt-1">
+              Professeur : {teacherName}
             </p>
           )}
-        </motion.div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {memberCount} membre{memberCount > 1 ? "s" : ""} · Code : <span className="font-mono font-bold">{classroom.join_code}</span>
+          </p>
+        </div>
 
-        {/* Choose mode */}
-        {mode === "choose" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="space-y-3"
-          >
+        {/* Already member */}
+        {alreadyMember && (
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 text-center">
+            <CheckCircle2 size={20} className="text-primary mx-auto mb-1" />
+            <p className="text-sm font-semibold text-primary">Vous êtes déjà membre</p>
             <button
-              onClick={() => setMode("new")}
-              className="w-full flex items-center gap-4 bg-card border border-border rounded-2xl p-4 text-left hover:border-primary/30 transition-colors"
+              onClick={() => navigate(`/classrooms/${classroom.id}`)}
+              className="mt-2 w-full py-2.5 bg-primary text-primary-foreground rounded-xl font-semibold text-sm"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <UserPlus size={24} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-foreground">{t("join.createChild")}</p>
-                <p className="text-xs text-muted-foreground">{t("join.createChildDesc")}</p>
-              </div>
+              Voir la classe
             </button>
+          </div>
+        )}
 
-            {availableProfiles.length > 0 && (
-              <button
-                onClick={() => setMode("existing")}
-                className="w-full flex items-center gap-4 bg-card border border-border rounded-2xl p-4 text-left hover:border-primary/30 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
-                  <Users size={24} className="text-secondary" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-foreground">{t("join.useExisting")}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {availableProfiles.length} {t("join.profilesAvailable")}
-                  </p>
-                </div>
-              </button>
+        {/* Not logged in */}
+        {!user && !alreadyMember && (
+          <div className="space-y-3">
+            <div className="bg-accent/50 border border-border rounded-xl p-3 text-center">
+              <LogIn size={20} className="text-primary mx-auto mb-1" />
+              <p className="text-sm font-medium text-foreground">
+                Connectez-vous pour rejoindre cette classe
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Créez un compte gratuit ou connectez-vous
+              </p>
+            </div>
+            <button
+              onClick={() => navigate(`/auth?redirect=/join/${code}`)}
+              className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold flex items-center justify-center gap-2"
+            >
+              <LogIn size={16} /> S'inscrire / Se connecter
+            </button>
+          </div>
+        )}
+
+        {/* Logged in, not a member */}
+        {user && !alreadyMember && (
+          <button
+            onClick={handleJoin}
+            disabled={joining}
+            className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {joining ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <UserPlus size={16} />
             )}
-          </motion.div>
+            Rejoindre la classe
+          </button>
         )}
 
-        {/* New child form */}
-        {mode === "new" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            <button
-              onClick={() => { setMode("choose"); setError(""); }}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              ← {t("join.back")}
-            </button>
-
-            {/* Avatar picker */}
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("join.avatar")}
-              </label>
-              <div className="flex gap-2 mt-2 flex-wrap">
-                {AVATAR_EMOJIS.map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={() => setSelectedAvatar(emoji)}
-                    className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${
-                      selectedAvatar === emoji
-                        ? "bg-primary/20 border-2 border-primary scale-110"
-                        : "bg-muted border-2 border-transparent"
-                    }`}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Name */}
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("join.childName")} *
-              </label>
-              <input
-                type="text"
-                value={childName}
-                onChange={(e) => { setChildName(e.target.value); setError(""); }}
-                maxLength={50}
-                placeholder={t("join.childNamePlaceholder")}
-                className="w-full mt-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            {/* Age */}
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("join.childAge")}
-              </label>
-              <input
-                type="number"
-                value={childAge}
-                onChange={(e) => { setChildAge(e.target.value); setError(""); }}
-                min={1}
-                max={99}
-                placeholder="8"
-                className="w-full mt-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            {error && (
-              <p className="text-xs text-destructive font-medium">{error}</p>
-            )}
-
-            <button
-              onClick={handleJoinWithNew}
-              className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold active:scale-[0.98] transition-transform"
-            >
-              {t("join.joinButton")}
-            </button>
-          </motion.div>
-        )}
-
-        {/* Existing child picker */}
-        {mode === "existing" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            <button
-              onClick={() => { setMode("choose"); setError(""); }}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              ← {t("join.back")}
-            </button>
-
-            <div className="space-y-2">
-              {availableProfiles.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setSelectedExistingChild(p.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all text-left ${
-                    selectedExistingChild === p.id
-                      ? "border-primary bg-primary/5"
-                      : "border-border bg-card hover:border-primary/30"
-                  }`}
-                >
-                  <span className="text-2xl">{p.avatarEmoji}</span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{p.name}</p>
-                    {p.age && (
-                      <p className="text-xs text-muted-foreground">{p.age} {t("join.years")}</p>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleJoinWithExisting}
-              disabled={!selectedExistingChild}
-              className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-semibold disabled:opacity-50 active:scale-[0.98] transition-transform"
-            >
-              {t("join.joinButton")}
-            </button>
-          </motion.div>
-        )}
-      </div>
+        <button
+          onClick={() => navigate("/")}
+          className="w-full py-2 text-sm text-muted-foreground font-medium"
+        >
+          ← Retour à l'accueil
+        </button>
+      </motion.div>
     </div>
   );
 }
