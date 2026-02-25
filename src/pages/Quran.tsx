@@ -27,7 +27,7 @@ import AyahRenderer from "@/components/AyahRenderer";
 import MushafReader from "@/components/MushafReader";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
@@ -54,6 +54,7 @@ export default function Quran() {
   const { t, lang } = useLanguage();
   const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // URL params for deep-linking (from bookmarks)
   const urlSurahParam = searchParams.get("surah");
@@ -519,7 +520,7 @@ export default function Quran() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.03 }}
-                onClick={() => setRecitationMode(item.mode)}
+                onClick={() => item.mode === "findAyah" ? navigate("/find-ayah") : setRecitationMode(item.mode)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   recitationMode === item.mode
                     ? "bg-primary text-primary-foreground shadow-sm"

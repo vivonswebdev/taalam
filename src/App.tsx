@@ -29,6 +29,7 @@ import JoinClassroom from "./pages/JoinClassroom";
 import Auth from "./pages/Auth";
 import Leaderboard from "./pages/Leaderboard";
 import Announcements from "./pages/Announcements";
+import FindAyahPage from "./pages/FindAyahPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -70,6 +71,7 @@ const App = () => (
               <Route path="/parent/child/:childId" element={<ChildDetail />} />
               <Route path="/parent/child/:childId/report" element={<ChildReport />} />
               <Route path="/join/:code" element={<JoinClassroom />} />
+              <Route path="/find-ayah" element={<FindAyahPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
