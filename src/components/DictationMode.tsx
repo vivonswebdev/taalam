@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Eye, EyeOff, AlertCircle, CheckCircle2, XCircle,
-  ChevronDown, Volume2, Wifi, WifiOff,
+  Volume2, Wifi, Info,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
 import {
@@ -20,6 +20,30 @@ interface DictationModeProps {
 
 type DictationPhase = "ready" | "recording" | "result";
 
+// ─── Waqf signs data ─────────────────────────────────────────
+const WAQF_SIGNS: Record<string, { symbol: string; translationKey: string; color: string }> = {
+  "مـ": { symbol: "مـ", translationKey: "waqf.obligatory", color: "text-destructive" },
+  "ط": { symbol: "ط", translationKey: "waqf.complete", color: "text-secondary" },
+  "ج": { symbol: "ج", translationKey: "waqf.permissible", color: "text-primary" },
+  "ۖ": { symbol: "ۖ", translationKey: "waqf.sufficient", color: "text-primary" },
+  "ۗ": { symbol: "ۗ", translationKey: "waqf.good", color: "text-success" },
+  "ۚ": { symbol: "ۚ", translationKey: "waqf.obligatory", color: "text-destructive" },
+};
+
+// Detect waqf signs in text
+function detectWaqfSigns(text: string): { sign: string; position: number }[] {
+  const signs: { sign: string; position: number }[] = [];
+  const waqfChars = Object.keys(WAQF_SIGNS);
+  for (let i = 0; i < text.length; i++) {
+    for (const sign of waqfChars) {
+      if (text.substring(i, i + sign.length) === sign) {
+        signs.push({ sign, position: i });
+      }
+    }
+  }
+  return signs;
+}
+
 export default function DictationMode({ surah, onBack, isChildMode }: DictationModeProps) {
   const { t } = useLanguage();
   const [phase, setPhase] = useState<DictationPhase>("ready");
@@ -32,6 +56,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     totalScore: number;
   } | null>(null);
   const [micError, setMicError] = useState<string | null>(null);
+  const [hoveredWaqf, setHoveredWaqf] = useState<string | null>(null);
 
   const allArabicTexts = surah.ayahs.map((a) => a.arabic);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
@@ -41,17 +66,11 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     continuous: true,
     onResult: (transcript) => {
       setLiveTranscript(transcript);
-      // Real-time comparison
       const result = compareSurahDictation(allArabicTexts, transcript);
       setLiveResults(result.wordResults);
     },
     onError: (error) => {
-      if (error === "not-allowed") {
-        setMicError("not-allowed");
-      }
-    },
-    onEnd: () => {
-      // If recording ended externally
+      if (error === "not-allowed") setMicError("not-allowed");
     },
   });
 
@@ -61,13 +80,12 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     setLiveResults([]);
     setFinalResults(null);
     setMicError(null);
-    setShowOriginal(false); // Hide text when recording for memorization test
+    setShowOriginal(false);
     voice.start();
   }, [voice]);
 
   const handleStop = useCallback(() => {
     voice.stop();
-    // Calculate final results
     const result = compareSurahDictation(allArabicTexts, liveTranscript);
     setFinalResults(result);
     setPhase("result");
@@ -84,11 +102,9 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
   }, []);
 
   const handleRetryErrors = useCallback(() => {
-    // Just restart for now
     handleRestart();
   }, [handleRestart]);
 
-  // Get color class for word status
   const getWordColor = (status: DictationWordResult["status"]) => {
     switch (status) {
       case "correct": return "text-success";
@@ -99,17 +115,164 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     }
   };
 
-  // Build colored original text from live results
-  const renderColoredText = () => {
-    if (liveResults.length === 0) return null;
-
+  // ─── Render Mushaf-style text with aya numbers & waqf signs ───
+  const renderMushafText = () => {
     return (
-      <div className="arabic-text text-2xl leading-[2.8] text-right" dir="rtl">
-        {liveResults.map((wr, i) => (
-          <span key={i} className={`${getWordColor(wr.status)} ${wr.status === "extra" ? "text-lg opacity-70" : ""}`}>
-            {wr.word}{" "}
-          </span>
-        ))}
+      <div className="bg-card border border-border rounded-2xl p-5 space-y-0">
+        {surah.ayahs.map((ayah, i) => {
+          const waqfSigns = detectWaqfSigns(ayah.arabic);
+          return (
+            <div key={i} className="inline" dir="rtl">
+              <span className="arabic-text text-xl text-foreground leading-[3]">
+                {ayah.arabic}
+              </span>
+              {/* Aya end marker */}
+              <span className="inline-flex items-center mx-1">
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-sans">
+                  {ayah.number}
+                </span>
+              </span>
+              {/* Waqf signs tooltips */}
+              {waqfSigns.map((ws, j) => {
+                const info = WAQF_SIGNS[ws.sign];
+                if (!info) return null;
+                return (
+                  <span
+                    key={j}
+                    className={`relative inline-block mx-0.5 cursor-help ${info.color} font-bold`}
+                    onMouseEnter={() => setHoveredWaqf(`${i}-${j}`)}
+                    onMouseLeave={() => setHoveredWaqf(null)}
+                    onClick={() => setHoveredWaqf(hoveredWaqf === `${i}-${j}` ? null : `${i}-${j}`)}
+                  >
+                    {info.symbol}
+                    {hoveredWaqf === `${i}-${j}` && (
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-card border border-border rounded-lg shadow-lg text-xs text-foreground whitespace-nowrap z-10 font-sans font-normal">
+                        {t(info.translationKey as any)}
+                      </span>
+                    )}
+                  </span>
+                );
+              })}
+              {/* Separator between ayas */}
+              {i < surah.ayahs.length - 1 && <span className="text-muted-foreground mx-1">·</span>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // ─── Render colored live results grouped by aya ───
+  const renderColoredLiveText = () => {
+    if (liveResults.length === 0) return null;
+    // Group results by aya boundaries
+    let wordIdx = 0;
+    return (
+      <div className="space-y-3" dir="rtl">
+        {surah.ayahs.map((ayah, ayaIdx) => {
+          const ayaWordCount = ayah.arabic.split(/\s+/).length;
+          const ayaWords = liveResults.slice(wordIdx, wordIdx + ayaWordCount + 5); // grab some extra for "extra" words
+          // Actually render all words that belong to this aya range
+          const relevantWords: DictationWordResult[] = [];
+          let consumed = 0;
+          for (let w = wordIdx; w < liveResults.length && consumed < ayaWordCount; w++) {
+            relevantWords.push(liveResults[w]);
+            if (liveResults[w].status !== "extra") consumed++;
+          }
+          wordIdx += relevantWords.length;
+
+          if (relevantWords.length === 0 && ayaIdx > 0) return null;
+
+          return (
+            <div key={ayaIdx} className="flex gap-2 items-start">
+              <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center shrink-0 mt-2 font-sans">
+                {ayah.number}
+              </span>
+              <div className="arabic-text text-xl leading-[2.8] flex-1">
+                {relevantWords.map((wr, i) => (
+                  <span key={i} className={`${getWordColor(wr.status)} ${wr.status === "extra" ? "text-base opacity-70" : ""}`}>
+                    {wr.word}{" "}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // ─── Render final results grouped by aya with aya markers ───
+  const renderFinalResults = () => {
+    if (!finalResults) return null;
+    let wordIdx = 0;
+    return (
+      <div className="space-y-3" dir="rtl">
+        {surah.ayahs.map((ayah, ayaIdx) => {
+          const ayaWordCount = ayah.arabic.split(/\s+/).length;
+          const relevantWords: DictationWordResult[] = [];
+          let consumed = 0;
+          for (let w = wordIdx; w < finalResults.wordResults.length && consumed < ayaWordCount; w++) {
+            relevantWords.push(finalResults.wordResults[w]);
+            if (finalResults.wordResults[w].status !== "extra") consumed++;
+          }
+          wordIdx += relevantWords.length;
+
+          const ayaScore = finalResults.ayahScores[ayaIdx];
+          const waqfSigns = detectWaqfSigns(ayah.arabic);
+
+          return (
+            <div key={ayaIdx} className={`bg-card border rounded-xl p-3 ${
+              ayaScore?.correct ? "border-success/30" : "border-destructive/30"
+            }`}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                    ayaScore?.correct ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"
+                  }`}>
+                    {ayaScore?.correct ? "✓" : "✗"}
+                  </span>
+                  <span className="text-xs text-muted-foreground font-sans">
+                    {t("aya.progress")} {ayah.number}
+                  </span>
+                  {/* Waqf sign badges */}
+                  {waqfSigns.map((ws, j) => {
+                    const info = WAQF_SIGNS[ws.sign];
+                    return info ? (
+                      <span key={j} className={`text-xs px-1.5 py-0.5 rounded ${info.color} bg-muted font-bold`} title={t(info.translationKey as any)}>
+                        {info.symbol}
+                      </span>
+                    ) : null;
+                  })}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm font-bold ${ayaScore?.correct ? "text-success" : "text-destructive"}`}>
+                    {ayaScore?.score}%
+                  </span>
+                  <button
+                    onClick={() => {
+                      fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+                        .then((r) => r.json())
+                        .then((data) => {
+                          if (data.data?.audio) new Audio(data.data.audio).play();
+                        }).catch(() => {});
+                    }}
+                    className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"
+                  >
+                    <Volume2 size={12} />
+                  </button>
+                </div>
+              </div>
+              <div className="arabic-text text-lg leading-[2.5]">
+                {relevantWords.map((wr, i) => (
+                  <span key={i} className={`${getWordColor(wr.status)} ${wr.status === "extra" ? "text-base opacity-70" : ""}`}>
+                    {wr.word}{" "}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -155,17 +318,23 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             </button>
           </div>
 
-          {/* Original text */}
+          {/* Original text in Mushaf style with aya markers & waqf signs */}
+          {showOriginal && renderMushafText()}
+
+          {/* Waqf legend */}
           {showOriginal && (
-            <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
-              {surah.ayahs.map((ayah, i) => (
-                <div key={i} className="flex gap-3 items-start" dir="rtl">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center shrink-0 mt-1">
-                    {ayah.number}
+            <div className="bg-accent/30 rounded-xl p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Info size={14} className="text-muted-foreground" />
+                <span className="text-xs font-semibold text-foreground">Signes d'arrêt (Waqf)</span>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {Object.entries(WAQF_SIGNS).slice(0, 5).map(([key, info]) => (
+                  <span key={key} className={`px-2 py-1 rounded-lg bg-card border border-border ${info.color} font-bold`}>
+                    {info.symbol} = {t(info.translationKey as any)}
                   </span>
-                  <p className="arabic-text text-xl text-foreground flex-1">{ayah.arabic}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
@@ -203,10 +372,10 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
       {/* ═══ RECORDING PHASE ═══ */}
       {phase === "recording" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-          {/* Live colored text comparison */}
+          {/* Live colored text grouped by aya */}
           <div className="bg-card border-2 border-primary/30 rounded-2xl p-5 min-h-[200px]">
             {liveResults.length > 0 ? (
-              renderColoredText()
+              renderColoredLiveText()
             ) : (
               <div className="flex items-center justify-center h-full min-h-[180px]">
                 <div className="text-center text-muted-foreground">
@@ -277,56 +446,12 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             <span className="flex items-center gap-1 text-destructive line-through">{t("dictation.legendExtra")}</span>
           </div>
 
-          {/* Detailed word-by-word results */}
-          <div className="bg-card border border-border rounded-2xl p-5">
-            <div className="arabic-text text-2xl leading-[2.8] text-right" dir="rtl">
-              {finalResults.wordResults.map((wr, i) => (
-                <span key={i} className={`${getWordColor(wr.status)} ${wr.status === "extra" ? "text-lg opacity-70" : ""}`}>
-                  {wr.word}{" "}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Per-ayah breakdown */}
+          {/* Detailed per-aya results with waqf signs */}
           <div>
             <h3 className={`${bodyTextClass} font-semibold text-foreground mb-3`}>
               {t("dictation.ayahBreakdown")}
             </h3>
-            <div className="space-y-2">
-              {finalResults.ayahScores.map((as) => {
-                const ayah = surah.ayahs[as.ayahIndex];
-                return (
-                  <div key={as.ayahIndex}
-                    className={`flex items-center gap-3 bg-card border rounded-xl px-4 py-3 ${
-                      as.correct ? "border-success/30" : "border-destructive/30"
-                    }`}>
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                      as.correct ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"
-                    }`}>
-                      {as.correct ? "✓" : "✗"}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="arabic-text text-base text-foreground truncate" dir="rtl">{ayah.arabic}</p>
-                    </div>
-                    <span className={`text-sm font-bold ${as.correct ? "text-success" : "text-destructive"}`}>
-                      {as.score}%
-                    </span>
-                    <button
-                      onClick={() => {
-                        fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
-                          .then((r) => r.json())
-                          .then((data) => {
-                            if (data.data?.audio) new Audio(data.data.audio).play();
-                          }).catch(() => {});
-                      }}
-                      className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <Volume2 size={14} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            {renderFinalResults()}
           </div>
 
           {/* Actions */}

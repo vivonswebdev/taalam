@@ -547,6 +547,65 @@ const translations = {
   "prayers.isha": {
     fr: "Isha", en: "Isha", nl: "Isha", ar: "العشاء",
   },
+
+  // Quiz categories
+  "quiz.category.general": {
+    fr: "Culture générale", en: "General knowledge", nl: "Algemene kennis", ar: "ثقافة عامة",
+  },
+  "quiz.category.memorization": {
+    fr: "Mémorisation Coran", en: "Quran memorization", nl: "Koran memorisatie", ar: "حفظ القرآن",
+  },
+  "quiz.category.tajweed": {
+    fr: "Tajwid & Signes d'arrêt", en: "Tajweed & Stop signs", nl: "Tajweed & Stoptekens", ar: "التجويد وعلامات الوقف",
+  },
+  "quiz.category.kids": {
+    fr: "Histoires des Prophètes", en: "Prophet stories", nl: "Profeetverhalen", ar: "قصص الأنبياء",
+  },
+  "quiz.chooseCategory": {
+    fr: "Choisissez une catégorie", en: "Choose a category", nl: "Kies een categorie", ar: "اختر فئة",
+  },
+  "quiz.flashcards": {
+    fr: "Flashcards Prophètes", en: "Prophet Flashcards", nl: "Profeet Flashcards", ar: "بطاقات الأنبياء",
+  },
+
+  // Flashcards
+  "flashcards.tapToReveal": {
+    fr: "Touchez pour révéler", en: "Tap to reveal", nl: "Tik om te onthullen", ar: "اضغط للكشف",
+  },
+  "flashcards.mastered": {
+    fr: "Maîtrisé !", en: "Mastered!", nl: "Beheerst!", ar: "تم إتقانها!",
+  },
+  "flashcards.markMastered": {
+    fr: "Marquer comme maîtrisé", en: "Mark as mastered", nl: "Markeer als beheerst", ar: "وضع علامة إتقان",
+  },
+
+  // Waqf signs
+  "waqf.obligatory": {
+    fr: "Arrêt obligatoire", en: "Obligatory stop", nl: "Verplichte stop", ar: "وقف لازم",
+  },
+  "waqf.complete": {
+    fr: "Arrêt complet recommandé", en: "Complete stop recommended", nl: "Volledige stop aanbevolen", ar: "وقف تام",
+  },
+  "waqf.permissible": {
+    fr: "Arrêt permis", en: "Permissible stop", nl: "Toegestane stop", ar: "وقف جائز",
+  },
+  "waqf.sufficient": {
+    fr: "Arrêt suffisant", en: "Sufficient stop", nl: "Voldoende stop", ar: "وقف كافٍ",
+  },
+  "waqf.good": {
+    fr: "Bon arrêt", en: "Good stop", nl: "Goede stop", ar: "وقف حسن",
+  },
+
+  // Progress quiz stats
+  "progress.quizStats": {
+    fr: "Statistiques quiz", en: "Quiz statistics", nl: "Quizstatistieken", ar: "إحصائيات الاختبار",
+  },
+  "progress.quizSuccess": {
+    fr: "Réussite quiz", en: "Quiz success", nl: "Quiz succes", ar: "نجاح الاختبار",
+  },
+  "progress.quizCompleted": {
+    fr: "Quiz complétés", en: "Quizzes completed", nl: "Quizzen voltooid", ar: "اختبارات مكتملة",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;

@@ -4,8 +4,9 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage } from "@/hooks/useLanguage";
 import { StickerCollection } from "@/components/StickerReward";
 import { surahs } from "@/data/surahs";
-import { Trophy, BookOpen, TrendingUp } from "lucide-react";
+import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
+import { loadQuizStats } from "@/pages/Quiz";
 
 export default function Progress() {
   const { progress, getMasteredCount } = useProgress();
@@ -18,6 +19,17 @@ export default function Progress() {
     const surah = surahs.find((s) => s.number === sp.surahNumber);
     return { name: surah?.nameArabic || `${sp.surahNumber}`, score: sp.bestScore };
   });
+
+  // Quiz stats
+  const quizStats = loadQuizStats();
+  const quizCategories = [
+    { key: "general" as const, icon: Star, label: t("quiz.category.general"), color: "text-primary" },
+    { key: "memorization" as const, icon: BookOpen, label: t("quiz.category.memorization"), color: "text-secondary" },
+    { key: "tajweed" as const, icon: Sparkles, label: t("quiz.category.tajweed"), color: "text-success" },
+    { key: "kids" as const, icon: Baby, label: t("quiz.category.kids"), color: "text-accent-foreground" },
+  ];
+
+  const totalQuizCompleted = Object.values(quizStats).reduce((a, s) => a + s.completed, 0);
 
   return (
     <div className="min-h-screen pb-24">
@@ -32,7 +44,7 @@ export default function Progress() {
           {[
             { icon: Trophy, value: mastered, label: t("progress.mastered"), color: "text-secondary" },
             { icon: BookOpen, value: totalAttempts, label: t("progress.attempts"), color: "text-primary" },
-            { icon: TrendingUp, value: progress.surahProgress.length, label: t("progress.studied"), color: "text-success" },
+            { icon: TrendingUp, value: totalQuizCompleted, label: t("progress.quizCompleted"), color: "text-success" },
           ].map((stat, i) => (
             <motion.div key={stat.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-card border border-border rounded-2xl p-4 text-center">
               <stat.icon size={20} className={`${stat.color} mx-auto mb-2`} />
@@ -41,6 +53,40 @@ export default function Progress() {
             </motion.div>
           ))}
         </div>
+
+        {/* Quiz stats by category */}
+        {totalQuizCompleted > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-card-foreground mb-4">{t("progress.quizStats")}</h3>
+            <div className="space-y-3">
+              {quizCategories.map((cat) => {
+                const stats = quizStats[cat.key];
+                if (stats.completed === 0) return null;
+                const successRate = stats.totalQuestions > 0
+                  ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100)
+                  : 0;
+                return (
+                  <div key={cat.key} className="flex items-center gap-3">
+                    <cat.icon size={16} className={cat.color} />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-foreground">{cat.label}</span>
+                        <span className="text-xs font-bold text-muted-foreground">{successRate}%</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all bg-primary"
+                          style={{ width: `${successRate}%` }}
+                        />
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground w-8 text-right">{stats.completed}x</span>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
         {chartData.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl p-5">
