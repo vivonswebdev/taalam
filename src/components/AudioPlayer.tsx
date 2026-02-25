@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, SkipForward, SkipBack, Volume2, Gauge, User, List } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, Volume2, Gauge, User, List, Repeat } from "lucide-react";
 
 const RECITERS = [
   { id: "ar.alafasy", name: "Al-Afasy", label: "مشاري العفاسي" },
@@ -24,6 +24,9 @@ interface AudioPlayerProps {
   /** Called when surah finishes to request the next surah for continuous play */
   onRequestNextSurah?: () => void;
   compact?: boolean;
+  /** External control for continuous mode */
+  continuousMode?: boolean;
+  onContinuousModeChange?: (enabled: boolean) => void;
   jumpToAyahRef?: React.MutableRefObject<((index: number) => void) | null>;
 }
 
@@ -38,7 +41,12 @@ export default function AudioPlayer({
   onRequestNextSurah,
   compact = false,
   jumpToAyahRef,
+  continuousMode: externalContinuous,
+  onContinuousModeChange,
 }: AudioPlayerProps) {
+  const [internalContinuous, setInternalContinuous] = useState(true);
+  const continuousMode = externalContinuous ?? internalContinuous;
+  const setContinuousMode = onContinuousModeChange ?? setInternalContinuous;
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentAyah, setCurrentAyah] = useState(0);
@@ -113,8 +121,8 @@ export default function AudioPlayer({
 
   const playAyah = useCallback((index: number, urls: string[]) => {
     if (index >= urls.length) {
-      // Surah finished — request next surah for continuous play
-      if (onRequestNextSurah) {
+      // Surah finished — request next surah for continuous play if enabled
+      if (continuousMode && onRequestNextSurah) {
         onRequestNextSurah();
         return;
       }
@@ -374,6 +382,19 @@ export default function AudioPlayer({
             </div>
           )}
         </div>
+
+        {/* Continuous mode */}
+        <button
+          onClick={() => setContinuousMode(!continuousMode)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            continuousMode
+              ? "bg-primary/15 text-primary border border-primary/30"
+              : "bg-muted text-muted-foreground"
+          }`}
+        >
+          <Repeat size={14} />
+          Continue
+        </button>
       </div>
     </motion.div>
   );
