@@ -25,6 +25,7 @@ export default function ReadOnlyMode({
 }: ReadOnlyModeProps) {
   const [currentAyah, setCurrentAyah] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const ayahRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   // Media Session API for background playback
   useEffect(() => {
@@ -43,6 +44,29 @@ export default function ReadOnlyMode({
       navigator.mediaSession.metadata = null;
     };
   }, [surah]);
+
+  // Auto-scroll to current ayah when playing
+  useEffect(() => {
+    if (!playing) return;
+    const el = ayahRefs.current.get(currentAyah);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [currentAyah, playing]);
+
+  const setAyahRef = useCallback((index: number, el: HTMLDivElement | null) => {
+    if (el) {
+      ayahRefs.current.set(index, el);
+    } else {
+      ayahRefs.current.delete(index);
+    }
+  }, []);
+
+  const jumpToAyahRef = useRef<((index: number) => void) | null>(null);
+
+  const handleAyahClick = useCallback((index: number) => {
+    jumpToAyahRef.current?.(index);
+  }, []);
 
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
 
@@ -76,6 +100,7 @@ export default function ReadOnlyMode({
         totalAyahs={surah.ayahs.length}
         onAyahChange={setCurrentAyah}
         onPlayStateChange={setPlaying}
+        jumpToAyahRef={jumpToAyahRef}
       />
 
       {/* Ayahs list */}
@@ -86,13 +111,15 @@ export default function ReadOnlyMode({
           return (
             <motion.div
               key={ayah.number}
+              ref={(el) => setAyahRef(i, el)}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.02, 0.6) }}
-              className={`bg-card border rounded-2xl p-4 transition-all ${
+              onClick={() => handleAyahClick(i)}
+              className={`bg-card border rounded-2xl p-4 transition-all duration-300 cursor-pointer ${
                 isActive
-                  ? "border-primary shadow-lg shadow-primary/10"
-                  : "border-border"
+                  ? "border-primary shadow-lg shadow-primary/10 bg-primary/5 scale-[1.01]"
+                  : "border-border hover:border-primary/30"
               }`}
             >
               {/* Aya number */}

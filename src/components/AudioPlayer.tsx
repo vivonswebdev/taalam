@@ -22,6 +22,7 @@ interface AudioPlayerProps {
   onPlayStateChange?: (playing: boolean) => void;
   onFinished?: () => void;
   compact?: boolean;
+  jumpToAyahRef?: React.MutableRefObject<((index: number) => void) | null>;
 }
 
 export default function AudioPlayer({
@@ -33,6 +34,7 @@ export default function AudioPlayer({
   onPlayStateChange,
   onFinished,
   compact = false,
+  jumpToAyahRef,
 }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -154,6 +156,24 @@ export default function AudioPlayer({
       onAyahChange?.(prev);
     }
   }, [currentAyah, audioUrls, playing, playAyah, onAyahChange]);
+
+  // Expose jumpToAyah via ref
+  const jumpToAyah = useCallback(async (index: number) => {
+    let urls = audioUrls;
+    if (urls.length === 0) {
+      urls = await fetchUrls(reciter.id);
+      if (urls.length === 0) return;
+    }
+    setPlaying(true);
+    onPlayStateChange?.(true);
+    playAyah(index, urls);
+  }, [audioUrls, reciter.id, fetchUrls, playAyah, onPlayStateChange]);
+
+  useEffect(() => {
+    if (jumpToAyahRef) {
+      jumpToAyahRef.current = jumpToAyah;
+    }
+  }, [jumpToAyah, jumpToAyahRef]);
 
   const handleSpeedChange = (s: number) => {
     setSpeed(s);
