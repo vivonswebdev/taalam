@@ -27,11 +27,15 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
 
-  // Fetch member counts per classroom
+  // Fetch member counts + unread messages per classroom
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
+  const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
+
   useEffect(() => {
     if (classrooms.length === 0) return;
     const ids = classrooms.map((c) => c.id);
+
+    // Member counts
     supabase
       .from("classroom_members")
       .select("classroom_id")
@@ -43,6 +47,20 @@ export default function Home() {
         });
         setMemberCounts(counts);
       });
+
+    // Unread message counts (based on last visit stored in localStorage)
+    const unread: Record<string, number> = {};
+    Promise.all(
+      ids.map(async (id) => {
+        const lastRead = localStorage.getItem(`chat_last_read_${id}`) || "1970-01-01T00:00:00Z";
+        const { count } = await supabase
+          .from("class_messages")
+          .select("id", { count: "exact", head: true })
+          .eq("classroom_id", id)
+          .gt("created_at", lastRead);
+        unread[id] = count || 0;
+      })
+    ).then(() => setUnreadMessages(unread));
   }, [classrooms]);
 
   return (
@@ -208,6 +226,11 @@ export default function Home() {
                   >
                     <Users size={16} className="text-primary shrink-0" />
                     <span className="text-sm font-medium text-foreground flex-1 truncate">{c.name}</span>
+                    {(unreadMessages[c.id] || 0) > 0 && (
+                      <span className="min-w-5 h-5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center px-1">
+                        {unreadMessages[c.id]}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
                       <Users size={10} /> {count} membre{count > 1 ? "s" : ""}
                     </span>
