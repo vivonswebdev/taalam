@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
+import { useClassSuccessShare } from "@/hooks/useClassSuccessShare";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts } from "@/hooks/useVoiceRecognition";
 import { useStreak } from "@/hooks/useStreak";
@@ -44,6 +45,7 @@ interface AyaScore {
 // ─── Component ──────────────────────────────────────────────
 export default function Quran() {
   const { updateSurahProgress } = useProgress();
+  const { shareSuccess } = useClassSuccessShare();
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t, lang } = useLanguage();
@@ -412,6 +414,7 @@ export default function Quran() {
     );
     updateSurahProgress(selectedSurah.number, avgScore);
     recordSession();
+    shareSuccess(selectedSurah.number, avgScore);
     setSurahFinished(true);
     setAyaPhase("idle");
 
