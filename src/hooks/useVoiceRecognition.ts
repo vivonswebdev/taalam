@@ -14,9 +14,9 @@ interface UseVoiceRecognitionOptions {
 }
 
 // ─── Constants ──────────────────────────────────────────────
-const MAX_RECORDING_DURATION_MS = 60_000; // 60 seconds max
-const CHUNK_INTERVAL_MS = 4_000; // send chunks every 4s
-const MIN_CHUNK_SIZE = 1_000; // ignore tiny blobs (likely silence)
+const MAX_RECORDING_DURATION_MS = 60_000;
+const TIMESLICE_MS = 2_000; // fire ondataavailable every 2s
+const MIN_CHUNK_SIZE = 500; // ignore tiny blobs
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", onResult, onEnd, onError } = options;
@@ -30,15 +30,12 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const onEndRef = useRef(onEnd);
   const onErrorRef = useRef(onError);
 
-  // MediaRecorder refs
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const chunkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const maxDurationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transcriptRef = useRef("");
-  const mimeTypeRef = useRef("");
-  const isSendingRef = useRef(false);
+  const chunkQueueRef = useRef<Blob[]>([]);
+  const isProcessingRef = useRef(false);
 
   useEffect(() => { onResultRef.current = onResult; }, [onResult]);
   useEffect(() => { onEndRef.current = onEnd; }, [onEnd]);
@@ -48,7 +45,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     setIsSupported(!!navigator.mediaDevices?.getUserMedia);
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       isListeningRef.current = false;
@@ -57,10 +53,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, []);
 
   const cleanup = useCallback(() => {
-    if (chunkIntervalRef.current) {
-      clearInterval(chunkIntervalRef.current);
-      chunkIntervalRef.current = null;
-    }
     if (maxDurationTimeoutRef.current) {
       clearTimeout(maxDurationTimeoutRef.current);
       maxDurationTimeoutRef.current = null;
@@ -77,48 +69,53 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     mediaStreamRef.current = null;
   }, []);
 
-  const sendAudioChunk = useCallback(async (blob: Blob) => {
-    if (blob.size < MIN_CHUNK_SIZE) return; // skip tiny/silent chunks
-    if (isSendingRef.current) return; // skip if already sending
-    isSendingRef.current = true;
+  // Process queue sequentially so transcripts stay in order
+  const processQueue = useCallback(async () => {
+    if (isProcessingRef.current) return;
+    isProcessingRef.current = true;
 
-    try {
-      const arrayBuffer = await blob.arrayBuffer();
-      const base64 = btoa(
-        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
-      );
+    while (chunkQueueRef.current.length > 0) {
+      const blob = chunkQueueRef.current.shift()!;
+      if (blob.size < MIN_CHUNK_SIZE) continue;
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      try {
+        const arrayBuffer = await blob.arrayBuffer();
+        const base64 = btoa(
+          new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), "")
+        );
 
-      const res = await fetch(`${supabaseUrl}/functions/v1/stt`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${supabaseKey}`,
-          "apikey": supabaseKey,
-        },
-        body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
-      });
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-      const data = await res.json();
-      if (data.transcript) {
-        transcriptRef.current += (transcriptRef.current ? " " : "") + data.transcript;
-        setTranscript(transcriptRef.current);
-        onResultRef.current?.(transcriptRef.current);
+        const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${supabaseKey}`,
+            "apikey": supabaseKey,
+          },
+          body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
+        });
+
+        const data = await res.json();
+        if (data.text) {
+          transcriptRef.current = (transcriptRef.current + " " + data.text).trim();
+          setTranscript(transcriptRef.current);
+          onResultRef.current?.(transcriptRef.current);
+        }
+      } catch (e) {
+        console.warn("[VoiceRecognition] chunk STT error:", e);
       }
-    } catch (e) {
-      console.warn("[VoiceRecognition] STT error:", e);
-    } finally {
-      isSendingRef.current = false;
     }
+
+    isProcessingRef.current = false;
   }, [lang]);
 
   const start = useCallback(async () => {
     setPermissionDenied(false);
     setTranscript("");
     transcriptRef.current = "";
-    audioChunksRef.current = [];
+    chunkQueueRef.current = [];
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -132,43 +129,24 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
             ? "audio/mp4"
             : "";
 
-      mimeTypeRef.current = mimeType;
-
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       mediaRecorderRef.current = recorder;
 
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
-          audioChunksRef.current.push(e.data);
+          chunkQueueRef.current.push(e.data);
+          processQueue();
         }
       };
 
-      recorder.onstop = () => {
-        // Send final accumulated audio on stop
-        if (audioChunksRef.current.length > 0) {
-          const fullBlob = new Blob(audioChunksRef.current, { type: mimeType || "audio/webm" });
-          sendAudioChunk(fullBlob);
-        }
-      };
-
-      recorder.start(1000); // collect data every 1s for timely chunks
+      // Use timeslice to get chunks every 2s
+      recorder.start(TIMESLICE_MS);
       isListeningRef.current = true;
       setIsListening(true);
 
-      // Send accumulated chunks every CHUNK_INTERVAL_MS
-      chunkIntervalRef.current = setInterval(() => {
-        if (audioChunksRef.current.length > 0 && !isSendingRef.current) {
-          const blob = new Blob(audioChunksRef.current, { type: mimeType || "audio/webm" });
-          // Don't clear chunks - we accumulate for context
-          // But send the full accumulated audio for better STT quality
-          sendAudioChunk(blob);
-        }
-      }, CHUNK_INTERVAL_MS);
-
-      // Auto-stop after max duration
       maxDurationTimeoutRef.current = setTimeout(() => {
         if (isListeningRef.current) {
-          console.log("[VoiceRecognition] Max duration reached, auto-stopping");
+          console.log("[VoiceRecognition] Max duration reached");
           stop();
         }
       }, MAX_RECORDING_DURATION_MS);
@@ -184,7 +162,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       setIsListening(false);
       isListeningRef.current = false;
     }
-  }, [sendAudioChunk]);
+  }, [processQueue]);
 
   const stop = useCallback(() => {
     isListeningRef.current = false;
@@ -193,7 +171,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     onEndRef.current?.();
   }, [cleanup]);
 
-  // Keep backward compatibility: mode is always "server"
   return { isListening, transcript, isSupported, permissionDenied, mode: "server" as const, start, stop };
 }
 
