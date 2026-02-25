@@ -21,6 +21,8 @@ interface AudioPlayerProps {
   onAyahChange?: (ayahIndex: number) => void;
   onPlayStateChange?: (playing: boolean) => void;
   onFinished?: () => void;
+  /** Called when surah finishes to request the next surah for continuous play */
+  onRequestNextSurah?: () => void;
   compact?: boolean;
   jumpToAyahRef?: React.MutableRefObject<((index: number) => void) | null>;
 }
@@ -33,6 +35,7 @@ export default function AudioPlayer({
   onAyahChange,
   onPlayStateChange,
   onFinished,
+  onRequestNextSurah,
   compact = false,
   jumpToAyahRef,
 }: AudioPlayerProps) {
@@ -68,6 +71,23 @@ export default function AudioPlayer({
     return [];
   }, [surahNumber]);
 
+  // When surahNumber changes while playing, auto-start the new surah
+  const prevSurahRef = useRef(surahNumber);
+  useEffect(() => {
+    if (prevSurahRef.current !== surahNumber && playing) {
+      // Surah changed while playing — reset and auto-play new surah
+      setCurrentAyah(0);
+      setProgress(0);
+      setAudioUrls([]);
+      fetchUrls(reciter.id).then((urls) => {
+        if (urls.length > 0) {
+          playAyah(0, urls);
+        }
+      });
+    }
+    prevSurahRef.current = surahNumber;
+  }, [surahNumber]);
+
   // Cleanup on unmount — stop audio completely
   useEffect(() => {
     return () => {
@@ -93,6 +113,11 @@ export default function AudioPlayer({
 
   const playAyah = useCallback((index: number, urls: string[]) => {
     if (index >= urls.length) {
+      // Surah finished — request next surah for continuous play
+      if (onRequestNextSurah) {
+        onRequestNextSurah();
+        return;
+      }
       setPlaying(false);
       setCurrentAyah(0);
       setProgress(0);

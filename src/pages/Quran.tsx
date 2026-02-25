@@ -832,6 +832,22 @@ export default function Quran() {
           onBack={handleNewSurah}
           isChildMode={isChildMode}
           t={t}
+          onRequestNextSurah={() => {
+            // Auto-advance to next surah for continuous playback
+            if (selectedSurah.number < 114) {
+              const nextNum = selectedSurah.number + 1;
+              const local = surahs.find(s => s.number === nextNum);
+              if (local) {
+                handleSelectSurah(local);
+                setRecitationMode("readOnly");
+              } else {
+                fetchFullSurah(nextNum).then((full) => {
+                  handleSelectSurah(full);
+                  setRecitationMode("readOnly");
+                }).catch(console.error);
+              }
+            }
+          }}
         />
       )}
 

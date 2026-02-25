@@ -16,6 +16,8 @@ interface ReadOnlyModeProps {
   onBack: () => void;
   isChildMode: boolean;
   t: (key: string) => string;
+  /** Called when surah audio finishes to advance to next surah */
+  onRequestNextSurah?: () => void;
 }
 
 export default function ReadOnlyMode({
@@ -26,6 +28,7 @@ export default function ReadOnlyMode({
   onBack,
   isChildMode,
   t,
+  onRequestNextSurah,
 }: ReadOnlyModeProps) {
   const [currentAyah, setCurrentAyah] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -140,6 +143,7 @@ export default function ReadOnlyMode({
         onAyahChange={(idx) => { setCurrentAyah(idx); setActiveWordIndex(-1); }}
         onPlayStateChange={setPlaying}
         jumpToAyahRef={jumpToAyahRef}
+        onRequestNextSurah={onRequestNextSurah}
       />
 
       {/* Ayahs list */}
