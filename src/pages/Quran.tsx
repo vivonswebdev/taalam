@@ -504,25 +504,41 @@ export default function Quran() {
       {/* ═══ SELECTION ═══ */}
       {!selectedSurah && (
         <div className="px-6 space-y-5">
-          {/* Streak card */}
+          {/* ─── Mode Grid (TOP — like home page) ─── */}
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-card border border-border rounded-2xl p-5">
-            <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${hasPracticedToday ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>
-                <Flame size={24} />
-              </div>
-              <div>
-                <p className="font-bold text-foreground">
-                  {streak.currentStreak > 0 ? `${streak.currentStreak} ${t("recitation.daysStreak")}` : t("recitation.startStreak")}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {t("recitation.record")} : {streak.longestStreak} {t("recitation.days")} · {streak.totalSessions} {t("recitation.sessions")}
-                </p>
-              </div>
-            </div>
-            {hasPracticedToday && (
-              <p className="text-xs text-success font-medium mt-2">{t("recitation.practicedToday")}</p>
-            )}
+            className="grid grid-cols-2 gap-2.5">
+            {[
+              { mode: "readOnly" as RecitationMode, icon: <Headphones size={18} />, label: "🔊 Lecture seule" },
+              { mode: "aya" as RecitationMode, icon: <Mic size={18} />, label: `🎤 ${t("dictation.modeAya")}` },
+              { mode: "hifz" as RecitationMode, icon: <Award size={18} />, label: `📖 ${t("hifz.modeLabel")}` },
+              { mode: "tahaddi" as RecitationMode, icon: <Target size={18} />, label: `🏆 ${t("tahaddi.modeLabel")}` },
+              { mode: "dictation" as RecitationMode, icon: <PenTool size={18} />, label: `✍️ ${t("dictation.modeSurah")}` },
+              { mode: "findAyah" as RecitationMode, icon: <Search size={18} />, label: `🔍 ${t("findAyah.modeLabel")}` },
+            ].map((item, i) => (
+              <motion.button
+                key={item.mode}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                onClick={() => setRecitationMode(item.mode)}
+                className={`flex items-center gap-2.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all ${
+                  recitationMode === item.mode
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                    : "bg-card border border-border text-foreground hover:bg-accent/50"
+                }`}
+              >
+                {item.icon}
+                <span className="truncate">{item.label}</span>
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* Streak compact — emoji + number only */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+            className="flex items-center justify-center gap-2">
+            <span className={`text-lg ${hasPracticedToday ? "" : "grayscale opacity-50"}`}>🔥</span>
+            <span className="text-sm font-bold text-foreground">{streak.currentStreak}</span>
+            {hasPracticedToday && <span className="text-xs text-success font-medium">✓</span>}
           </motion.div>
 
           {/* ─── Quick Pick Card ─── */}
@@ -703,61 +719,6 @@ export default function Quran() {
             </div>
           )}
 
-          {/* ─── Mode Toggle Card ─── */}
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="bg-card border border-border rounded-2xl p-4">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">{t("dictation.title")}</p>
-            <div className="grid grid-cols-3 gap-1.5">
-              <button
-                onClick={() => setRecitationMode("aya")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "aya" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <BookOpen size={14} />
-                {t("dictation.modeAya")}
-              </button>
-              <button
-                onClick={() => setRecitationMode("dictation")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "dictation" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <PenTool size={14} />
-                {t("dictation.modeSurah")}
-              </button>
-              <button
-                onClick={() => setRecitationMode("readOnly")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "readOnly" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <Headphones size={14} />
-                {t("quran.readOnly")}
-              </button>
-              <button
-                onClick={() => setRecitationMode("hifz")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "hifz" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <Award size={14} />
-                {t("hifz.modeLabel")}
-              </button>
-                <button
-                onClick={() => setRecitationMode("tahaddi")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "tahaddi" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <Target size={14} />
-                {t("tahaddi.modeLabel")}
-              </button>
-              <button
-                onClick={() => setRecitationMode("findAyah")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "findAyah" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <Search size={14} />
-                {t("findAyah.modeLabel")}
-              </button>
-            </div>
-          </motion.div>
         </div>
       )}
 
@@ -824,6 +785,21 @@ export default function Quran() {
             surah={selectedSurah}
             onBack={handleNewSurah}
             isChildMode={isChildMode}
+            onRequestNextSurah={() => {
+              if (selectedSurah.number < 114) {
+                const nextNum = selectedSurah.number + 1;
+                const local = surahs.find(s => s.number === nextNum);
+                if (local) {
+                  handleSelectSurah(local);
+                  setRecitationMode("dictation");
+                } else {
+                  fetchFullSurah(nextNum).then((full) => {
+                    handleSelectSurah(full);
+                    setRecitationMode("dictation");
+                  }).catch(console.error);
+                }
+              }
+            }}
           />
         </div>
       )}

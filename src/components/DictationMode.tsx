@@ -21,6 +21,7 @@ interface DictationModeProps {
   surah: Surah;
   onBack: () => void;
   isChildMode: boolean;
+  onRequestNextSurah?: () => void;
 }
 
 type DictationPhase = "ready" | "recording" | "result";
@@ -48,7 +49,7 @@ function detectWaqfSigns(text: string): { sign: string; position: number }[] {
   return signs;
 }
 
-export default function DictationMode({ surah, onBack, isChildMode }: DictationModeProps) {
+export default function DictationMode({ surah, onBack, isChildMode, onRequestNextSurah }: DictationModeProps) {
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
   const [phase, setPhase] = useState<DictationPhase>("ready");
@@ -506,17 +507,17 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
               <RotateCcw size={18} />
               {t("dictation.restart")}
             </button>
-            {liveResult.ayahScores.some((a) => !a.correct) && (
-              <button onClick={handleRestart}
+            {onRequestNextSurah && (
+              <button onClick={onRequestNextSurah}
                 className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl bg-primary text-primary-foreground font-semibold`}>
-                {t("dictation.retryErrors")}
+                {t("recitation.changeSurah")} →
               </button>
             )}
           </div>
 
           <button onClick={onBack}
             className="w-full py-3 text-sm text-muted-foreground underline">
-            {t("recitation.changeSurah")}
+            ← {t("recitation.changeSurah")}
           </button>
         </motion.div>
       )}
