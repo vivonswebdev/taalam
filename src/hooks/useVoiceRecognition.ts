@@ -96,9 +96,12 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       console.warn("[VoiceRecognition] Error:", error);
       // For "no-speech" or "aborted", let onend handle restart
       if (error === "no-speech" || error === "aborted") return;
-      // For real errors, stop
+      // For real errors (not-allowed, network, etc.), stop completely
       isListeningRef.current = false;
       setIsListening(false);
+      if (error === "not-allowed") {
+        console.error("[VoiceRecognition] Microphone permission denied. Grant mic access and retry.");
+      }
     };
 
     recognitionRef.current = recognition;
