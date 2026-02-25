@@ -477,7 +477,7 @@ export default function Quran() {
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
 
       {/* Header */}
-      <div className="px-6 pt-14 pb-4">
+      <div className="px-6 pt-14 pb-3">
         <div className="flex items-center justify-between">
           <div>
             <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
@@ -489,174 +489,116 @@ export default function Quran() {
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            <div className="flex items-center gap-1.5 bg-secondary/15 text-secondary px-3 py-1.5 rounded-full">
-              <Flame size={16} />
+            <div className="flex items-center gap-1 bg-secondary/15 text-secondary px-2.5 py-1 rounded-full">
+              <span className="text-sm">🔥</span>
               <span className="text-sm font-bold">{streak.currentStreak}</span>
+              {hasPracticedToday && <span className="text-xs text-green-500">✓</span>}
             </div>
           </div>
         </div>
-        {/* Active child banner */}
-        <div className="px-6 pb-2">
+        <div className="mt-1">
           <ActiveChildBanner />
         </div>
       </div>
 
       {/* ═══ SELECTION ═══ */}
       {!selectedSurah && (
-        <div className="px-6 space-y-5">
-          {/* ─── Mode Grid (TOP — like home page) ─── */}
+        <div className="px-6 space-y-3">
+          {/* ─── Modes list (full width, compact) ─── */}
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 gap-2.5">
+            className="space-y-1.5">
             {[
-              { mode: "readOnly" as RecitationMode, icon: <Headphones size={18} />, label: "🔊 Lecture seule" },
-              { mode: "aya" as RecitationMode, icon: <Mic size={18} />, label: `🎤 ${t("dictation.modeAya")}` },
-              { mode: "hifz" as RecitationMode, icon: <Award size={18} />, label: `📖 ${t("hifz.modeLabel")}` },
-              { mode: "tahaddi" as RecitationMode, icon: <Target size={18} />, label: `🏆 ${t("tahaddi.modeLabel")}` },
-              { mode: "dictation" as RecitationMode, icon: <PenTool size={18} />, label: `✍️ ${t("dictation.modeSurah")}` },
-              { mode: "findAyah" as RecitationMode, icon: <Search size={18} />, label: `🔍 ${t("findAyah.modeLabel")}` },
+              { mode: "aya" as RecitationMode, emoji: "🎤", label: "Dicté verset" },
+              { mode: "dictation" as RecitationMode, emoji: "✍️", label: "Dicté sourate" },
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: "Tahaddi" },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: "Contrôle" },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: "Trouver l'Ayah" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.03 }}
                 onClick={() => setRecitationMode(item.mode)}
-                className={`flex items-center gap-2.5 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   recitationMode === item.mode
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : "bg-card border border-border text-foreground hover:bg-accent/50"
                 }`}
               >
-                {item.icon}
-                <span className="truncate">{item.label}</span>
+                <span className="text-base">{item.emoji}</span>
+                <span>{item.label}</span>
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Streak compact — emoji + number only */}
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-            className="flex items-center justify-center gap-2">
-            <span className={`text-lg ${hasPracticedToday ? "" : "grayscale opacity-50"}`}>🔥</span>
-            <span className="text-sm font-bold text-foreground">{streak.currentStreak}</span>
-            {hasPracticedToday && <span className="text-xs text-success font-medium">✓</span>}
-          </motion.div>
-
-          {/* ─── Quick Pick Card ─── */}
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-2xl p-4 space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t("recitation.chooseSurah")}</p>
-
-            {/* Difficulty pills */}
-            <div className="flex gap-1.5">
-              {(["easy", "medium", "hard"] as const).map((d) => (
-                <button key={d}
-                  onClick={() => { setDifficulty(d); setBrowseMode("local"); }}
-                  className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-                    browseMode === "local" && difficulty === d
-                      ? "bg-primary text-primary-foreground shadow-sm"
+          {/* ─── Sourate + Difficulty on same row ─── */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="bg-card border border-border rounded-xl p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex-shrink-0">Sourate</p>
+              <div className="flex gap-1 flex-1">
+                {(["easy", "medium", "hard"] as const).map((d) => (
+                  <button key={d}
+                    onClick={() => { setDifficulty(d); setBrowseMode("local"); }}
+                    className={`flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                      browseMode === "local" && difficulty === d
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-accent/50"
+                    }`}>
+                    {d === "easy" ? t("recitation.easy") :
+                     d === "medium" ? t("recitation.medium") :
+                     t("recitation.hard")}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setBrowseMode(browseMode === "all" ? "local" : "all")}
+                  className={`flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                    browseMode === "all"
+                      ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground hover:bg-accent/50"
                   }`}>
-                  {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
-                   d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
-                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
+                  Tout
                 </button>
-              ))}
+              </div>
             </div>
 
-            {/* Browse all link */}
-            <button
-              onClick={() => setBrowseMode(browseMode === "all" ? "local" : "all")}
-              className={`w-full text-xs font-medium py-1.5 transition-colors ${
-                browseMode === "all" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}>
-              📖 {browseMode === "all" ? t("recitation.difficulty") : "114 sourates"}
-            </button>
-          </motion.div>
-
-          {/* ─── Last Used Surah Card ─── */}
-          {lastUsedSurah && browseMode === "local" && (
-            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
-              <button
-                onClick={() => handleSelectSurah(lastUsedSurah)}
-                className="w-full flex items-center gap-3 bg-primary/5 border-2 border-primary/20 rounded-2xl px-4 py-3 text-left hover:bg-primary/10 transition-colors"
-              >
-                <span className="w-10 h-10 rounded-xl bg-primary/15 text-primary text-sm font-bold flex items-center justify-center shrink-0">
-                  {lastUsedSurah.number}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">{t("surah.lastUsed")}</p>
-                  <p className="font-arabic text-lg text-foreground">{lastUsedSurah.nameArabic}</p>
-                  <p className="text-xs text-muted-foreground truncate">{lastUsedSurah.frenchName} · {lastUsedSurah.versesCount} {t("detail.verses")}</p>
-                </div>
-                <span className="text-lg font-extrabold text-primary-foreground bg-primary px-5 py-2.5 rounded-xl shrink-0 animate-pulse shadow-lg shadow-primary/30">
-                  {t("surah.continueWith")} →
-                </span>
-              </button>
-            </motion.div>
-          )}
-
-          {/* ─── Surah Selector ─── */}
-          {browseMode === "local" && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className={`${bodyTextClass} font-semibold text-foreground`}>Sourate</p>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                  difficulty === "easy" ? "bg-green-500/15 text-green-600" :
-                  difficulty === "medium" ? "bg-amber-500/15 text-amber-600" :
-                  "bg-red-500/15 text-red-600"
-                }`}>
-                  {t(`recitation.${difficulty}`)}
-                </span>
-              </div>
-
+            {/* Surah dropdown (local) */}
+            {browseMode === "local" && (
               <div className="relative">
                 <button onClick={() => setShowDropdown(!showDropdown)}
-                  className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left">
-                  <span className={`${bodyTextClass} text-muted-foreground`}>{t("recitation.selectSurah")}</span>
-                  <ChevronDown size={18} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
+                  className="w-full flex items-center justify-between bg-muted rounded-lg px-3 py-2.5 text-left">
+                  <span className="text-sm text-muted-foreground">{t("recitation.selectSurah")}</span>
+                  <ChevronDown size={16} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
                 </button>
 
                 <AnimatePresence>
                   {showDropdown && (
                     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                      className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-72 overflow-y-auto">
-
-                      {/* Recommended easy surahs section (only in easy mode) */}
+                      className="absolute z-50 w-full mt-1 bg-card border border-border rounded-xl shadow-lg max-h-60 overflow-y-auto">
                       {difficulty === "easy" && easySurahsList.length > 0 && (
                         <>
-                          <p className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-                            ⭐ {t("surah.recommended")}
-                          </p>
-                          {easySurahsList
-                            .filter(s => filteredSurahs.some(fs => fs.number === s.number))
-                            .map((s) => (
-                            <button key={`rec-${s.number}`}
-                              onClick={() => handleSelectSurah(s)}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-primary/5 transition-colors text-left border-b border-border">
-                              <span className="w-7 h-7 rounded-lg bg-primary/15 text-primary text-[10px] font-bold flex items-center justify-center shrink-0">
-                                {s.number}
-                              </span>
+                          <p className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-primary">⭐ {t("surah.recommended")}</p>
+                          {easySurahsList.filter(s => filteredSurahs.some(fs => fs.number === s.number)).map((s) => (
+                            <button key={`rec-${s.number}`} onClick={() => handleSelectSurah(s)}
+                              className="w-full flex items-center gap-2 px-3 py-2 hover:bg-primary/5 text-left border-b border-border">
+                              <span className="w-6 h-6 rounded-md bg-primary/15 text-primary text-[10px] font-bold flex items-center justify-center shrink-0">{s.number}</span>
                               <div className="flex-1 min-w-0">
-                                <p className="font-arabic text-base text-foreground">{s.nameArabic}</p>
-                                <p className="text-[10px] text-muted-foreground truncate">{s.frenchName} · {s.versesCount} {t("detail.verses")}</p>
+                                <p className="font-arabic text-sm text-foreground">{s.nameArabic}</p>
+                                <p className="text-[10px] text-muted-foreground truncate">{s.frenchName} · {s.versesCount} v.</p>
                               </div>
-                              <span className="text-[10px] text-primary">⭐</span>
                             </button>
                           ))}
-                          <div className="h-px bg-border mx-3 my-1" />
+                          <div className="h-px bg-border mx-2 my-0.5" />
                         </>
                       )}
-
                       {filteredSurahs.map((s) => (
-                        <button key={s.number}
-                          onClick={() => handleSelectSurah(s)}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0">
-                          <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                            {s.number}
-                          </span>
+                        <button key={s.number} onClick={() => handleSelectSurah(s)}
+                          className="w-full flex items-center gap-2 px-3 py-2.5 hover:bg-accent/50 text-left border-b border-border last:border-b-0">
+                          <span className="w-7 h-7 rounded-md bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">{s.number}</span>
                           <div className="flex-1 min-w-0">
-                            <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
-                            <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} {t("detail.verses")}</p>
+                            <p className="font-arabic text-base text-foreground">{s.nameArabic}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">{s.frenchName} · {s.versesCount} v.</p>
                           </div>
                         </button>
                       ))}
@@ -664,60 +606,75 @@ export default function Quran() {
                   )}
                 </AnimatePresence>
               </div>
-            </div>
-          )}
+            )}
 
-          {browseMode === "all" && (
-            <div>
-              {/* Search bar */}
-              <div className="relative mb-3">
-                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Rechercher une sourate..."
-                  className="w-full bg-card border border-border rounded-xl pl-9 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-
-              {loadingSurah && (
-                <div className="flex items-center justify-center py-8 gap-2 text-primary">
-                  <Loader2 size={20} className="animate-spin" />
-                  <span className="text-sm font-medium">Chargement...</span>
+            {/* Browse all 114 */}
+            {browseMode === "all" && (
+              <div>
+                <div className="relative mb-2">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Rechercher..." className="w-full bg-muted rounded-lg pl-8 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary" />
                 </div>
-              )}
-
-              {!loadingSurah && (
-                <div className="space-y-1.5 max-h-[50vh] overflow-y-auto">
-                  {filteredAllSurahs.map((s, i) => (
-                    <motion.button
-                      key={s.number}
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: Math.min(i * 0.01, 0.5) }}
-                      onClick={() => handleSelectSurahFromApi(s)}
-                      className="w-full flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:bg-accent/30 transition-colors text-left"
-                    >
-                      <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                        {s.number}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-arabic text-lg text-foreground">{s.nameArabic}</span>
-                          <span className="text-[10px] text-muted-foreground">{s.revelationType}</span>
+                {loadingSurah && (
+                  <div className="flex items-center justify-center py-6 gap-2 text-primary">
+                    <Loader2 size={18} className="animate-spin" /><span className="text-xs">Chargement...</span>
+                  </div>
+                )}
+                {!loadingSurah && (
+                  <div className="space-y-1 max-h-[40vh] overflow-y-auto">
+                    {filteredAllSurahs.map((s, i) => (
+                      <motion.button key={s.number}
+                        initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i * 0.01, 0.3) }}
+                        onClick={() => handleSelectSurahFromApi(s)}
+                        className="w-full flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg hover:bg-accent/30 text-left">
+                        <span className="w-7 h-7 rounded-md bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">{s.number}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="font-arabic text-sm text-foreground">{s.nameArabic}</span>
+                            <span className="text-[9px] text-muted-foreground">{s.revelationType}</span>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground truncate">{s.name} · {s.versesCount} v.</p>
                         </div>
-                        <p className="text-xs text-muted-foreground truncate">{s.name} · {s.englishName} · {s.versesCount} versets</p>
-                      </div>
-                    </motion.button>
-                  ))}
-                  {filteredAllSurahs.length === 0 && (
-                    <p className="text-center text-sm text-muted-foreground py-6">Aucun résultat</p>
-                  )}
-                </div>
-              )}
-            </div>
+                      </motion.button>
+                    ))}
+                    {filteredAllSurahs.length === 0 && (
+                      <p className="text-center text-xs text-muted-foreground py-4">Aucun résultat</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+
+          {/* ─── Reprendre (Last Used) ─── */}
+          {lastUsedSurah && browseMode === "local" && (
+            <motion.button initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+              onClick={() => handleSelectSurah(lastUsedSurah)}
+              className="w-full flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2.5 text-left hover:bg-primary/10 transition-colors">
+              <span className="w-8 h-8 rounded-lg bg-primary/15 text-primary text-xs font-bold flex items-center justify-center shrink-0">{lastUsedSurah.number}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">{t("surah.lastUsed")}</p>
+                <p className="font-arabic text-sm text-foreground">{lastUsedSurah.nameArabic}</p>
+              </div>
+              <span className="text-xs font-bold text-primary-foreground bg-primary px-3 py-1.5 rounded-lg shrink-0">
+                Reprendre →
+              </span>
+            </motion.button>
           )}
+
+          {/* ─── Lecture seule (full width, bottom) ─── */}
+          <motion.button
+            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            onClick={() => setRecitationMode("readOnly")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+              recitationMode === "readOnly"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "bg-card border border-border text-foreground hover:bg-accent/50"
+            }`}>
+            <span className="text-base">🔊</span>
+            <span>Lecture seule</span>
+          </motion.button>
 
         </div>
       )}
