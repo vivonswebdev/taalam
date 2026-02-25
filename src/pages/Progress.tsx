@@ -4,7 +4,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage } from "@/hooks/useLanguage";
 import { StickerCollection } from "@/components/StickerReward";
 import { surahs } from "@/data/surahs";
-import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby, Layers } from "lucide-react";
+import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby, Layers, Map } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { loadQuizStats } from "@/pages/Quiz";
 import { useXP } from "@/hooks/useXP";
@@ -144,6 +144,25 @@ export default function Progress() {
               <div className="text-left">
                 <p className="text-sm font-semibold text-card-foreground">{t("juz.progress")}</p>
                 <p className="text-[10px] text-muted-foreground">{t("juz.viewAll")}</p>
+              </div>
+            </div>
+            <span className="text-muted-foreground text-lg">→</span>
+          </button>
+        </motion.div>
+
+        {/* Hifz Map */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <button
+            onClick={() => navigate("/hifz-map")}
+            className="w-full flex items-center justify-between bg-card border border-border rounded-2xl p-4 active:scale-[0.98] transition-transform"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <Map size={20} className="text-secondary" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-card-foreground">{t("hifzMap.title")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("hifzMap.subtitle")}</p>
               </div>
             </div>
             <span className="text-muted-foreground text-lg">→</span>
