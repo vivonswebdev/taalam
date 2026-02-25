@@ -1,21 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Users, Share2, Trash2, GraduationCap } from "lucide-react";
+import { ArrowLeft, Plus, Users, Share2, Trash2, GraduationCap, UserPlus } from "lucide-react";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 import BottomNav from "@/components/BottomNav";
 
 export default function Classrooms() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { classrooms, createClassroom, deleteClassroom, getMembersForClass, shareClassroom } = useClassrooms();
-  const { profiles, getLastActivity } = useChildProfiles();
+  const { classrooms, createClassroom, deleteClassroom, getMembersForClass, shareClassroom, getNewMemberCount, markClassSeen, totalNewMembers } = useClassrooms();
+  const { profiles } = useChildProfiles();
 
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
   const [teacherName, setTeacherName] = useState("");
+
+  // Show toast on mount if there are new members
+  useEffect(() => {
+    if (totalNewMembers > 0) {
+      toast({
+        title: `🎉 ${totalNewMembers} ${totalNewMembers > 1 ? t("classrooms.newStudentsPlural") : t("classrooms.newStudentSingular")}`,
+        description: t("classrooms.newStudentToast"),
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreate = () => {
     if (!newName.trim()) return;
@@ -23,6 +35,11 @@ export default function Classrooms() {
     setNewName("");
     setTeacherName("");
     setShowCreate(false);
+  };
+
+  const handleViewDetail = (classId: string) => {
+    markClassSeen(classId);
+    navigate(`/classrooms/${classId}`);
   };
 
   return (
@@ -36,6 +53,11 @@ export default function Classrooms() {
           <h1 className="text-lg font-bold flex items-center gap-2">
             <GraduationCap size={20} className="text-primary" />
             {t("classrooms.title")}
+            {totalNewMembers > 0 && (
+              <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-5 animate-pulse">
+                +{totalNewMembers}
+              </Badge>
+            )}
           </h1>
           <p className="text-xs text-muted-foreground">{t("classrooms.subtitle")}</p>
         </div>
@@ -92,13 +114,23 @@ export default function Classrooms() {
           classrooms.map((c) => {
             const memberIds = getMembersForClass(c.id);
             const memberProfiles = profiles.filter((p) => memberIds.includes(p.id));
+            const newCount = getNewMemberCount(c.id);
             return (
               <motion.div
                 key={c.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card border border-border rounded-xl p-4 space-y-3"
+                className="bg-card border border-border rounded-xl p-4 space-y-3 relative"
               >
+                {/* New member badge */}
+                {newCount > 0 && (
+                  <div className="absolute -top-2 -right-2">
+                    <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-5 animate-bounce shadow-md">
+                      <UserPlus size={10} className="mr-0.5" /> +{newCount}
+                    </Badge>
+                  </div>
+                )}
+
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-semibold text-foreground">{c.name}</p>
@@ -140,10 +172,11 @@ export default function Classrooms() {
                 </div>
 
                 <button
-                  onClick={() => navigate(`/classrooms/${c.id}`)}
+                  onClick={() => handleViewDetail(c.id)}
                   className="w-full py-2 text-xs font-semibold text-primary bg-primary/5 rounded-lg"
                 >
                   {t("classrooms.viewDetail")}
+                  {newCount > 0 && <span className="ml-1 text-destructive">({newCount} {t("classrooms.new")})</span>}
                 </button>
               </motion.div>
             );
