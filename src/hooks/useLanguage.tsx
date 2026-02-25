@@ -964,6 +964,10 @@ const translations = {
   "classrooms.notFound": { fr: "Classe introuvable", en: "Class not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },
   "classrooms.homeTitle": { fr: "Mode Classe (Professeur)", en: "Classroom Mode (Teacher)", nl: "Klassenmodus (Leraar)", ar: "وضع الفصل (المعلم)" },
   "classrooms.homeDesc": { fr: "Gérez vos classes et suivez les progrès", en: "Manage classes & track progress", nl: "Beheer klassen & volg voortgang", ar: "إدارة الفصول ومتابعة التقدم" },
+  "classrooms.newStudentsPlural": { fr: "nouveaux élèves", en: "new students", nl: "nieuwe leerlingen", ar: "طلاب جدد" },
+  "classrooms.newStudentSingular": { fr: "nouvel élève", en: "new student", nl: "nieuwe leerling", ar: "طالب جديد" },
+  "classrooms.newStudentToast": { fr: "De nouveaux élèves ont rejoint vos classes !", en: "New students have joined your classes!", nl: "Nieuwe leerlingen zijn toegetreden!", ar: "انضم طلاب جدد إلى فصولك!" },
+  "classrooms.new": { fr: "nouveau(x)", en: "new", nl: "nieuw", ar: "جديد" },
   // Join Classroom
   "join.title": { fr: "Rejoindre une classe", en: "Join a classroom", nl: "Klas bijtreden", ar: "الانضمام إلى فصل" },
   "join.notFound": { fr: "Classe introuvable", en: "Classroom not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },

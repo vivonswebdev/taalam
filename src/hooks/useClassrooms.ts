@@ -17,6 +17,7 @@ export interface ClassroomMember {
 // ─── Storage ────────────────────────────────────────────────
 const CLASSROOMS_KEY = "quranEasyClassrooms";
 const MEMBERS_KEY = "quranEasyClassMembers";
+const SEEN_COUNTS_KEY = "quranEasySeenMemberCounts";
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -91,6 +92,28 @@ export function useClassrooms() {
     [members]
   );
 
+  // ─── New-member tracking ──────────────────────────────────
+  const getSeenCounts = useCallback((): Record<string, number> => {
+    try {
+      const s = localStorage.getItem(SEEN_COUNTS_KEY);
+      return s ? JSON.parse(s) : {};
+    } catch { return {}; }
+  }, []);
+
+  const getNewMemberCount = useCallback((classId: string): number => {
+    const current = members.filter((m) => m.classId === classId).length;
+    const seen = getSeenCounts()[classId] ?? 0;
+    return Math.max(0, current - seen);
+  }, [members, getSeenCounts]);
+
+  const markClassSeen = useCallback((classId: string) => {
+    const counts = getSeenCounts();
+    counts[classId] = members.filter((m) => m.classId === classId).length;
+    localStorage.setItem(SEEN_COUNTS_KEY, JSON.stringify(counts));
+  }, [members, getSeenCounts]);
+
+  const totalNewMembers = classrooms.reduce((sum, c) => sum + getNewMemberCount(c.id), 0);
+
   const shareClassroom = useCallback(async (classroom: Classroom) => {
     const url = `https://iqraacoran.lovable.app/join/${classroom.joinCode}`;
     const text = `Rejoignez ma classe Iqraa "${classroom.name}" avec le code : ${classroom.joinCode}\n${url}`;
@@ -101,7 +124,6 @@ export function useClassrooms() {
         return;
       } catch {}
     }
-    // Fallback to WhatsApp
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   }, []);
 
@@ -115,5 +137,8 @@ export function useClassrooms() {
     getMembersForClass,
     getClassesForChild,
     shareClassroom,
+    getNewMemberCount,
+    markClassSeen,
+    totalNewMembers,
   };
 }
