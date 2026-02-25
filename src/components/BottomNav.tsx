@@ -12,7 +12,7 @@ export default function BottomNav() {
   const tabs = [
     { path: "/", icon: Home, label: t("nav.home") },
     { path: "/learn", icon: BookOpen, label: t("nav.learn") },
-    { path: "/recitation", icon: Mic, label: t("nav.recitation") },
+    { path: "/quran", icon: Mic, label: t("nav.quran") },
     { path: "/progress", icon: BarChart3, label: t("nav.progress") },
     { path: "/settings", icon: Settings, label: t("nav.settings") },
   ];

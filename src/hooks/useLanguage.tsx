@@ -349,6 +349,83 @@ const translations = {
   "audio.stop": {
     fr: "Arrêter", en: "Stop", nl: "Stoppen", ar: "إيقاف",
   },
+
+  // Aya-by-aya Tarteel flow
+  "aya.playAya": {
+    fr: "▶ Écouter l'aya", en: "▶ Listen to aya", nl: "▶ Luister naar aya", ar: "▶ استمع للآية",
+  },
+  "aya.reciteNow": {
+    fr: "🎤 Récitez cette aya !", en: "🎤 Recite this aya!", nl: "🎤 Reciteer deze aya!", ar: "🎤 اتلُ هذه الآية!",
+  },
+  "aya.listening": {
+    fr: "🎙️ J'écoute... Appuyez pour arrêter", en: "🎙️ Listening... Tap to stop", nl: "🎙️ Luisteren... Tik om te stoppen", ar: "🎙️ أستمع... اضغط للإيقاف",
+  },
+  "aya.tapToRecite": {
+    fr: "Appuyez sur le micro pour réciter", en: "Tap the mic to recite", nl: "Tik op de microfoon om te reciteren", ar: "اضغط على الميكروفون للتلاوة",
+  },
+  "aya.correct": {
+    fr: "Correct ! ✓", en: "Correct! ✓", nl: "Correct! ✓", ar: "صحيح! ✓",
+  },
+  "aya.incorrect": {
+    fr: "Réessayez ✗", en: "Try again ✗", nl: "Probeer opnieuw ✗", ar: "حاول مرة أخرى ✗",
+  },
+  "aya.retry": {
+    fr: "Réessayer cette aya", en: "Retry this aya", nl: "Deze aya opnieuw", ar: "إعادة هذه الآية",
+  },
+  "aya.skip": {
+    fr: "Passer →", en: "Skip →", nl: "Overslaan →", ar: "→ تخطي",
+  },
+  "aya.pause": {
+    fr: "Pause", en: "Pause", nl: "Pauze", ar: "إيقاف مؤقت",
+  },
+  "aya.resume": {
+    fr: "Reprendre", en: "Resume", nl: "Hervatten", ar: "استئناف",
+  },
+  "aya.next": {
+    fr: "Suivant", en: "Next", nl: "Volgende", ar: "التالي",
+  },
+  "aya.prev": {
+    fr: "Précédent", en: "Previous", nl: "Vorige", ar: "السابق",
+  },
+  "aya.repeatX3": {
+    fr: "Répéter ×3", en: "Repeat ×3", nl: "Herhaal ×3", ar: "إعادة ×3",
+  },
+  "aya.progress": {
+    fr: "Aya", en: "Aya", nl: "Aya", ar: "آية",
+  },
+  "aya.surahComplete": {
+    fr: "Sourate terminée !", en: "Surah complete!", nl: "Soera voltooid!", ar: "اكتملت السورة!",
+  },
+  "aya.perfectAyas": {
+    fr: "ayas parfaites !", en: "perfect ayas!", nl: "perfecte aya's!", ar: "آيات مثالية!",
+  },
+  "aya.score": {
+    fr: "Score final", en: "Final score", nl: "Eindscore", ar: "النتيجة النهائية",
+  },
+  "aya.errors": {
+    fr: "Erreurs à revoir", en: "Errors to review", nl: "Fouten om te herzien", ar: "أخطاء للمراجعة",
+  },
+  "aya.badge5": {
+    fr: "5 ayas parfaites ! 🌟", en: "5 perfect ayas! 🌟", nl: "5 perfecte aya's! 🌟", ar: "5 آيات مثالية! 🌟",
+  },
+  "aya.badge10": {
+    fr: "10 ayas parfaites ! 🏆", en: "10 perfect ayas! 🏆", nl: "10 perfecte aya's! 🏆", ar: "10 آيات مثالية! 🏆",
+  },
+  "aya.badgeAll": {
+    fr: "Sourate parfaite ! 👑", en: "Perfect surah! 👑", nl: "Perfecte soera! 👑", ar: "سورة مثالية! 👑",
+  },
+  "aya.translation": {
+    fr: "Traduction", en: "Translation", nl: "Vertaling", ar: "الترجمة",
+  },
+  "aya.voiceUnsupported": {
+    fr: "Reconnaissance vocale non supportée. Utilisez Chrome.", en: "Voice recognition not supported. Use Chrome.", nl: "Spraakherkenning niet ondersteund. Gebruik Chrome.", ar: "التعرف على الصوت غير مدعوم. استخدم Chrome.",
+  },
+  "aya.autoNext": {
+    fr: "Aya suivante dans...", en: "Next aya in...", nl: "Volgende aya in...", ar: "...الآية التالية في",
+  },
+  "nav.quran": {
+    fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;
