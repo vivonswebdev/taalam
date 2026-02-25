@@ -100,6 +100,7 @@ export default function ReadOnlyMode({
         totalAyahs={surah.ayahs.length}
         onAyahChange={setCurrentAyah}
         onPlayStateChange={setPlaying}
+        jumpToAyahRef={jumpToAyahRef}
       />
 
       {/* Ayahs list */}
