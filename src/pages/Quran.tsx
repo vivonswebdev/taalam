@@ -509,11 +509,11 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             className="space-y-1.5">
             {[
-              { mode: "aya" as RecitationMode, emoji: "🎤", label: "Dicté verset" },
-              { mode: "dictation" as RecitationMode, emoji: "✍️", label: "Dicté sourate" },
-              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: "Tahaddi" },
-              { mode: "hifz" as RecitationMode, emoji: "📖", label: "Contrôle" },
-              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: "Trouver l'Ayah" },
+              { mode: "aya" as RecitationMode, emoji: "🎤", label: "Dicté verset", desc: "Écoute un verset puis récite-le au micro" },
+              { mode: "dictation" as RecitationMode, emoji: "✍️", label: "Dicté sourate", desc: "Récite la sourate entière verset par verset" },
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: "Tahaddi", desc: "Défi : récite de mémoire sans écouter d'abord" },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: "Contrôle", desc: "Teste ta mémorisation avec un score final" },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: "Trouver l'Ayah", desc: "Récite un passage et retrouve sa position" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
@@ -528,7 +528,10 @@ export default function Quran() {
                 }`}
               >
                 <span className="text-base">{item.emoji}</span>
-                <span>{item.label}</span>
+                <div className="flex-1 text-left">
+                  <span className="block">{item.label}</span>
+                  <span className={`block text-[10px] font-normal ${recitationMode === item.mode ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{item.desc}</span>
+                </div>
               </motion.button>
             ))}
           </motion.div>
@@ -674,7 +677,10 @@ export default function Quran() {
                 : "bg-card border border-border text-foreground hover:bg-accent/50"
             }`}>
             <span className="text-base">🔊</span>
-            <span>Lecture seule</span>
+            <div className="flex-1 text-left">
+              <span className="block">Lecture seule</span>
+              <span className={`block text-[10px] font-normal ${recitationMode === "readOnly" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>Écoute la récitation sans micro, idéal pour suivre</span>
+            </div>
           </motion.button>
 
         </div>
