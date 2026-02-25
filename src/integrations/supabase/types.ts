@@ -73,6 +73,48 @@ export type Database = {
         }
         Relationships: []
       }
+      class_challenge_results: {
+        Row: {
+          challenge_id: string
+          class_id: string
+          completed_at: string
+          id: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          class_id: string
+          completed_at?: string
+          id?: string
+          score?: number
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          class_id?: string
+          completed_at?: string
+          id?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_challenge_results_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "class_weekly_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_challenge_results_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_messages: {
         Row: {
           author_id: string
@@ -102,6 +144,50 @@ export type Database = {
           {
             foreignKeyName: "class_messages_classroom_id_fkey"
             columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      class_weekly_challenges: {
+        Row: {
+          ayah_from: number
+          ayah_to: number
+          class_id: string
+          created_at: string
+          created_by: string
+          double_xp: boolean
+          id: string
+          surah_number: number
+          week_start: string
+        }
+        Insert: {
+          ayah_from: number
+          ayah_to: number
+          class_id: string
+          created_at?: string
+          created_by: string
+          double_xp?: boolean
+          id?: string
+          surah_number: number
+          week_start: string
+        }
+        Update: {
+          ayah_from?: number
+          ayah_to?: number
+          class_id?: string
+          created_at?: string
+          created_by?: string
+          double_xp?: boolean
+          id?: string
+          surah_number?: number
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_weekly_challenges_class_id_fkey"
+            columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classrooms"
             referencedColumns: ["id"]

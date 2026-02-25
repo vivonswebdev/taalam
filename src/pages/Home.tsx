@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Clock, Settings, LogOut, Megaphone } from "lucide-react";
+import { GraduationCap, Clock, Settings, LogOut, Megaphone, Trophy, Zap } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useXP } from "@/hooks/useXP";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
+import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
+import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
@@ -21,6 +23,7 @@ export default function Home() {
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
+  const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
 
   return (
     <div className="min-h-screen pb-24">
@@ -32,6 +35,35 @@ export default function Home() {
           onDismiss={() => dailyChallenge.dismiss()}
         />
       )}
+      {/* Weekly Class Challenge Banner */}
+      {weeklyChallenges.filter((ch) => !myResults.some((r) => r.challenge_id === ch.id)).map((ch) => {
+        const surah = surahs.find((s) => s.number === ch.surah_number);
+        return (
+          <motion.div
+            key={ch.id}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-4 mt-2 bg-gradient-to-r from-primary/15 to-primary/5 border border-primary/20 rounded-xl p-3 flex items-center gap-3"
+          >
+            <Trophy size={24} className="text-primary shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold truncate">
+                Défi Hifz – {ch.className}
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                {surah ? `${surah.name} (${surah.nameArabic})` : `Sourate ${ch.surah_number}`} · Ayahs {ch.ayah_from}–{ch.ayah_to}
+                {ch.double_xp && <span className="ml-1 text-yellow-600 font-bold">⚡ x2 XP</span>}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate(`/recitation?surah=${ch.surah_number}&from=${ch.ayah_from}&to=${ch.ayah_to}&challengeId=${ch.id}&classId=${ch.class_id}`)}
+              className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg"
+            >
+              Go !
+            </button>
+          </motion.div>
+        );
+      })}
       {/* Header */}
       <div className="relative overflow-visible">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />

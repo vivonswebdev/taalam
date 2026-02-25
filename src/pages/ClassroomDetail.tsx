@@ -1,13 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy } from "lucide-react";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
+import { useWeeklyChallenge } from "@/hooks/useWeeklyChallenge";
 import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
+import WeeklyChallengeCard from "@/components/WeeklyChallengeCard";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS, nl, ar } from "date-fns/locale";
 import { Progress } from "@/components/ui/progress";
@@ -31,11 +33,43 @@ export default function ClassroomDetail() {
   const { user } = useAuth();
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
   const { profiles, getChildMastery, getSessionsForChild, getLastActivity } = useChildProfiles();
+  const {
+    challenge, results, myResult, loading: challengeLoading,
+    createChallenge, submitResult, weekStart,
+  } = useWeeklyChallenge(classId);
 
   const classroom = classrooms.find((c) => c.id === classId);
+  const isTeacher = !!(user && classroom && (classroom as any).teacherId === user.id);
+  // Also check DB teacher_id (classroom from local may not have it)
+  const [dbTeacherId, setDbTeacherId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!classId) return;
+    supabase.from("classrooms").select("teacher_id").eq("id", classId).maybeSingle()
+      .then(({ data }) => { if (data) setDbTeacherId(data.teacher_id); });
+  }, [classId]);
+  const isTeacherFinal = isTeacher || (user && dbTeacherId === user.id);
+
   const memberIds = classId ? getMembersForClass(classId) : [];
   const memberProfiles = profiles.filter((p) => memberIds.includes(p.id));
   const nonMembers = profiles.filter((p) => !memberIds.includes(p.id));
+
+  // DB member profiles for challenge card
+  const [dbMembers, setDbMembers] = useState<Map<string, { name: string; emoji: string }>>(new Map());
+  useEffect(() => {
+    if (!classId) return;
+    (async () => {
+      const { data: mems } = await supabase
+        .from("classroom_members").select("user_id").eq("classroom_id", classId);
+      const uids = (mems || []).map((m: any) => m.user_id);
+      if (dbTeacherId) uids.push(dbTeacherId);
+      if (uids.length === 0) return;
+      const { data: profs } = await supabase
+        .from("profiles").select("user_id, display_name, avatar_emoji").in("user_id", uids);
+      const map = new Map<string, { name: string; emoji: string }>();
+      (profs || []).forEach((p: any) => map.set(p.user_id, { name: p.display_name, emoji: p.avatar_emoji }));
+      setDbMembers(map);
+    })();
+  }, [classId, dbTeacherId]);
 
   const [showAdd, setShowAdd] = useState(false);
 
@@ -123,8 +157,11 @@ export default function ClassroomDetail() {
         </button>
       </div>
 
-      <Tabs defaultValue="students" className="px-4 py-3">
-        <TabsList className="w-full grid grid-cols-2">
+      <Tabs defaultValue="challenge" className="px-4 py-3">
+        <TabsList className="w-full grid grid-cols-3">
+          <TabsTrigger value="challenge" className="text-xs gap-1">
+            <Trophy size={14} /> Défi
+          </TabsTrigger>
           <TabsTrigger value="students" className="text-xs gap-1">
             <UserPlus size={14} /> {t("classrooms.students")}
           </TabsTrigger>
@@ -132,6 +169,25 @@ export default function ClassroomDetail() {
             <MessageSquare size={14} /> {t("classrooms.messages")}
           </TabsTrigger>
         </TabsList>
+
+        {/* Challenge tab */}
+        <TabsContent value="challenge" className="mt-3">
+          <WeeklyChallengeCard
+            challenge={challenge}
+            results={results}
+            myResult={myResult}
+            isTeacher={!!isTeacherFinal}
+            loading={challengeLoading}
+            onCreateChallenge={(sn, af, at, dx) => createChallenge(sn, af, at, dx)}
+            onStartChallenge={() => {
+              if (challenge) {
+                const surahNum = challenge.surah_number;
+                navigate(`/recitation?surah=${surahNum}&from=${challenge.ayah_from}&to=${challenge.ayah_to}&challengeId=${challenge.id}&classId=${classId}`);
+              }
+            }}
+            memberProfiles={dbMembers}
+          />
+        </TabsContent>
 
         {/* Students tab */}
         <TabsContent value="students" className="space-y-4 mt-3">
