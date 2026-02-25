@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -117,6 +117,18 @@ export default function Settings() {
             </div>
           )}
         </motion.div>
+
+        {/* Parent / Teacher Area */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => navigate("/parent")} className="w-full flex items-center gap-4 p-4 text-left">
+            <Users size={20} className="text-primary" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">{t("parent.access")}</p>
+              <p className="text-xs text-muted-foreground">{t("parent.accessDesc")}</p>
+            </div>
+          </button>
+        </motion.div>
+
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <button onClick={() => setShowConfirm(true)} className="w-full flex items-center gap-4 p-4 text-left">
             <RotateCcw size={20} className="text-destructive" />

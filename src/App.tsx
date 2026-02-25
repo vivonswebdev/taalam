@@ -15,6 +15,9 @@ import Progress from "./pages/Progress";
 import Juz from "./pages/Juz";
 import HifzMap from "./pages/HifzMap";
 import Settings from "./pages/Settings";
+import ParentDashboard from "./pages/ParentDashboard";
+import ChildDetail from "./pages/ChildDetail";
+import ChildReport from "./pages/ChildReport";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 import DedicationPopup from "./components/DedicationPopup";
@@ -43,6 +46,9 @@ const App = () => (
               <Route path="/juz" element={<Juz />} />
               <Route path="/hifz-map" element={<HifzMap />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/parent" element={<ParentDashboard />} />
+              <Route path="/parent/child/:childId" element={<ChildDetail />} />
+              <Route path="/parent/child/:childId/report" element={<ChildReport />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <BottomNav />
