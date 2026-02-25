@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 export default function Auth() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const { t } = useLanguage();
   const { signUpWithEmail } = useAuth();
 
@@ -56,7 +58,7 @@ export default function Auth() {
       }
 
       toast.success("Compte créé avec succès !");
-      navigate("/");
+      navigate(redirectTo);
     } catch (err: any) {
       toast.error(err.message || "Erreur");
     } finally {
@@ -77,7 +79,7 @@ export default function Auth() {
       });
       if (error) throw error;
       toast.success("Connecté !");
-      navigate("/");
+      navigate(redirectTo);
     } catch (err: any) {
       toast.error(err.message || "Email ou mot de passe incorrect");
     } finally {
