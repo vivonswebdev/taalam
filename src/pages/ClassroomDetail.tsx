@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History, QrCode, X } from "lucide-react";
 import { toast } from "sonner";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
@@ -16,6 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import { fr, enUS, nl, ar } from "date-fns/locale";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { QRCodeSVG } from "qrcode.react";
 
 const LOCALES: Record<string, typeof fr> = { fr, en: enUS, nl, ar };
 
@@ -171,6 +172,7 @@ export default function ClassroomDetail() {
   }, [classId, dbTeacherId]);
 
   const [showAdd, setShowAdd] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   // Chat state
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -322,10 +324,60 @@ export default function ClassroomDetail() {
           <h1 className="text-lg font-bold truncate">{classroom.name}</h1>
           <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {classroom.joinCode}</p>
         </div>
+        <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+          <QrCode size={16} className="text-primary" />
+        </button>
         <button onClick={() => shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <Share2 size={16} className="text-primary" />
         </button>
       </div>
+
+      {/* QR Code Modal */}
+      {showQR && classroom && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-6"
+          onClick={() => setShowQR(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-card border border-border rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl"
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold text-foreground">Invitation QR</h3>
+              <button onClick={() => setShowQR(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+                <X size={14} />
+              </button>
+            </div>
+            <div className="bg-white rounded-xl p-4 inline-block mx-auto">
+              <QRCodeSVG
+                value={`https://iqraacoran.lovable.app/join/${classroom.joinCode}`}
+                size={200}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <div>
+              <p className="font-bold text-foreground">{classroom.name}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Code : <span className="font-mono font-bold text-primary">{classroom.joinCode}</span>
+              </p>
+            </div>
+            <p className="text-[10px] text-muted-foreground">
+              Scannez ce QR code pour rejoindre la classe
+            </p>
+            <button
+              onClick={() => shareClassroom(classroom)}
+              className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+            >
+              <Share2 size={14} /> Partager le lien
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* Leave / Delete button */}
       <LeaveClassButton
