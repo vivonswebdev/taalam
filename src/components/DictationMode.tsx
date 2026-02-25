@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { motion } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Eye, EyeOff, AlertCircle, CheckCircle2, XCircle,
@@ -169,32 +170,51 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
           return (
             <span key={i} className="inline">
               {isRecording ? (
-                // During recording: hide pending words, reveal only as spoken
+                // During recording: hide pending words, reveal with Tajwid underline
                 <span className="arabic-text text-xl leading-[3]">
-                  {words.map((word, wi) => {
-                    const lw = ayahLiveWords[wi];
-                    const status = lw?.status || "pending";
-                    const isPending = status === "pending";
-                    const colorClass = getLiveWordColor(status);
-                    return (
-                      <motion.span
-                        key={wi}
-                        initial={!isPending ? { scale: 1.1 } : false}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${
-                          isPending ? "text-transparent select-none" : colorClass
-                        }`}
-                      >
-                        {isPending ? "████" : word}{" "}
-                      </motion.span>
-                    );
-                  })}
+                  {(() => {
+                    const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+                    return words.map((word, wi) => {
+                      const lw = ayahLiveWords[wi];
+                      const status = lw?.status || "pending";
+                      const isPending = status === "pending";
+                      const colorClass = getLiveWordColor(status);
+                      const tw = tajwidWords[wi];
+                      const tajwidBorder = !isPending && tw?.primaryColor
+                        ? `3px solid hsl(${tw.primaryColor})`
+                        : undefined;
+                      return (
+                        <motion.span
+                          key={wi}
+                          initial={!isPending ? { scale: 1.1 } : false}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                          className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${
+                            isPending ? "text-transparent select-none" : colorClass
+                          }`}
+                          style={{ borderBottom: tajwidBorder }}
+                        >
+                          {isPending ? "████" : word}{" "}
+                        </motion.span>
+                      );
+                    });
+                  })()}
                 </span>
               ) : (
-                // Not recording: show normally
-                <span className="arabic-text text-xl text-foreground leading-[3]">
-                  {ayah.arabic}
+                // Not recording: show with Tajwid colors
+                <span className="arabic-text text-xl leading-[3]">
+                  {(() => {
+                    const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+                    return tajwidWords.map((tw, wi) => (
+                      <span
+                        key={wi}
+                        className="inline-block px-0.5"
+                        style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}
+                      >
+                        {tw.text}{" "}
+                      </span>
+                    ));
+                  })()}
                 </span>
               )}
 
