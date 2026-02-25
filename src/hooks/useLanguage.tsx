@@ -606,6 +606,93 @@ const translations = {
   "progress.quizCompleted": {
     fr: "Quiz complétés", en: "Quizzes completed", nl: "Quizzen voltooid", ar: "اختبارات مكتملة",
   },
+
+  // Prayer settings
+  "prayers.settings.title": {
+    fr: "Paramètres des prières", en: "Prayer settings", nl: "Gebedsinstellingen", ar: "إعدادات الصلاة",
+  },
+  "prayers.settings.location": {
+    fr: "Localisation", en: "Location", nl: "Locatie", ar: "الموقع",
+  },
+  "prayers.settings.city": {
+    fr: "Ville", en: "City", nl: "Stad", ar: "المدينة",
+  },
+  "prayers.settings.cityPlaceholder": {
+    fr: "Ex : Bruxelles, Paris…", en: "E.g. Brussels, Paris…", nl: "Bv. Brussel, Parijs…", ar: "مثال: بروكسل، باريس…",
+  },
+  "prayers.settings.countryPlaceholder": {
+    fr: "Pays (optionnel)", en: "Country (optional)", nl: "Land (optioneel)", ar: "البلد (اختياري)",
+  },
+  "prayers.settings.method": {
+    fr: "Méthode de calcul", en: "Calculation method", nl: "Berekeningsmethode", ar: "طريقة الحساب",
+  },
+  "prayers.settings.madhab": {
+    fr: "Madhhab (Asr)", en: "Madhhab (Asr)", nl: "Madhhab (Asr)", ar: "المذهب (العصر)",
+  },
+  "prayers.settings.shafii": {
+    fr: "Standard (Shafi'i)", en: "Standard (Shafi'i)", nl: "Standaard (Shafi'i)", ar: "شافعي (عادي)",
+  },
+  "prayers.settings.hanafi": {
+    fr: "Hanafi", en: "Hanafi", nl: "Hanafi", ar: "حنفي",
+  },
+  "prayers.settings.latitudeMethod": {
+    fr: "Méthode haute latitude", en: "High latitude method", nl: "Hoge breedtegraad methode", ar: "طريقة خطوط العرض العالية",
+  },
+  "prayers.settings.midNight": {
+    fr: "Milieu de la nuit", en: "Middle of the Night", nl: "Midden van de nacht", ar: "منتصف الليل",
+  },
+  "prayers.settings.oneSeventh": {
+    fr: "Un septième de la nuit", en: "One Seventh of the Night", nl: "Een zevende van de nacht", ar: "سُبع الليل",
+  },
+  "prayers.settings.angleBased": {
+    fr: "Basée sur l'angle", en: "Angle based", nl: "Hoekgebaseerd", ar: "على أساس الزاوية",
+  },
+  "prayers.settings.save": {
+    fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ",
+  },
+  "prayers.settings.button": {
+    fr: "Paramètres", en: "Settings", nl: "Instellingen", ar: "الإعدادات",
+  },
+  "prayers.horairesPour": {
+    fr: "Horaires pour", en: "Times for", nl: "Tijden voor", ar: "مواعيد لـ",
+  },
+
+  // Notifications
+  "prayers.notif.title": {
+    fr: "Notifications", en: "Notifications", nl: "Meldingen", ar: "الإشعارات",
+  },
+  "prayers.notif.enable": {
+    fr: "Activer les notifications", en: "Enable notifications", nl: "Meldingen inschakelen", ar: "تفعيل الإشعارات",
+  },
+  "prayers.notif.offset": {
+    fr: "min avant l'adhan", en: "min before adhan", nl: "min voor adhan", ar: "دقيقة قبل الأذان",
+  },
+  "prayers.notif.unsupported": {
+    fr: "Notifications non supportées sur cet appareil", en: "Notifications not supported on this device", nl: "Meldingen niet ondersteund op dit apparaat", ar: "الإشعارات غير مدعومة على هذا الجهاز",
+  },
+  "prayers.notif.denied": {
+    fr: "Permission refusée. Activez les notifications dans les réglages de votre navigateur.", en: "Permission denied. Enable notifications in your browser settings.", nl: "Toestemming geweigerd. Schakel meldingen in via je browserinstellingen.", ar: "تم رفض الإذن. فعّل الإشعارات من إعدادات المتصفح.",
+  },
+
+  // Juz
+  "juz.title": {
+    fr: "Mode Juz", en: "Juz Mode", nl: "Juz Modus", ar: "وضع الجزء",
+  },
+  "juz.subtitle": {
+    fr: "Mémorisez le Coran par Juz", en: "Memorize the Quran by Juz", nl: "Memoriseer de Koran per Juz", ar: "احفظ القرآن حسب الجزء",
+  },
+  "juz.notAvailable": {
+    fr: "Non disponible", en: "Not available", nl: "Niet beschikbaar", ar: "غير متوفر",
+  },
+  "juz.startRevision": {
+    fr: "Réviser ce Juz", en: "Review this Juz", nl: "Herhaal deze Juz", ar: "مراجعة هذا الجزء",
+  },
+  "juz.viewAll": {
+    fr: "Voir les 30 Juz", en: "View all 30 Juz", nl: "Bekijk alle 30 Juz", ar: "عرض الأجزاء الثلاثين",
+  },
+  "juz.progress": {
+    fr: "Progression par Juz", en: "Juz progress", nl: "Juz voortgang", ar: "تقدم الجزء",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;
