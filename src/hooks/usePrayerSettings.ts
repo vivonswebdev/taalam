@@ -46,7 +46,7 @@ const STORAGE_KEY = "quranEasyPrayerSettings";
 const defaultSettings: PrayerSettings = {
   city: "",
   country: "",
-  method: 12, // UOIF (France) — sensible default for Brussels area
+  method: 3, // Muslim World League (MWL)
   school: 0,
   latitudeAdjustmentMethod: 3,
   source: "gps",
