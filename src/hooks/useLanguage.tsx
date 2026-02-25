@@ -908,6 +908,20 @@ const translations = {
   "bookmarks.toAyah": { fr: "Verset fin", en: "To verse", nl: "Tot vers", ar: "إلى آية" },
   "bookmarks.from": { fr: "De", en: "From", nl: "Van", ar: "من" },
   "bookmarks.navLabel": { fr: "Favoris", en: "Bookmarks", nl: "Bladwijzers", ar: "المفضلة" },
+
+  // Reading Mode
+  "reading.title": { fr: "Lecture Coran", en: "Quran Reading", nl: "Koran Lezen", ar: "قراءة القرآن" },
+  "reading.subtitle": { fr: "Lisez le Coran complet", en: "Read the complete Quran", nl: "Lees de volledige Koran", ar: "اقرأ القرآن الكريم كاملاً" },
+  "reading.settings": { fr: "Réglages lecture", en: "Reading settings", nl: "Leesinstellingen", ar: "إعدادات القراءة" },
+  "reading.darkMode": { fr: "Mode sombre (lecture)", en: "Dark mode (reading)", nl: "Donkere modus (lezen)", ar: "الوضع الداكن (قراءة)" },
+  "reading.arabicFont": { fr: "Police arabe", en: "Arabic font", nl: "Arabisch lettertype", ar: "الخط العربي" },
+  "reading.defaultReciter": { fr: "Réciteur par défaut", en: "Default reciter", nl: "Standaard reciteerder", ar: "القارئ الافتراضي" },
+  "reading.resume": { fr: "Reprendre la lecture", en: "Resume reading", nl: "Verder lezen", ar: "استئناف القراءة" },
+  "reading.resumeSurah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة" },
+  "reading.searchPlaceholder": { fr: "Rechercher une sourate...", en: "Search a surah...", nl: "Zoek een soera...", ar: "ابحث عن سورة..." },
+  "reading.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جاري التحميل..." },
+  "reading.noResults": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا توجد نتائج" },
+  "nav.reading": { fr: "Lecture", en: "Reading", nl: "Lezen", ar: "قراءة" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

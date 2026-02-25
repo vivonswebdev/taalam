@@ -12,6 +12,7 @@ import Quran from "./pages/Quran";
 import Prayers from "./pages/Prayers";
 import PrayerSettings from "./pages/PrayerSettings";
 import Progress from "./pages/Progress";
+import Reading from "./pages/Reading";
 import Juz from "./pages/Juz";
 import HifzMap from "./pages/HifzMap";
 import Settings from "./pages/Settings";
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/learn/:surahNumber" element={<LearnDetail />} />
               <Route path="/quran" element={<Quran />} />
               <Route path="/recitation" element={<Quran />} />
+              <Route path="/reading" element={<Reading />} />
               <Route path="/prayers" element={<Prayers />} />
               <Route path="/prayer-settings" element={<PrayerSettings />} />
               <Route path="/progress" element={<Progress />} />
