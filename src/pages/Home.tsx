@@ -1,39 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Star, ArrowRight, GraduationCap, Trophy, Megaphone, UserPlus, LogOut } from "lucide-react";
-import { useProgress } from "@/hooks/useProgress";
+import { GraduationCap, Clock, Settings, LogOut, Megaphone } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
-import { surahs } from "@/data/surahs";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import islamicPattern from "@/assets/islamic-pattern.jpg";
 import { useXP } from "@/hooks/useXP";
-import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import RoundActionButton from "@/components/RoundActionButton";
+import islamicPattern from "@/assets/islamic-pattern.jpg";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { progress, getMasteredCount } = useProgress();
   const { t } = useLanguage();
   const xp = useXP();
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
-  const mastered = getMasteredCount();
-  const hasLevel = progress.level !== null;
-
-  const levelLabel = progress.level === "easy" ? t("home.level.easy") : progress.level === "medium" ? t("home.level.medium") : t("home.level.hard");
 
   return (
     <div className="min-h-screen pb-24">
-      {/* Hero */}
+      {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
         <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 opacity-10 pointer-events-none" />
-        <div className="relative px-6 pt-14 pb-8 text-center">
-          {/* Language switcher + auth */}
+        <div className="relative px-6 pt-14 pb-6 text-center">
+          {/* Top bar */}
           <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
             {user && (
               <button onClick={signOut} className="text-muted-foreground hover:text-foreground" title={t("auth.logout")}>
@@ -43,145 +36,113 @@ export default function Home() {
             <LanguageSwitcher />
           </div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-arabic text-2xl text-primary mb-2">
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-arabic text-xl text-primary mb-1">
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-3xl font-bold text-foreground tracking-tight">
-            Quran<span className="text-primary">Easy</span>
+          <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-2xl font-bold text-foreground tracking-tight">
+            Iqraa – <span className="text-primary">{t("home.hifzTitle")}</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-muted-foreground mt-2 text-sm">
-            {t("home.subtitle")}
-          </motion.p>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-3 flex items-center justify-center gap-4"
+          >
+            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
+              <span className="text-base">🔥</span>
+              <span className="text-sm font-semibold text-foreground">{xp.streakDays} {t("home.days")}</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
+              <span className="text-base">⭐</span>
+              <span className="text-sm font-semibold text-foreground">{xp.xpToday} XP {t("home.today")}</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
+              <span className="text-base">🏅</span>
+              <span className="text-sm font-semibold text-foreground">Niv. {xp.level}</span>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      <div className="px-6 space-y-5">
-        {/* XP Progress Bar Duolingo */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-          <ProgressBarDuolingo
-            level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
-            lastGain={xp.lastGain}
-          />
-        </motion.div>
+      {/* 3 Big Round Buttons */}
+      <div className="px-6 mt-4 space-y-4">
+        <RoundActionButton
+          icon="🧠"
+          title={t("home.quizButton")}
+          subtitle={t("home.quizButtonDesc")}
+          onClick={() => navigate("/quiz")}
+          delay={0.3}
+        />
+        <RoundActionButton
+          icon="🎤"
+          title={t("home.tarteelButton")}
+          subtitle={t("home.tarteelButtonDesc")}
+          onClick={() => navigate("/recitation")}
+          delay={0.4}
+        />
+        <RoundActionButton
+          icon="🏆"
+          title={t("home.leaderboardButton")}
+          subtitle={t("home.leaderboardButtonDesc")}
+          onClick={() => navigate("/leaderboard")}
+          delay={0.5}
+        />
+      </div>
 
-        {/* Progress Card */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-2xl p-5">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center">
-              <Star size={20} className="text-secondary" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-card-foreground">{t("home.progress")}</p>
-              <p className="text-xs text-muted-foreground">
-                {hasLevel ? `${t("home.level")} ${levelLabel}` : t("home.level.none")}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-3xl font-bold text-foreground">{mastered}<span className="text-base font-normal text-muted-foreground">/{surahs.length}</span></p>
-              <p className="text-xs text-muted-foreground">{t("home.mastered")}</p>
-            </div>
-            <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div initial={{ width: 0 }} animate={{ width: `${(mastered / surahs.length) * 100}%` }} transition={{ delay: 0.6, duration: 0.8 }} className="h-full bg-primary rounded-full" />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* CTA */}
-        {!hasLevel ? (
-          <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} onClick={() => navigate("/quiz")} className="w-full flex items-center justify-center gap-3 bg-primary text-primary-foreground rounded-2xl p-4 font-semibold text-lg active:scale-[0.98] transition-transform">
-            <BookOpen size={22} />
-            {t("home.startQuiz")}
-            <ArrowRight size={18} />
-          </motion.button>
-        ) : (
-          <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} onClick={() => navigate("/learn")} className="w-full flex items-center justify-center gap-3 bg-primary text-primary-foreground rounded-2xl p-4 font-semibold text-lg active:scale-[0.98] transition-transform">
-            <BookOpen size={22} />
-            {t("home.continue")}
-            <ArrowRight size={18} />
-          </motion.button>
-        )}
-
-        {/* Quick Actions */}
-        {hasLevel && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className="grid grid-cols-2 gap-3">
-            <button onClick={() => navigate("/quiz")} className="flex flex-col items-center gap-2 p-4 bg-accent rounded-2xl text-accent-foreground active:scale-[0.98] transition-transform">
-              <Star size={20} />
-              <span className="text-sm font-medium">{t("home.retakeQuiz")}</span>
-            </button>
-            <button onClick={() => navigate("/progress")} className="flex flex-col items-center gap-2 p-4 bg-secondary/15 rounded-2xl text-secondary-foreground active:scale-[0.98] transition-transform">
-              <BookOpen size={20} />
-              <span className="text-sm font-medium">{t("home.myProgress")}</span>
-            </button>
-          </motion.div>
-        )}
-
-        {/* Leaderboard + Announcements row */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }} className="grid grid-cols-2 gap-3">
+      {/* Quick actions */}
+      <div className="px-6 mt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="grid grid-cols-3 gap-3"
+        >
           <button
-            onClick={() => navigate("/leaderboard")}
-            className="flex flex-col items-center gap-2 p-4 bg-card border border-border rounded-2xl active:scale-[0.98] transition-transform"
+            onClick={() => navigate("/classrooms")}
+            className="flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
           >
-            <Trophy size={22} className="text-secondary" />
-            <span className="text-sm font-semibold text-foreground">{t("home.leaderboard")}</span>
+            <GraduationCap size={22} className="text-primary" />
+            <span className="text-xs font-semibold text-foreground">{t("home.classMode")}</span>
           </button>
           <button
             onClick={() => navigate("/announcements")}
-            className="relative flex flex-col items-center gap-2 p-4 bg-card border border-border rounded-2xl active:scale-[0.98] transition-transform"
+            className="relative flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
           >
-            <Megaphone size={22} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">{t("home.announcements")}</span>
+            <Megaphone size={22} className="text-secondary" />
+            <span className="text-xs font-semibold text-foreground">{t("home.announcements")}</span>
             {unreadCount > 0 && (
               <span className="absolute top-2 right-2 w-5 h-5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
                 {unreadCount}
               </span>
             )}
           </button>
+          <button
+            onClick={() => navigate("/settings")}
+            className="flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
+          >
+            <Settings size={22} className="text-muted-foreground" />
+            <span className="text-xs font-semibold text-foreground">{t("nav.settings")}</span>
+          </button>
         </motion.div>
 
-        {/* Join community CTA (if not logged in) */}
+        {/* Join community CTA */}
         {!user && (
           <motion.button
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.7 }}
             onClick={() => navigate("/auth")}
-            className="w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
+            className="mt-4 w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
           >
-            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-              <UserPlus size={24} className="text-primary" />
-            </div>
+            <span className="text-2xl">👤</span>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-foreground">{t("home.joinCommunity")}</p>
               <p className="text-xs text-muted-foreground">{t("home.joinCommunityDesc")}</p>
             </div>
-            <ArrowRight size={16} className="text-primary shrink-0" />
           </motion.button>
         )}
-
-        {/* Classroom Mode Card */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.85 }}
-          onClick={() => navigate("/classrooms")}
-          className="w-full flex items-center gap-4 bg-card border border-border rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
-        >
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <GraduationCap size={24} className="text-primary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-foreground">{t("classrooms.homeTitle")}</p>
-            <p className="text-xs text-muted-foreground">{t("classrooms.homeDesc")}</p>
-          </div>
-          <ArrowRight size={16} className="text-muted-foreground shrink-0" />
-        </motion.button>
       </div>
     </div>
   );
