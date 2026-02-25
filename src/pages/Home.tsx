@@ -33,7 +33,7 @@ export default function Home() {
         />
       )}
       {/* Header */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-visible">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
         <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 opacity-10 pointer-events-none" />
         <div className="relative px-6 pt-14 pb-6 text-center">
