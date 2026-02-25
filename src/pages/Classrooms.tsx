@@ -88,19 +88,34 @@ export default function Classrooms() {
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
-    const localClass = createClassroom(newName.trim(), teacherName.trim());
-    // Also persist to DB so join-by-code works
-    if (user) {
-      try {
-        await supabase.from("classrooms").insert({
-          id: localClass.id,
-          name: localClass.name,
-          join_code: localClass.joinCode,
-          teacher_id: user.id,
-        });
-      } catch (err) {
-        console.error("Failed to sync classroom to DB:", err);
-      }
+    if (!user) {
+      toast({ title: "Connectez-vous d'abord", variant: "destructive" });
+      return;
+    }
+    try {
+      // Create in DB first to get a proper UUID
+      const joinCode = Array.from({ length: 6 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random() * 31)]).join("");
+      const { data: dbClass, error } = await supabase
+        .from("classrooms")
+        .insert({ name: newName.trim(), join_code: joinCode, teacher_id: user.id })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local state with the DB UUID
+      const localClass = {
+        id: dbClass.id,
+        name: dbClass.name,
+        teacherName: teacherName.trim(),
+        joinCode: dbClass.join_code,
+        createdAt: dbClass.created_at,
+      };
+      const current = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
+      localStorage.setItem("quranEasyClassrooms", JSON.stringify([...current, localClass]));
+      window.location.reload();
+    } catch (err: any) {
+      toast({ title: "Erreur", description: err.message, variant: "destructive" });
     }
     setNewName("");
     setTeacherName("");
