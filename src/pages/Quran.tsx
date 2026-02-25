@@ -566,7 +566,7 @@ export default function Quran() {
                   <p className="font-arabic text-lg text-foreground">{lastUsedSurah.nameArabic}</p>
                   <p className="text-xs text-muted-foreground truncate">{lastUsedSurah.frenchName} · {lastUsedSurah.versesCount} {t("detail.verses")}</p>
                 </div>
-                <span className="text-base font-bold text-primary bg-primary/10 px-4 py-2 rounded-xl shrink-0">
+                <span className="text-lg font-extrabold text-primary-foreground bg-primary px-5 py-2.5 rounded-xl shrink-0 animate-pulse shadow-lg shadow-primary/30">
                   {t("surah.continueWith")} →
                 </span>
               </button>
