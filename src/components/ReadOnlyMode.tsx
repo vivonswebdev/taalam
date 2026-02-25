@@ -115,10 +115,11 @@ export default function ReadOnlyMode({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.02, 0.6) }}
-              className={`bg-card border rounded-2xl p-4 transition-all duration-300 ${
+              onClick={() => handleAyahClick(i)}
+              className={`bg-card border rounded-2xl p-4 transition-all duration-300 cursor-pointer ${
                 isActive
                   ? "border-primary shadow-lg shadow-primary/10 bg-primary/5 scale-[1.01]"
-                  : "border-border"
+                  : "border-border hover:border-primary/30"
               }`}
             >
               {/* Aya number */}
