@@ -890,6 +890,11 @@ const translations = {
   "mushaf.darkMode": { fr: "Mode sombre", en: "Dark mode", nl: "Donkere modus", ar: "الوضع الداكن" },
   "mushaf.addBookmark": { fr: "Ajouter aux favoris", en: "Add to bookmarks", nl: "Toevoegen aan bladwijzers", ar: "إضافة للمفضلة" },
   "mushaf.removeBookmark": { fr: "Retirer des favoris", en: "Remove bookmark", nl: "Bladwijzer verwijderen", ar: "إزالة من المفضلة" },
+  "tafsir.title": { fr: "Tafsir", en: "Tafsir", nl: "Tafsir", ar: "تفسير" },
+  "tafsir.ayah": { fr: "Verset", en: "Ayah", nl: "Vers", ar: "آية" },
+  "tafsir.source": { fr: "Source", en: "Source", nl: "Bron", ar: "المصدر" },
+  "tafsir.surahTafsir": { fr: "Tafsir de la sourate", en: "Surah Tafsir", nl: "Soera Tafsir", ar: "تفسير السورة" },
+  "tafsir.goToAyah": { fr: "Aller au verset", en: "Go to ayah", nl: "Ga naar vers", ar: "اذهب للآية" },
   "mushaf.modeLabel": { fr: "Mushaf", en: "Mushaf", nl: "Mushaf", ar: "المصحف" },
 
   // Bookmarks
