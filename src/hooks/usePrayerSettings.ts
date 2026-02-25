@@ -7,6 +7,9 @@ export interface PrayerSettings {
   school: number; // 0 = Shafi'i (standard), 1 = Hanafi
   latitudeAdjustmentMethod: number; // 1 = Middle of Night, 2 = One Seventh, 3 = Angle based
   source: "city" | "gps"; // whether to use city or GPS
+  lat: number | null;
+  lng: number | null;
+  locationDetected: boolean; // whether auto-detection has run
 }
 
 export const CALCULATION_METHODS = [
@@ -47,6 +50,9 @@ const defaultSettings: PrayerSettings = {
   school: 0,
   latitudeAdjustmentMethod: 3,
   source: "gps",
+  lat: null,
+  lng: null,
+  locationDetected: false,
 };
 
 function load(): PrayerSettings {
