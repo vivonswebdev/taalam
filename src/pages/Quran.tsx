@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -11,15 +11,18 @@ import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts } from "@/hooks/useVoiceRecognition";
 import { useStreak } from "@/hooks/useStreak";
 import { useLanguage, QURAN_TRANSLATION_IDS } from "@/hooks/useLanguage";
+import { useTranslationPreference } from "@/hooks/useTranslationPreference";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DictationMode from "@/components/DictationMode";
+import AudioPlayer from "@/components/AudioPlayer";
+import ReadOnlyMode from "@/components/ReadOnlyMode";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation";
+type RecitationMode = "aya" | "dictation" | "readOnly";
 
 interface AyaScore {
   ayaIndex: number;
@@ -34,6 +37,7 @@ export default function Quran() {
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t, lang } = useLanguage();
+  const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
 
   // Selection
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
@@ -110,14 +114,13 @@ export default function Quran() {
     };
   }, []);
 
-  // Fetch translations when surah or language changes
+  // Fetch translations when surah or edition changes
   useEffect(() => {
-    if (!selectedSurah || lang === "ar") {
+    if (!selectedSurah || isArabicOnly) {
       setTranslations({});
       return;
     }
-    const translationId = QURAN_TRANSLATION_IDS[lang];
-    fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/${translationId}`)
+    fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/${resolvedEditionId}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.data?.ayahs) {
@@ -129,7 +132,7 @@ export default function Quran() {
         }
       })
       .catch(() => {});
-  }, [selectedSurah, lang]);
+  }, [selectedSurah, resolvedEditionId, isArabicOnly]);
 
   // ─── Handlers ─────────────────────────────────────────────
 
@@ -587,19 +590,27 @@ export default function Quran() {
             <div className="flex gap-2">
               <button
                 onClick={() => setRecitationMode("aya")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   recitationMode === "aya" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                 }`}>
-                <BookOpen size={16} />
+                <BookOpen size={14} />
                 {t("dictation.modeAya")}
               </button>
               <button
                 onClick={() => setRecitationMode("dictation")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   recitationMode === "dictation" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                 }`}>
-                <PenTool size={16} />
+                <PenTool size={14} />
                 {t("dictation.modeSurah")}
+              </button>
+              <button
+                onClick={() => setRecitationMode("readOnly")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                  recitationMode === "readOnly" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}>
+                <Headphones size={14} />
+                {t("quran.readOnly")}
               </button>
             </div>
           </div>
@@ -615,6 +626,19 @@ export default function Quran() {
             isChildMode={isChildMode}
           />
         </div>
+      )}
+
+      {/* ═══ READ-ONLY MODE ═══ */}
+      {selectedSurah && recitationMode === "readOnly" && (
+        <ReadOnlyMode
+          surah={selectedSurah}
+          translations={translations}
+          isArabicOnly={isArabicOnly}
+          lang={lang}
+          onBack={handleNewSurah}
+          isChildMode={isChildMode}
+          t={t}
+        />
       )}
 
       {/* ═══ AYA LIST + ACTIVE AYA ═══ */}

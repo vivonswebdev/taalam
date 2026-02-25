@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
+import { useTranslationPreference, AVAILABLE_EDITIONS } from "@/hooks/useTranslationPreference";
 import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
@@ -12,6 +13,7 @@ export default function Settings() {
   const { resetProgress } = useProgress();
   const { isChildMode, toggleChildMode, stickers, resetStickers } = useChildMode();
   const { t, lang, setLang } = useLanguage();
+  const { isAuto, setAuto, manualEditionId, setManualEdition, resolvedEditionId } = useTranslationPreference();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showDedication, setShowDedication] = useState(false);
@@ -77,7 +79,44 @@ export default function Settings() {
           </div>
         </motion.div>
 
-        {/* Reset */}
+
+        {/* Translation preference */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          {/* Auto toggle */}
+          <button onClick={() => setAuto(!isAuto)} className="w-full flex items-center gap-4 p-4 text-left border-b border-border">
+            <Globe size={20} className={isAuto ? "text-primary" : "text-muted-foreground"} />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">{t("settings.translationAuto")}</p>
+              <p className="text-xs text-muted-foreground">{t("settings.translationAutoDesc")}</p>
+            </div>
+            <div className={`w-12 h-7 rounded-full transition-colors relative ${isAuto ? "bg-success" : "bg-muted"}`}>
+              <motion.div animate={{ x: isAuto ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
+            </div>
+          </button>
+
+          {/* Manual edition selector */}
+          {!isAuto && (
+            <div className="p-4">
+              <p className="text-xs font-medium text-card-foreground mb-2 flex items-center gap-1.5">
+                <Languages size={14} />
+                {t("settings.translationManual")}
+              </p>
+              <div className="space-y-1.5">
+                {AVAILABLE_EDITIONS.map((ed) => (
+                  <button
+                    key={ed.id}
+                    onClick={() => setManualEdition(ed.id)}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border-2 transition-colors text-xs font-medium ${
+                      resolvedEditionId === ed.id ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-accent/50 text-foreground"
+                    }`}
+                  >
+                    {ed.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </motion.div>
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <button onClick={() => setShowConfirm(true)} className="w-full flex items-center gap-4 p-4 text-left">
             <RotateCcw size={20} className="text-destructive" />
