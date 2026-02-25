@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Bookmark, BookmarkCheck, Settings2,
   ChevronDown, Moon, Gauge, BookOpen, Palette,
+  Play, Pause, SkipForward, SkipBack, ChevronsLeft, ChevronsRight, Repeat,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import AudioPlayer from "@/components/AudioPlayer";
 import TajwidBar from "@/components/TajwidBar";
 import TajwidAyahText from "@/components/TajwidAyahText";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
@@ -14,6 +14,7 @@ import { useBookmarks } from "@/hooks/useBookmarks";
 import TafsirSheet from "@/components/TafsirSheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
+import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import type { Surah } from "@/data/surahs";
 
 interface MushafReaderProps {
@@ -38,16 +39,20 @@ export default function MushafReader({
   onRequestPrevSurah,
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
+  const globalAudio = useGlobalAudio();
 
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
   const [darkOverride, setDarkOverride] = useState(false);
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
-  const [currentAyah, setCurrentAyah] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const [tajwidEnabled, setTajwidEnabled] = useState(true);
   const [activeWordIndex, setActiveWordIndex] = useState(-1);
+
+  // Derive playing state from global audio
+  const isGlobalPlaying = globalAudio.state.surahNumber === surah.number && globalAudio.state.isPlaying;
+  const currentAyah = globalAudio.state.surahNumber === surah.number ? globalAudio.state.currentAyah : 0;
+  const playing = isGlobalPlaying;
 
   // Tafsir state
   const [tafsirAyahIndex, setTafsirAyahIndex] = useState<number | null>(null);
@@ -57,7 +62,14 @@ export default function MushafReader({
   const scrollAnimRef = useRef<number | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ayahRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-  const jumpToAyahRef = useRef<((index: number) => void) | null>(null);
+
+  // Auto-start playback on mount
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0);
+  }, []);
 
   // Resume reading position on mount
   useEffect(() => {
@@ -242,42 +254,70 @@ export default function MushafReader({
         )}
       </AnimatePresence>
 
-      {/* Audio Player */}
+      {/* Inline Player Controls (uses global audio) */}
       <div className="px-4 py-2 shrink-0">
-        <AudioPlayer
-          surahNumber={surah.number}
-          surahName={surah.name}
-          surahNameArabic={surah.nameArabic}
-          totalAyahs={surah.ayahs.length}
-          onAyahChange={setCurrentAyah}
-          onPlayStateChange={setPlaying}
-          jumpToAyahRef={jumpToAyahRef}
-          onRequestNextSurah={onRequestNextSurah}
-          onRequestPrevSurah={onRequestPrevSurah}
-          isCurrentAyahBookmarked={surah.ayahs[currentAyah] ? isBookmarked(surah.number, surah.ayahs[currentAyah].number) : false}
-          onToggleBookmark={(ayahIdx) => {
-            const ayah = surah.ayahs[ayahIdx];
-            if (!ayah) return;
-            if (isBookmarked(surah.number, ayah.number)) {
-              removeBookmark(surah.number, ayah.number);
-            } else {
-              addBookmark({
-                surahNumber: surah.number, surahName: surah.name,
-                surahNameArabic: surah.nameArabic, ayahNumber: ayah.number,
-                arabicText: ayah.arabic.slice(0, 80),
-              });
-            }
-          }}
-          onGoToBookmark={() => {
-            if (readingPosition && readingPosition.surahNumber === surah.number) {
-              const el = ayahRefs.current.get(readingPosition.ayahIndex);
-              el?.scrollIntoView({ behavior: "smooth", block: "center" });
-              jumpToAyahRef.current?.(readingPosition.ayahIndex);
-            }
-          }}
-          hasBookmark={!!readingPosition && readingPosition.surahNumber === surah.number}
-          compact
-        />
+        <div className="bg-card border border-border rounded-2xl p-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <button onClick={onRequestPrevSurah} className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+              <ChevronsLeft size={14} />
+            </button>
+            <button onClick={() => globalAudio.prevAyah()} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
+              <SkipBack size={14} />
+            </button>
+            <button
+              onClick={() => {
+                if (playing) {
+                  globalAudio.pause();
+                } else if (globalAudio.state.surahNumber === surah.number) {
+                  globalAudio.resume();
+                } else {
+                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0);
+                }
+              }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playing ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+            >
+              {playing ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
+            </button>
+            <button onClick={() => globalAudio.nextAyah()} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
+              <SkipForward size={14} />
+            </button>
+            <button onClick={onRequestNextSurah} className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+              <ChevronsRight size={14} />
+            </button>
+            <div className="flex-1" />
+            <button
+              onClick={() => {
+                const ayah = surah.ayahs[currentAyah];
+                if (!ayah) return;
+                if (isBookmarked(surah.number, ayah.number)) {
+                  removeBookmark(surah.number, ayah.number);
+                } else {
+                  addBookmark({ surahNumber: surah.number, surahName: surah.name, surahNameArabic: surah.nameArabic, ayahNumber: ayah.number, arabicText: ayah.arabic.slice(0, 80) });
+                }
+              }}
+              className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                surah.ayahs[currentAyah] && isBookmarked(surah.number, surah.ayahs[currentAyah].number) ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {surah.ayahs[currentAyah] && isBookmarked(surah.number, surah.ayahs[currentAyah].number) ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+            </button>
+            <button
+              onClick={() => globalAudio.setContinuousMode(!globalAudio.state.continuousMode)}
+              className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                globalAudio.state.continuousMode ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              <Repeat size={14} />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground shrink-0">{currentAyah + 1}/{surah.ayahs.length}</span>
+            <div className="flex-1 h-1.5 bg-muted rounded-full">
+              <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${globalAudio.state.progress}%` }} />
+            </div>
+            <span className="text-[10px] text-muted-foreground shrink-0">{surah.nameArabic}</span>
+          </div>
+        </div>
       </div>
 
       {/* Tajwid Bar */}
@@ -359,7 +399,7 @@ export default function MushafReader({
                 arabicText={ayah.arabic}
                 activeWordIndex={isActive ? activeWordIndex : -1}
                 onWordTap={(wi) => {
-                  setCurrentAyah(i);
+                  globalAudio.jumpToAyah(i);
                   setActiveWordIndex(wi);
                 }}
                 tajwidEnabled={tajwidEnabled}
