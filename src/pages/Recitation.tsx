@@ -68,7 +68,9 @@ export default function Recitation() {
   const [recitingAyah, setRecitingAyah] = useState(0);
   const [currentTranscript, setCurrentTranscript] = useState("");
   const [ayahResults, setAyahResults] = useState<AyahResult[]>([]);
-  const [showArabic, setShowArabic] = useState(true); // Arabic visible before mic
+  const [showArabic, setShowArabic] = useState(true);
+  const [showAyahResult, setShowAyahResult] = useState(false);
+  const [lastAyahResult, setLastAyahResult] = useState<AyahResult | null>(null);
 
   // Live word feedback for current ayah only
   const currentAyahTexts = selectedSurah && phase === "recite"
@@ -160,34 +162,44 @@ export default function Recitation() {
     voice.stop();
     const ayah = selectedSurah.ayahs[recitingAyah];
     const { results, score } = compareTexts(ayah.arabic, currentTranscript);
-    const newResults = [...ayahResults, { ayahIndex: recitingAyah, results, score }];
-    setAyahResults(newResults);
-
-    if (recitingAyah < selectedSurah.ayahs.length - 1) {
-      setRecitingAyah((p) => p + 1);
-      setCurrentTranscript("");
-      setShowArabic(true);
-    } else {
-      finishRecitation(newResults);
-    }
-  }, [selectedSurah, recitingAyah, currentTranscript, ayahResults, voice]);
+    const result: AyahResult = { ayahIndex: recitingAyah, results, score };
+    setAyahResults((prev) => [...prev, result]);
+    setLastAyahResult(result);
+    setTimeout(() => setShowAyahResult(true), 500);
+  }, [selectedSurah, recitingAyah, currentTranscript, voice]);
 
   const skipAyah = useCallback(() => {
     if (!selectedSurah) return;
     voice.stop();
     const ayah = selectedSurah.ayahs[recitingAyah];
     const { results, score } = compareTexts(ayah.arabic, currentTranscript || " ");
-    const newResults = [...ayahResults, { ayahIndex: recitingAyah, results, score }];
-    setAyahResults(newResults);
+    const result: AyahResult = { ayahIndex: recitingAyah, results, score };
+    setAyahResults((prev) => [...prev, result]);
+    setLastAyahResult(result);
+    setTimeout(() => setShowAyahResult(true), 500);
+  }, [selectedSurah, recitingAyah, currentTranscript, voice]);
 
+  const restartAyah = useCallback(() => {
+    setShowAyahResult(false);
+    setLastAyahResult(null);
+    // Remove last result since we're redoing
+    setAyahResults((prev) => prev.filter((r) => r.ayahIndex !== recitingAyah));
+    setCurrentTranscript("");
+    setShowArabic(true);
+  }, [recitingAyah]);
+
+  const goNextAyah = useCallback(() => {
+    if (!selectedSurah) return;
+    setShowAyahResult(false);
+    setLastAyahResult(null);
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
       setRecitingAyah((p) => p + 1);
       setCurrentTranscript("");
       setShowArabic(true);
     } else {
-      finishRecitation(newResults);
+      finishRecitation(ayahResults);
     }
-  }, [selectedSurah, recitingAyah, currentTranscript, ayahResults, voice]);
+  }, [selectedSurah, recitingAyah, ayahResults]);
 
   const finishRecitation = (results: AyahResult[]) => {
     if (!selectedSurah) return;
@@ -612,6 +624,81 @@ export default function Recitation() {
                 </button>
               </div>
             </motion.div>
+          </AnimatePresence>
+
+          {/* Ayah Result Popup */}
+          <AnimatePresence>
+            {showAyahResult && lastAyahResult && selectedSurah && (() => {
+              const greens = lastAyahResult.results.filter((r) => r.correct).length;
+              const reds = lastAyahResult.results.filter((r) => !r.correct).length;
+              const wrongWords = lastAyahResult.results.filter((r) => !r.correct).map((r) => r.word);
+              const isLast = recitingAyah >= selectedSurah.ayahs.length - 1;
+              return (
+                <motion.div
+                  key="ayah-popup"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+                >
+                  <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" />
+                  <motion.div
+                    initial={{ scale: 0.9, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    exit={{ scale: 0.9, y: 20 }}
+                    className="relative bg-card border border-border rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4"
+                  >
+                    {/* Score header */}
+                    <div className="text-center">
+                      <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-2 ${
+                        lastAyahResult.score >= 90 ? "bg-success/15" : lastAyahResult.score >= 70 ? "bg-primary/15" : lastAyahResult.score >= 50 ? "bg-warning/15" : "bg-destructive/15"
+                      }`}>
+                        <span className={`text-2xl font-bold ${
+                          lastAyahResult.score >= 90 ? "text-success" : lastAyahResult.score >= 70 ? "text-primary" : lastAyahResult.score >= 50 ? "text-warning" : "text-destructive"
+                        }`}>
+                          {lastAyahResult.score}%
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground">
+                        📊 Ayah {recitingAyah + 1}/{selectedSurah.ayahs.length}
+                      </p>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex justify-center gap-4 text-xs">
+                      <span className="flex items-center gap-1 text-success font-semibold">✅ {greens}</span>
+                      <span className="flex items-center gap-1 text-destructive font-semibold">❌ {reds}</span>
+                    </div>
+
+                    {/* Wrong words focus */}
+                    {wrongWords.length > 0 && (
+                      <div className="bg-destructive/5 border border-destructive/10 rounded-xl p-3 text-center" dir="rtl">
+                        <p className="text-[10px] text-muted-foreground mb-1">À retravailler :</p>
+                        <p className="font-arabic text-lg text-destructive">{wrongWords.join(" · ")}</p>
+                      </div>
+                    )}
+
+                    {/* Buttons */}
+                    <div className="flex gap-3">
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={restartAyah}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-muted text-foreground font-semibold text-sm"
+                      >
+                        🎤 Refaire
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={goNextAyah}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm"
+                      >
+                        {isLast ? "📊 Résultats" : "▶️ Suivant"}
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              );
+            })()}
           </AnimatePresence>
         </div>
       )}
