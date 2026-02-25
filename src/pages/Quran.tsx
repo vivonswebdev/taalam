@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle,
+  Repeat, AlertCircle, BookOpen, PenTool,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -14,9 +14,11 @@ import { useLanguage, QURAN_TRANSLATION_IDS } from "@/hooks/useLanguage";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DictationMode from "@/components/DictationMode";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
+type RecitationMode = "aya" | "dictation";
 
 interface AyaScore {
   ayaIndex: number;
@@ -36,6 +38,7 @@ export default function Quran() {
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [recitationMode, setRecitationMode] = useState<RecitationMode>("aya");
 
   // Aya-by-aya state
   const [currentAya, setCurrentAya] = useState(0);
@@ -452,11 +455,45 @@ export default function Quran() {
               )}
             </AnimatePresence>
           </div>
+
+          {/* Mode toggle: Aya by aya / Full surah dictation */}
+          <div>
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("dictation.title")}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setRecitationMode("aya")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  recitationMode === "aya" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}>
+                <BookOpen size={16} />
+                {t("dictation.modeAya")}
+              </button>
+              <button
+                onClick={() => setRecitationMode("dictation")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                  recitationMode === "dictation" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}>
+                <PenTool size={16} />
+                {t("dictation.modeSurah")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DICTATION MODE ═══ */}
+      {selectedSurah && recitationMode === "dictation" && !surahFinished && (
+        <div className="px-6">
+          <DictationMode
+            surah={selectedSurah}
+            onBack={handleNewSurah}
+            isChildMode={isChildMode}
+          />
         </div>
       )}
 
       {/* ═══ AYA LIST + ACTIVE AYA ═══ */}
-      {selectedSurah && !surahFinished && (
+      {selectedSurah && recitationMode === "aya" && !surahFinished && (
         <div className="px-6 space-y-4">
           {/* Surah header */}
           <div className="text-center mb-2">
@@ -782,7 +819,7 @@ export default function Quran() {
       )}
 
       {/* ═══ BOTTOM CONTROLS BAR ═══ */}
-      {selectedSurah && !surahFinished && (
+      {selectedSurah && recitationMode === "aya" && !surahFinished && (
         <div className="fixed bottom-16 left-0 right-0 z-40">
           <div className="max-w-lg mx-auto px-4">
             <motion.div
