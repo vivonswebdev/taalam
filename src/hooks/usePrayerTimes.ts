@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { PrayerSettings } from "@/hooks/usePrayerSettings";
+import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
 export interface PrayerTimes {
   Fajr: string;
@@ -39,7 +40,7 @@ function formatCountdown(ms: number): string {
   return h > 0 ? `${h}h ${String(m).padStart(2, "0")}m` : `${m}m`;
 }
 
-export function usePrayerTimes(prayerSettings?: PrayerSettings) {
+export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (city: string, country: string, lat: number, lng: number) => void) {
   const [state, setState] = useState<PrayerTimesState>({
     times: null,
     loading: true,
@@ -49,36 +50,7 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings) {
     cityName: null,
   });
 
-  const fetchTimesByCity = useCallback(async (city: string, country: string, method: number, school: number, latAdj: number) => {
-    try {
-      setState((s) => ({ ...s, loading: true, error: null }));
-      const today = new Date();
-      const dd = String(today.getDate()).padStart(2, "0");
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const yyyy = today.getFullYear();
-      const params = new URLSearchParams({
-        city,
-        country: country || "",
-        method: String(method),
-        school: String(school),
-        latitudeAdjustmentMethod: String(latAdj),
-      });
-      const res = await fetch(
-        `https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?${params}`
-      );
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
-      const t = data.data.timings;
-      const times: PrayerTimes = {
-        Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
-      };
-      setState((s) => ({ ...s, times, loading: false, cityName: city }));
-    } catch (e: any) {
-      setState((s) => ({ ...s, loading: false, error: e.message }));
-    }
-  }, []);
-
-  const fetchTimesByCoords = useCallback(async (lat: number, lng: number, method: number, school: number, latAdj: number) => {
+  const fetchTimesByCoords = useCallback(async (lat: number, lng: number, method: number, school: number, latAdj: number, knownCity?: string) => {
     try {
       setState((s) => ({ ...s, loading: true, error: null }));
       const today = new Date();
@@ -94,7 +66,7 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings) {
       const times: PrayerTimes = {
         Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
       };
-      setState((s) => ({ ...s, times, loading: false, location: { lat, lng }, cityName: null }));
+      setState((s) => ({ ...s, times, loading: false, location: { lat, lng }, cityName: knownCity || s.cityName }));
     } catch (e: any) {
       setState((s) => ({ ...s, loading: false, error: e.message }));
     }
@@ -106,21 +78,67 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings) {
     const school = prayerSettings?.school ?? 0;
     const latAdj = prayerSettings?.latitudeAdjustmentMethod ?? 3;
 
-    if (prayerSettings?.source === "city" && prayerSettings.city.trim()) {
-      fetchTimesByCity(prayerSettings.city, prayerSettings.country, method, school, latAdj);
-    } else {
-      // GPS mode
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => fetchTimesByCoords(pos.coords.latitude, pos.coords.longitude, method, school, latAdj),
-          () => fetchTimesByCoords(DEFAULT_LAT, DEFAULT_LNG, method, school, latAdj),
-          { timeout: 5000 }
-        );
-      } else {
-        fetchTimesByCoords(DEFAULT_LAT, DEFAULT_LNG, method, school, latAdj);
-      }
+    // If we have stored coords (from auto-detect or manual selection), use them
+    if (prayerSettings?.lat && prayerSettings?.lng) {
+      const cityDisplay = prayerSettings.city && prayerSettings.country
+        ? `${prayerSettings.city}, ${prayerSettings.country}`
+        : prayerSettings.city || null;
+      fetchTimesByCoords(prayerSettings.lat, prayerSettings.lng, method, school, latAdj, cityDisplay);
+      return;
     }
-  }, [prayerSettings?.source, prayerSettings?.city, prayerSettings?.country, prayerSettings?.method, prayerSettings?.school, prayerSettings?.latitudeAdjustmentMethod, fetchTimesByCity, fetchTimesByCoords]);
+
+    // Legacy city mode (no coords stored)
+    if (prayerSettings?.source === "city" && prayerSettings.city.trim()) {
+      // Use AlAdhan city endpoint as fallback
+      const fetchByCity = async () => {
+        try {
+          setState((s) => ({ ...s, loading: true, error: null }));
+          const today = new Date();
+          const dd = String(today.getDate()).padStart(2, "0");
+          const mm = String(today.getMonth() + 1).padStart(2, "0");
+          const yyyy = today.getFullYear();
+          const params = new URLSearchParams({
+            city: prayerSettings.city,
+            country: prayerSettings.country || "",
+            method: String(method),
+            school: String(school),
+            latitudeAdjustmentMethod: String(latAdj),
+          });
+          const res = await fetch(`https://api.aladhan.com/v1/timingsByCity/${dd}-${mm}-${yyyy}?${params}`);
+          if (!res.ok) throw new Error("API error");
+          const data = await res.json();
+          const t = data.data.timings;
+          const times: PrayerTimes = {
+            Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
+          };
+          setState((s) => ({ ...s, times, loading: false, cityName: prayerSettings.city }));
+        } catch (e: any) {
+          setState((s) => ({ ...s, loading: false, error: e.message }));
+        }
+      };
+      fetchByCity();
+      return;
+    }
+
+    // GPS mode — auto-detect city
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+          // Reverse geocode to get city name
+          const geo = await reverseGeocode(latitude, longitude);
+          if (geo && onAutoDetect) {
+            onAutoDetect(geo.city, geo.country, geo.lat, geo.lng);
+          }
+          fetchTimesByCoords(latitude, longitude, method, school, latAdj, geo?.displayName || null);
+        },
+        () => fetchTimesByCoords(DEFAULT_LAT, DEFAULT_LNG, method, school, latAdj, "Bruxelles, Belgique"),
+        { timeout: 5000 }
+      );
+    } else {
+      fetchTimesByCoords(DEFAULT_LAT, DEFAULT_LNG, method, school, latAdj, "Bruxelles, Belgique");
+    }
+  }, [prayerSettings?.source, prayerSettings?.city, prayerSettings?.country, prayerSettings?.method, prayerSettings?.school, prayerSettings?.latitudeAdjustmentMethod, prayerSettings?.lat, prayerSettings?.lng, fetchTimesByCoords, onAutoDetect]);
 
   // Update next prayer countdown every 30s
   useEffect(() => {

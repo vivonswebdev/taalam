@@ -705,6 +705,17 @@ const translations = {
     fr: "Édition de traduction", en: "Translation edition", nl: "Vertalingseditie", ar: "إصدار الترجمة",
   },
 
+  // City detection
+  "prayers.detectCity": {
+    fr: "Détecter ma ville", en: "Detect my city", nl: "Detecteer mijn stad", ar: "اكتشف مدينتي",
+  },
+  "prayers.changeCity": {
+    fr: "Changer", en: "Change", nl: "Wijzigen", ar: "تغيير",
+  },
+  "prayers.noCity": {
+    fr: "Aucune ville définie", en: "No city set", nl: "Geen stad ingesteld", ar: "لم يتم تحديد مدينة",
+  },
+
   // Read-only mode
   "quran.readOnly": {
     fr: "Lecture seule", en: "Read only", nl: "Alleen lezen", ar: "قراءة فقط",

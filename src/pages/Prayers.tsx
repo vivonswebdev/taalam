@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
@@ -6,7 +7,8 @@ import { usePrayerNotifications } from "@/hooks/usePrayerNotifications";
 import { useQibla } from "@/hooks/useQibla";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useNavigate } from "react-router-dom";
-import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle } from "lucide-react";
+import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation } from "lucide-react";
+import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
 const PRAYER_ICONS: Record<string, string> = {
   Fajr: "🌅",
@@ -21,14 +23,42 @@ const PRAYER_NAMES_LIST = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
 export default function Prayers() {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { settings } = usePrayerSettings();
-  const { times, loading, nextPrayer, cityName } = usePrayerTimes(settings);
-  const { needleRotation, permissionGranted, requestPermission, qiblaAngle } = useQibla();
+  const { settings, updateSettings } = usePrayerSettings();
   const { isChildMode } = useChildMode();
 
-  const displayCity = cityName || (settings.source === "city" && settings.city ? settings.city : "GPS");
+  const handleAutoDetect = useCallback((city: string, country: string, lat: number, lng: number) => {
+    if (!settings.locationDetected) {
+      updateSettings({ city, country, lat, lng, source: "city", locationDetected: true });
+    }
+  }, [settings.locationDetected, updateSettings]);
 
-  const notif = usePrayerNotifications(times, displayCity !== "GPS" ? displayCity : undefined);
+  const { times, loading, nextPrayer, cityName } = usePrayerTimes(settings, handleAutoDetect);
+  const { needleRotation, permissionGranted, requestPermission, qiblaAngle } = useQibla();
+
+  const displayCity = cityName || (settings.city && settings.country ? `${settings.city}, ${settings.country}` : settings.city || null);
+
+  const notif = usePrayerNotifications(times, displayCity || undefined);
+
+  const handleDetectCity = () => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const geo = await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+        if (geo) {
+          updateSettings({
+            city: geo.city,
+            country: geo.country,
+            lat: geo.lat,
+            lng: geo.lng,
+            source: "city",
+            locationDetected: true,
+          });
+        }
+      },
+      () => {},
+      { timeout: 8000 }
+    );
+  };
 
   return (
     <div className="min-h-screen pb-24">
@@ -47,10 +77,31 @@ export default function Prayers() {
 
       <div className="px-6 space-y-5">
         {/* Location badge */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <MapPin size={12} />
-          <span>{t("prayers.horairesPour")} <strong className="text-foreground">{displayCity}</strong></span>
-        </div>
+        {displayCity ? (
+          <div className="flex items-center justify-between bg-card border border-border rounded-xl px-3 py-2.5">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <MapPin size={12} className="text-primary" />
+              <span>{t("prayers.horairesPour")} <strong className="text-foreground">{displayCity}</strong></span>
+            </div>
+            <button
+              onClick={() => navigate("/prayer-settings?focus=city")}
+              className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full"
+            >
+              {t("prayers.changeCity")}
+            </button>
+          </div>
+        ) : (
+          <div className="bg-card border border-border rounded-xl px-3 py-3 flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">{t("prayers.noCity")}</span>
+            <button
+              onClick={handleDetectCity}
+              className="flex items-center gap-1 text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full"
+            >
+              <Navigation size={12} />
+              {t("prayers.detectCity")}
+            </button>
+          </div>
+        )}
 
         {/* Next Prayer Countdown */}
         {nextPrayer && (
@@ -93,7 +144,6 @@ export default function Prayers() {
             <p className="text-xs text-destructive">{t("prayers.notif.denied")}</p>
           ) : (
             <>
-              {/* Toggle global */}
               <button
                 onClick={() => {
                   if (!notif.config.enabled && notif.permissionState !== "granted") {
