@@ -32,8 +32,8 @@ interface GlobalAudioContextType {
   setContinuousMode: (v: boolean) => void;
   /** Call this from any other audio source to stop global player */
   requestExclusiveAudio: () => void;
-  /** Subscribe to ayah changes */
-  onAyahChange: React.MutableRefObject<((ayah: number) => void) | null>;
+  /** Subscribe to ayah changes (surahNumber, ayahIndex) */
+  onAyahChange: React.MutableRefObject<((surahNumber: number, ayah: number) => void) | null>;
 }
 
 const defaultState: GlobalAudioState = {
@@ -61,7 +61,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const isPlayingRef = useRef(false);
   const surahNameRef = useRef("");
   const surahNameArabicRef = useRef("");
-  const onAyahChange = useRef<((ayah: number) => void) | null>(null);
+  const onAyahChange = useRef<((surahNumber: number, ayah: number) => void) | null>(null);
 
   const clearInterval_ = useCallback(() => {
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
@@ -145,7 +145,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     currentAyahRef.current = index;
 
     setState(prev => ({ ...prev, currentAyah: index, isPlaying: true }));
-    onAyahChange.current?.(index);
+    onAyahChange.current?.(surahNumberRef.current, index);
 
     audio.onended = () => playAyahInternal(index + 1, urls);
     audio.onerror = () => playAyahInternal(index + 1, urls);
@@ -212,7 +212,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     } else {
       currentAyahRef.current = next;
       setState(prev => ({ ...prev, currentAyah: next }));
-      onAyahChange.current?.(next);
+      onAyahChange.current?.(surahNumberRef.current, next);
     }
   }, [playAyahInternal]);
 
@@ -225,7 +225,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     } else {
       currentAyahRef.current = prevIdx;
       setState(s => ({ ...s, currentAyah: prevIdx }));
-      onAyahChange.current?.(prevIdx);
+      onAyahChange.current?.(surahNumberRef.current, prevIdx);
     }
   }, [playAyahInternal]);
 
@@ -262,6 +262,22 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       pause();
     }
   }, [pause]);
+
+  // MediaSession API for background audio control
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return;
+    if (state.isPlaying) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `Ayah ${state.currentAyah + 1}`,
+        artist: state.surahName,
+        album: 'Quran',
+      });
+      navigator.mediaSession.setActionHandler('play', resume);
+      navigator.mediaSession.setActionHandler('pause', pause);
+      navigator.mediaSession.setActionHandler('nexttrack', nextAyah);
+      navigator.mediaSession.setActionHandler('previoustrack', prevAyah);
+    }
+  }, [state.isPlaying, state.currentAyah, state.surahName, resume, pause, nextAyah, prevAyah]);
 
   // Cleanup on unmount
   useEffect(() => {
