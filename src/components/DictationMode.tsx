@@ -169,24 +169,24 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
           return (
             <span key={i} className="inline">
               {isRecording ? (
-                // During recording: show all words, colored live as spoken
+                // During recording: hide pending words, reveal only as spoken
                 <span className="arabic-text text-xl leading-[3]">
                   {words.map((word, wi) => {
                     const lw = ayahLiveWords[wi];
                     const status = lw?.status || "pending";
-                    const colorClass = getLiveWordColor(status);
                     const isPending = status === "pending";
+                    const colorClass = getLiveWordColor(status);
                     return (
                       <motion.span
                         key={wi}
                         initial={!isPending ? { scale: 1.1 } : false}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${colorClass} ${
-                          isPending ? "opacity-40" : "opacity-100"
+                        className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${
+                          isPending ? "text-transparent select-none" : colorClass
                         }`}
                       >
-                        {word}{" "}
+                        {isPending ? "████" : word}{" "}
                       </motion.span>
                     );
                   })}
