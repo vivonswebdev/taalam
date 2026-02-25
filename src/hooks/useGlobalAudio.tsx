@@ -295,10 +295,27 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   );
 }
 
+const noopRef = { current: null };
+const noopFn = () => {};
+const fallback: GlobalAudioContextType = {
+  state: defaultState,
+  play: noopFn as any,
+  pause: noopFn,
+  resume: noopFn,
+  stop: noopFn,
+  nextAyah: noopFn,
+  prevAyah: noopFn,
+  nextSurah: noopFn,
+  prevSurah: noopFn,
+  jumpToAyah: noopFn,
+  setContinuousMode: noopFn,
+  requestExclusiveAudio: noopFn,
+  onAyahChange: noopRef as any,
+};
+
 export function useGlobalAudio() {
   const ctx = useContext(GlobalAudioContext);
-  if (!ctx) throw new Error("useGlobalAudio must be inside GlobalAudioProvider");
-  return ctx;
+  return ctx ?? fallback;
 }
 
 /** Simple helper to fetch surah meta from API */
