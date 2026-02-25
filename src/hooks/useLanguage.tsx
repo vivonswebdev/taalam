@@ -944,6 +944,26 @@ const translations = {
   "backup.importSuccess": { fr: "✅ Données restaurées avec succès !", en: "✅ Data restored successfully!", nl: "✅ Gegevens succesvol hersteld!", ar: "✅ تمت استعادة البيانات بنجاح!" },
   "backup.importError": { fr: "❌ Fichier invalide", en: "❌ Invalid file", nl: "❌ Ongeldig bestand", ar: "❌ ملف غير صالح" },
   "backup.lastActivity": { fr: "Dernière activité", en: "Last activity", nl: "Laatste activiteit", ar: "آخر نشاط" },
+
+  // Classrooms
+  "classrooms.title": { fr: "Mes classes", en: "My Classes", nl: "Mijn klassen", ar: "فصولي" },
+  "classrooms.subtitle": { fr: "Gérez vos groupes d'élèves", en: "Manage your student groups", nl: "Beheer je leerlinggroepen", ar: "إدارة مجموعات الطلاب" },
+  "classrooms.create": { fr: "Créer une classe", en: "Create a class", nl: "Klas aanmaken", ar: "إنشاء فصل" },
+  "classrooms.namePlaceholder": { fr: "Nom de la classe (ex: Samedi 10h)", en: "Class name (e.g. Saturday 10am)", nl: "Klasnaam (bv. Zaterdag 10u)", ar: "اسم الفصل (مثال: السبت 10 صباحاً)" },
+  "classrooms.teacherPlaceholder": { fr: "Nom du professeur (optionnel)", en: "Teacher name (optional)", nl: "Naam leraar (optioneel)", ar: "اسم المعلم (اختياري)" },
+  "classrooms.cancel": { fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء" },
+  "classrooms.createBtn": { fr: "Créer", en: "Create", nl: "Aanmaken", ar: "إنشاء" },
+  "classrooms.empty": { fr: "Aucune classe créée", en: "No classes yet", nl: "Nog geen klassen", ar: "لا توجد فصول بعد" },
+  "classrooms.code": { fr: "Code", en: "Code", nl: "Code", ar: "الرمز" },
+  "classrooms.students": { fr: "Élèves", en: "Students", nl: "Leerlingen", ar: "الطلاب" },
+  "classrooms.viewDetail": { fr: "Voir la classe", en: "View class", nl: "Bekijk klas", ar: "عرض الفصل" },
+  "classrooms.addStudent": { fr: "Ajouter un élève", en: "Add student", nl: "Leerling toevoegen", ar: "إضافة طالب" },
+  "classrooms.noStudents": { fr: "Aucun élève dans cette classe", en: "No students in this class", nl: "Geen leerlingen in deze klas", ar: "لا يوجد طلاب في هذا الفصل" },
+  "classrooms.mastery": { fr: "Maîtrise", en: "Mastery", nl: "Beheersing", ar: "الإتقان" },
+  "classrooms.viewChild": { fr: "Voir le profil", en: "View profile", nl: "Profiel bekijken", ar: "عرض الملف" },
+  "classrooms.notFound": { fr: "Classe introuvable", en: "Class not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },
+  "classrooms.homeTitle": { fr: "Mode Classe (Professeur)", en: "Classroom Mode (Teacher)", nl: "Klassenmodus (Leraar)", ar: "وضع الفصل (المعلم)" },
+  "classrooms.homeDesc": { fr: "Gérez vos classes et suivez les progrès", en: "Manage classes & track progress", nl: "Beheer klassen & volg voortgang", ar: "إدارة الفصول ومتابعة التقدم" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

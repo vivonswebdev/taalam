@@ -21,6 +21,8 @@ import ParentDashboard from "./pages/ParentDashboard";
 import ChildDetail from "./pages/ChildDetail";
 import ChildReport from "./pages/ChildReport";
 import Bookmarks from "./pages/Bookmarks";
+import Classrooms from "./pages/Classrooms";
+import ClassroomDetail from "./pages/ClassroomDetail";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 import DedicationPopup from "./components/DedicationPopup";
@@ -54,6 +56,8 @@ const App = () => (
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/parent" element={<ParentDashboard />} />
+              <Route path="/classrooms" element={<Classrooms />} />
+              <Route path="/classrooms/:classId" element={<ClassroomDetail />} />
               <Route path="/parent/child/:childId" element={<ChildDetail />} />
               <Route path="/parent/child/:childId/report" element={<ChildReport />} />
               <Route path="*" element={<NotFound />} />

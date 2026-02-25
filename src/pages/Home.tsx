@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Star, ArrowRight } from "lucide-react";
+import { BookOpen, Star, ArrowRight, GraduationCap } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useClassrooms } from "@/hooks/useClassrooms";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
@@ -14,6 +15,7 @@ export default function Home() {
   const { progress, getMasteredCount } = useProgress();
   const { t } = useLanguage();
   const xp = useXP();
+  const { classrooms } = useClassrooms();
   const mastered = getMasteredCount();
   const hasLevel = progress.level !== null;
 
@@ -109,6 +111,24 @@ export default function Home() {
             </button>
           </motion.div>
         )}
+
+        {/* Classroom Mode Card */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          onClick={() => navigate("/classrooms")}
+          className="w-full flex items-center gap-4 bg-card border border-border rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
+        >
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <GraduationCap size={24} className="text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-foreground">{t("classrooms.homeTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("classrooms.homeDesc")}</p>
+          </div>
+          <ArrowRight size={16} className="text-muted-foreground shrink-0" />
+        </motion.button>
       </div>
     </div>
   );

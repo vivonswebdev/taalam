@@ -8,6 +8,7 @@ import {
 import type { Surah } from "@/data/surahs";
 import { useHifzSession, type HifzMode, type ToleranceLevel, type WordStatus } from "@/hooks/useHifzSession";
 import { useVoiceRecognition } from "@/hooks/useVoiceRecognition";
+import ActiveChildBanner from "@/components/ActiveChildBanner";
 
 interface HifzControlProps {
   surah: Surah;
@@ -141,6 +142,16 @@ export default function HifzControl({ surah, onBack, isChildMode, t }: HifzContr
   if (screen === "setup") {
     return (
       <div className="px-6 space-y-5 pb-8">
+        {/* Active child banner */}
+        <div className="pt-2">
+          <ActiveChildBanner
+            mode="control_hifz"
+            surahName={surah.name}
+            ayahFrom={ayahStart + 1}
+            ayahTo={ayahEnd + 1}
+          />
+        </div>
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="w-9 h-9 rounded-full bg-muted text-foreground flex items-center justify-center">
