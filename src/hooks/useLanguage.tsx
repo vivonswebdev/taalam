@@ -530,7 +530,13 @@ const translations = {
     fr: "Activer la boussole", en: "Enable compass", nl: "Kompas inschakelen", ar: "تفعيل البوصلة",
   },
   "prayers.fromNorth": {
-    fr: "depuis le Nord", en: "from North", nl: "vanaf het Noorden", ar: "من الشمال",
+    fr: "depuis le Nord", en: "from North", nl: "vanaf het Noorden", ar: "من الشمال", tr: "Kuzeyden", ur: "شمال سے",
+  },
+  "prayers.fromQibla": {
+    fr: "de la Qibla", en: "from Qibla", nl: "van Qibla", ar: "عن القبلة", tr: "Kıbleden", ur: "قبلہ سے",
+  },
+  "prayers.qiblaFound": {
+    fr: "Qibla trouvée ! ✅", en: "Qibla found! ✅", nl: "Qibla gevonden! ✅", ar: "تم العثور على القبلة! ✅", tr: "Kıble bulundu! ✅", ur: "قبلہ مل گیا! ✅",
   },
   "prayers.times": {
     fr: "Horaires du jour", en: "Today's times", nl: "Tijden vandaag", ar: "مواعيد اليوم",

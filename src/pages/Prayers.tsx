@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
@@ -6,8 +6,9 @@ import { usePrayerSettings } from "@/hooks/usePrayerSettings";
 import { usePrayerNotifications } from "@/hooks/usePrayerNotifications";
 import { useQibla } from "@/hooks/useQibla";
 import { useChildMode } from "@/hooks/useChildMode";
+import { useSound } from "@/hooks/useSound";
 import { useNavigate } from "react-router-dom";
-import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation } from "lucide-react";
+import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation, CheckCircle2 } from "lucide-react";
 import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
 const PRAYER_ICONS: Record<string, string> = {
@@ -33,7 +34,20 @@ export default function Prayers() {
   }, [settings.locationDetected, updateSettings]);
 
   const { times, loading, nextPrayer, cityName } = usePrayerTimes(settings, handleAutoDetect);
-  const { needleRotation, permissionGranted, requestPermission, qiblaAngle } = useQibla();
+  const { needleRotation, permissionGranted, requestPermission, qiblaAngle, qiblaDelta, isAligned } = useQibla();
+  const { play, vibrate } = useSound();
+  const alignedRef = useRef(false);
+
+  // Sound + haptic when Qibla found
+  useEffect(() => {
+    if (isAligned && !alignedRef.current) {
+      alignedRef.current = true;
+      play("qiblaFound");
+      vibrate([50, 30, 50]);
+    } else if (!isAligned) {
+      alignedRef.current = false;
+    }
+  }, [isAligned, play, vibrate]);
 
   const displayCity = cityName || (settings.city && settings.country ? `${settings.city}, ${settings.country}` : settings.city || null);
 
@@ -222,7 +236,17 @@ export default function Prayers() {
               </button>
             ) : (
               <div className="relative w-48 h-48">
-                <div className="absolute inset-0 rounded-full border-4 border-muted" />
+                {/* Outer ring — glows green when aligned */}
+                <motion.div
+                  className="absolute inset-0 rounded-full border-4 transition-colors duration-500"
+                  animate={{
+                    borderColor: isAligned ? "hsl(var(--success))" : "hsl(var(--muted))",
+                    boxShadow: isAligned
+                      ? "0 0 20px hsl(var(--success) / 0.4), 0 0 40px hsl(var(--success) / 0.15)"
+                      : "none",
+                  }}
+                  transition={{ duration: 0.4 }}
+                />
                 <span className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold text-muted-foreground">N</span>
                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-xs font-bold text-muted-foreground">S</span>
                 <span className="absolute right-1 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">E</span>
@@ -233,18 +257,38 @@ export default function Prayers() {
                   transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 >
                   <div className="flex flex-col items-center">
-                    <div className="w-1 h-16 bg-primary rounded-full" />
+                    <div className={`w-1 h-16 rounded-full transition-colors duration-300 ${isAligned ? "bg-success" : "bg-primary"}`} />
                     <span className="text-lg mt-1">🕌</span>
                   </div>
                 </motion.div>
+                {/* Center dot — pulses when aligned */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-3 h-3 bg-secondary rounded-full" />
+                  <motion.div
+                    className={`rounded-full transition-colors duration-300 ${isAligned ? "bg-success" : "bg-secondary"}`}
+                    animate={isAligned ? { scale: [1, 1.6, 1], opacity: [1, 0.6, 1] } : { scale: 1 }}
+                    transition={isAligned ? { duration: 1.2, repeat: Infinity } : {}}
+                    style={{ width: 12, height: 12 }}
+                  />
                 </div>
               </div>
             )}
+            {/* Aligned badge */}
+            {isAligned && permissionGranted && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-1.5 mt-3 bg-success/15 text-success rounded-full px-4 py-1.5"
+              >
+                <CheckCircle2 size={14} />
+                <span className="text-xs font-bold">{t("prayers.qiblaFound")}</span>
+              </motion.div>
+            )}
             {qiblaAngle !== null && (
-              <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
-                <MapPin size={12} /> {Math.round(qiblaAngle)}° {t("prayers.fromNorth")}
+              <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                <MapPin size={12} />
+                {permissionGranted
+                  ? `${qiblaDelta.toFixed(1)}° ${t("prayers.fromQibla")}`
+                  : `${Math.round(qiblaAngle)}° ${t("prayers.fromNorth")}`}
               </p>
             )}
           </div>

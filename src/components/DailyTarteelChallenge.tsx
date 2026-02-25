@@ -6,6 +6,7 @@ import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceReco
 import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useXP } from "@/hooks/useXP";
+import { useSound } from "@/hooks/useSound";
 import Confetti from "@/components/Confetti";
 
 interface Props {
@@ -28,6 +29,7 @@ const getLiveWordColor = (status: LiveWordStatus) => {
 export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: Props) {
   const { t } = useLanguage();
   const xp = useXP();
+  const { play, vibrate } = useSound();
   const [phase, setPhase] = useState<Phase>("intro");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [finalScore, setFinalScore] = useState(0);
@@ -58,6 +60,10 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
 
     if (result.totalScore >= 70) {
       setShowConfetti(true);
+      play("sessionComplete");
+      vibrate([50, 30, 80]);
+    } else {
+      play("error");
     }
   }, [voice, allArabicTexts, liveTranscript]);
 

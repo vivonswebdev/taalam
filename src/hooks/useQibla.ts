@@ -83,5 +83,10 @@ export function useQibla() {
   // The rotation to apply to the compass needle: qibla direction - device heading
   const needleRotation = qiblaAngle !== null ? qiblaAngle - compassHeading : 0;
 
-  return { qiblaAngle, compassHeading, needleRotation, permissionGranted, requestPermission, error };
+  // How far off from Qibla (0 = perfect alignment)
+  const rawDelta = qiblaAngle !== null ? ((qiblaAngle - compassHeading) % 360 + 360) % 360 : 180;
+  const qiblaDelta = rawDelta > 180 ? 360 - rawDelta : rawDelta;
+  const isAligned = qiblaDelta <= 5;
+
+  return { qiblaAngle, compassHeading, needleRotation, qiblaDelta, isAligned, permissionGranted, requestPermission, error };
 }
