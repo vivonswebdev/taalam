@@ -1,13 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Bookmark, BookmarkCheck, Play, Pause, Settings2,
-  ChevronUp, ChevronDown, Moon, Sun, Gauge,
+  ArrowLeft, Bookmark, BookmarkCheck, Settings2,
+  ChevronDown, Moon, Gauge, BookOpen,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import AudioPlayer from "@/components/AudioPlayer";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import TafsirSheet from "@/components/TafsirSheet";
+import TafsirSurahView from "@/components/TafsirSurahView";
 import type { Surah } from "@/data/surahs";
 
 interface MushafReaderProps {
@@ -16,16 +18,8 @@ interface MushafReaderProps {
   isArabicOnly: boolean;
   onBack: () => void;
   t: (key: string) => string;
-  startAtAyah?: number; // 0-indexed
+  startAtAyah?: number;
 }
-
-const SCROLL_SPEEDS = [
-  { label: "0.5×", value: 0.5 },
-  { label: "1×", value: 1 },
-  { label: "1.5×", value: 1.5 },
-  { label: "2×", value: 2 },
-  { label: "3×", value: 3 },
-];
 
 export default function MushafReader({
   surah,
@@ -37,14 +31,17 @@ export default function MushafReader({
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
 
-  // Auto-scroll
   const [autoScroll, setAutoScroll] = useState(false);
-  const [scrollSpeed, setScrollSpeed] = useState(1); // px per frame multiplier
+  const [scrollSpeed, setScrollSpeed] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
   const [darkOverride, setDarkOverride] = useState(false);
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [currentAyah, setCurrentAyah] = useState(0);
   const [playing, setPlaying] = useState(false);
+
+  // Tafsir state
+  const [tafsirAyahIndex, setTafsirAyahIndex] = useState<number | null>(null);
+  const [showSurahTafsir, setShowSurahTafsir] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollAnimRef = useRef<number | null>(null);
@@ -56,13 +53,11 @@ export default function MushafReader({
   useEffect(() => {
     if (startAtAyah > 0) {
       setTimeout(() => {
-        const el = ayahRefs.current.get(startAtAyah);
-        el?.scrollIntoView({ behavior: "smooth", block: "start" });
+        ayahRefs.current.get(startAtAyah)?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
     } else if (readingPosition && readingPosition.surahNumber === surah.number) {
       setTimeout(() => {
-        const el = ayahRefs.current.get(readingPosition.ayahIndex);
-        el?.scrollIntoView({ behavior: "auto", block: "start" });
+        ayahRefs.current.get(readingPosition.ayahIndex)?.scrollIntoView({ behavior: "auto", block: "start" });
       }, 300);
     }
   }, []);
@@ -71,27 +66,18 @@ export default function MushafReader({
   useEffect(() => {
     return () => {
       if (containerRef.current) {
-        // Find the ayah closest to viewport top
         let closestIdx = 0;
         let closestDist = Infinity;
         ayahRefs.current.forEach((el, idx) => {
-          const rect = el.getBoundingClientRect();
-          const dist = Math.abs(rect.top);
-          if (dist < closestDist) {
-            closestDist = dist;
-            closestIdx = idx;
-          }
+          const dist = Math.abs(el.getBoundingClientRect().top);
+          if (dist < closestDist) { closestDist = dist; closestIdx = idx; }
         });
-        saveReadingPosition({
-          surahNumber: surah.number,
-          ayahIndex: closestIdx,
-          scrollY: 0,
-        });
+        saveReadingPosition({ surahNumber: surah.number, ayahIndex: closestIdx, scrollY: 0 });
       }
     };
   }, [surah.number, saveReadingPosition]);
 
-  // Auto-scroll animation
+  // Auto-scroll
   useEffect(() => {
     if (!autoScroll || !containerRef.current) {
       if (scrollAnimRef.current) cancelAnimationFrame(scrollAnimRef.current);
@@ -100,40 +86,27 @@ export default function MushafReader({
     const el = containerRef.current;
     const step = () => {
       el.scrollTop += 0.5 * scrollSpeed;
-      // Stop at bottom
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
-        setAutoScroll(false);
-        return;
-      }
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight) { setAutoScroll(false); return; }
       scrollAnimRef.current = requestAnimationFrame(step);
     };
     scrollAnimRef.current = requestAnimationFrame(step);
-    return () => {
-      if (scrollAnimRef.current) cancelAnimationFrame(scrollAnimRef.current);
-    };
+    return () => { if (scrollAnimRef.current) cancelAnimationFrame(scrollAnimRef.current); };
   }, [autoScroll, scrollSpeed]);
 
-  // Auto-scroll to current ayah when audio plays
+  // Scroll to current ayah during audio
   useEffect(() => {
     if (!playing) return;
-    const el = ayahRefs.current.get(currentAyah);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    ayahRefs.current.get(currentAyah)?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [currentAyah, playing]);
 
   // Dark mode override
   useEffect(() => {
-    if (darkOverride) {
-      document.documentElement.classList.add("dark");
-    }
-    return () => {
-      if (darkOverride) document.documentElement.classList.remove("dark");
-    };
+    if (darkOverride) document.documentElement.classList.add("dark");
+    return () => { if (darkOverride) document.documentElement.classList.remove("dark"); };
   }, [darkOverride]);
 
   const handleLongPressStart = useCallback((index: number) => {
-    longPressTimer.current = setTimeout(() => {
-      setLongPressAyah(index);
-    }, 500);
+    longPressTimer.current = setTimeout(() => setLongPressAyah(index), 500);
   }, []);
 
   const handleLongPressEnd = useCallback(() => {
@@ -147,10 +120,8 @@ export default function MushafReader({
         removeBookmark(surah.number, ayah.number);
       } else {
         addBookmark({
-          surahNumber: surah.number,
-          surahName: surah.name,
-          surahNameArabic: surah.nameArabic,
-          ayahNumber: ayah.number,
+          surahNumber: surah.number, surahName: surah.name,
+          surahNameArabic: surah.nameArabic, ayahNumber: ayah.number,
           arabicText: ayah.arabic.slice(0, 80),
         });
       }
@@ -160,9 +131,32 @@ export default function MushafReader({
   );
 
   const setAyahRef = useCallback((index: number, el: HTMLDivElement | null) => {
-    if (el) ayahRefs.current.set(index, el);
-    else ayahRefs.current.delete(index);
+    if (el) ayahRefs.current.set(index, el); else ayahRefs.current.delete(index);
   }, []);
+
+  const scrollToAyahIndex = useCallback((index: number) => {
+    const el = ayahRefs.current.get(index);
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  // Handle tap on ayah — short tap opens tafsir, distinguish from long press
+  const handleAyahTap = useCallback((index: number) => {
+    // If long press popup is showing, ignore
+    if (longPressAyah !== null) return;
+    setTafsirAyahIndex(index);
+  }, [longPressAyah]);
+
+  // Show surah tafsir view
+  if (showSurahTafsir) {
+    return (
+      <TafsirSurahView
+        surah={surah}
+        onBack={() => setShowSurahTafsir(false)}
+        onScrollToAyah={scrollToAyahIndex}
+        t={t}
+      />
+    );
+  }
 
   return (
     <div className={`flex flex-col h-[calc(100vh-4rem)] ${darkOverride ? "bg-black" : ""}`}>
@@ -175,6 +169,13 @@ export default function MushafReader({
           <p className="font-arabic text-lg text-primary truncate">{surah.nameArabic}</p>
           <p className="text-[10px] text-muted-foreground">{surah.name} · {surah.versesCount} {t("detail.verses")}</p>
         </div>
+        <button
+          onClick={() => setShowSurahTafsir(true)}
+          className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+          title={t("tafsir.surahTafsir")}
+        >
+          <BookOpen size={16} className="text-primary" />
+        </button>
         <button onClick={() => setShowSettings(!showSettings)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <Settings2 size={18} />
         </button>
@@ -190,7 +191,6 @@ export default function MushafReader({
             className="overflow-hidden border-b border-border bg-card"
           >
             <div className="px-4 py-3 space-y-4">
-              {/* Auto-scroll */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ChevronDown size={14} className="text-muted-foreground" />
@@ -198,8 +198,6 @@ export default function MushafReader({
                 </div>
                 <Switch checked={autoScroll} onCheckedChange={setAutoScroll} />
               </div>
-
-              {/* Scroll speed */}
               {autoScroll && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -208,17 +206,9 @@ export default function MushafReader({
                     </span>
                     <span className="text-xs font-bold text-primary">{scrollSpeed}×</span>
                   </div>
-                  <Slider
-                    min={0.5}
-                    max={3}
-                    step={0.5}
-                    value={[scrollSpeed]}
-                    onValueChange={([v]) => setScrollSpeed(v)}
-                  />
+                  <Slider min={0.5} max={3} step={0.5} value={[scrollSpeed]} onValueChange={([v]) => setScrollSpeed(v)} />
                 </div>
               )}
-
-              {/* Dark mode */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Moon size={14} className="text-muted-foreground" />
@@ -260,19 +250,17 @@ export default function MushafReader({
               onMouseDown={() => handleLongPressStart(i)}
               onMouseUp={handleLongPressEnd}
               onMouseLeave={handleLongPressEnd}
-              onClick={() => jumpToAyahRef.current?.(i)}
+              onClick={() => handleAyahTap(i)}
               className={`relative rounded-xl p-3 transition-all cursor-pointer select-none ${
                 isActive
                   ? "bg-primary/10 border border-primary/30"
                   : "bg-card border border-transparent hover:border-border"
               }`}
             >
-              {/* Bookmark indicator */}
               {bookmarked && (
                 <BookmarkCheck size={14} className="absolute top-2 right-2 text-primary" />
               )}
 
-              {/* Long-press popup */}
               <AnimatePresence>
                 {longPressAyah === i && (
                   <motion.div
@@ -292,15 +280,11 @@ export default function MushafReader({
                 )}
               </AnimatePresence>
 
-              {/* Ayah number */}
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-2 align-middle">
                 {ayah.number}
               </span>
-
-              {/* Arabic */}
               <span className="arabic-text text-xl leading-[2.2] text-foreground">{ayah.arabic}</span>
 
-              {/* Translation */}
               {!isArabicOnly && (
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {translations[i] || ayah.translation}
@@ -314,6 +298,19 @@ export default function MushafReader({
       {/* Dismiss long press overlay */}
       {longPressAyah !== null && (
         <div className="fixed inset-0 z-40" onClick={() => setLongPressAyah(null)} />
+      )}
+
+      {/* Tafsir bottom sheet */}
+      {tafsirAyahIndex !== null && surah.ayahs[tafsirAyahIndex] && (
+        <TafsirSheet
+          open={tafsirAyahIndex !== null}
+          onOpenChange={(open) => { if (!open) setTafsirAyahIndex(null); }}
+          surahNumber={surah.number}
+          ayahNumber={surah.ayahs[tafsirAyahIndex].number}
+          arabicText={surah.ayahs[tafsirAyahIndex].arabic}
+          translation={translations[tafsirAyahIndex] || surah.ayahs[tafsirAyahIndex].translation}
+          t={t}
+        />
       )}
     </div>
   );
