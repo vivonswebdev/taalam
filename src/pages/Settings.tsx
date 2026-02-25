@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
 import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
+import DedicationPopup from "@/components/DedicationPopup";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
@@ -13,6 +14,7 @@ export default function Settings() {
   const { t, lang, setLang } = useLanguage();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showDedication, setShowDedication] = useState(false);
 
   const handleReset = () => {
     resetProgress();
@@ -86,6 +88,17 @@ export default function Settings() {
           </button>
         </motion.div>
 
+        {/* Dedication */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => setShowDedication(true)} className="w-full flex items-center gap-4 p-4 text-left">
+            <Heart size={20} className="text-primary" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">إعادة عرض الإهداء</p>
+              <p className="text-xs text-muted-foreground">Dedication / Dédicace</p>
+            </div>
+          </button>
+        </motion.div>
+
         {/* Version */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4 p-4">
@@ -114,6 +127,10 @@ export default function Settings() {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {showDedication && (
+        <DedicationPopup forceShow onClose={() => setShowDedication(false)} />
       )}
     </div>
   );

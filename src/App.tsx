@@ -14,6 +14,7 @@ import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
+import DedicationPopup from "./components/DedicationPopup";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <DedicationPopup />
           <div className="min-h-screen bg-background max-w-lg mx-auto relative">
             <Routes>
               <Route path="/" element={<Home />} />
