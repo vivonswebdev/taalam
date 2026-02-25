@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      user_progress: {
+        Row: {
+          created_at: string
+          last_xp_date: string | null
+          streak_days: number
+          updated_at: string
+          user_id: string
+          xp_today: number
+          xp_total: number
+        }
+        Insert: {
+          created_at?: string
+          last_xp_date?: string | null
+          streak_days?: number
+          updated_at?: string
+          user_id: string
+          xp_today?: number
+          xp_total?: number
+        }
+        Update: {
+          created_at?: string
+          last_xp_date?: string | null
+          streak_days?: number
+          updated_at?: string
+          user_id?: string
+          xp_today?: number
+          xp_total?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
