@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, SkipForward, SkipBack, Gauge, User, Repeat } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, Gauge, User, Repeat, Bookmark, BookmarkCheck, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 const RECITERS = [
   { id: "ar.alafasy", name: "Al-Afasy", label: "مشاري العفاسي" },
@@ -21,10 +21,15 @@ interface AudioPlayerProps {
   onPlayStateChange?: (playing: boolean) => void;
   onFinished?: () => void;
   onRequestNextSurah?: () => void;
+  onRequestPrevSurah?: () => void;
   compact?: boolean;
   continuousMode?: boolean;
   onContinuousModeChange?: (enabled: boolean) => void;
   jumpToAyahRef?: React.MutableRefObject<((index: number) => void) | null>;
+  isCurrentAyahBookmarked?: boolean;
+  onToggleBookmark?: (ayahIndex: number) => void;
+  onGoToBookmark?: () => void;
+  hasBookmark?: boolean;
 }
 
 export default function AudioPlayer({
@@ -36,10 +41,15 @@ export default function AudioPlayer({
   onPlayStateChange,
   onFinished,
   onRequestNextSurah,
+  onRequestPrevSurah,
   compact = false,
   jumpToAyahRef,
   continuousMode: externalContinuous,
   onContinuousModeChange,
+  isCurrentAyahBookmarked,
+  onToggleBookmark,
+  onGoToBookmark,
+  hasBookmark,
 }: AudioPlayerProps) {
   const [internalContinuous, setInternalContinuous] = useState(true);
   const continuousMode = externalContinuous ?? internalContinuous;
@@ -326,8 +336,22 @@ export default function AudioPlayer({
   // ─── Compact UI ───────────────────────────────────────────
   if (compact) {
     return (
-      <div className="bg-card border border-border rounded-2xl p-3">
-        <div className="flex items-center gap-3">
+      <div className="bg-card border border-border rounded-2xl p-3 space-y-2">
+        {/* Row 1: Controls */}
+        <div className="flex items-center gap-2">
+          {/* Prev surah */}
+          <button
+            onClick={() => onRequestPrevSurah?.()}
+            className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
+            title="Sourate précédente"
+          >
+            <ChevronsLeft size={14} />
+          </button>
+          {/* Prev ayah */}
+          <button onClick={handlePrev} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
+            <SkipBack size={14} />
+          </button>
+          {/* Play/Pause */}
           {playing ? (
             <button onClick={handlePlayPause} className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
               <Pause size={18} />
@@ -341,13 +365,41 @@ export default function AudioPlayer({
               <Play size={18} className="ml-0.5" />
             </button>
           )}
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-muted-foreground truncate">{surahNameArabic} · {reciter.name}</p>
-            <div className="h-1.5 bg-muted rounded-full mt-1 cursor-pointer" onClick={handleSeek}>
-              <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
-          <span className="text-[10px] text-muted-foreground shrink-0">{currentAyah + 1}/{totalAyahs}</span>
+          {/* Next ayah */}
+          <button onClick={handleNext} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
+            <SkipForward size={14} />
+          </button>
+          {/* Next surah */}
+          <button
+            onClick={() => onRequestNextSurah?.()}
+            className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
+            title="Sourate suivante"
+          >
+            <ChevronsRight size={14} />
+          </button>
+          {/* Spacer */}
+          <div className="flex-1" />
+          {/* Bookmark current ayah */}
+          <button
+            onClick={() => onToggleBookmark?.(currentAyah)}
+            className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+              isCurrentAyahBookmarked ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+            }`}
+            title="Marquer ce verset"
+          >
+            {isCurrentAyahBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+          </button>
+          {/* Go to bookmark */}
+          {hasBookmark && (
+            <button
+              onClick={() => onGoToBookmark?.()}
+              className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"
+              title="Aller au signet"
+            >
+              <BookmarkCheck size={14} />
+            </button>
+          )}
+          {/* Continuous mode */}
           <button
             onClick={() => setContinuousMode(!continuousMode)}
             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
@@ -357,6 +409,14 @@ export default function AudioPlayer({
           >
             <Repeat size={14} />
           </button>
+        </div>
+        {/* Row 2: Progress */}
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted-foreground shrink-0">{currentAyah + 1}/{totalAyahs}</span>
+          <div className="flex-1 h-1.5 bg-muted rounded-full cursor-pointer" onClick={handleSeek}>
+            <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+          </div>
+          <span className="text-[10px] text-muted-foreground shrink-0">{surahNameArabic}</span>
         </div>
       </div>
     );
