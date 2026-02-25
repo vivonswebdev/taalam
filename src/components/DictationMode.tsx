@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Eye, EyeOff, AlertCircle, CheckCircle2, XCircle,
   Volume2, Info,
@@ -30,7 +30,6 @@ const WAQF_SIGNS: Record<string, { symbol: string; translationKey: string; color
   "ۚ": { symbol: "ۚ", translationKey: "waqf.obligatory", color: "text-destructive" },
 };
 
-// Detect waqf signs in text
 function detectWaqfSigns(text: string): { sign: string; position: number }[] {
   const signs: { sign: string; position: number }[] = [];
   const waqfChars = Object.keys(WAQF_SIGNS);
@@ -49,8 +48,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
   const [phase, setPhase] = useState<DictationPhase>("ready");
   const [showOriginal, setShowOriginal] = useState(true);
   const [liveTranscript, setLiveTranscript] = useState("");
-  const [liveResults, setLiveResults] = useState<DictationWordResult[]>([]);
-  const [finalResults, setFinalResults] = useState<{
+  const [liveResult, setLiveResult] = useState<{
     wordResults: DictationWordResult[];
     ayahScores: { ayahIndex: number; score: number; correct: boolean }[];
     totalScore: number;
@@ -67,7 +65,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     onResult: (transcript) => {
       setLiveTranscript(transcript);
       const result = compareSurahDictation(allArabicTexts, transcript);
-      setLiveResults(result.wordResults);
+      setLiveResult(result);
     },
     onError: (error) => {
       if (error === "not-allowed") setMicError("not-allowed");
@@ -77,33 +75,28 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
   const handleStart = useCallback(() => {
     setPhase("recording");
     setLiveTranscript("");
-    setLiveResults([]);
-    setFinalResults(null);
+    setLiveResult(null);
     setMicError(null);
-    setShowOriginal(false);
+    setShowOriginal(true);
     voice.start();
   }, [voice]);
 
   const handleStop = useCallback(() => {
     voice.stop();
-    const result = compareSurahDictation(allArabicTexts, liveTranscript);
-    setFinalResults(result);
+    if (!liveResult) {
+      const result = compareSurahDictation(allArabicTexts, liveTranscript);
+      setLiveResult(result);
+    }
     setPhase("result");
-    setShowOriginal(true);
-  }, [voice, allArabicTexts, liveTranscript]);
+  }, [voice, allArabicTexts, liveTranscript, liveResult]);
 
   const handleRestart = useCallback(() => {
     setPhase("ready");
     setLiveTranscript("");
-    setLiveResults([]);
-    setFinalResults(null);
+    setLiveResult(null);
     setMicError(null);
     setShowOriginal(true);
   }, []);
-
-  const handleRetryErrors = useCallback(() => {
-    handleRestart();
-  }, [handleRestart]);
 
   const getWordColor = (status: DictationWordResult["status"]) => {
     switch (status) {
@@ -115,24 +108,89 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     }
   };
 
-  // ─── Render Mushaf-style text with aya numbers & waqf signs ───
-  const renderMushafText = () => {
+  // ─── Compute per-aya word slices from the live result ───
+  const ayahWordSlices = useMemo(() => {
+    if (!liveResult) return [];
+    const slices: DictationWordResult[][] = [];
+    let wordIdx = 0;
+    for (const ayah of surah.ayahs) {
+      const ayaWordCount = ayah.arabic.split(/\s+/).filter(Boolean).length;
+      const relevantWords: DictationWordResult[] = [];
+      let consumed = 0;
+      for (let w = wordIdx; w < liveResult.wordResults.length && consumed < ayaWordCount; w++) {
+        relevantWords.push(liveResult.wordResults[w]);
+        if (liveResult.wordResults[w].status !== "extra") consumed++;
+      }
+      wordIdx += relevantWords.length;
+      slices.push(relevantWords);
+    }
+    return slices;
+  }, [liveResult, surah.ayahs]);
+
+  // Determine which ayahs have been "reached" by the recitation
+  const isAyahReached = useCallback((ayaIdx: number) => {
+    if (!liveResult || ayahWordSlices.length === 0) return false;
+    // An ayah is reached if the previous ayah has at least some words processed,
+    // or it's the first ayah and we have any results
+    if (ayaIdx === 0) return liveResult.wordResults.length > 0;
+    // Check if the previous ayah's slice has words
+    for (let i = 0; i <= ayaIdx; i++) {
+      if (ayahWordSlices[i] && ayahWordSlices[i].length > 0) continue;
+      return false;
+    }
+    return true;
+  }, [liveResult, ayahWordSlices]);
+
+  // ─── Render Mushaf page with hide/reveal logic ───
+  const renderMushafWithReveal = (isRecording: boolean) => {
     return (
-      <div className="bg-card border border-border rounded-2xl p-5 space-y-0">
+      <div className="bg-card border border-border rounded-2xl p-5 space-y-0" dir="rtl">
         {surah.ayahs.map((ayah, i) => {
           const waqfSigns = detectWaqfSigns(ayah.arabic);
+          const reached = isRecording && isAyahReached(i);
+          const words = ayah.arabic.split(/\s+/).filter(Boolean);
+          const sliceWords = reached ? (ayahWordSlices[i] || []) : [];
+
           return (
-            <div key={i} className="inline" dir="rtl">
-              <span className="arabic-text text-xl text-foreground leading-[3]">
-                {ayah.arabic}
-              </span>
-              {/* Aya end marker */}
+            <span key={i} className="inline">
+              {isRecording ? (
+                // During recording: hidden until reached, then revealed with colors
+                reached ? (
+                  // Revealed: show each word colored
+                  <span className="arabic-text text-xl leading-[3]">
+                    {words.map((word, wi) => {
+                      // Find matching result word
+                      const resultWord = sliceWords.filter(w => w.status !== "extra")[wi];
+                      const status = resultWord?.status;
+                      const colorClass = status ? getWordColor(status) : "text-foreground";
+                      return (
+                        <span key={wi} className={colorClass}>
+                          {word}{" "}
+                        </span>
+                      );
+                    })}
+                  </span>
+                ) : (
+                  // Hidden: show invisible placeholder to preserve layout
+                  <span className="arabic-text text-xl leading-[3] select-none" style={{ color: "transparent" }}>
+                    {ayah.arabic}
+                  </span>
+                )
+              ) : (
+                // Not recording (ready/result): show normally
+                <span className="arabic-text text-xl text-foreground leading-[3]">
+                  {ayah.arabic}
+                </span>
+              )}
+
+              {/* Aya end marker - always visible */}
               <span className="inline-flex items-center mx-1">
                 <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-sans">
                   {ayah.number}
                 </span>
               </span>
-              {/* Waqf signs tooltips */}
+
+              {/* Waqf signs - always visible */}
               {waqfSigns.map((ws, j) => {
                 const info = WAQF_SIGNS[ws.sign];
                 if (!info) return null;
@@ -153,72 +211,23 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
                   </span>
                 );
               })}
-              {/* Separator between ayas */}
+
               {i < surah.ayahs.length - 1 && <span className="text-muted-foreground mx-1">·</span>}
-            </div>
+            </span>
           );
         })}
       </div>
     );
   };
 
-  // ─── Render colored live results grouped by aya ───
-  const renderColoredLiveText = () => {
-    if (liveResults.length === 0) return null;
-    // Group results by aya boundaries
-    let wordIdx = 0;
-    return (
-      <div className="space-y-3" dir="rtl">
-        {surah.ayahs.map((ayah, ayaIdx) => {
-          const ayaWordCount = ayah.arabic.split(/\s+/).length;
-          const ayaWords = liveResults.slice(wordIdx, wordIdx + ayaWordCount + 5); // grab some extra for "extra" words
-          // Actually render all words that belong to this aya range
-          const relevantWords: DictationWordResult[] = [];
-          let consumed = 0;
-          for (let w = wordIdx; w < liveResults.length && consumed < ayaWordCount; w++) {
-            relevantWords.push(liveResults[w]);
-            if (liveResults[w].status !== "extra") consumed++;
-          }
-          wordIdx += relevantWords.length;
-
-          if (relevantWords.length === 0 && ayaIdx > 0) return null;
-
-          return (
-            <div key={ayaIdx} className="flex gap-2 items-start">
-              <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center shrink-0 mt-2 font-sans">
-                {ayah.number}
-              </span>
-              <div className="arabic-text text-xl leading-[2.8] flex-1">
-                {relevantWords.map((wr, i) => (
-                  <span key={i} className={`${getWordColor(wr.status)} ${wr.status === "extra" ? "text-base opacity-70" : ""}`}>
-                    {wr.word}{" "}
-                  </span>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  // ─── Render final results grouped by aya with aya markers ───
+  // ─── Render final result view (per-aya cards) ───
   const renderFinalResults = () => {
-    if (!finalResults) return null;
-    let wordIdx = 0;
+    if (!liveResult) return null;
     return (
       <div className="space-y-3" dir="rtl">
         {surah.ayahs.map((ayah, ayaIdx) => {
-          const ayaWordCount = ayah.arabic.split(/\s+/).length;
-          const relevantWords: DictationWordResult[] = [];
-          let consumed = 0;
-          for (let w = wordIdx; w < finalResults.wordResults.length && consumed < ayaWordCount; w++) {
-            relevantWords.push(finalResults.wordResults[w]);
-            if (finalResults.wordResults[w].status !== "extra") consumed++;
-          }
-          wordIdx += relevantWords.length;
-
-          const ayaScore = finalResults.ayahScores[ayaIdx];
+          const relevantWords = ayahWordSlices[ayaIdx] || [];
+          const ayaScore = liveResult.ayahScores[ayaIdx];
           const waqfSigns = detectWaqfSigns(ayah.arabic);
 
           return (
@@ -235,7 +244,6 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
                   <span className="text-xs text-muted-foreground font-sans">
                     {t("aya.progress")} {ayah.number}
                   </span>
-                  {/* Waqf sign badges */}
                   {waqfSigns.map((ws, j) => {
                     const info = WAQF_SIGNS[ws.sign];
                     return info ? (
@@ -287,14 +295,6 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
         </p>
       </div>
 
-      {/* Mode indicator */}
-      {phase === "recording" && (
-        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          <Mic size={12} className="text-primary" />
-          <span>{t("dictation.serverMode")}</span>
-        </div>
-      )}
-
       {/* ═══ READY PHASE ═══ */}
       {phase === "ready" && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
@@ -309,8 +309,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             </button>
           </div>
 
-          {/* Original text in Mushaf style with aya markers & waqf signs */}
-          {showOriginal && renderMushafText()}
+          {showOriginal && renderMushafWithReveal(false)}
 
           {/* Waqf legend */}
           {showOriginal && (
@@ -339,7 +338,6 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             </p>
           </div>
 
-          {/* Permission error */}
           {micError === "not-allowed" && (
             <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-2">
               <AlertCircle size={20} className="inline" />
@@ -348,7 +346,6 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             </div>
           )}
 
-          {/* Start button */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleStart}
@@ -360,38 +357,31 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
         </motion.div>
       )}
 
-      {/* ═══ RECORDING PHASE ═══ */}
+      {/* ═══ RECORDING PHASE — Same mushaf page with hidden→reveal ═══ */}
       {phase === "recording" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-          {/* Live colored text grouped by aya */}
-          <div className="bg-card border-2 border-primary/30 rounded-2xl p-5 min-h-[200px]">
-            {liveResults.length > 0 ? (
-              renderColoredLiveText()
-            ) : (
-              <div className="flex items-center justify-center h-full min-h-[180px]">
-                <div className="text-center text-muted-foreground">
-                  <div className="flex justify-center gap-1 mb-3">
-                    {[0, 1, 2, 3].map((b) => (
-                      <motion.div key={b}
-                        animate={{ scaleY: [1, 2.5, 1] }}
-                        transition={{ duration: 0.6, delay: b * 0.12, repeat: Infinity }}
-                        className="w-1.5 h-4 bg-primary rounded-full"
-                      />
-                    ))}
-                  </div>
-                  <p className={bodyTextClass}>{t("dictation.listening")}</p>
-                </div>
-              </div>
-            )}
+          {/* Recording indicator */}
+          <div className="flex items-center justify-center gap-2 py-2">
+            <div className="flex gap-1">
+              {[0, 1, 2, 3].map((b) => (
+                <motion.div key={b}
+                  animate={{ scaleY: [1, 2.5, 1] }}
+                  transition={{ duration: 0.6, delay: b * 0.12, repeat: Infinity }}
+                  className="w-1.5 h-4 bg-primary rounded-full"
+                />
+              ))}
+            </div>
+            <span className="text-xs text-muted-foreground">{t("dictation.listening")}</span>
           </div>
 
-          {/* Live transcript (raw) */}
-          {liveTranscript && (
-            <div className="bg-muted/50 rounded-xl p-3">
-              <p className="text-xs text-muted-foreground mb-1">{t("dictation.rawTranscript")}</p>
-              <p className="arabic-text text-lg text-foreground" dir="rtl">{liveTranscript}</p>
-            </div>
-          )}
+          {/* Same mushaf page — ayahs hidden, revealed as recited */}
+          {renderMushafWithReveal(true)}
+
+          {/* Color legend during recording */}
+          <div className="flex flex-wrap justify-center gap-3 text-xs">
+            <span className="flex items-center gap-1 text-success"><CheckCircle2 size={12} /> {t("dictation.legendCorrect")}</span>
+            <span className="flex items-center gap-1 text-destructive"><XCircle size={12} /> {t("dictation.legendIncorrect")}</span>
+          </div>
 
           {/* Stop button */}
           <motion.button
@@ -406,30 +396,30 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
       )}
 
       {/* ═══ RESULT PHASE ═══ */}
-      {phase === "result" && finalResults && (
+      {phase === "result" && liveResult && (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5">
-          {/* Score circle */}
+          {/* Score */}
           <div className="text-center py-4">
             <div className={`${isChildMode ? "w-32 h-32 text-4xl" : "w-24 h-24 text-3xl"} rounded-full mx-auto flex items-center justify-center font-bold mb-3 ${
-              finalResults.totalScore >= 80 ? "bg-success/15 text-success"
-                : finalResults.totalScore >= 50 ? "bg-secondary/15 text-secondary"
+              liveResult.totalScore >= 80 ? "bg-success/15 text-success"
+                : liveResult.totalScore >= 50 ? "bg-secondary/15 text-secondary"
                 : "bg-destructive/15 text-destructive"
             }`}>
-              {finalResults.totalScore}%
+              {liveResult.totalScore}%
             </div>
             <h2 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
-              {finalResults.totalScore >= 80
+              {liveResult.totalScore >= 80
                 ? t("dictation.excellent")
-                : finalResults.totalScore >= 50
+                : liveResult.totalScore >= 50
                   ? t("dictation.good")
                   : t("dictation.needsWork")}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              {finalResults.wordResults.filter((r) => r.status === "correct").length} / {surah.ayahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).length, 0)} {t("dictation.wordsCorrect")}
+              {liveResult.wordResults.filter((r) => r.status === "correct").length} / {surah.ayahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).length, 0)} {t("dictation.wordsCorrect")}
             </p>
           </div>
 
-          {/* Color legend */}
+          {/* Legend */}
           <div className="flex flex-wrap justify-center gap-3 text-xs">
             <span className="flex items-center gap-1 text-success"><CheckCircle2 size={12} /> {t("dictation.legendCorrect")}</span>
             <span className="flex items-center gap-1 text-destructive"><XCircle size={12} /> {t("dictation.legendIncorrect")}</span>
@@ -437,7 +427,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             <span className="flex items-center gap-1 text-destructive line-through">{t("dictation.legendExtra")}</span>
           </div>
 
-          {/* Detailed per-aya results with waqf signs */}
+          {/* Per-aya results */}
           <div>
             <h3 className={`${bodyTextClass} font-semibold text-foreground mb-3`}>
               {t("dictation.ayahBreakdown")}
@@ -452,15 +442,14 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
               <RotateCcw size={18} />
               {t("dictation.restart")}
             </button>
-            {finalResults.ayahScores.some((a) => !a.correct) && (
-              <button onClick={handleRetryErrors}
+            {liveResult.ayahScores.some((a) => !a.correct) && (
+              <button onClick={handleRestart}
                 className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl bg-primary text-primary-foreground font-semibold`}>
                 {t("dictation.retryErrors")}
               </button>
             )}
           </div>
 
-          {/* Back to surah selection */}
           <button onClick={onBack}
             className="w-full py-3 text-sm text-muted-foreground underline">
             {t("recitation.changeSurah")}
