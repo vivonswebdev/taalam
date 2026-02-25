@@ -14,6 +14,107 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcement_reads: {
+        Row: {
+          announcement_id: string
+          id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          announcement_id: string
+          id?: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          announcement_id?: string
+          id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcement_reads_announcement_id_fkey"
+            columns: ["announcement_id"]
+            isOneToOne: false
+            referencedRelation: "announcements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      announcements: {
+        Row: {
+          author_name: string | null
+          author_uid: string
+          class_code: string
+          created_at: string
+          id: string
+          message: string
+          title: string
+        }
+        Insert: {
+          author_name?: string | null
+          author_uid: string
+          class_code: string
+          created_at?: string
+          id?: string
+          message: string
+          title: string
+        }
+        Update: {
+          author_name?: string | null
+          author_uid?: string
+          class_code?: string
+          created_at?: string
+          id?: string
+          message?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_emoji: string
+          country_code: string | null
+          created_at: string
+          display_name: string
+          id: string
+          is_public: boolean
+          mastery_score: number
+          sessions_count: number
+          updated_at: string
+          user_id: string
+          xp_total: number
+        }
+        Insert: {
+          avatar_emoji?: string
+          country_code?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          is_public?: boolean
+          mastery_score?: number
+          sessions_count?: number
+          updated_at?: string
+          user_id: string
+          xp_total?: number
+        }
+        Update: {
+          avatar_emoji?: string
+          country_code?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_public?: boolean
+          mastery_score?: number
+          sessions_count?: number
+          updated_at?: string
+          user_id?: string
+          xp_total?: number
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           created_at: string

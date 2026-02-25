@@ -25,6 +25,9 @@ import Classrooms from "./pages/Classrooms";
 import ClassroomDetail from "./pages/ClassroomDetail";
 import NotFound from "./pages/NotFound";
 import JoinClassroom from "./pages/JoinClassroom";
+import Auth from "./pages/Auth";
+import Leaderboard from "./pages/Leaderboard";
+import Announcements from "./pages/Announcements";
 import BottomNav from "./components/BottomNav";
 import DedicationPopup from "./components/DedicationPopup";
 
@@ -37,12 +40,14 @@ const App = () => (
         <ActiveChildProvider>
         <Toaster />
         <Sonner />
-        <Sonner />
         <BrowserRouter>
           <DedicationPopup />
           <div className="min-h-screen bg-background max-w-lg mx-auto relative">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/announcements" element={<Announcements />} />
               <Route path="/quiz" element={<Quiz />} />
               <Route path="/learn" element={<Learn />} />
               <Route path="/learn/:surahNumber" element={<LearnDetail />} />
