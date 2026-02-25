@@ -328,6 +328,10 @@ export type Database = {
         Args: { _classroom_id: string; _user_id: string }
         Returns: boolean
       }
+      is_classroom_teacher: {
+        Args: { _classroom_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
