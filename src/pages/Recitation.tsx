@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
+import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -289,6 +289,45 @@ export default function Recitation() {
           </div>
         </div>
       </div>
+
+      {/* SURAH STEPPER - shown when not in select phase */}
+      {phase !== "select" && selectedSurah && (
+        <div className="px-4 mb-3">
+          <div className="flex items-center gap-1 bg-card border border-border rounded-xl p-1">
+            {/* Prev button */}
+            <button
+              disabled={selectedSurah.number <= 1}
+              onClick={() => {
+                const prevSurah = surahs.find(s => s.number === selectedSurah.number - 1);
+                if (prevSurah) handleSelectSurah(prevSurah);
+              }}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors shrink-0"
+            >
+              <ChevronLeft size={14} />
+              <span className="hidden min-[360px]:inline">{selectedSurah.number > 1 ? surahs.find(s => s.number === selectedSurah.number - 1)?.nameArabic : ""}</span>
+            </button>
+
+            {/* Current surah */}
+            <div className="flex-1 text-center px-1">
+              <p className="font-arabic text-sm font-bold text-foreground leading-tight">{selectedSurah.number} · {selectedSurah.nameArabic}</p>
+              <p className="text-[10px] text-muted-foreground">{selectedSurah.frenchName}</p>
+            </div>
+
+            {/* Next button */}
+            <button
+              disabled={selectedSurah.number >= 114}
+              onClick={() => {
+                const nextSurah = surahs.find(s => s.number === selectedSurah.number + 1);
+                if (nextSurah) handleSelectSurah(nextSurah);
+              }}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors shrink-0"
+            >
+              <span className="hidden min-[360px]:inline">{selectedSurah.number < 114 ? surahs.find(s => s.number === selectedSurah.number + 1)?.nameArabic : ""}</span>
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* SELECT PHASE */}
       {phase === "select" && (
