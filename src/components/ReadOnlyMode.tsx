@@ -62,6 +62,12 @@ export default function ReadOnlyMode({
     }
   }, []);
 
+  const jumpToAyahRef = useRef<((index: number) => void) | null>(null);
+
+  const handleAyahClick = useCallback((index: number) => {
+    jumpToAyahRef.current?.(index);
+  }, []);
+
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
 
   return (
