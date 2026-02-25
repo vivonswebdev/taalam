@@ -111,7 +111,7 @@ function ClassTabContent({
   ligue: Ligue;
 }) {
   const { t } = useLanguage();
-  const { myClassrooms, classBoard, selectedClassId, loading, setSelectedClassId, createClassroom, joinByCode } = useClassLeaderboard();
+  const { myClassrooms, classBoard, classStats, selectedClassId, loading, setSelectedClassId, createClassroom, joinByCode } = useClassLeaderboard();
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
   const [newClassName, setNewClassName] = useState("");
@@ -243,6 +243,32 @@ function ClassTabContent({
           </div>
         );
       })()}
+
+      {/* Class Stats */}
+      {selectedClassId && classBoard.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-3 grid grid-cols-2 gap-2"
+        >
+          <div className="bg-card border border-border rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-primary">{classStats.avgMastery}%</p>
+            <p className="text-[10px] text-muted-foreground">{t("lb.statAvgHifz")}</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-secondary">{classStats.avgStreak} 🔥</p>
+            <p className="text-[10px] text-muted-foreground">{t("lb.statAvgStreak")}</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-foreground">{classStats.totalSessions}</p>
+            <p className="text-[10px] text-muted-foreground">{t("lb.statTotalSessions")}</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-foreground">{classStats.memberCount}</p>
+            <p className="text-[10px] text-muted-foreground">{t("lb.statMembers")}</p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Rank card */}
       {classBoard.length > 0 && userId && (

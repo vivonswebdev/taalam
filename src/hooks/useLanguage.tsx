@@ -1043,6 +1043,10 @@ const translations = {
   "lb.noClasses": { fr: "Crée ou rejoins une classe", en: "Create or join a class", nl: "Maak of neem deel aan een klas", ar: "أنشئ أو انضم إلى فصل" },
   "lb.emptyClass": { fr: "Aucun membre dans cette classe", en: "No members in this class", nl: "Geen leden in deze klas", ar: "لا يوجد أعضاء في هذا الفصل" },
   "lb.shareCode": { fr: "Partager le code", en: "Share code", nl: "Code delen", ar: "مشاركة الرمز" },
+  "lb.statAvgHifz": { fr: "% moyen Hifz", en: "Avg Hifz %", nl: "Gem. Hifz %", ar: "متوسط الحفظ %" },
+  "lb.statAvgStreak": { fr: "Streak moyen", en: "Avg streak", nl: "Gem. reeks", ar: "متوسط السلسلة" },
+  "lb.statTotalSessions": { fr: "Sessions totales", en: "Total sessions", nl: "Totale sessies", ar: "إجمالي الجلسات" },
+  "lb.statMembers": { fr: "Élèves", en: "Students", nl: "Studenten", ar: "طلاب" },
 
   // Announcements
   "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },

@@ -1,8 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { getLigue, getHifzLevel } from "@/components/LigueBadge";
 import type { LeaderboardEntry } from "./useLeaderboard";
+
+export interface ClassStats {
+  avgMastery: number;
+  avgStreak: number;
+  totalSessions: number;
+  memberCount: number;
+}
 
 export interface ClassroomInfo {
   id: string;
@@ -17,6 +24,7 @@ export function useClassLeaderboard() {
   const [myClassrooms, setMyClassrooms] = useState<ClassroomInfo[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [classBoard, setClassBoard] = useState<LeaderboardEntry[]>([]);
+  const [classStats, setClassStats] = useState<ClassStats>({ avgMastery: 0, avgStreak: 0, totalSessions: 0, memberCount: 0 });
   const [loading, setLoading] = useState(false);
 
   // Fetch classrooms where user is teacher or member
@@ -81,19 +89,42 @@ export function useClassLeaderboard() {
       return;
     }
 
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, user_id, display_name, avatar_emoji, country_code, mastery_score, xp_total, sessions_count")
-      .in("user_id", userIds)
-      .order("xp_total", { ascending: false });
+    // Fetch profiles and streaks in parallel
+    const [profilesRes, streaksRes] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("id, user_id, display_name, avatar_emoji, country_code, mastery_score, xp_total, sessions_count")
+        .in("user_id", userIds)
+        .order("xp_total", { ascending: false }),
+      supabase
+        .from("user_progress")
+        .select("user_id, streak_days")
+        .in("user_id", userIds),
+    ]);
 
-    setClassBoard(
-      (profiles || []).map((row: any) => ({
-        ...row,
-        ligue: getLigue(row.xp_total || 0),
-        level: getHifzLevel(Number(row.mastery_score) || 0),
-      }))
-    );
+    const profiles = profilesRes.data || [];
+    const streakMap = new Map((streaksRes.data || []).map((r: any) => [r.user_id, r.streak_days || 0]));
+
+    const entries = profiles.map((row: any) => ({
+      ...row,
+      ligue: getLigue(row.xp_total || 0),
+      level: getHifzLevel(Number(row.mastery_score) || 0),
+      streak_days: streakMap.get(row.user_id) || 0,
+    }));
+
+    setClassBoard(entries);
+
+    // Compute stats
+    const memberCount = entries.length;
+    if (memberCount > 0) {
+      const avgMastery = entries.reduce((a: number, e: any) => a + (Number(e.mastery_score) || 0), 0) / memberCount;
+      const avgStreak = entries.reduce((a: number, e: any) => a + (e.streak_days || 0), 0) / memberCount;
+      const totalSessions = entries.reduce((a: number, e: any) => a + (e.sessions_count || 0), 0);
+      setClassStats({ avgMastery: Math.round(avgMastery * 10) / 10, avgStreak: Math.round(avgStreak * 10) / 10, totalSessions, memberCount });
+    } else {
+      setClassStats({ avgMastery: 0, avgStreak: 0, totalSessions: 0, memberCount: 0 });
+    }
+
     setLoading(false);
   }, [myClassrooms]);
 
@@ -147,6 +178,7 @@ export function useClassLeaderboard() {
   return {
     myClassrooms,
     classBoard,
+    classStats,
     selectedClassId,
     loading,
     setSelectedClassId: (id: string) => {
