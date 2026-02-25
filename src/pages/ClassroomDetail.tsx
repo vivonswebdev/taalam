@@ -1,21 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare } from "lucide-react";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS, nl, ar } from "date-fns/locale";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const LOCALES: Record<string, typeof fr> = { fr, en: enUS, nl, ar };
+
+interface ChatMessage {
+  id: string;
+  classroom_id: string;
+  author_id: string;
+  author_name: string;
+  message: string;
+  created_at: string;
+}
 
 export default function ClassroomDetail() {
   const { classId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
   const { profiles, getChildMastery, getSessionsForChild, getLastActivity } = useChildProfiles();
 
@@ -25,6 +38,66 @@ export default function ClassroomDetail() {
   const nonMembers = profiles.filter((p) => !memberIds.includes(p.id));
 
   const [showAdd, setShowAdd] = useState(false);
+
+  // Chat state
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load messages
+  useEffect(() => {
+    if (!classId) return;
+    const loadMessages = async () => {
+      const { data } = await supabase
+        .from("class_messages")
+        .select("*")
+        .eq("classroom_id", classId)
+        .order("created_at", { ascending: true })
+        .limit(100);
+      if (data) setMessages(data as ChatMessage[]);
+    };
+    loadMessages();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel(`class-messages-${classId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "class_messages", filter: `classroom_id=eq.${classId}` },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new as ChatMessage]);
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [classId]);
+
+  // Auto scroll
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = async () => {
+    const text = newMessage.trim();
+    if (!text || !user || !classId || sending) return;
+    setSending(true);
+    try {
+      const authorName = user.user_metadata?.display_name || user.email || "Utilisateur";
+      await supabase.from("class_messages").insert({
+        classroom_id: classId,
+        author_id: user.id,
+        author_name: authorName,
+        message: text.slice(0, 500),
+      });
+      setNewMessage("");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSending(false);
+    }
+  };
 
   if (!classroom) {
     return (
@@ -50,89 +123,144 @@ export default function ClassroomDetail() {
         </button>
       </div>
 
-      <div className="px-4 py-4 space-y-4">
-        {/* Add member */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold">{t("classrooms.students")} ({memberProfiles.length})</p>
-          {nonMembers.length > 0 && (
-            <button onClick={() => setShowAdd(!showAdd)} className="flex items-center gap-1 text-xs text-primary font-semibold">
-              <UserPlus size={14} /> {t("classrooms.addStudent")}
-            </button>
-          )}
-        </div>
+      <Tabs defaultValue="students" className="px-4 py-3">
+        <TabsList className="w-full grid grid-cols-2">
+          <TabsTrigger value="students" className="text-xs gap-1">
+            <UserPlus size={14} /> {t("classrooms.students")}
+          </TabsTrigger>
+          <TabsTrigger value="messages" className="text-xs gap-1">
+            <MessageSquare size={14} /> {t("classrooms.messages")}
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Add member picker */}
-        {showAdd && nonMembers.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap gap-2">
-            {nonMembers.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => { addMember(classroom.id, p.id); }}
-                className="flex items-center gap-1.5 bg-muted border border-border rounded-full px-3 py-1.5 text-xs font-medium"
-              >
-                <span>{p.avatarEmoji}</span> {p.name}
-                <UserPlus size={12} className="text-primary" />
+        {/* Students tab */}
+        <TabsContent value="students" className="space-y-4 mt-3">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold">{t("classrooms.students")} ({memberProfiles.length})</p>
+            {nonMembers.length > 0 && (
+              <button onClick={() => setShowAdd(!showAdd)} className="flex items-center gap-1 text-xs text-primary font-semibold">
+                <UserPlus size={14} /> {t("classrooms.addStudent")}
               </button>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Members list with stats */}
-        {memberProfiles.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-sm text-muted-foreground">{t("classrooms.noStudents")}</p>
+            )}
           </div>
-        ) : (
-          memberProfiles.map((child) => {
-            const mastery = getChildMastery(child.id);
-            const sessionCount = getSessionsForChild(child.id).length;
-            const lastDate = getLastActivity(child.id);
-            const lastAgo = lastDate
-              ? formatDistanceToNow(new Date(lastDate), { addSuffix: true, locale: LOCALES[lang] || LOCALES.fr })
-              : null;
 
-            return (
-              <motion.div
-                key={child.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-card border border-border rounded-xl p-3 space-y-2"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{child.avatarEmoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{child.name}</p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                      <span className="flex items-center gap-0.5"><BarChart3 size={10} /> {sessionCount} sessions</span>
-                      {lastAgo && <span className="flex items-center gap-0.5"><Clock size={10} /> {lastAgo}</span>}
+          {showAdd && nonMembers.length > 0 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap gap-2">
+              {nonMembers.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => addMember(classroom.id, p.id)}
+                  className="flex items-center gap-1.5 bg-muted border border-border rounded-full px-3 py-1.5 text-xs font-medium"
+                >
+                  <span>{p.avatarEmoji}</span> {p.name}
+                  <UserPlus size={12} className="text-primary" />
+                </button>
+              ))}
+            </motion.div>
+          )}
+
+          {memberProfiles.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground">{t("classrooms.noStudents")}</p>
+            </div>
+          ) : (
+            memberProfiles.map((child) => {
+              const mastery = getChildMastery(child.id);
+              const sessionCount = getSessionsForChild(child.id).length;
+              const lastDate = getLastActivity(child.id);
+              const lastAgo = lastDate
+                ? formatDistanceToNow(new Date(lastDate), { addSuffix: true, locale: LOCALES[lang] || LOCALES.fr })
+                : null;
+
+              return (
+                <motion.div
+                  key={child.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-card border border-border rounded-xl p-3 space-y-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{child.avatarEmoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm truncate">{child.name}</p>
+                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                        <span className="flex items-center gap-0.5"><BarChart3 size={10} /> {sessionCount} sessions</span>
+                        {lastAgo && <span className="flex items-center gap-0.5"><Clock size={10} /> {lastAgo}</span>}
+                      </div>
                     </div>
+                    <button
+                      onClick={() => removeMember(classroom.id, child.id)}
+                      className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
+                    >
+                      <Trash2 size={12} className="text-destructive" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground w-14">{t("classrooms.mastery")}</span>
+                    <Progress value={mastery} className="h-1.5 flex-1" />
+                    <span className="text-[10px] font-bold text-primary w-8 text-right">{mastery}%</span>
                   </div>
                   <button
-                    onClick={() => removeMember(classroom.id, child.id)}
-                    className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
+                    onClick={() => navigate(`/parent/child/${child.id}`)}
+                    className="w-full py-1.5 text-[11px] font-semibold text-primary bg-primary/5 rounded-lg"
                   >
-                    <Trash2 size={12} className="text-destructive" />
+                    {t("classrooms.viewChild")}
                   </button>
-                </div>
+                </motion.div>
+              );
+            })
+          )}
+        </TabsContent>
 
-                {/* Mastery bar */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-muted-foreground w-14">{t("classrooms.mastery")}</span>
-                  <Progress value={mastery} className="h-1.5 flex-1" />
-                  <span className="text-[10px] font-bold text-primary w-8 text-right">{mastery}%</span>
+        {/* Messages tab */}
+        <TabsContent value="messages" className="mt-3">
+          <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col" style={{ height: "calc(100vh - 280px)" }}>
+            {/* Messages list */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {messages.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageSquare size={28} className="mx-auto text-muted-foreground mb-2" />
+                  <p className="text-xs text-muted-foreground">{t("classrooms.noMessages")}</p>
                 </div>
+              ) : (
+                messages.map((msg) => {
+                  const isMe = msg.author_id === user?.id;
+                  return (
+                    <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+                      <div className={`max-w-[80%] rounded-xl px-3 py-2 ${isMe ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                        {!isMe && <p className="text-[10px] font-semibold mb-0.5 opacity-70">{msg.author_name}</p>}
+                        <p className="text-sm break-words">{msg.message}</p>
+                      </div>
+                      <span className="text-[9px] text-muted-foreground mt-0.5 px-1">
+                        {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true, locale: LOCALES[lang] || LOCALES.fr })}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-                <button
-                  onClick={() => navigate(`/parent/child/${child.id}`)}
-                  className="w-full py-1.5 text-[11px] font-semibold text-primary bg-primary/5 rounded-lg"
-                >
-                  {t("classrooms.viewChild")}
-                </button>
-              </motion.div>
-            );
-          })
-        )}
-      </div>
+            {/* Input */}
+            <div className="border-t border-border p-2 flex gap-2">
+              <input
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value.slice(0, 500))}
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+                placeholder={t("classrooms.typeMessage")}
+                className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm outline-none"
+              />
+              <button
+                onClick={handleSend}
+                disabled={!newMessage.trim() || sending}
+                className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
       <BottomNav />
     </div>
   );

@@ -73,6 +73,41 @@ export type Database = {
         }
         Relationships: []
       }
+      class_messages: {
+        Row: {
+          author_id: string
+          author_name: string
+          classroom_id: string
+          created_at: string
+          id: string
+          message: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          classroom_id: string
+          created_at?: string
+          id?: string
+          message: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          classroom_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_messages_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       classroom_members: {
         Row: {
           classroom_id: string

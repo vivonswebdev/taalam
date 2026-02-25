@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Users, Share2, Trash2, GraduationCap, UserPlus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Plus, Users, Share2, Trash2, GraduationCap, UserPlus, LogIn } from "lucide-react";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
 
 export default function Classrooms() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { user } = useAuth();
   const { classrooms, createClassroom, deleteClassroom, getMembersForClass, shareClassroom, getNewMemberCount, markClassSeen, totalNewMembers } = useClassrooms();
   const { profiles } = useChildProfiles();
 
@@ -19,7 +22,11 @@ export default function Classrooms() {
   const [newName, setNewName] = useState("");
   const [teacherName, setTeacherName] = useState("");
 
-  // Show toast on mount if there are new members
+  // Join modal state
+  const [showJoin, setShowJoin] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
+  const [joining, setJoining] = useState(false);
+
   useEffect(() => {
     if (totalNewMembers > 0) {
       toast({
@@ -40,6 +47,58 @@ export default function Classrooms() {
   const handleViewDetail = (classId: string) => {
     markClassSeen(classId);
     navigate(`/classrooms/${classId}`);
+  };
+
+  const handleJoin = async () => {
+    const code = joinCode.trim().toUpperCase();
+    if (!code || !user) return;
+    setJoining(true);
+    try {
+      // Look up classroom by join_code
+      const { data: classroom, error } = await supabase
+        .from("classrooms")
+        .select("id, name")
+        .eq("join_code", code)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!classroom) {
+        toast({ title: "❌ " + t("classrooms.joinInvalidCode"), variant: "destructive" });
+        setJoining(false);
+        return;
+      }
+
+      // Check if already a member
+      const { data: existing } = await supabase
+        .from("classroom_members")
+        .select("id")
+        .eq("classroom_id", classroom.id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (existing) {
+        toast({ title: t("classrooms.joinAlreadyMember") });
+        setJoining(false);
+        setShowJoin(false);
+        setJoinCode("");
+        return;
+      }
+
+      // Join
+      const { error: joinError } = await supabase
+        .from("classroom_members")
+        .insert({ classroom_id: classroom.id, user_id: user.id });
+
+      if (joinError) throw joinError;
+
+      toast({ title: `✅ ${t("classrooms.joinSuccess")} "${classroom.name}"` });
+      setShowJoin(false);
+      setJoinCode("");
+    } catch (err: any) {
+      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+    } finally {
+      setJoining(false);
+    }
   };
 
   return (
@@ -70,6 +129,43 @@ export default function Classrooms() {
       </div>
 
       <div className="px-4 py-4 space-y-4">
+        {/* Join class button */}
+        <button
+          onClick={() => setShowJoin(true)}
+          className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-primary bg-primary/10 rounded-xl border border-primary/20"
+        >
+          <LogIn size={16} /> {t("classrooms.joinClass")}
+        </button>
+
+        {/* Join modal */}
+        <AnimatePresence>
+          {showJoin && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-card border border-border rounded-xl p-4 space-y-3 overflow-hidden"
+            >
+              <p className="text-sm font-semibold">{t("classrooms.joinClass")}</p>
+              <input
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                placeholder={t("classrooms.joinCodePlaceholder")}
+                maxLength={10}
+                className="w-full bg-muted rounded-lg px-3 py-2 text-sm outline-none font-mono tracking-widest text-center uppercase"
+              />
+              <div className="flex gap-2">
+                <button onClick={() => { setShowJoin(false); setJoinCode(""); }} className="flex-1 py-2 text-sm rounded-lg bg-muted text-muted-foreground font-medium">
+                  {t("classrooms.cancel")}
+                </button>
+                <button onClick={handleJoin} disabled={!joinCode.trim() || joining} className="flex-1 py-2 text-sm rounded-lg bg-primary text-primary-foreground font-semibold disabled:opacity-50">
+                  {joining ? "..." : t("classrooms.joinBtn")}
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Create form */}
         {showCreate && (
           <motion.div
@@ -122,7 +218,6 @@ export default function Classrooms() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-card border border-border rounded-xl p-4 space-y-3 relative"
               >
-                {/* New member badge */}
                 {newCount > 0 && (
                   <div className="absolute -top-2 -right-2">
                     <Badge variant="destructive" className="text-[10px] px-1.5 py-0 h-5 animate-bounce shadow-md">
@@ -137,28 +232,20 @@ export default function Classrooms() {
                     {c.teacherName && <p className="text-xs text-muted-foreground">{c.teacherName}</p>}
                   </div>
                   <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => shareClassroom(c)}
-                      className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center"
-                    >
+                    <button onClick={() => shareClassroom(c)} className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                       <Share2 size={14} className="text-primary" />
                     </button>
-                    <button
-                      onClick={() => deleteClassroom(c.id)}
-                      className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center"
-                    >
+                    <button onClick={() => deleteClassroom(c.id)} className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center">
                       <Trash2 size={14} className="text-destructive" />
                     </button>
                   </div>
                 </div>
 
-                {/* Join code */}
                 <div className="flex items-center gap-2 bg-muted rounded-lg px-3 py-1.5">
                   <span className="text-[10px] text-muted-foreground uppercase font-semibold">{t("classrooms.code")}</span>
                   <span className="text-sm font-mono font-bold text-primary tracking-widest">{c.joinCode}</span>
                 </div>
 
-                {/* Members preview */}
                 <div className="flex items-center gap-2">
                   <Users size={14} className="text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
