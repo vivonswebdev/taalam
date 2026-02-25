@@ -71,6 +71,7 @@ export default function Recitation() {
   const [showArabic, setShowArabic] = useState(true);
   const [showAyahResult, setShowAyahResult] = useState(false);
   const [lastAyahResult, setLastAyahResult] = useState<AyahResult | null>(null);
+  const [completedAyahs, setCompletedAyahs] = useState<Set<number>>(new Set());
 
   // Live word feedback for current ayah only
   const currentAyahTexts = selectedSurah && phase === "recite"
@@ -155,6 +156,7 @@ export default function Recitation() {
     setRecitingAyah(0);
     setCurrentTranscript("");
     setShowArabic(true);
+    setCompletedAyahs(new Set());
   };
 
   const handleFinishAyah = useCallback(() => {
@@ -165,6 +167,7 @@ export default function Recitation() {
     const result: AyahResult = { ayahIndex: recitingAyah, results, score };
     setAyahResults((prev) => [...prev, result]);
     setLastAyahResult(result);
+    setCompletedAyahs((prev) => new Set([...prev, recitingAyah]));
     setTimeout(() => setShowAyahResult(true), 500);
   }, [selectedSurah, recitingAyah, currentTranscript, voice]);
 
@@ -176,6 +179,7 @@ export default function Recitation() {
     const result: AyahResult = { ayahIndex: recitingAyah, results, score };
     setAyahResults((prev) => [...prev, result]);
     setLastAyahResult(result);
+    setCompletedAyahs((prev) => new Set([...prev, recitingAyah]));
     setTimeout(() => setShowAyahResult(true), 500);
   }, [selectedSurah, recitingAyah, currentTranscript, voice]);
 
@@ -229,6 +233,7 @@ export default function Recitation() {
     setShowArabic(true);
     setShowConfetti(false);
     setEarnedSticker(null);
+    setCompletedAyahs(new Set());
   };
 
   const handleNewSurah = () => {
@@ -241,6 +246,7 @@ export default function Recitation() {
     setShowArabic(true);
     setShowConfetti(false);
     setEarnedSticker(null);
+    setCompletedAyahs(new Set());
   };
 
   const replayAyahAudio = async (surahNum: number, ayahIndex: number) => {
@@ -485,6 +491,30 @@ export default function Recitation() {
               exit={{ opacity: 0, x: -30 }}
               className="space-y-5"
             >
+              {/* Previously completed ayahs - shown with colored results */}
+              {completedAyahs.size > 0 && (
+                <div className="space-y-2 mb-4">
+                  {selectedSurah.ayahs.map((ayah, i) => {
+                    if (!completedAyahs.has(i)) return null;
+                    const result = ayahResults.find((r) => r.ayahIndex === i);
+                    if (!result) return null;
+                    return (
+                      <div key={`completed-${i}`} className="bg-card border border-border rounded-xl p-3 opacity-80">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="w-6 h-6 rounded-md bg-muted text-muted-foreground text-[10px] font-bold flex items-center justify-center">{ayah.number}</span>
+                          <span className={`text-xs font-bold ${result.score >= 80 ? "text-success" : result.score >= 50 ? "text-warning" : "text-destructive"}`}>{result.score}%</span>
+                        </div>
+                        <div className="arabic-text text-base leading-[2] flex flex-wrap gap-x-1.5 justify-end" dir="rtl">
+                          {result.results.map((wr, j) => (
+                            <span key={j} className={wr.correct ? "text-success" : "text-destructive"}>{wr.word}</span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
               {/* Current ayah card */}
               <div className={`bg-card border-2 border-primary/30 rounded-2xl ${isChildMode ? "p-8" : "p-6"}`}>
                 <div className="flex items-center justify-between mb-3">
