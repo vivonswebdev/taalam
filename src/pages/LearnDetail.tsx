@@ -5,6 +5,7 @@ import { ArrowLeft, Play, Square, Volume2, Mic, MicOff, RotateCcw, ArrowRight, C
 import AudioPlayer from "@/components/AudioPlayer";
 import { getSurahByNumber } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
+import { useClassSuccessShare } from "@/hooks/useClassSuccessShare";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -17,6 +18,7 @@ export default function LearnDetail() {
   const { surahNumber } = useParams();
   const navigate = useNavigate();
   const { updateSurahProgress } = useProgress();
+  const { shareSuccess } = useClassSuccessShare();
   const { isChildMode, earnSticker } = useChildMode();
   const { t } = useLanguage();
   const [playing, setPlaying] = useState(false);
@@ -95,7 +97,7 @@ export default function LearnDetail() {
     } else {
       const avgScore = Math.round(newResults.reduce((a, r) => a + r.score, 0) / newResults.length);
       updateSurahProgress(surah.number, avgScore);
-      
+      shareSuccess(surah.number, avgScore);
       // Child mode rewards
       if (isChildMode && avgScore >= 50) {
         setShowConfetti(true);
@@ -315,6 +317,7 @@ export default function LearnDetail() {
                     } else {
                       const avgScore = Math.round(newResults.reduce((a, r) => a + r.score, 0) / newResults.length);
                       updateSurahProgress(surah.number, avgScore);
+                      shareSuccess(surah.number, avgScore);
                       if (isChildMode && avgScore >= 50) {
                         setShowConfetti(true);
                         if (avgScore >= 70) {

@@ -4,6 +4,7 @@ import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume
 import AudioPlayer from "@/components/AudioPlayer";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
+import { useClassSuccessShare } from "@/hooks/useClassSuccessShare";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
@@ -44,6 +45,7 @@ function getBadge(score: number) {
 
 export default function Recitation() {
   const { updateSurahProgress } = useProgress();
+  const { shareSuccess } = useClassSuccessShare();
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t } = useLanguage();
@@ -211,6 +213,7 @@ export default function Recitation() {
     const avgScore = Math.round(results.reduce((a, r) => a + r.score, 0) / results.length);
     updateSurahProgress(selectedSurah.number, avgScore);
     recordSession();
+    shareSuccess(selectedSurah.number, avgScore);
 
     if (isChildMode && avgScore >= 50) {
       setShowConfetti(true);
