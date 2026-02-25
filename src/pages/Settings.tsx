@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -17,6 +17,28 @@ export default function Settings() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showDedication, setShowDedication] = useState(false);
+
+  // Theme state: "light" | "dark" | "system"
+  const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
+    return (localStorage.getItem("quranEasyTheme") as "light" | "dark" | "system") || "system";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("quranEasyTheme", theme);
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else if (theme === "light") {
+      root.classList.remove("dark");
+    } else {
+      // system
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    }
+  }, [theme]);
 
   const handleReset = () => {
     resetProgress();
@@ -50,6 +72,32 @@ export default function Settings() {
           </button>
         </motion.div>
 
+        {/* Theme selector */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.07 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="p-4">
+            <p className="text-sm font-medium text-card-foreground mb-3 flex items-center gap-2">
+              {theme === "dark" ? <Moon size={18} className="text-primary" /> : <Sun size={18} className="text-primary" />}
+              Apparence
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { key: "light" as const, label: "☀️ Clair", icon: <Sun size={14} /> },
+                { key: "dark" as const, label: "🌙 Sombre", icon: <Moon size={14} /> },
+                { key: "system" as const, label: "⚙️ Auto", icon: null },
+              ]).map((opt) => (
+                <button
+                  key={opt.key}
+                  onClick={() => setTheme(opt.key)}
+                  className={`flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-colors text-xs font-medium ${
+                    theme === opt.key ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-accent/50 text-foreground"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
         {/* Sticker Collection */}
         {isChildMode && stickers.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-4">
