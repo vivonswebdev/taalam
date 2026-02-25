@@ -71,6 +71,23 @@ export default function MushafReader({
     globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0);
   }, []);
 
+  // Listen for surah changes from global audio (e.g. auto-advance to next surah)
+  useEffect(() => {
+    globalAudio.onAyahChange.current = (surahNum: number, ayahIdx: number) => {
+      if (surahNum !== surah.number) {
+        // Global audio switched to a different surah — request navigation
+        if (surahNum > surah.number && onRequestNextSurah) {
+          onRequestNextSurah();
+        } else if (surahNum < surah.number && onRequestPrevSurah) {
+          onRequestPrevSurah();
+        }
+      }
+    };
+    return () => {
+      globalAudio.onAyahChange.current = null;
+    };
+  }, [surah.number, onRequestNextSurah, onRequestPrevSurah]);
+
   // Resume reading position on mount
   useEffect(() => {
     if (startAtAyah > 0) {
