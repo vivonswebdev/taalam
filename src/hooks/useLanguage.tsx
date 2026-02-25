@@ -1,0 +1,400 @@
+import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from "react";
+
+export type Lang = "fr" | "en" | "nl" | "ar";
+
+export const LANGUAGES: { code: Lang; label: string; flag: string; dir: "ltr" | "rtl" }[] = [
+  { code: "fr", label: "Français", flag: "🇫🇷", dir: "ltr" },
+  { code: "en", label: "English", flag: "🇬🇧", dir: "ltr" },
+  { code: "nl", label: "Nederlands", flag: "🇳🇱", dir: "ltr" },
+  { code: "ar", label: "العربية", flag: "🇸🇦", dir: "rtl" },
+];
+
+// Translation API identifiers for AlQuran Cloud
+export const QURAN_TRANSLATION_IDS: Record<Lang, string> = {
+  fr: "fr.hamidullah",
+  en: "en.asad",
+  nl: "nl.siregar",
+  ar: "ar.alafasy", // Arabic uses original text
+};
+
+const LANG_KEY = "quranEasyLang";
+
+function detectBrowserLang(): Lang {
+  try {
+    const nav = navigator.language?.toLowerCase() || "";
+    if (nav.startsWith("fr")) return "fr";
+    if (nav.startsWith("nl")) return "nl";
+    if (nav.startsWith("ar")) return "ar";
+    return "en";
+  } catch {
+    return "fr";
+  }
+}
+
+function loadLang(): Lang {
+  try {
+    const stored = localStorage.getItem(LANG_KEY) as Lang;
+    if (stored && ["fr", "en", "nl", "ar"].includes(stored)) return stored;
+  } catch {}
+  return detectBrowserLang();
+}
+
+// ─── Translations ───────────────────────────────────────────
+const translations = {
+  // Home
+  "home.subtitle": {
+    fr: "Apprenez le Coran facilement, pas à pas",
+    en: "Learn the Quran easily, step by step",
+    nl: "Leer de Koran eenvoudig, stap voor stap",
+    ar: "تعلّم القرآن بسهولة، خطوة بخطوة",
+  },
+  "home.progress": {
+    fr: "Votre progression", en: "Your progress", nl: "Je voortgang", ar: "تقدّمك",
+  },
+  "home.level.none": {
+    fr: "Pas encore de niveau", en: "No level yet", nl: "Nog geen niveau", ar: "لا مستوى بعد",
+  },
+  "home.level": {
+    fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى",
+  },
+  "home.level.easy": {
+    fr: "Débutant", en: "Beginner", nl: "Beginner", ar: "مبتدئ",
+  },
+  "home.level.medium": {
+    fr: "Intermédiaire", en: "Intermediate", nl: "Gevorderd", ar: "متوسط",
+  },
+  "home.level.hard": {
+    fr: "Avancé", en: "Advanced", nl: "Expert", ar: "متقدم",
+  },
+  "home.mastered": {
+    fr: "sourates maîtrisées", en: "surahs mastered", nl: "soera's beheerst", ar: "سور متقنة",
+  },
+  "home.startQuiz": {
+    fr: "Commencer le Quiz Niveau", en: "Start Level Quiz", nl: "Start Niveau Quiz", ar: "ابدأ اختبار المستوى",
+  },
+  "home.continue": {
+    fr: "Continuer l'apprentissage", en: "Continue learning", nl: "Doorgaan met leren", ar: "واصل التعلم",
+  },
+  "home.retakeQuiz": {
+    fr: "Refaire le quiz", en: "Retake quiz", nl: "Quiz opnieuw", ar: "إعادة الاختبار",
+  },
+  "home.myProgress": {
+    fr: "Ma progression", en: "My progress", nl: "Mijn voortgang", ar: "تقدّمي",
+  },
+
+  // Learn
+  "learn.title": {
+    fr: "Apprendre", en: "Learn", nl: "Leren", ar: "تعلّم",
+  },
+  "learn.surahs": {
+    fr: "sourates", en: "surahs", nl: "soera's", ar: "سور",
+  },
+  "learn.determineLevel": {
+    fr: "Déterminez votre niveau", en: "Determine your level", nl: "Bepaal je niveau", ar: "حدّد مستواك",
+  },
+  "learn.takeQuiz": {
+    fr: "Passez le quiz pour débloquer les sourates adaptées",
+    en: "Take the quiz to unlock suitable surahs",
+    nl: "Doe de quiz om geschikte soera's te ontgrendelen",
+    ar: "قم بالاختبار لفتح السور المناسبة",
+  },
+  "learn.startQuiz": {
+    fr: "Passer le quiz", en: "Take the quiz", nl: "Doe de quiz", ar: "ابدأ الاختبار",
+  },
+
+  // Learn Detail
+  "detail.back": {
+    fr: "Retour", en: "Back", nl: "Terug", ar: "رجوع",
+  },
+  "detail.verses": {
+    fr: "versets", en: "verses", nl: "verzen", ar: "آيات",
+  },
+  "detail.surah": {
+    fr: "Sourate n°", en: "Surah no.", nl: "Soera nr.", ar: "سورة رقم",
+  },
+  "detail.step1": {
+    fr: "Étape 1 : Écoutez la récitation", en: "Step 1: Listen to recitation", nl: "Stap 1: Luister naar recitatie", ar: "الخطوة 1: استمع للتلاوة",
+  },
+  "detail.step2": {
+    fr: "Étape 2 : Récitez le verset", en: "Step 2: Recite the verse", nl: "Stap 2: Reciteer het vers", ar: "الخطوة 2: اتلُ الآية",
+  },
+  "detail.step3": {
+    fr: "Étape 3 : Résultats", en: "Step 3: Results", nl: "Stap 3: Resultaten", ar: "الخطوة 3: النتائج",
+  },
+  "detail.skipToRecitation": {
+    fr: "Passer à la récitation →", en: "Skip to recitation →", nl: "Ga naar recitatie →", ar: "→ انتقل للتلاوة",
+  },
+  "detail.reciteNow": {
+    fr: "Récitez maintenant... Appuyez pour arrêter", en: "Recite now... Tap to stop", nl: "Reciteer nu... Tik om te stoppen", ar: "اتلُ الآن... اضغط للإيقاف",
+  },
+  "detail.tapToStart": {
+    fr: "Appuyez pour commencer", en: "Tap to start", nl: "Tik om te starten", ar: "اضغط للبدء",
+  },
+  "detail.yourRecitation": {
+    fr: "Votre récitation :", en: "Your recitation:", nl: "Jouw recitatie:", ar: "تلاوتك:",
+  },
+  "detail.validate": {
+    fr: "Valider le verset", en: "Validate verse", nl: "Vers valideren", ar: "تأكيد الآية",
+  },
+  "detail.skipVerse": {
+    fr: "Passer ce verset", en: "Skip this verse", nl: "Sla dit vers over", ar: "تخطي هذه الآية",
+  },
+  "detail.verse": {
+    fr: "Verset", en: "Verse", nl: "Vers", ar: "آية",
+  },
+  "detail.repeat": {
+    fr: "Répéter", en: "Repeat", nl: "Herhalen", ar: "إعادة",
+  },
+  "detail.nextSurah": {
+    fr: "Sourate suivante", en: "Next surah", nl: "Volgende soera", ar: "السورة التالية",
+  },
+  "detail.excellent": {
+    fr: "Excellent ! 🌟", en: "Excellent! 🌟", nl: "Uitstekend! 🌟", ar: "ممتاز! 🌟",
+  },
+  "detail.good": {
+    fr: "Bien ! Continuez 💪", en: "Good! Keep going 💪", nl: "Goed! Ga zo door 💪", ar: "جيد! واصل 💪",
+  },
+  "detail.tryAgain": {
+    fr: "Réessayez 📖", en: "Try again 📖", nl: "Probeer opnieuw 📖", ar: "حاول مرة أخرى 📖",
+  },
+  "detail.mastered": {
+    fr: "Vous maîtrisez cette sourate !", en: "You've mastered this surah!", nl: "Je beheerst deze soera!", ar: "لقد أتقنت هذه السورة!",
+  },
+  "detail.listenAgain": {
+    fr: "Réécoutez et réessayez les versets en rouge", en: "Re-listen and retry the red verses", nl: "Luister opnieuw en probeer de rode verzen opnieuw", ar: "أعد الاستماع وحاول الآيات الحمراء مرة أخرى",
+  },
+  "detail.voiceNotSupported": {
+    fr: "La reconnaissance vocale n'est pas supportée par votre navigateur. Utilisez Chrome pour une meilleure expérience.",
+    en: "Voice recognition is not supported by your browser. Use Chrome for a better experience.",
+    nl: "Spraakherkenning wordt niet ondersteund door je browser. Gebruik Chrome voor een betere ervaring.",
+    ar: "التعرف على الصوت غير مدعوم في متصفحك. استخدم Chrome للحصول على تجربة أفضل.",
+  },
+  "detail.childMode": {
+    fr: "🧒 Mode Enfant activé", en: "🧒 Child Mode enabled", nl: "🧒 Kindermodus ingeschakeld", ar: "🧒 وضع الأطفال مفعّل",
+  },
+
+  // Recitation
+  "recitation.title": {
+    fr: "Récitation Tarteel", en: "Tarteel Recitation", nl: "Tarteel Recitatie", ar: "تلاوة ترتيل",
+  },
+  "recitation.subtitle": {
+    fr: "Écoute, mémorise, récite", en: "Listen, memorize, recite", nl: "Luister, onthoud, reciteer", ar: "استمع، احفظ، اتلُ",
+  },
+  "recitation.streak": {
+    fr: "de suite", en: "streak", nl: "op rij", ar: "متتالية",
+  },
+  "recitation.startStreak": {
+    fr: "Commence ton streak !", en: "Start your streak!", nl: "Begin je reeks!", ar: "ابدأ سلسلتك!",
+  },
+  "recitation.daysStreak": {
+    fr: "jour(s) de suite !", en: "day(s) streak!", nl: "dag(en) op rij!", ar: "يوم/أيام متتالية!",
+  },
+  "recitation.record": {
+    fr: "Record", en: "Record", nl: "Record", ar: "رقم قياسي",
+  },
+  "recitation.days": {
+    fr: "jours", en: "days", nl: "dagen", ar: "أيام",
+  },
+  "recitation.sessions": {
+    fr: "sessions", en: "sessions", nl: "sessies", ar: "جلسات",
+  },
+  "recitation.practicedToday": {
+    fr: "✅ Tu as pratiqué aujourd'hui !", en: "✅ You practiced today!", nl: "✅ Je hebt vandaag geoefend!", ar: "✅ لقد تدربت اليوم!",
+  },
+  "recitation.difficulty": {
+    fr: "Niveau de difficulté", en: "Difficulty level", nl: "Moeilijkheidsgraad", ar: "مستوى الصعوبة",
+  },
+  "recitation.easy": {
+    fr: "Facile", en: "Easy", nl: "Makkelijk", ar: "سهل",
+  },
+  "recitation.medium": {
+    fr: "Moyen", en: "Medium", nl: "Gemiddeld", ar: "متوسط",
+  },
+  "recitation.hard": {
+    fr: "Difficile", en: "Hard", nl: "Moeilijk", ar: "صعب",
+  },
+  "recitation.chooseSurah": {
+    fr: "Choisis une sourate", en: "Choose a surah", nl: "Kies een soera", ar: "اختر سورة",
+  },
+  "recitation.selectSurah": {
+    fr: "Sélectionner une sourate...", en: "Select a surah...", nl: "Selecteer een soera...", ar: "...اختر سورة",
+  },
+  "recitation.textMasked": {
+    fr: "Texte masqué — mémorise bien !", en: "Text hidden — memorize well!", nl: "Tekst verborgen — onthoud goed!", ar: "النص مخفي — احفظ جيدًا!",
+  },
+  "recitation.skipToRecitation": {
+    fr: "Passer à la récitation →", en: "Skip to recitation →", nl: "Ga naar recitatie →", ar: "→ انتقل للتلاوة",
+  },
+  "recitation.restart": {
+    fr: "Recommencer", en: "Restart", nl: "Opnieuw", ar: "إعادة",
+  },
+  "recitation.changeSurah": {
+    fr: "Changer de sourate", en: "Change surah", nl: "Andere soera", ar: "تغيير السورة",
+  },
+  "recitation.hafiz": {
+    fr: "Hâfiz en herbe", en: "Budding Hafiz", nl: "Aankomend Hafiz", ar: "حافظ ناشئ",
+  },
+  "recitation.daysOfStreak": {
+    fr: "jour(s) de streak", en: "day(s) streak", nl: "dag(en) reeks", ar: "يوم/أيام سلسلة",
+  },
+
+  // Progress
+  "progress.title": {
+    fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم",
+  },
+  "progress.mastered": {
+    fr: "Maîtrisées", en: "Mastered", nl: "Beheerst", ar: "متقنة",
+  },
+  "progress.attempts": {
+    fr: "Tentatives", en: "Attempts", nl: "Pogingen", ar: "محاولات",
+  },
+  "progress.studied": {
+    fr: "Étudiées", en: "Studied", nl: "Bestudeerd", ar: "مدروسة",
+  },
+  "progress.scores": {
+    fr: "Scores par sourate", en: "Scores by surah", nl: "Scores per soera", ar: "النتائج حسب السورة",
+  },
+  "progress.stickers": {
+    fr: "🎁 Ma collection de stickers", en: "🎁 My sticker collection", nl: "🎁 Mijn stickerverzameling", ar: "🎁 مجموعة الملصقات",
+  },
+  "progress.details": {
+    fr: "Détails", en: "Details", nl: "Details", ar: "التفاصيل",
+  },
+  "progress.noSurahs": {
+    fr: "Aucune sourate étudiée pour le moment", en: "No surahs studied yet", nl: "Nog geen soera's bestudeerd", ar: "لم تتم دراسة أي سورة بعد",
+  },
+
+  // Settings
+  "settings.title": {
+    fr: "Réglages", en: "Settings", nl: "Instellingen", ar: "الإعدادات",
+  },
+  "settings.childMode": {
+    fr: "Mode Enfant", en: "Child Mode", nl: "Kindermodus", ar: "وضع الأطفال",
+  },
+  "settings.childModeDesc": {
+    fr: "Texte plus gros, stickers et confettis", en: "Bigger text, stickers and confetti", nl: "Grotere tekst, stickers en confetti", ar: "نص أكبر، ملصقات وقصاصات ورقية",
+  },
+  "settings.language": {
+    fr: "Langue", en: "Language", nl: "Taal", ar: "اللغة",
+  },
+  "settings.reset": {
+    fr: "Réinitialiser la progression", en: "Reset progress", nl: "Voortgang resetten", ar: "إعادة تعيين التقدم",
+  },
+  "settings.resetDesc": {
+    fr: "Remet tout à zéro", en: "Reset everything", nl: "Alles resetten", ar: "إعادة تعيين كل شيء",
+  },
+  "settings.version": {
+    fr: "Apprendre le Coran facilement", en: "Learn the Quran easily", nl: "Leer de Koran eenvoudig", ar: "تعلّم القرآن بسهولة",
+  },
+  "settings.confirmTitle": {
+    fr: "Confirmer", en: "Confirm", nl: "Bevestigen", ar: "تأكيد",
+  },
+  "settings.confirmMessage": {
+    fr: "Toute votre progression sera perdue. Voulez-vous continuer ?",
+    en: "All your progress will be lost. Do you want to continue?",
+    nl: "Al je voortgang gaat verloren. Wil je doorgaan?",
+    ar: "سيتم فقدان كل تقدمك. هل تريد المتابعة؟",
+  },
+  "settings.cancel": {
+    fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء",
+  },
+  "settings.confirmReset": {
+    fr: "Réinitialiser", en: "Reset", nl: "Resetten", ar: "إعادة تعيين",
+  },
+
+  // Quiz
+  "quiz.back": {
+    fr: "Retour", en: "Back", nl: "Terug", ar: "رجوع",
+  },
+  "quiz.question": {
+    fr: "Question", en: "Question", nl: "Vraag", ar: "سؤال",
+  },
+  "quiz.bravo": {
+    fr: "Bravo !", en: "Well done!", nl: "Goed gedaan!", ar: "أحسنت!",
+  },
+  "quiz.score": {
+    fr: "Score", en: "Score", nl: "Score", ar: "النتيجة",
+  },
+  "quiz.levelLabel": {
+    fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى",
+  },
+  "quiz.startLearning": {
+    fr: "Commencer l'apprentissage", en: "Start learning", nl: "Begin met leren", ar: "ابدأ التعلم",
+  },
+
+  // Bottom Nav
+  "nav.home": {
+    fr: "Accueil", en: "Home", nl: "Home", ar: "الرئيسية",
+  },
+  "nav.learn": {
+    fr: "Apprendre", en: "Learn", nl: "Leren", ar: "تعلّم",
+  },
+  "nav.recitation": {
+    fr: "Récitation", en: "Recitation", nl: "Recitatie", ar: "تلاوة",
+  },
+  "nav.progress": {
+    fr: "Progrès", en: "Progress", nl: "Voortgang", ar: "التقدم",
+  },
+  "nav.settings": {
+    fr: "Réglages", en: "Settings", nl: "Instellingen", ar: "الإعدادات",
+  },
+
+  // Audio player
+  "audio.loading": {
+    fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "...جاري التحميل",
+  },
+  "audio.listen": {
+    fr: "Écouter la sourate", en: "Listen to surah", nl: "Luister naar soera", ar: "استمع للسورة",
+  },
+  "audio.stop": {
+    fr: "Arrêter", en: "Stop", nl: "Stoppen", ar: "إيقاف",
+  },
+} as const;
+
+type TranslationKey = keyof typeof translations;
+
+// ─── Context ────────────────────────────────────────────────
+interface LanguageContextType {
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+  t: (key: TranslationKey) => string;
+  dir: "ltr" | "rtl";
+  isRTL: boolean;
+}
+
+const LanguageContext = createContext<LanguageContextType | null>(null);
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(loadLang);
+
+  const setLang = useCallback((newLang: Lang) => {
+    setLangState(newLang);
+    localStorage.setItem(LANG_KEY, newLang);
+  }, []);
+
+  const t = useCallback((key: TranslationKey): string => {
+    const entry = translations[key];
+    if (!entry) return key;
+    return entry[lang] || entry.fr;
+  }, [lang]);
+
+  const langInfo = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
+
+  // Update document dir for RTL
+  useEffect(() => {
+    document.documentElement.dir = langInfo.dir;
+    document.documentElement.lang = lang;
+  }, [lang, langInfo.dir]);
+
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t, dir: langInfo.dir, isRTL: lang === "ar" }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
+  return ctx;
+}
