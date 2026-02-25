@@ -150,7 +150,14 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) return;
 
-    try { recognitionRef.current?.abort(); } catch {}
+    // Detach old handlers BEFORE aborting to prevent stale onend from interfering
+    if (recognitionRef.current) {
+      recognitionRef.current.onresult = null;
+      recognitionRef.current.onend = null;
+      recognitionRef.current.onerror = null;
+      try { recognitionRef.current.abort(); } catch {}
+      recognitionRef.current = null;
+    }
 
     const recognition: SpeechRecognition = new SR();
     recognition.lang = lang;
