@@ -5,6 +5,7 @@ export interface Classroom {
   id: string;
   name: string;
   teacherName: string;
+  teacherId?: string;
   joinCode: string;
   createdAt: string;
 }

@@ -63,6 +63,7 @@ export default function Classrooms() {
             id: c.id,
             name: c.name,
             teacherName: "",
+            teacherId: c.teacher_id,
             joinCode: c.join_code,
             createdAt: c.created_at,
           }));
@@ -108,6 +109,7 @@ export default function Classrooms() {
         id: dbClass.id,
         name: dbClass.name,
         teacherName: teacherName.trim(),
+        teacherId: user.id,
         joinCode: dbClass.join_code,
         createdAt: dbClass.created_at,
       };
