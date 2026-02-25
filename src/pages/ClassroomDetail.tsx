@@ -27,20 +27,50 @@ interface ChatMessage {
 }
 
 export default function ClassroomDetail() {
-  const { classId } = useParams<{ classId: string }>();
+  const { classId: rawClassId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
   const { user } = useAuth();
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
   const { profiles, getChildMastery, getSessionsForChild, getLastActivity } = useChildProfiles();
+
+  // Resolve classId: if it's not a UUID, look it up by join_code
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const isUuid = rawClassId ? UUID_RE.test(rawClassId) : false;
+  const [resolvedClassId, setResolvedClassId] = useState<string | null>(isUuid ? rawClassId! : null);
+
+  useEffect(() => {
+    if (isUuid || !rawClassId) return;
+    // Try to find in local classrooms first
+    const local = classrooms.find((c) => c.id === rawClassId || c.joinCode === rawClassId);
+    if (local && UUID_RE.test(local.id)) {
+      setResolvedClassId(local.id);
+      return;
+    }
+    // Lookup by join_code in DB
+    supabase
+      .from("classrooms")
+      .select("id")
+      .eq("join_code", rawClassId.toUpperCase())
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setResolvedClassId(data.id);
+          // Redirect to proper UUID URL
+          navigate(`/classrooms/${data.id}`, { replace: true });
+        }
+      });
+  }, [rawClassId, isUuid, classrooms, navigate]);
+
+  const classId = resolvedClassId;
+
   const {
     challenge, results, myResult, loading: challengeLoading,
     createChallenge, submitResult, weekStart,
-  } = useWeeklyChallenge(classId);
+  } = useWeeklyChallenge(classId ?? undefined);
 
-  const classroom = classrooms.find((c) => c.id === classId);
+  const classroom = classrooms.find((c) => c.id === classId || c.id === rawClassId);
   const isTeacher = !!(user && classroom && (classroom as any).teacherId === user.id);
-  // Also check DB teacher_id (classroom from local may not have it)
   const [dbTeacherId, setDbTeacherId] = useState<string | null>(null);
   useEffect(() => {
     if (!classId) return;
@@ -133,10 +163,10 @@ export default function ClassroomDetail() {
     }
   };
 
-  if (!classroom) {
+  if (!classroom && !resolvedClassId) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">{t("classrooms.notFound")}</p>
+        <p className="text-muted-foreground">Chargement...</p>
       </div>
     );
   }
