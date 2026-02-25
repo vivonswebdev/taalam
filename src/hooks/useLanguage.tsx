@@ -785,6 +785,29 @@ const translations = {
   "tahaddi.detail": { fr: "Détail par verset", en: "Per-verse detail", nl: "Detail per vers", ar: "تفاصيل لكل آية" },
   "tahaddi.attempts": { fr: "essais", en: "tries", nl: "pogingen", ar: "محاولات" },
   "tahaddi.hintUsed": { fr: "indice utilisé", en: "hint used", nl: "hint gebruikt", ar: "تم استخدام التلميح" },
+
+  // Find Ayah (voice search)
+  "findAyah.title": { fr: "Trouve l'ayah", en: "Find the Ayah", nl: "Vind de Ayah", ar: "اعثر على الآية" },
+  "findAyah.subtitle": { fr: "Récitez et identifiez le verset", en: "Recite and identify the verse", nl: "Reciteer en identificeer het vers", ar: "اتلُ وحدد الآية" },
+  "findAyah.searchIn": { fr: "Chercher dans", en: "Search in", nl: "Zoeken in", ar: "البحث في" },
+  "findAyah.scopeAll": { fr: "Tout le Coran", en: "Whole Quran", nl: "Hele Koran", ar: "القرآن كاملاً" },
+  "findAyah.scopeSurah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة" },
+  "findAyah.instruction": { fr: "Appuyez sur le micro et récitez quelques mots d'un verset. L'app trouvera la sourate et l'ayah.", en: "Press the mic and recite a few words from a verse. The app will find the surah and ayah.", nl: "Druk op de microfoon en reciteer een paar woorden van een vers.", ar: "اضغط على المايك واتلُ بضع كلمات من آية. سيجد التطبيق السورة والآية." },
+  "findAyah.tapToStart": { fr: "Appuyez et récitez", en: "Press and recite", nl: "Druk en reciteer", ar: "اضغط واتلُ" },
+  "findAyah.listening": { fr: "Écoute en cours…", en: "Listening…", nl: "Luisteren…", ar: "جارٍ الاستماع…" },
+  "findAyah.searching": { fr: "Recherche dans le Coran…", en: "Searching the Quran…", nl: "Zoeken in de Koran…", ar: "جارٍ البحث في القرآن…" },
+  "findAyah.youRecited": { fr: "Vous avez récité", en: "You recited", nl: "Je reciteerde", ar: "ما تلوته" },
+  "findAyah.noResults": { fr: "Aucun verset trouvé. Réessayez en récitant plus clairement.", en: "No verse found. Try again more clearly.", nl: "Geen vers gevonden. Probeer duidelijker.", ar: "لم يتم العثور على آية. حاول مرة أخرى بوضوح أكثر." },
+  "findAyah.verse": { fr: "Verset", en: "Verse", nl: "Vers", ar: "آية" },
+  "findAyah.listen": { fr: "Écouter", en: "Listen", nl: "Luisteren", ar: "استمع" },
+  "findAyah.openMushaf": { fr: "Ouvrir", en: "Open", nl: "Openen", ar: "فتح" },
+  "findAyah.searchAgain": { fr: "Nouvelle recherche", en: "Search again", nl: "Opnieuw zoeken", ar: "بحث جديد" },
+  "findAyah.micDenied": { fr: "Accès au micro refusé", en: "Microphone access denied", nl: "Microfoon geweigerd", ar: "تم رفض الوصول للميكروفون" },
+  "findAyah.micError": { fr: "Erreur microphone", en: "Microphone error", nl: "Microfoonfout", ar: "خطأ في الميكروفون" },
+  "findAyah.tooShort": { fr: "Enregistrement trop court", en: "Recording too short", nl: "Opname te kort", ar: "التسجيل قصير جداً" },
+  "findAyah.searchError": { fr: "Erreur de recherche", en: "Search error", nl: "Zoekfout", ar: "خطأ في البحث" },
+  "findAyah.dismiss": { fr: "Fermer", en: "Dismiss", nl: "Sluiten", ar: "إغلاق" },
+  "findAyah.modeLabel": { fr: "Trouve l'ayah", en: "Find Ayah", nl: "Vind Ayah", ar: "اعثر على الآية" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
