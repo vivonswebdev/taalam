@@ -27,6 +27,56 @@ export default function Classrooms() {
   const [joinCode, setJoinCode] = useState("");
   const [joining, setJoining] = useState(false);
 
+  // Fetch classrooms from DB where user is teacher or member, merge into local state
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        // Classes I teach
+        const { data: taught } = await supabase
+          .from("classrooms")
+          .select("id, name, join_code, teacher_id, created_at")
+          .eq("teacher_id", user.id);
+
+        // Classes I joined
+        const { data: memberships } = await supabase
+          .from("classroom_members")
+          .select("classroom_id")
+          .eq("user_id", user.id);
+
+        const joinedIds = (memberships || []).map((m) => m.classroom_id);
+        let joinedClasses: any[] = [];
+        if (joinedIds.length > 0) {
+          const { data } = await supabase
+            .from("classrooms")
+            .select("id, name, join_code, teacher_id, created_at")
+            .in("id", joinedIds);
+          joinedClasses = data || [];
+        }
+
+        const allDb = [...(taught || []), ...joinedClasses];
+        // Deduplicate and merge into local classrooms
+        const existingIds = new Set(classrooms.map((c) => c.id));
+        const newOnes = allDb.filter((c) => !existingIds.has(c.id));
+        if (newOnes.length > 0) {
+          const mapped = newOnes.map((c) => ({
+            id: c.id,
+            name: c.name,
+            teacherName: "",
+            joinCode: c.join_code,
+            createdAt: c.created_at,
+          }));
+          // Use createClassroom won't work here, just set via localStorage + reload
+          const updated = [...classrooms, ...mapped];
+          localStorage.setItem("quranEasyClassrooms", JSON.stringify(updated));
+          window.location.reload();
+        }
+      } catch (err) {
+        console.error("Failed to sync classrooms from DB:", err);
+      }
+    })();
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (totalNewMembers > 0) {
       toast({
@@ -108,9 +158,24 @@ export default function Classrooms() {
 
       if (joinError) throw joinError;
 
+      // Add to local state so it appears immediately
+      const localClass = {
+        id: classroom.id,
+        name: classroom.name,
+        teacherName: "",
+        joinCode: code,
+        createdAt: new Date().toISOString(),
+      };
+      const current = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
+      if (!current.some((c: any) => c.id === classroom.id)) {
+        localStorage.setItem("quranEasyClassrooms", JSON.stringify([...current, localClass]));
+      }
+
       toast({ title: `✅ ${t("classrooms.joinSuccess")} "${classroom.name}"` });
       setShowJoin(false);
       setJoinCode("");
+      // Reload to pick up the new class in local state
+      window.location.reload();
     } catch (err: any) {
       toast({ title: "Erreur", description: err.message, variant: "destructive" });
     } finally {
