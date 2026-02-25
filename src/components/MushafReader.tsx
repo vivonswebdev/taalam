@@ -341,6 +341,12 @@ export default function MushafReader({
                 className="arabic-text text-xl leading-[2.2] text-foreground"
               />
 
+              {ayah.transliteration && (
+                <p className="text-xs text-primary/70 italic mt-1 leading-relaxed">
+                  {ayah.transliteration}
+                </p>
+              )}
+
               {!isArabicOnly && (
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {translations[i] || ayah.translation}
