@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, BarChart3, Settings } from "lucide-react";
+import { Home, BookOpen, Mic, BarChart3, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 
 const tabs = [
   { path: "/", icon: Home, label: "Accueil" },
   { path: "/learn", icon: BookOpen, label: "Apprendre" },
+  { path: "/recitation", icon: Mic, label: "Récitation" },
   { path: "/progress", icon: BarChart3, label: "Progrès" },
   { path: "/settings", icon: Settings, label: "Réglages" },
 ];
@@ -15,7 +16,7 @@ export default function BottomNav() {
   const currentPath = location.pathname;
 
   // Hide on quiz and learn detail pages
-  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath)) return null;
+  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/")) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-border safe-area-bottom">
