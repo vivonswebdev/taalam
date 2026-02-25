@@ -520,8 +520,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Fallback context for when provider is not yet mounted (HMR / race conditions)
+const fallbackContext: LanguageContextType = {
+  lang: "fr",
+  setLang: () => {},
+  t: (key: TranslationKey) => {
+    const entry = translations[key];
+    return entry?.fr || key;
+  },
+  dir: "ltr",
+  isRTL: false,
+};
+
 export function useLanguage() {
   const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
-  return ctx;
+  return ctx || fallbackContext;
 }
