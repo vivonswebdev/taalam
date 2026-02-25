@@ -49,6 +49,7 @@ export default function AudioPlayer({
   const setContinuousMode = onContinuousModeChange ?? setInternalContinuous;
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const autoStartedRef = useRef(false);
   const [currentAyah, setCurrentAyah] = useState(0);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -95,6 +96,20 @@ export default function AudioPlayer({
     }
     prevSurahRef.current = surahNumber;
   }, [surahNumber]);
+
+  // Auto-start playback on mount
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    (async () => {
+      const urls = await fetchUrls(reciter.id);
+      if (urls.length > 0) {
+        setPlaying(true);
+        onPlayStateChange?.(true);
+        playAyah(0, urls);
+      }
+    })();
+  }, []);
 
   // Cleanup on unmount — stop audio completely
   useEffect(() => {
@@ -257,19 +272,25 @@ export default function AudioPlayer({
     return (
       <div className="bg-card border border-border rounded-2xl p-3">
         <div className="flex items-center gap-3">
-          <button
-            onClick={handlePlayPause}
-            disabled={loading}
-            className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0"
-          >
-            {loading ? (
-              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-            ) : playing ? (
+          {playing ? (
+            <button
+              onClick={handlePlayPause}
+              className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0"
+            >
               <Pause size={18} />
-            ) : (
+            </button>
+          ) : loading ? (
+            <div className="w-10 h-10 rounded-full bg-primary/70 flex items-center justify-center shrink-0">
+              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+            </div>
+          ) : (
+            <button
+              onClick={handlePlayPause}
+              className="w-10 h-10 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
+            >
               <Play size={18} className="ml-0.5" />
-            )}
-          </button>
+            </button>
+          )}
           <div className="flex-1 min-w-0">
             <p className="text-xs text-muted-foreground truncate">{surahNameArabic} · {reciter.name}</p>
             <div className="h-1.5 bg-muted rounded-full mt-1 cursor-pointer" onClick={handleSeek}>
@@ -312,19 +333,25 @@ export default function AudioPlayer({
         <button onClick={handlePrev} className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center">
           <SkipBack size={18} />
         </button>
-        <button
-          onClick={handlePlayPause}
-          disabled={loading}
-          className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20"
-        >
-          {loading ? (
-            <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-          ) : playing ? (
+        {playing ? (
+          <button
+            onClick={handlePlayPause}
+            className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20"
+          >
             <Pause size={24} />
-          ) : (
+          </button>
+        ) : loading ? (
+          <div className="w-14 h-14 rounded-full bg-primary/70 flex items-center justify-center shadow-lg shadow-primary/20">
+            <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+          </div>
+        ) : (
+          <button
+            onClick={handlePlayPause}
+            className="w-14 h-14 rounded-full bg-muted text-muted-foreground flex items-center justify-center shadow-lg"
+          >
             <Play size={24} className="ml-1" />
-          )}
-        </button>
+          </button>
+        )}
         <button onClick={handleNext} className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center">
           <SkipForward size={18} />
         </button>
