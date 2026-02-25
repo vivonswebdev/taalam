@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Eye, EyeOff, AlertCircle, CheckCircle2, XCircle,
@@ -11,6 +11,8 @@ import {
   type DictationWordResult,
 } from "@/hooks/useVoiceRecognition";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useXP } from "@/hooks/useXP";
+import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 
 interface DictationModeProps {
   surah: Surah;
@@ -81,14 +83,28 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     voice.start();
   }, [voice]);
 
+  const xp = useXP();
+  const xpAwardedRef = useRef(false);
+
   const handleStop = useCallback(() => {
     voice.stop();
-    if (!liveResult) {
-      const result = compareSurahDictation(allArabicTexts, liveTranscript);
-      setLiveResult(result);
-    }
+    const result = liveResult || compareSurahDictation(allArabicTexts, liveTranscript);
+    if (!liveResult) setLiveResult(result);
     setPhase("result");
   }, [voice, allArabicTexts, liveTranscript, liveResult]);
+
+  // Award XP once when result phase is shown
+  useEffect(() => {
+    if (phase === "result" && liveResult && !xpAwardedRef.current) {
+      xpAwardedRef.current = true;
+      if (liveResult.totalScore >= 50) {
+        const correctWords = liveResult.wordResults.filter((r) => r.status === "correct").length;
+        const xpGain = Math.max(1, Math.round(correctWords / 2));
+        xp.addXP(xpGain);
+      }
+    }
+    if (phase === "ready") xpAwardedRef.current = false;
+  }, [phase, liveResult]);
 
   const handleRestart = useCallback(() => {
     setPhase("ready");
@@ -413,6 +429,18 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
               {liveResult.wordResults.filter((r) => r.status === "correct").length} / {surah.ayahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).length, 0)} {t("dictation.wordsCorrect")}
             </p>
           </div>
+
+          {/* XP Progress Bar */}
+          <ProgressBarDuolingo
+            level={xp.level}
+            xpInLevel={xp.xpInLevel}
+            xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal}
+            xpToday={xp.xpToday}
+            streakDays={xp.streakDays}
+            lastGain={xp.lastGain}
+            compact
+          />
 
           {/* Legend */}
           <div className="flex flex-wrap justify-center gap-3 text-xs">

@@ -7,11 +7,14 @@ import { surahs } from "@/data/surahs";
 import { Trophy, BookOpen, TrendingUp, Star, Sparkles, Baby } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { loadQuizStats } from "@/pages/Quiz";
+import { useXP } from "@/hooks/useXP";
+import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 
 export default function Progress() {
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
   const { t } = useLanguage();
+  const xp = useXP();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
@@ -40,6 +43,19 @@ export default function Progress() {
       </div>
 
       <div className="px-6 space-y-5">
+        {/* XP Progress Bar */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <ProgressBarDuolingo
+            level={xp.level}
+            xpInLevel={xp.xpInLevel}
+            xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal}
+            xpToday={xp.xpToday}
+            streakDays={xp.streakDays}
+            lastGain={xp.lastGain}
+          />
+        </motion.div>
+
         <div className="grid grid-cols-3 gap-3">
           {[
             { icon: Trophy, value: mastered, label: t("progress.mastered"), color: "text-secondary" },
