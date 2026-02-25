@@ -143,13 +143,14 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     return slices;
   }, [liveResult, surah.ayahs]);
 
-  // An ayah is "reached" only if its slice contains at least one
-  // correct or incorrect word (not just "missing" placeholders).
+  // An aya is revealed only when ALL its expected words are resolved (correct or incorrect).
   const isAyahReached = useCallback((ayaIdx: number) => {
-    if (!ayahWordSlices[ayaIdx] || ayahWordSlices[ayaIdx].length === 0) return false;
-    return ayahWordSlices[ayaIdx].some(
-      (w) => w.status === "correct" || w.status === "incorrect" || w.status === "extra"
-    );
+    const slice = ayahWordSlices[ayaIdx];
+    if (!slice || slice.length === 0) return false;
+    const expected = slice.filter(w => w.status !== "extra");
+    if (expected.length === 0) return false;
+    const done = expected.filter(w => w.status === "correct" || w.status === "incorrect").length;
+    return done === expected.length;
   }, [ayahWordSlices]);
 
   // ─── Render Mushaf page with hide/reveal logic ───
