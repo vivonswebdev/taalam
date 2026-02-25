@@ -1036,6 +1036,16 @@ const translations = {
   "home.announcements": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "الإعلانات" },
   "home.joinCommunity": { fr: "Rejoindre la communauté", en: "Join community", nl: "Word lid", ar: "انضم للمجتمع" },
   "home.joinCommunityDesc": { fr: "Crée ton compte et apparais dans le classement", en: "Create your account & appear in leaderboard", nl: "Maak een account & verschijn in de ranglijst", ar: "أنشئ حسابك وظهر في لوحة المتصدرين" },
+  "home.hifzTitle": { fr: "Votre Hifz", en: "Your Hifz", nl: "Uw Hifz", ar: "حفظك" },
+  "home.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام" },
+  "home.today": { fr: "aujourd'hui", en: "today", nl: "vandaag", ar: "اليوم" },
+  "home.quizButton": { fr: "Commencer le Quiz Niveau", en: "Start Level Quiz", nl: "Start Niveau Quiz", ar: "ابدأ اختبار المستوى" },
+  "home.quizButtonDesc": { fr: "Testez votre niveau Hifz", en: "Test your Hifz level", nl: "Test je Hifz-niveau", ar: "اختبر مستوى حفظك" },
+  "home.tarteelButton": { fr: "Commencer votre Tarteel", en: "Start your Tarteel", nl: "Start je Tarteel", ar: "ابدأ ترتيلك" },
+  "home.tarteelButtonDesc": { fr: "Récitation + Correction IA", en: "Recitation + AI Correction", nl: "Recitatie + AI-correctie", ar: "تلاوة + تصحيح ذكي" },
+  "home.leaderboardButton": { fr: "Voir votre classement", en: "View your ranking", nl: "Bekijk je ranglijst", ar: "شاهد ترتيبك" },
+  "home.leaderboardButtonDesc": { fr: "Top mondial / pays", en: "Global / country top", nl: "Wereld / land top", ar: "عالمي / حسب البلد" },
+  "home.classMode": { fr: "Mode Classe", en: "Class Mode", nl: "Klassenmodus", ar: "وضع الفصل" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
