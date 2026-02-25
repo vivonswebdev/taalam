@@ -986,6 +986,52 @@ const translations = {
   "join.errorNameLong": { fr: "50 caractères max", en: "50 characters max", nl: "Max 50 tekens", ar: "50 حرفًا كحد أقصى" },
   "join.errorAge": { fr: "Âge invalide (1-99)", en: "Invalid age (1-99)", nl: "Ongeldige leeftijd (1-99)", ar: "عمر غير صالح (1-99)" },
   "join.years": { fr: "ans", en: "years", nl: "jaar", ar: "سنة" },
+
+  // Auth
+  "auth.signupTitle": { fr: "Créer un compte", en: "Create account", nl: "Account aanmaken", ar: "إنشاء حساب" },
+  "auth.loginTitle": { fr: "Se connecter", en: "Sign in", nl: "Inloggen", ar: "تسجيل الدخول" },
+  "auth.signupDesc": { fr: "Rejoignez la communauté Iqraa", en: "Join the Iqraa community", nl: "Word lid van Iqraa", ar: "انضم إلى مجتمع إقرأ" },
+  "auth.loginDesc": { fr: "Recevez un lien magique par email", en: "Get a magic link by email", nl: "Ontvang een magische link", ar: "احصل على رابط سحري" },
+  "auth.signup": { fr: "Inscription", en: "Sign up", nl: "Registreren", ar: "تسجيل" },
+  "auth.login": { fr: "Connexion", en: "Sign in", nl: "Inloggen", ar: "دخول" },
+  "auth.chooseAvatar": { fr: "Choisis ton avatar", en: "Choose your avatar", nl: "Kies je avatar", ar: "اختر صورتك الرمزية" },
+  "auth.displayName": { fr: "Ton nom / pseudo", en: "Your name", nl: "Je naam", ar: "اسمك" },
+  "auth.email": { fr: "Email", en: "Email", nl: "E-mail", ar: "البريد الإلكتروني" },
+  "auth.publicProfile": { fr: "Profil public", en: "Public profile", nl: "Openbaar profiel", ar: "ملف عام" },
+  "auth.publicProfileDesc": { fr: "Visible dans le classement", en: "Visible in leaderboard", nl: "Zichtbaar in ranglijst", ar: "مرئي في لوحة المتصدرين" },
+  "auth.createAccount": { fr: "Créer mon compte", en: "Create my account", nl: "Account aanmaken", ar: "إنشاء حسابي" },
+  "auth.sendMagicLink": { fr: "Envoyer le lien magique", en: "Send magic link", nl: "Magische link sturen", ar: "إرسال الرابط السحري" },
+  "auth.magicLinkInfo": { fr: "Un lien de connexion sera envoyé à votre email", en: "A login link will be sent to your email", nl: "Een inloglink wordt naar je e-mail gestuurd", ar: "سيتم إرسال رابط تسجيل الدخول إلى بريدك" },
+  "auth.errorFields": { fr: "Remplis tous les champs", en: "Fill all fields", nl: "Vul alle velden in", ar: "املأ جميع الحقول" },
+  "auth.errorEmail": { fr: "Email requis", en: "Email required", nl: "E-mail vereist", ar: "البريد مطلوب" },
+  "auth.signupSuccess": { fr: "Compte créé ! 🎉", en: "Account created! 🎉", nl: "Account aangemaakt! 🎉", ar: "تم إنشاء الحساب! 🎉" },
+  "auth.magicLinkSent": { fr: "Lien envoyé ! Vérifiez votre boîte mail", en: "Link sent! Check your inbox", nl: "Link verstuurd! Check je inbox", ar: "تم إرسال الرابط! تحقق من بريدك" },
+  "auth.checkEmail": { fr: "Vérifiez votre email", en: "Check your email", nl: "Check je e-mail", ar: "تحقق من بريدك" },
+  "auth.checkEmailDesc": { fr: "Nous vous avons envoyé un lien magique", en: "We sent you a magic link", nl: "We hebben je een magische link gestuurd", ar: "أرسلنا لك رابطًا سحريًا" },
+  "auth.logout": { fr: "Déconnexion", en: "Sign out", nl: "Uitloggen", ar: "تسجيل الخروج" },
+  "auth.myAccount": { fr: "Mon compte", en: "My account", nl: "Mijn account", ar: "حسابي" },
+
+  // Leaderboard
+  "leaderboard.title": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "لوحة المتصدرين" },
+  "leaderboard.global": { fr: "Mondial", en: "Global", nl: "Wereldwijd", ar: "عالمي" },
+  "leaderboard.country": { fr: "Par pays", en: "By country", nl: "Per land", ar: "حسب البلد" },
+  "leaderboard.empty": { fr: "Aucun joueur encore — sois le premier !", en: "No players yet — be the first!", nl: "Nog geen spelers — wees de eerste!", ar: "لا يوجد لاعبون بعد — كن الأول!" },
+
+  // Announcements
+  "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },
+  "announcements.loginRequired": { fr: "Connectez-vous pour voir les annonces", en: "Sign in to view announcements", nl: "Log in om aankondigingen te zien", ar: "سجّل الدخول لعرض الإعلانات" },
+  "announcements.titlePlaceholder": { fr: "Titre de l'annonce", en: "Announcement title", nl: "Titel", ar: "عنوان الإعلان" },
+  "announcements.messagePlaceholder": { fr: "Votre message...", en: "Your message...", nl: "Je bericht...", ar: "رسالتك..." },
+  "announcements.send": { fr: "Envoyer", en: "Send", nl: "Versturen", ar: "إرسال" },
+  "announcements.sent": { fr: "Annonce envoyée !", en: "Announcement sent!", nl: "Aankondiging verstuurd!", ar: "تم إرسال الإعلان!" },
+  "announcements.empty": { fr: "Aucune annonce", en: "No announcements", nl: "Geen aankondigingen", ar: "لا توجد إعلانات" },
+  "announcements.read": { fr: "Lu", en: "Read", nl: "Gelezen", ar: "مقروء" },
+
+  // Home extras
+  "home.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "المتصدرين" },
+  "home.announcements": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "الإعلانات" },
+  "home.joinCommunity": { fr: "Rejoindre la communauté", en: "Join community", nl: "Word lid", ar: "انضم للمجتمع" },
+  "home.joinCommunityDesc": { fr: "Crée ton compte et apparais dans le classement", en: "Create your account & appear in leaderboard", nl: "Maak een account & verschijn in de ranglijst", ar: "أنشئ حسابك وظهر في لوحة المتصدرين" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

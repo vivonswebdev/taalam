@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Star, ArrowRight, GraduationCap } from "lucide-react";
+import { BookOpen, Star, ArrowRight, GraduationCap, Trophy, Megaphone, UserPlus, LogOut } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
+import { useAuth } from "@/hooks/useAuth";
+import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
@@ -16,6 +18,9 @@ export default function Home() {
   const { t } = useLanguage();
   const xp = useXP();
   const { classrooms } = useClassrooms();
+  const { user, signOut } = useAuth();
+  const classCodes = classrooms.map((c) => c.joinCode);
+  const { unreadCount } = useAnnouncements(classCodes);
   const mastered = getMasteredCount();
   const hasLevel = progress.level !== null;
 
@@ -28,8 +33,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
         <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 opacity-10 pointer-events-none" />
         <div className="relative px-6 pt-14 pb-8 text-center">
-          {/* Language switcher */}
-          <div className="absolute top-4 right-4 z-10">
+          {/* Language switcher + auth */}
+          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+            {user && (
+              <button onClick={signOut} className="text-muted-foreground hover:text-foreground" title={t("auth.logout")}>
+                <LogOut size={18} />
+              </button>
+            )}
             <LanguageSwitcher />
           </div>
 
@@ -112,11 +122,54 @@ export default function Home() {
           </motion.div>
         )}
 
+        {/* Leaderboard + Announcements row */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }} className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => navigate("/leaderboard")}
+            className="flex flex-col items-center gap-2 p-4 bg-card border border-border rounded-2xl active:scale-[0.98] transition-transform"
+          >
+            <Trophy size={22} className="text-secondary" />
+            <span className="text-sm font-semibold text-foreground">{t("home.leaderboard")}</span>
+          </button>
+          <button
+            onClick={() => navigate("/announcements")}
+            className="relative flex flex-col items-center gap-2 p-4 bg-card border border-border rounded-2xl active:scale-[0.98] transition-transform"
+          >
+            <Megaphone size={22} className="text-primary" />
+            <span className="text-sm font-semibold text-foreground">{t("home.announcements")}</span>
+            {unreadCount > 0 && (
+              <span className="absolute top-2 right-2 w-5 h-5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+        </motion.div>
+
+        {/* Join community CTA (if not logged in) */}
+        {!user && (
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            onClick={() => navigate("/auth")}
+            className="w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
+          >
+            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+              <UserPlus size={24} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-foreground">{t("home.joinCommunity")}</p>
+              <p className="text-xs text-muted-foreground">{t("home.joinCommunityDesc")}</p>
+            </div>
+            <ArrowRight size={16} className="text-primary shrink-0" />
+          </motion.button>
+        )}
+
         {/* Classroom Mode Card */}
         <motion.button
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.85 }}
           onClick={() => navigate("/classrooms")}
           className="w-full flex items-center gap-4 bg-card border border-border rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
         >
