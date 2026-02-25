@@ -17,6 +17,7 @@ interface UseVoiceRecognitionOptions {
 const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 2_000;
 const MIN_CHUNK_SIZE = 500;
+const NATIVE_SILENCE_TIMEOUT_MS = 4_000; // Auto-fallback if no result after 4s
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
@@ -40,6 +41,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const transcriptRef = useRef("");
   const chunkQueueRef = useRef<Blob[]>([]);
   const isProcessingRef = useRef(false);
+  const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasReceivedResultRef = useRef(false);
 
   const hasNativeSR = useRef(false);
 
@@ -59,6 +62,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   useEffect(() => {
     return () => {
       isListeningRef.current = false;
+      if (nativeSilenceTimerRef.current) clearTimeout(nativeSilenceTimerRef.current);
       try { recognitionRef.current?.abort(); } catch {}
       cleanupServer();
     };
@@ -162,6 +166,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
+    if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+    hasReceivedResultRef.current = false;
 
     const recognition: SpeechRecognition = new SR();
     recognition.lang = lang;
@@ -172,6 +178,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     finalTranscriptRef.current = "";
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
+      hasReceivedResultRef.current = true;
+      // Clear silence timer since we got results
+      if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
@@ -188,6 +198,14 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onend = () => {
       if (isListeningRef.current && recognitionRef.current === recognition) {
+        // If we never got results and it ended, fallback to server
+        if (!hasReceivedResultRef.current) {
+          console.warn("[VoiceRecognition] Native ended with no results, falling back to server STT");
+          recognitionRef.current = null;
+          setMode("server");
+          startServer();
+          return;
+        }
         try { recognition.start(); return; } catch (e) {
           console.warn("[VoiceRecognition] Restart failed:", e);
         }
@@ -202,10 +220,12 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       const error = event?.error || "unknown";
       console.warn("[VoiceRecognition] Error:", error);
       if (error === "not-allowed" || error === "service-not-allowed") {
-        setPermissionDenied(true);
-        onErrorRef.current?.("not-allowed");
+        // Try server fallback instead of just giving up
+        console.warn("[VoiceRecognition] Permission denied for native, trying server fallback...");
         isListeningRef.current = false;
-        setIsListening(false);
+        recognitionRef.current = null;
+        setMode("server");
+        startServer();
         return;
       }
       if (error === "no-speech" || error === "aborted") return;
@@ -223,16 +243,30 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
+      // Set a silence timeout: if no result in 4s, fallback to server
+      nativeSilenceTimerRef.current = setTimeout(() => {
+        if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
+          console.warn("[VoiceRecognition] No results after timeout, falling back to server STT");
+          try { recognition.abort(); } catch {}
+          recognitionRef.current = null;
+          setMode("server");
+          startServer();
+        }
+      }, NATIVE_SILENCE_TIMEOUT_MS);
     } catch (e) {
       console.error("[VoiceRecognition] Start failed:", e);
       isListeningRef.current = false;
       setIsListening(false);
       recognitionRef.current = null;
+      // Fallback to server on start failure
+      setMode("server");
+      startServer();
     }
-  }, [lang, continuous, cleanupNative]);
+  }, [lang, continuous, cleanupNative, startServer]);
 
   const stopNative = useCallback(() => {
     isListeningRef.current = false;
+    if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
     if (recognitionRef.current) {
       const rec = recognitionRef.current;
       rec.onresult = null;
