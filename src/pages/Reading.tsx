@@ -122,6 +122,11 @@ export default function Reading() {
           onBack={() => setSelectedSurah(null)}
           t={t}
           startAtAyah={startAyah}
+          onRequestNextSurah={() => {
+            if (selectedSurah.number < 114) {
+              handleSelectSurah(selectedSurah.number + 1, 0);
+            }
+          }}
         />
       </div>
     );
