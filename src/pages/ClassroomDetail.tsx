@@ -465,18 +465,18 @@ export default function ClassroomDetail() {
           )}
         </TabsContent>
 
-        {/* Students tab */}
+        {/* Students tab — visible to all members */}
         <TabsContent value="students" className="space-y-4 mt-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold">{t("classrooms.students")} ({memberProfiles.length})</p>
-            {nonMembers.length > 0 && (
+            <p className="text-sm font-semibold">{t("classrooms.students")} ({dbMembers.size})</p>
+            {isTeacherFinal && nonMembers.length > 0 && (
               <button onClick={() => setShowAdd(!showAdd)} className="flex items-center gap-1 text-xs text-primary font-semibold">
                 <UserPlus size={14} /> {t("classrooms.addStudent")}
               </button>
             )}
           </div>
 
-          {showAdd && nonMembers.length > 0 && (
+          {isTeacherFinal && showAdd && nonMembers.length > 0 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap gap-2">
               {nonMembers.map((p) => (
                 <button
@@ -491,53 +491,40 @@ export default function ClassroomDetail() {
             </motion.div>
           )}
 
-          {memberProfiles.length === 0 ? (
+          {dbMembers.size === 0 ? (
             <div className="text-center py-8">
               <p className="text-sm text-muted-foreground">{t("classrooms.noStudents")}</p>
             </div>
           ) : (
-            memberProfiles.map((child) => {
-              const mastery = getChildMastery(child.id);
-              const sessionCount = getSessionsForChild(child.id).length;
-              const lastDate = getLastActivity(child.id);
-              const lastAgo = lastDate
-                ? formatDistanceToNow(new Date(lastDate), { addSuffix: true, locale: LOCALES[lang] || LOCALES.fr })
-                : null;
-
+            Array.from(dbMembers.entries()).map(([uid, prof]) => {
+              const isCurrentUser = uid === user?.id;
+              const isTeacherMember = uid === dbTeacherId;
               return (
                 <motion.div
-                  key={child.id}
+                  key={uid}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-card border border-border rounded-xl p-3 space-y-2"
+                  className="bg-card border border-border rounded-xl p-3"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{child.avatarEmoji}</span>
+                    <span className="text-2xl">{prof.emoji}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate">{child.name}</p>
-                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                        <span className="flex items-center gap-0.5"><BarChart3 size={10} /> {sessionCount} sessions</span>
-                        {lastAgo && <span className="flex items-center gap-0.5"><Clock size={10} /> {lastAgo}</span>}
-                      </div>
+                      <p className="font-semibold text-sm truncate">
+                        {prof.name}{isCurrentUser ? " (vous)" : ""}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {isTeacherMember ? "👨‍🏫 Professeur" : "📖 Élève"}
+                      </p>
                     </div>
-                    <button
-                      onClick={() => removeMember(classroom.id, child.id)}
-                      className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
-                    >
-                      <Trash2 size={12} className="text-destructive" />
-                    </button>
+                    {isTeacherFinal && !isTeacherMember && (
+                      <button
+                        onClick={() => removeMember(classroom.id, uid)}
+                        className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
+                      >
+                        <Trash2 size={12} className="text-destructive" />
+                      </button>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground w-14">{t("classrooms.mastery")}</span>
-                    <Progress value={mastery} className="h-1.5 flex-1" />
-                    <span className="text-[10px] font-bold text-primary w-8 text-right">{mastery}%</span>
-                  </div>
-                  <button
-                    onClick={() => navigate(`/parent/child/${child.id}`)}
-                    className="w-full py-1.5 text-[11px] font-semibold text-primary bg-primary/5 rounded-lg"
-                  >
-                    {t("classrooms.viewChild")}
-                  </button>
                 </motion.div>
               );
             })
