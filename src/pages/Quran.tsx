@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -15,6 +15,7 @@ import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DictationMode from "@/components/DictationMode";
+import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
@@ -40,6 +41,12 @@ export default function Quran() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [recitationMode, setRecitationMode] = useState<RecitationMode>("aya");
 
+  // Full Quran list (114 surahs)
+  const [allSurahsMeta, setAllSurahsMeta] = useState<SurahMeta[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loadingSurah, setLoadingSurah] = useState(false);
+  const [browseMode, setBrowseMode] = useState<"local" | "all">("local");
+
   // Aya-by-aya state
   const [currentAya, setCurrentAya] = useState(0);
   const [ayaPhase, setAyaPhase] = useState<AyaPhase>("idle");
@@ -62,6 +69,25 @@ export default function Quran() {
   const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
   const filteredSurahs = getSurahsByDifficulty(difficulty);
+
+  // Fetch all 114 surahs metadata
+  useEffect(() => {
+    fetchSurahList().then(setAllSurahsMeta).catch(console.error);
+  }, []);
+
+  // Filter surahs in "all" mode
+  const filteredAllSurahs = allSurahsMeta.filter((s) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      s.name.toLowerCase().includes(q) ||
+      s.nameArabic.includes(q) ||
+      s.englishName.toLowerCase().includes(q) ||
+      String(s.number).includes(q)
+    );
+  });
+
+  
 
   const [micError, setMicError] = useState<string | null>(null);
 
@@ -120,6 +146,26 @@ export default function Quran() {
     setShowConfetti(false);
     setEarnedSticker(null);
     setAutoNextTimer(null);
+  };
+
+  // Select a surah from the full 114 list (fetch ayahs from API)
+  const handleSelectSurahFromApi = async (meta: SurahMeta) => {
+    // Check if we have it locally first
+    const local = surahs.find((s) => s.number === meta.number);
+    if (local) {
+      handleSelectSurah(local);
+      return;
+    }
+    // Fetch from API
+    setLoadingSurah(true);
+    try {
+      const full = await fetchFullSurah(meta.number);
+      handleSelectSurah(full);
+    } catch (e) {
+      console.error("Failed to load surah", e);
+    } finally {
+      setLoadingSurah(false);
+    }
   };
 
   const playAyaAudio = useCallback(async (ayaIndex: number) => {
@@ -407,54 +453,133 @@ export default function Quran() {
             )}
           </motion.div>
 
-          {/* Difficulty */}
+          {/* Browse mode toggle */}
           <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
-            <div className="flex gap-2">
-              {(["easy", "medium", "hard"] as const).map((d) => (
-                <button key={d}
-                  onClick={() => { setDifficulty(d); }}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                    difficulty === d ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                  }`}>
-                  {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
-                   d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
-                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
-                </button>
-              ))}
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.chooseSurah")}</p>
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => setBrowseMode("local")}
+                className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  browseMode === "local" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {t("recitation.difficulty")}
+              </button>
+              <button
+                onClick={() => setBrowseMode("all")}
+                className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                  browseMode === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                📖 114 sourates
+              </button>
             </div>
           </div>
 
-          {/* Surah dropdown */}
-          <div className="relative">
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.chooseSurah")}</p>
-            <button onClick={() => setShowDropdown(!showDropdown)}
-              className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left">
-              <span className={`${bodyTextClass} text-muted-foreground`}>{t("recitation.selectSurah")}</span>
-              <ChevronDown size={18} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
-            </button>
+          {browseMode === "local" && (
+            <>
+              {/* Difficulty */}
+              <div>
+                <div className="flex gap-2">
+                  {(["easy", "medium", "hard"] as const).map((d) => (
+                    <button key={d}
+                      onClick={() => { setDifficulty(d); }}
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                        difficulty === d ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                      }`}>
+                      {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
+                       d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
+                       (isChildMode ? "💪 " : "") + t("recitation.hard")}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-            <AnimatePresence>
-              {showDropdown && (
-                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                  className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto">
-                  {filteredSurahs.map((s) => (
-                    <button key={s.number}
-                      onClick={() => handleSelectSurah(s)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0">
+              {/* Surah dropdown (local) */}
+              <div className="relative">
+                <button onClick={() => setShowDropdown(!showDropdown)}
+                  className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left">
+                  <span className={`${bodyTextClass} text-muted-foreground`}>{t("recitation.selectSurah")}</span>
+                  <ChevronDown size={18} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showDropdown && (
+                    <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                      className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto">
+                      {filteredSurahs.map((s) => (
+                        <button key={s.number}
+                          onClick={() => handleSelectSurah(s)}
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0">
+                          <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                            {s.number}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
+                            <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} {t("detail.verses")}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </>
+          )}
+
+          {browseMode === "all" && (
+            <>
+              {/* Search bar */}
+              <div className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Rechercher une sourate..."
+                  className="w-full bg-card border border-border rounded-xl pl-9 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+
+              {/* Loading overlay */}
+              {loadingSurah && (
+                <div className="flex items-center justify-center py-8 gap-2 text-primary">
+                  <Loader2 size={20} className="animate-spin" />
+                  <span className="text-sm font-medium">Chargement...</span>
+                </div>
+              )}
+
+              {/* Full 114 surahs list */}
+              {!loadingSurah && (
+                <div className="space-y-1.5 max-h-[50vh] overflow-y-auto">
+                  {filteredAllSurahs.map((s, i) => (
+                    <motion.button
+                      key={s.number}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(i * 0.01, 0.5) }}
+                      onClick={() => handleSelectSurahFromApi(s)}
+                      className="w-full flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:bg-accent/30 transition-colors text-left"
+                    >
                       <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {s.number}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
-                        <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} {t("detail.verses")}</p>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-arabic text-lg text-foreground">{s.nameArabic}</span>
+                          <span className="text-[10px] text-muted-foreground">{s.revelationType}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">{s.name} · {s.englishName} · {s.versesCount} versets</p>
                       </div>
-                    </button>
+                    </motion.button>
                   ))}
-                </motion.div>
+                  {filteredAllSurahs.length === 0 && (
+                    <p className="text-center text-sm text-muted-foreground py-6">Aucun résultat</p>
+                  )}
+                </div>
               )}
-            </AnimatePresence>
-          </div>
+            </>
+          )}
 
           {/* Mode toggle: Aya by aya / Full surah dictation */}
           <div>
