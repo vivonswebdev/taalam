@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { ActiveChildProvider } from "@/hooks/useActiveChild";
+import { GlobalAudioProvider } from "@/hooks/useGlobalAudio";
 import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
 import Learn from "./pages/Learn";
@@ -29,6 +30,7 @@ import Auth from "./pages/Auth";
 import Leaderboard from "./pages/Leaderboard";
 import Announcements from "./pages/Announcements";
 import BottomNav from "./components/BottomNav";
+import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
 
 const queryClient = new QueryClient();
@@ -41,6 +43,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <GlobalAudioProvider>
           <DedicationPopup />
           <div className="min-h-screen bg-background max-w-lg mx-auto relative">
             <Routes>
@@ -69,8 +72,10 @@ const App = () => (
               <Route path="/join/:code" element={<JoinClassroom />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <MiniPlayer />
             <BottomNav />
           </div>
+          </GlobalAudioProvider>
         </BrowserRouter>
         </ActiveChildProvider>
       </LanguageProvider>

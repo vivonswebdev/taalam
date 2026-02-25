@@ -11,6 +11,7 @@ import { useBookmarks } from "@/hooks/useBookmarks";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
+import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Reading() {
@@ -124,12 +125,14 @@ export default function Reading() {
           startAtAyah={startAyah}
           onRequestNextSurah={() => {
             if (selectedSurah.number < 114) {
-              handleSelectSurah(selectedSurah.number + 1, 0);
+              const nextNum = selectedSurah.number + 1;
+              handleSelectSurah(nextNum, 0);
             }
           }}
           onRequestPrevSurah={() => {
             if (selectedSurah.number > 1) {
-              handleSelectSurah(selectedSurah.number - 1, 0);
+              const prevNum = selectedSurah.number - 1;
+              handleSelectSurah(prevNum, 0);
             }
           }}
         />
