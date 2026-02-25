@@ -10,6 +10,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import TafsirSheet from "@/components/TafsirSheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
+import ActiveChildBanner from "@/components/ActiveChildBanner";
 import type { Surah } from "@/data/surahs";
 
 interface MushafReaderProps {
@@ -160,6 +161,10 @@ export default function MushafReader({
 
   return (
     <div className={`flex flex-col h-[calc(100vh-4rem)] ${darkOverride ? "bg-black" : ""}`}>
+      {/* Active child banner */}
+      <div className="px-4 pt-2 shrink-0">
+        <ActiveChildBanner mode="reading" surahName={surah.name} />
+      </div>
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-card shrink-0">
         <button onClick={onBack} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">

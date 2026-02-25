@@ -10,6 +10,7 @@ import { useTahaddiSession, MAX_ATTEMPTS } from "@/hooks/useTahaddiSession";
 import { useVoiceRecognition, compareTexts } from "@/hooks/useVoiceRecognition";
 import { useXP } from "@/hooks/useXP";
 import Confetti from "@/components/Confetti";
+import ActiveChildBanner from "@/components/ActiveChildBanner";
 
 interface TahaddiModeProps {
   surah: Surah;
@@ -161,6 +162,16 @@ export default function TahaddiMode({ surah, onBack, isChildMode, t }: TahaddiMo
   if (screen === "setup") {
     return (
       <div className="px-6 space-y-5 pb-8">
+        {/* Active child banner */}
+        <div className="pt-2">
+          <ActiveChildBanner
+            mode="tahaddi"
+            surahName={surah.name}
+            ayahFrom={ayahStart + 1}
+            ayahTo={ayahEnd + 1}
+          />
+        </div>
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="w-9 h-9 rounded-full bg-muted text-foreground flex items-center justify-center">
