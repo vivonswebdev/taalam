@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -10,6 +10,7 @@ import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFee
 import { useStreak } from "@/hooks/useStreak";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSound } from "@/hooks/useSound";
+import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
@@ -568,29 +569,48 @@ export default function Recitation() {
                 {/* Arabic text: visible before mic, hidden/revealed during recitation */}
                 <div className={`arabic-text ${isChildMode ? "text-3xl" : "text-2xl"} leading-[2.4] flex flex-wrap gap-x-2 justify-center mb-4`} dir="rtl">
                   {showArabic ? (
-                    // Full text visible before recording
-                    <span className="text-foreground">{selectedSurah.ayahs[recitingAyah].arabic}</span>
-                  ) : (
-                    // Word-by-word reveal with colors during recording
-                    selectedSurah.ayahs[recitingAyah].arabic.split(/\s+/).filter(Boolean).map((word, wi) => {
-                      const lw = liveWords[0]?.[wi];
-                      const status = lw?.status || "pending";
-                      const isRevealed = status !== "pending";
-                      const colorClass = getLiveWordColor(status);
-                      return (
-                        <motion.span
+                    // Full text visible before recording — with Tajwid colors
+                    (() => {
+                      const tajwidWords = analyzeAyahTajwid(selectedSurah.ayahs[recitingAyah].arabic);
+                      return tajwidWords.map((tw, wi) => (
+                        <span
                           key={wi}
-                          initial={isRevealed ? { scale: 1.15, opacity: 0 } : false}
-                          animate={isRevealed ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                          className={`inline-block px-1 py-0.5 rounded-md transition-all duration-300 ${
-                            isRevealed ? colorClass : "text-transparent bg-muted/50 select-none"
-                          }`}
+                          className="inline-block px-0.5"
+                          style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}
                         >
-                          {isRevealed ? word : "████"}
-                        </motion.span>
-                      );
-                    })
+                          {tw.text}
+                        </span>
+                      ));
+                    })()
+                  ) : (
+                    // Word-by-word reveal with Tajwid underline during recording
+                    (() => {
+                      const tajwidWords = analyzeAyahTajwid(selectedSurah.ayahs[recitingAyah].arabic);
+                      return selectedSurah.ayahs[recitingAyah].arabic.split(/\s+/).filter(Boolean).map((word, wi) => {
+                        const lw = liveWords[0]?.[wi];
+                        const status = lw?.status || "pending";
+                        const isRevealed = status !== "pending";
+                        const colorClass = getLiveWordColor(status);
+                        const tw = tajwidWords[wi];
+                        const tajwidBorder = isRevealed && tw?.primaryColor
+                          ? `3px solid hsl(${tw.primaryColor})`
+                          : undefined;
+                        return (
+                          <motion.span
+                            key={wi}
+                            initial={isRevealed ? { scale: 1.15, opacity: 0 } : false}
+                            animate={isRevealed ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            className={`inline-block px-1 py-0.5 rounded-md transition-all duration-300 ${
+                              isRevealed ? colorClass : "text-transparent bg-muted/50 select-none"
+                            }`}
+                            style={{ borderBottom: tajwidBorder }}
+                          >
+                            {isRevealed ? word : "████"}
+                          </motion.span>
+                        );
+                      });
+                    })()
                   )}
                 </div>
 
