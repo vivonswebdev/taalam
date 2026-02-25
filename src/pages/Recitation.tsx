@@ -1,0 +1,666 @@
+import { useState, useRef, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff } from "lucide-react";
+import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
+import { useProgress } from "@/hooks/useProgress";
+import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
+import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
+import { useStreak } from "@/hooks/useStreak";
+import Confetti from "@/components/Confetti";
+import StickerReward from "@/components/StickerReward";
+import BottomNav from "@/components/BottomNav";
+
+type TarteelPhase = "select" | "listen" | "recite" | "results";
+
+interface AyahResult {
+  ayahIndex: number;
+  results: WordResult[];
+  score: number;
+}
+
+const BADGES = [
+  { minScore: 90, label: "Hâfiz en herbe", emoji: "🌟", color: "text-yellow-500" },
+  { minScore: 75, label: "Récitateur assidu", emoji: "📖", color: "text-primary" },
+  { minScore: 50, label: "En progression", emoji: "💪", color: "text-secondary" },
+] as const;
+
+function getBadge(score: number) {
+  return BADGES.find((b) => score >= b.minScore) || null;
+}
+
+export default function Recitation() {
+  const { updateSurahProgress } = useProgress();
+  const { isChildMode, earnSticker } = useChildMode();
+  const { streak, recordSession, hasPracticedToday } = useStreak();
+
+  // Selection state
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
+  const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // Phase state
+  const [phase, setPhase] = useState<TarteelPhase>("select");
+
+  // Listen state
+  const [playing, setPlaying] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [currentAyah, setCurrentAyah] = useState(-1);
+  const [textMasked, setTextMasked] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const maskTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Recite state
+  const [recitingAyah, setRecitingAyah] = useState(0);
+  const [currentTranscript, setCurrentTranscript] = useState("");
+  const [ayahResults, setAyahResults] = useState<AyahResult[]>([]);
+  const [revealedWords, setRevealedWords] = useState<Set<number>>(new Set());
+
+  // Rewards
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
+
+  const voice = useVoiceRecognition({
+    lang: "ar-SA",
+    continuous: true,
+    onResult: (transcript) => {
+      setCurrentTranscript(transcript);
+      if (selectedSurah) {
+        const ayah = selectedSurah.ayahs[recitingAyah];
+        const { results } = compareTexts(ayah.arabic, transcript);
+        // Reveal incorrect words
+        const errorIndices = new Set<number>();
+        results.forEach((r, i) => {
+          if (!r.correct) errorIndices.add(i);
+        });
+        setRevealedWords(errorIndices);
+      }
+    },
+  });
+
+  const filteredSurahs = getSurahsByDifficulty(difficulty);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      if (maskTimerRef.current) clearTimeout(maskTimerRef.current);
+    };
+  }, []);
+
+  const playAyahSequence = useCallback((index: number, urls: string[]) => {
+    if (index >= urls.length) {
+      setPlaying(false);
+      setCurrentAyah(-1);
+      // After audio finishes, mask text and go to recite
+      setTextMasked(true);
+      setTimeout(() => {
+        setPhase("recite");
+        setRecitingAyah(0);
+        setRevealedWords(new Set());
+      }, 500);
+      return;
+    }
+    setCurrentAyah(index);
+    const audio = new Audio(urls[index]);
+    audioRef.current = audio;
+    audio.onended = () => playAyahSequence(index + 1, urls);
+    audio.onerror = () => playAyahSequence(index + 1, urls);
+    audio.play().catch(() => playAyahSequence(index + 1, urls));
+  }, []);
+
+  const startListening = useCallback(async () => {
+    if (!selectedSurah) return;
+    if (playing) {
+      audioRef.current?.pause();
+      setPlaying(false);
+      setCurrentAyah(-1);
+      return;
+    }
+    setAudioLoading(true);
+    try {
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/ar.alafasy`);
+      const data = await res.json();
+      if (data.data?.ayahs) {
+        const urls = data.data.ayahs.map((a: { audio: string }) => a.audio);
+        setPlaying(true);
+        setAudioLoading(false);
+        // Start masking timer after 5s of playback
+        maskTimerRef.current = setTimeout(() => setTextMasked(true), 5000);
+        playAyahSequence(0, urls);
+      }
+    } catch {
+      setAudioLoading(false);
+    }
+  }, [playing, selectedSurah, playAyahSequence]);
+
+  const handleSelectSurah = (surah: Surah) => {
+    setSelectedSurah(surah);
+    setShowDropdown(false);
+    setPhase("listen");
+    setTextMasked(false);
+    setAyahResults([]);
+    setRecitingAyah(0);
+    setCurrentTranscript("");
+    setRevealedWords(new Set());
+  };
+
+  const handleFinishAyah = useCallback(() => {
+    if (!selectedSurah) return;
+    voice.stop();
+    const ayah = selectedSurah.ayahs[recitingAyah];
+    const { results, score } = compareTexts(ayah.arabic, currentTranscript);
+    const newResults = [...ayahResults, { ayahIndex: recitingAyah, results, score }];
+    setAyahResults(newResults);
+
+    if (recitingAyah < selectedSurah.ayahs.length - 1) {
+      setRecitingAyah((p) => p + 1);
+      setCurrentTranscript("");
+      setRevealedWords(new Set());
+    } else {
+      finishRecitation(newResults);
+    }
+  }, [selectedSurah, recitingAyah, currentTranscript, ayahResults, voice]);
+
+  const skipAyah = useCallback(() => {
+    if (!selectedSurah) return;
+    voice.stop();
+    const ayah = selectedSurah.ayahs[recitingAyah];
+    const { results, score } = compareTexts(ayah.arabic, currentTranscript || " ");
+    const newResults = [...ayahResults, { ayahIndex: recitingAyah, results, score }];
+    setAyahResults(newResults);
+
+    if (recitingAyah < selectedSurah.ayahs.length - 1) {
+      setRecitingAyah((p) => p + 1);
+      setCurrentTranscript("");
+      setRevealedWords(new Set());
+    } else {
+      finishRecitation(newResults);
+    }
+  }, [selectedSurah, recitingAyah, currentTranscript, ayahResults, voice]);
+
+  const finishRecitation = (results: AyahResult[]) => {
+    if (!selectedSurah) return;
+    const avgScore = Math.round(results.reduce((a, r) => a + r.score, 0) / results.length);
+    updateSurahProgress(selectedSurah.number, avgScore);
+    recordSession();
+
+    if (isChildMode && avgScore >= 50) {
+      setShowConfetti(true);
+      if (avgScore >= 70) {
+        const sticker = earnSticker(selectedSurah.number);
+        setTimeout(() => setEarnedSticker(sticker), 1500);
+      }
+    }
+    if (avgScore >= 90) {
+      setShowConfetti(true);
+    }
+    setPhase("results");
+  };
+
+  const handleRestart = () => {
+    setPhase("listen");
+    setTextMasked(false);
+    setRecitingAyah(0);
+    setAyahResults([]);
+    setCurrentTranscript("");
+    setRevealedWords(new Set());
+    setShowConfetti(false);
+    setEarnedSticker(null);
+  };
+
+  const handleNewSurah = () => {
+    setPhase("select");
+    setSelectedSurah(null);
+    setTextMasked(false);
+    setAyahResults([]);
+    setRecitingAyah(0);
+    setCurrentTranscript("");
+    setRevealedWords(new Set());
+    setShowConfetti(false);
+    setEarnedSticker(null);
+  };
+
+  const replayAyahAudio = async (surahNum: number, ayahIndex: number) => {
+    try {
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+      const data = await res.json();
+      if (data.data?.ayahs?.[ayahIndex]) {
+        const audio = new Audio(data.data.ayahs[ayahIndex].audio);
+        audio.play();
+      }
+    } catch {}
+  };
+
+  const totalScore = ayahResults.length > 0
+    ? Math.round(ayahResults.reduce((a, r) => a + r.score, 0) / ayahResults.length)
+    : 0;
+  const badge = getBadge(totalScore);
+  const bodyTextClass = isChildMode ? "text-base" : "text-sm";
+
+  return (
+    <div className="min-h-screen pb-24">
+      <Confetti active={showConfetti} emoji={isChildMode} />
+      <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
+
+      {/* Header */}
+      <div className="px-6 pt-14 pb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
+              {isChildMode ? "🎤 Récitation Tarteel" : "Récitation Tarteel"}
+            </h1>
+            <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
+              Écoute, mémorise, récite
+            </p>
+          </div>
+          {/* Streak badge */}
+          <div className="flex items-center gap-1.5 bg-secondary/15 text-secondary px-3 py-1.5 rounded-full">
+            <Flame size={16} />
+            <span className="text-sm font-bold">{streak.currentStreak}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* SELECT PHASE */}
+      {phase === "select" && (
+        <div className="px-6 space-y-6">
+          {/* Streak info */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-card border border-border rounded-2xl p-5"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${hasPracticedToday ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>
+                <Flame size={24} />
+              </div>
+              <div>
+                <p className="font-bold text-foreground">
+                  {streak.currentStreak > 0
+                    ? `${streak.currentStreak} jour${streak.currentStreak > 1 ? "s" : ""} de suite !`
+                    : "Commence ton streak !"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Record : {streak.longestStreak} jours · {streak.totalSessions} sessions
+                </p>
+              </div>
+            </div>
+            {hasPracticedToday && (
+              <p className="text-xs text-success font-medium">✅ Tu as pratiqué aujourd'hui !</p>
+            )}
+          </motion.div>
+
+          {/* Difficulty selector */}
+          <div>
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>Niveau de difficulté</p>
+            <div className="flex gap-2">
+              {(["easy", "medium", "hard"] as const).map((d) => (
+                <button
+                  key={d}
+                  onClick={() => { setDifficulty(d); setSelectedSurah(null); }}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                    difficulty === d
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {d === "easy" ? (isChildMode ? "😊 Facile" : "Facile") :
+                   d === "medium" ? (isChildMode ? "🤔 Moyen" : "Moyen") :
+                   (isChildMode ? "💪 Difficile" : "Difficile")}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Surah dropdown */}
+          <div className="relative">
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>Choisis une sourate</p>
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left"
+            >
+              <span className={`${bodyTextClass} ${selectedSurah ? "text-foreground" : "text-muted-foreground"}`}>
+                {selectedSurah ? `${selectedSurah.nameArabic} - ${selectedSurah.frenchName}` : "Sélectionner une sourate..."}
+              </span>
+              <ChevronDown size={18} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {showDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto"
+                >
+                  {filteredSurahs.map((s) => (
+                    <button
+                      key={s.number}
+                      onClick={() => handleSelectSurah(s)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0"
+                    >
+                      <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                        {s.number}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
+                        <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} versets</p>
+                      </div>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      )}
+
+      {/* LISTEN PHASE */}
+      {phase === "listen" && selectedSurah && (
+        <div className="px-6 space-y-5">
+          <div className="text-center">
+            <p className="font-arabic text-3xl text-primary mb-1">{selectedSurah.nameArabic}</p>
+            <p className={`${bodyTextClass} text-muted-foreground`}>{selectedSurah.frenchName} · {selectedSurah.versesCount} versets</p>
+          </div>
+
+          {/* Play button */}
+          <div className="flex justify-center">
+            <motion.button
+              whileTap={{ scale: 0.93 }}
+              onClick={startListening}
+              disabled={audioLoading}
+              className={`flex items-center gap-3 ${isChildMode ? "px-10 py-4 text-lg" : "px-8 py-3.5"} rounded-full font-semibold transition-colors ${
+                playing ? "bg-destructive/10 text-destructive border-2 border-destructive" : "bg-primary text-primary-foreground"
+              }`}
+            >
+              {audioLoading ? (
+                <><div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> Chargement...</>
+              ) : playing ? (
+                <><Square size={18} /> Arrêter</>
+              ) : (
+                <><Play size={18} /> {isChildMode ? "▶️ Écouter" : "Écouter la sourate"}</>
+              )}
+            </motion.button>
+          </div>
+
+          {/* Mask indicator */}
+          {textMasked && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center justify-center gap-2 text-secondary"
+            >
+              <EyeOff size={16} />
+              <span className="text-sm font-medium">Texte masqué — mémorise bien !</span>
+            </motion.div>
+          )}
+
+          {/* Skip to recitation */}
+          <div className="flex justify-center">
+            <button
+              onClick={() => {
+                audioRef.current?.pause();
+                setPlaying(false);
+                setTextMasked(true);
+                setPhase("recite");
+                setRecitingAyah(0);
+              }}
+              className="text-xs text-muted-foreground underline"
+            >
+              Passer à la récitation →
+            </button>
+          </div>
+
+          {/* Ayahs */}
+          <div className="space-y-3">
+            {selectedSurah.ayahs.map((ayah, i) => (
+              <motion.div
+                key={ayah.number}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03 }}
+                className={`bg-card border rounded-2xl p-4 transition-all ${
+                  currentAyah === i ? "border-primary shadow-lg shadow-primary/10" : "border-border"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                    {ayah.number}
+                  </span>
+                  {currentAyah === i && <Volume2 size={14} className="text-primary animate-pulse mt-1" />}
+                </div>
+                {textMasked ? (
+                  <div className="h-12 flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm">••• مخفي •••</span>
+                  </div>
+                ) : (
+                  <>
+                    <p className="arabic-text text-xl text-foreground mb-2">{ayah.arabic}</p>
+                    <p className="text-xs text-primary/70 italic">{ayah.transliteration}</p>
+                  </>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* RECITE PHASE */}
+      {phase === "recite" && selectedSurah && (
+        <div className="px-6">
+          {/* Progress indicator */}
+          <div className="flex items-center gap-2 mb-5">
+            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${((recitingAyah) / selectedSurah.ayahs.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground font-semibold">
+              {recitingAyah + 1}/{selectedSurah.ayahs.length}
+            </span>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={recitingAyah}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              className="space-y-5"
+            >
+              {/* Current ayah card - masked with error reveals */}
+              <div className={`bg-card border-2 border-primary/30 rounded-2xl ${isChildMode ? "p-8" : "p-6"} text-center`}>
+                <span className={`inline-block ${isChildMode ? "w-10 h-10 text-lg leading-10" : "w-8 h-8 text-sm leading-8"} rounded-full bg-primary text-primary-foreground font-bold mb-4`}>
+                  {selectedSurah.ayahs[recitingAyah].number}
+                </span>
+
+                {/* Masked text with error word reveals */}
+                <div className={`arabic-text ${isChildMode ? "text-3xl" : "text-2xl"} leading-[2.4] flex flex-wrap gap-x-2 justify-center mb-3`}>
+                  {selectedSurah.ayahs[recitingAyah].arabic.split(/\s+/).map((word, wi) => (
+                    <span
+                      key={wi}
+                      className={`transition-all duration-300 ${
+                        revealedWords.has(wi)
+                          ? "text-destructive font-bold"
+                          : "text-muted-foreground/20 blur-sm select-none"
+                      }`}
+                    >
+                      {revealedWords.has(wi) ? word : "████"}
+                    </span>
+                  ))}
+                </div>
+
+                <p className={`text-primary/60 italic ${bodyTextClass}`}>
+                  {selectedSurah.ayahs[recitingAyah].transliteration}
+                </p>
+              </div>
+
+              {/* Mic controls */}
+              <div className="flex flex-col items-center gap-4">
+                {!voice.isSupported ? (
+                  <div className="bg-destructive/10 text-destructive rounded-2xl p-4 text-sm text-center">
+                    Reconnaissance vocale non supportée. Utilisez Chrome.
+                  </div>
+                ) : (
+                  <>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={voice.isListening ? voice.stop : voice.start}
+                      className={`${isChildMode ? "w-24 h-24" : "w-20 h-20"} rounded-full flex items-center justify-center transition-all ${
+                        voice.isListening
+                          ? "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30 animate-pulse"
+                          : "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                      }`}
+                    >
+                      {voice.isListening ? <MicOff size={isChildMode ? 38 : 32} /> : <Mic size={isChildMode ? 38 : 32} />}
+                    </motion.button>
+                    <p className={`${bodyTextClass} text-muted-foreground`}>
+                      {voice.isListening
+                        ? (isChildMode ? "🎤 Récite maintenant !" : "Récitez... Appuyez pour arrêter")
+                        : (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez pour commencer")}
+                    </p>
+                  </>
+                )}
+
+                {currentTranscript && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full bg-accent/50 rounded-2xl p-4"
+                  >
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {isChildMode ? "🗣️ Ta récitation :" : "Votre récitation :"}
+                    </p>
+                    <p className={`arabic-text ${isChildMode ? "text-xl" : "text-lg"} text-foreground`}>{currentTranscript}</p>
+                  </motion.div>
+                )}
+
+                {currentTranscript && !voice.isListening && (
+                  <motion.button
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleFinishAyah}
+                    className={`flex items-center gap-2 bg-success text-success-foreground ${isChildMode ? "px-8 py-4 text-lg" : "px-6 py-3"} rounded-full font-semibold`}
+                  >
+                    ✅ {isChildMode ? "Valider !" : `Valider verset ${recitingAyah + 1}`}
+                  </motion.button>
+                )}
+
+                <button onClick={skipAyah} className="text-xs text-muted-foreground underline">
+                  Passer ce verset
+                </button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* RESULTS PHASE */}
+      {phase === "results" && selectedSurah && (
+        <div className="px-6 space-y-5">
+          {/* Score */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="text-center py-6"
+          >
+            <div className={`${isChildMode ? "w-32 h-32 text-4xl" : "w-24 h-24 text-3xl"} rounded-full mx-auto flex items-center justify-center font-bold mb-3 ${
+              totalScore >= 80 ? "bg-success/15 text-success" : totalScore >= 50 ? "bg-secondary/15 text-secondary" : "bg-destructive/15 text-destructive"
+            }`}>
+              {totalScore}%
+            </div>
+
+            {/* Badge */}
+            {badge && (
+              <motion.div
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.3, type: "spring" }}
+                className="flex items-center justify-center gap-2 mb-2"
+              >
+                <Award size={20} className={badge.color} />
+                <span className={`font-bold ${badge.color}`}>{badge.emoji} {badge.label}</span>
+              </motion.div>
+            )}
+
+            <h2 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
+              {isChildMode
+                ? (totalScore >= 90 ? "Super champion ! 🌟🎉" : totalScore >= 50 ? "Bien joué ! 💪😊" : "Réessaie ! 📖💚")
+                : (totalScore >= 90 ? "Excellent ! 🌟" : totalScore >= 50 ? "Bien, continuez 💪" : "Réessayez 📖")}
+            </h2>
+
+            {/* Streak */}
+            <div className="flex items-center justify-center gap-2 mt-3 text-secondary">
+              <Flame size={18} />
+              <span className="text-sm font-bold">{streak.currentStreak} jour{streak.currentStreak > 1 ? "s" : ""} de streak</span>
+            </div>
+          </motion.div>
+
+          {/* Ayah-by-ayah results */}
+          <div className="space-y-3">
+            {ayahResults.map((ar, i) => {
+              const ayah = selectedSurah.ayahs[ar.ayahIndex];
+              const hasErrors = ar.results.some((r) => !r.correct);
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  className="bg-card border border-border rounded-2xl p-4"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-semibold text-muted-foreground">Verset {ayah.number}</span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-bold ${ar.score >= 80 ? "text-success" : ar.score >= 50 ? "text-secondary" : "text-destructive"}`}>
+                        {ar.score}% {isChildMode && (ar.score >= 80 ? "⭐" : ar.score >= 50 ? "👍" : "📖")}
+                      </span>
+                      {hasErrors && (
+                        <button
+                          onClick={() => replayAyahAudio(selectedSurah.number, ar.ayahIndex)}
+                          className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center"
+                          title="Réécouter ce verset"
+                        >
+                          <Volume2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className={`arabic-text ${isChildMode ? "text-xl" : "text-lg"} leading-[2.2] flex flex-wrap gap-x-2 justify-end`}>
+                    {ar.results.map((wr, j) => (
+                      <span
+                        key={j}
+                        className={`${wr.correct ? "text-success" : "text-destructive font-bold underline decoration-wavy"}`}
+                      >
+                        {wr.word}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-3 pt-2 pb-6">
+            <button
+              onClick={handleRestart}
+              className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl border-2 border-border text-foreground font-semibold active:scale-[0.98] transition-transform`}
+            >
+              <RotateCcw size={18} /> {isChildMode ? "🔄 Répéter" : "Recommencer"}
+            </button>
+            <button
+              onClick={handleNewSurah}
+              className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl bg-primary text-primary-foreground font-semibold active:scale-[0.98] transition-transform`}
+            >
+              {isChildMode ? "📖 Autre sourate" : "Changer de sourate"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

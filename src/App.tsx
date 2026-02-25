@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
 import Learn from "./pages/Learn";
 import LearnDetail from "./pages/LearnDetail";
+import Recitation from "./pages/Recitation";
 import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/learn/:surahNumber" element={<LearnDetail />} />
+            <Route path="/recitation" element={<Recitation />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
