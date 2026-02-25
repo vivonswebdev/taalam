@@ -23,17 +23,15 @@ export function useAuth() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUpWithEmail = useCallback(async (email: string, displayName: string, avatarEmoji: string, isPublic: boolean, countryCode?: string) => {
-    // Auto-confirm enabled: sign up with a random password, user gets instant access
-    const password = crypto.randomUUID();
+  const signUpWithEmail = useCallback(async (email: string, displayName: string, avatarEmoji: string, isPublic: boolean, countryCode?: string, password?: string) => {
+    const pwd = password || crypto.randomUUID();
     const { data, error } = await supabase.auth.signUp({
       email,
-      password,
+      password: pwd,
       options: { data: { display_name: displayName, avatar_emoji: avatarEmoji } },
     });
     if (error) throw error;
 
-    // Create profile
     if (data.user) {
       const { error: profileError } = await supabase.from("profiles").insert({
         user_id: data.user.id,
