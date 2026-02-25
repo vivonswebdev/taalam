@@ -6,8 +6,10 @@ import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useXP } from "@/hooks/useXP";
+import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
+import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 
 export default function Home() {
@@ -18,9 +20,18 @@ export default function Home() {
   const { user, signOut } = useAuth();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
+  const dailyChallenge = useDailyTarteelChallenge();
 
   return (
     <div className="min-h-screen pb-24">
+      {/* Daily Tarteel Challenge */}
+      {!dailyChallenge.isCompleted && dailyChallenge.surah && (
+        <DailyTarteelChallenge
+          surah={dailyChallenge.surah}
+          onComplete={(score) => dailyChallenge.complete(score)}
+          onDismiss={() => dailyChallenge.dismiss()}
+        />
+      )}
       {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />

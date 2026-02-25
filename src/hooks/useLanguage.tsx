@@ -1068,6 +1068,19 @@ const translations = {
   "home.leaderboardButton": { fr: "Voir votre classement", en: "View your ranking", nl: "Bekijk je ranglijst", ar: "شاهد ترتيبك" },
   "home.leaderboardButtonDesc": { fr: "Top mondial / pays", en: "Global / country top", nl: "Wereld / land top", ar: "عالمي / حسب البلد" },
   "home.classMode": { fr: "Mode Classe", en: "Class Mode", nl: "Klassenmodus", ar: "وضع الفصل" },
+
+  // Daily Tarteel Challenge
+  "daily.title": { fr: "🎯 Défi Tarteel du jour", en: "🎯 Daily Tarteel Challenge", nl: "🎯 Dagelijkse Tarteel Uitdaging", ar: "🎯 تحدي الترتيل اليومي" },
+  "daily.subtitle": { fr: "Récite cette sourate et teste l'IA en direct !", en: "Recite this surah and test the AI live!", nl: "Reciteer deze soera en test de AI live!", ar: "اقرأ هذه السورة واختبر الذكاء الاصطناعي مباشرة!" },
+  "daily.startButton": { fr: "Écouter & réciter", en: "Listen & recite", nl: "Luister & reciteer", ar: "استمع وارتل" },
+  "daily.stopButton": { fr: "Terminer la récitation", en: "Finish recitation", nl: "Recitatie beëindigen", ar: "إنهاء التلاوة" },
+  "daily.almost": { fr: "Presque", en: "Almost", nl: "Bijna", ar: "تقريباً" },
+  "daily.excellent": { fr: "Excellent ! Mâ shâ' Allâh !", en: "Excellent! Masha'Allah!", nl: "Uitstekend! Masha'Allah!", ar: "ممتاز! ما شاء الله!" },
+  "daily.good": { fr: "Bien joué ! Continue !", en: "Well done! Keep going!", nl: "Goed gedaan! Ga zo door!", ar: "أحسنت! واصل!" },
+  "daily.notBad": { fr: "Pas mal ! Tu progresses !", en: "Not bad! You're improving!", nl: "Niet slecht! Je verbetert!", ar: "ليس سيئاً! أنت تتحسن!" },
+  "daily.tryAgain": { fr: "Continue à t'entraîner !", en: "Keep practicing!", nl: "Blijf oefenen!", ar: "واصل التدريب!" },
+  "daily.perfectBadge": { fr: "Récitation parfaite !", en: "Perfect recitation!", nl: "Perfecte recitatie!", ar: "تلاوة مثالية!" },
+  "daily.continue": { fr: "Continuer", en: "Continue", nl: "Doorgaan", ar: "متابعة" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
