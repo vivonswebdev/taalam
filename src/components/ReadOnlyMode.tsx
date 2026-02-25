@@ -1,7 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Volume2 } from "lucide-react";
+import { ArrowLeft, Volume2, Palette } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
+import TajwidBar from "@/components/TajwidBar";
+import TajwidAyahText from "@/components/TajwidAyahText";
+import { analyzeAyahTajwid } from "@/data/tajwidRules";
+import { Switch } from "@/components/ui/switch";
 import type { Surah } from "@/data/surahs";
 
 interface ReadOnlyModeProps {
@@ -25,6 +29,8 @@ export default function ReadOnlyMode({
 }: ReadOnlyModeProps) {
   const [currentAyah, setCurrentAyah] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [tajwidEnabled, setTajwidEnabled] = useState(true);
+  const [activeWordIndex, setActiveWordIndex] = useState(-1);
   const ayahRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   // Media Session API for background playback
@@ -92,13 +98,46 @@ export default function ReadOnlyMode({
         {t("quran.readOnlyDesc")}
       </p>
 
+      {/* Tajwid toggle + bar */}
+      <div className="flex items-center justify-between bg-card border border-border rounded-xl px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Palette size={14} className="text-primary" />
+          <span className="text-sm font-medium">Tajwid</span>
+        </div>
+        <Switch checked={tajwidEnabled} onCheckedChange={setTajwidEnabled} />
+      </div>
+
+      {tajwidEnabled && (
+        <TajwidBar
+          activeRules={(() => {
+            const ayah = surah.ayahs[currentAyah];
+            if (!ayah) return [];
+            const words = analyzeAyahTajwid(ayah.arabic);
+            const idx = activeWordIndex >= 0 ? activeWordIndex : 0;
+            return words[idx]?.rules || [];
+          })()}
+          nextRule={(() => {
+            const ayah = surah.ayahs[currentAyah];
+            if (!ayah) return null;
+            const words = analyzeAyahTajwid(ayah.arabic);
+            const start = (activeWordIndex >= 0 ? activeWordIndex : 0) + 1;
+            for (let j = start; j < words.length; j++) {
+              if (words[j].rules.length > 0) {
+                return { rule: words[j].rules[0], wordsAhead: j - (activeWordIndex >= 0 ? activeWordIndex : 0) };
+              }
+            }
+            return null;
+          })()}
+        />
+      )}
+
       {/* Audio Player */}
       <AudioPlayer
         surahNumber={surah.number}
         surahName={surah.name}
         surahNameArabic={surah.nameArabic}
         totalAyahs={surah.ayahs.length}
-        onAyahChange={setCurrentAyah}
+        onAyahChange={(idx) => { setCurrentAyah(idx); setActiveWordIndex(-1); }}
         onPlayStateChange={setPlaying}
         jumpToAyahRef={jumpToAyahRef}
       />
@@ -130,10 +169,17 @@ export default function ReadOnlyMode({
                 {isActive && <Volume2 size={14} className="text-primary animate-pulse mt-1" />}
               </div>
 
-              {/* Arabic text */}
-              <p className={`arabic-text ${isChildMode ? "text-2xl" : "text-xl"} text-foreground mb-2 leading-loose`}>
-                {ayah.arabic}
-              </p>
+              {/* Arabic text with Tajwid */}
+              <TajwidAyahText
+                arabicText={ayah.arabic}
+                activeWordIndex={isActive ? activeWordIndex : -1}
+                onWordTap={(wi) => {
+                  setCurrentAyah(i);
+                  setActiveWordIndex(wi);
+                }}
+                tajwidEnabled={tajwidEnabled}
+                className={`arabic-text ${isChildMode ? "text-2xl" : "text-xl"} text-foreground mb-2 leading-loose block`}
+              />
 
               {/* Transliteration */}
               {ayah.transliteration && (
