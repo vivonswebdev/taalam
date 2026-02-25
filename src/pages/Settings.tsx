@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Globe } from "lucide-react";
+import { RotateCcw, Info, Globe, Baby } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
+import { useChildMode } from "@/hooks/useChildMode";
+import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
+  const { isChildMode, toggleChildMode, stickers, resetStickers } = useChildMode();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleReset = () => {
     resetProgress();
+    resetStickers();
     setShowConfirm(false);
     navigate("/");
   };
@@ -24,6 +28,41 @@ export default function Settings() {
       </div>
 
       <div className="px-6 space-y-3">
+        {/* Child Mode Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="bg-card border border-border rounded-2xl overflow-hidden"
+        >
+          <button onClick={toggleChildMode} className="w-full flex items-center gap-4 p-4 text-left">
+            <Baby size={20} className={isChildMode ? "text-secondary" : "text-primary"} />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">Mode Enfant</p>
+              <p className="text-xs text-muted-foreground">Texte plus gros, stickers et confettis</p>
+            </div>
+            <div className={`w-12 h-7 rounded-full transition-colors relative ${isChildMode ? "bg-success" : "bg-muted"}`}>
+              <motion.div
+                animate={{ x: isChildMode ? 20 : 2 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md"
+              />
+            </div>
+          </button>
+        </motion.div>
+
+        {/* Sticker Collection (only in child mode) */}
+        {isChildMode && stickers.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-card border border-border rounded-2xl p-4"
+          >
+            <p className="text-sm font-semibold text-card-foreground mb-3">🎁 Ma collection de stickers</p>
+            <StickerCollection stickers={stickers} />
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}

@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import { useProgress } from "@/hooks/useProgress";
+import { useChildMode } from "@/hooks/useChildMode";
+import { StickerCollection } from "@/components/StickerReward";
 import { surahs } from "@/data/surahs";
 import { Trophy, BookOpen, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 
 export default function Progress() {
   const { progress, getMasteredCount } = useProgress();
+  const { isChildMode, stickers } = useChildMode();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
@@ -70,6 +73,19 @@ export default function Progress() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+          </motion.div>
+        )}
+
+        {/* Sticker collection (child mode) */}
+        {isChildMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-card border border-border rounded-2xl p-5"
+          >
+            <h3 className="text-sm font-semibold text-card-foreground mb-4">🎁 Ma collection de stickers</h3>
+            <StickerCollection stickers={stickers} />
           </motion.div>
         )}
 
