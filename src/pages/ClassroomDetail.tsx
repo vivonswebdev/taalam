@@ -188,6 +188,8 @@ export default function ClassroomDetail() {
         .order("created_at", { ascending: true })
         .limit(100);
       if (data) setMessages(data as ChatMessage[]);
+      // Mark chat as read
+      localStorage.setItem(`chat_last_read_${classId}`, new Date().toISOString());
     };
     loadMessages();
 
