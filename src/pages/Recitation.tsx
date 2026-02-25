@@ -205,10 +205,8 @@ export default function Recitation() {
       setRecitingAyah((p) => p + 1);
       setCurrentTranscript("");
       setShowArabic(false); // Hide text immediately for next verse
-      // Auto-start mic after a short delay to let UI settle
-      setTimeout(() => {
-        voice.start();
-      }, 300);
+      // Must stay synchronous in click handler (user gesture) for Web Speech API
+      voice.start();
     } else {
       finishRecitation(ayahResults);
     }
