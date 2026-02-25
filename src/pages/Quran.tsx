@@ -18,11 +18,12 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DictationMode from "@/components/DictationMode";
 import AudioPlayer from "@/components/AudioPlayer";
 import ReadOnlyMode from "@/components/ReadOnlyMode";
+import HifzControl from "@/components/HifzControl";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly";
+type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz";
 
 interface AyaScore {
   ayaIndex: number;
@@ -91,7 +92,7 @@ export default function Quran() {
     );
   });
 
-  
+
 
   const [micError, setMicError] = useState<string | null>(null);
 
@@ -589,10 +590,10 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="bg-card border border-border rounded-2xl p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">{t("dictation.title")}</p>
-            <div className="flex gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
               <button
                 onClick={() => setRecitationMode("aya")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   recitationMode === "aya" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <BookOpen size={14} />
@@ -600,7 +601,7 @@ export default function Quran() {
               </button>
               <button
                 onClick={() => setRecitationMode("dictation")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   recitationMode === "dictation" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <PenTool size={14} />
@@ -608,11 +609,19 @@ export default function Quran() {
               </button>
               <button
                 onClick={() => setRecitationMode("readOnly")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   recitationMode === "readOnly" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <Headphones size={14} />
                 {t("quran.readOnly")}
+              </button>
+              <button
+                onClick={() => setRecitationMode("hifz")}
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "hifz" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
+                }`}>
+                <Award size={14} />
+                {t("hifz.modeLabel")}
               </button>
             </div>
           </motion.div>
@@ -637,6 +646,16 @@ export default function Quran() {
           translations={translations}
           isArabicOnly={isArabicOnly}
           lang={lang}
+          onBack={handleNewSurah}
+          isChildMode={isChildMode}
+          t={t}
+        />
+      )}
+
+      {/* ═══ HIFZ CONTROL MODE ═══ */}
+      {selectedSurah && recitationMode === "hifz" && (
+        <HifzControl
+          surah={selectedSurah}
           onBack={handleNewSurah}
           isChildMode={isChildMode}
           t={t}

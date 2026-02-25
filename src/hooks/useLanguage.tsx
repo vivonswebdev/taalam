@@ -723,6 +723,38 @@ const translations = {
   "quran.readOnlyDesc": {
     fr: "Écoutez et lisez sans micro ni correction", en: "Listen and read without mic or correction", nl: "Luister en lees zonder microfoon of correctie", ar: "استمع واقرأ بدون ميكروفون أو تصحيح",
   },
+
+  // Hifz Control Mode
+  "hifz.title": { fr: "Contrôle Hifz", en: "Hifz Check", nl: "Hifz Controle", ar: "اختبار الحفظ" },
+  "hifz.selectPassage": { fr: "Sélection du passage", en: "Select passage", nl: "Passage selecteren", ar: "اختيار المقطع" },
+  "hifz.from": { fr: "De", en: "From", nl: "Van", ar: "من" },
+  "hifz.to": { fr: "À", en: "To", nl: "Tot", ar: "إلى" },
+  "hifz.ayah": { fr: "Verset", en: "Verse", nl: "Vers", ar: "آية" },
+  "hifz.ayahsSelected": { fr: "versets sélectionnés", en: "verses selected", nl: "verzen geselecteerd", ar: "آيات مختارة" },
+  "hifz.mode": { fr: "Mode de contrôle", en: "Check mode", nl: "Controlemodus", ar: "وضع الاختبار" },
+  "hifz.blocking": { fr: "Bloquant", en: "Blocking", nl: "Blokkerend", ar: "حظر" },
+  "hifz.blockingDesc": { fr: "Pause à chaque erreur", en: "Pauses on each error", nl: "Pauzeert bij elke fout", ar: "يتوقف عند كل خطأ" },
+  "hifz.observer": { fr: "Observation", en: "Observer", nl: "Observatie", ar: "مراقبة" },
+  "hifz.observerDesc": { fr: "Erreurs marquées, récap à la fin", en: "Errors marked, recap at the end", nl: "Fouten gemarkeerd, samenvatting aan het einde", ar: "تُحدَّد الأخطاء، ملخص في النهاية" },
+  "hifz.tolerance": { fr: "Tolérance", en: "Tolerance", nl: "Tolerantie", ar: "التسامح" },
+  "hifz.strict": { fr: "Strict", en: "Strict", nl: "Strikt", ar: "صارم" },
+  "hifz.medium": { fr: "Moyen", en: "Medium", nl: "Gemiddeld", ar: "متوسط" },
+  "hifz.lenient": { fr: "Tolérant", en: "Lenient", nl: "Tolerant", ar: "متساهل" },
+  "hifz.accessibility": { fr: "Symboles pour daltoniens", en: "Colorblind-friendly symbols", nl: "Kleurenblind-vriendelijke symbolen", ar: "رموز صديقة لعمى الألوان" },
+  "hifz.start": { fr: "Commencer le contrôle", en: "Start check", nl: "Start controle", ar: "ابدأ الاختبار" },
+  "hifz.errorDetected": { fr: "Erreur détectée !", en: "Error detected!", nl: "Fout gedetecteerd!", ar: "تم اكتشاف خطأ!" },
+  "hifz.correctOrIgnore": { fr: "Corrigez ou ignorez pour continuer", en: "Correct it or ignore to continue", nl: "Corrigeer of negeer om door te gaan", ar: "صحح أو تجاهل للمتابعة" },
+  "hifz.ignoreError": { fr: "Ignorer", en: "Ignore", nl: "Negeren", ar: "تجاهل" },
+  "hifz.retry": { fr: "Réessayer", en: "Retry", nl: "Opnieuw", ar: "إعادة المحاولة" },
+  "hifz.results": { fr: "Résultats du contrôle", en: "Check results", nl: "Controleresultaten", ar: "نتائج الاختبار" },
+  "hifz.wordsCorrect": { fr: "mots corrects", en: "correct words", nl: "correcte woorden", ar: "كلمات صحيحة" },
+  "hifz.errorBreakdown": { fr: "Détail des erreurs", en: "Error breakdown", nl: "Foutendetails", ar: "تفاصيل الأخطاء" },
+  "hifz.incorrect": { fr: "Incorrect", en: "Incorrect", nl: "Onjuist", ar: "خاطئ" },
+  "hifz.missing": { fr: "Manquant", en: "Missing", nl: "Ontbrekend", ar: "مفقود" },
+  "hifz.extra": { fr: "Ajouté", en: "Extra", nl: "Extra", ar: "إضافي" },
+  "hifz.worstAyahs": { fr: "Versets à retravailler", en: "Verses to review", nl: "Verzen om te herzien", ar: "آيات للمراجعة" },
+  "hifz.ayahScores": { fr: "Scores par verset", en: "Scores per verse", nl: "Scores per vers", ar: "النتائج لكل آية" },
+  "hifz.modeLabel": { fr: "Contrôle", en: "Hifz Check", nl: "Controle", ar: "اختبار" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
