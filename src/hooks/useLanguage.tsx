@@ -1020,6 +1020,16 @@ const translations = {
   "leaderboard.global": { fr: "Mondial", en: "Global", nl: "Wereldwijd", ar: "عالمي" },
   "leaderboard.country": { fr: "Par pays", en: "By country", nl: "Per land", ar: "حسب البلد" },
   "leaderboard.empty": { fr: "Aucun joueur encore — sois le premier !", en: "No players yet — be the first!", nl: "Nog geen spelers — wees de eerste!", ar: "لا يوجد لاعبون بعد — كن الأول!" },
+  "lb.yourRank": { fr: "Ton rang", en: "Your rank", nl: "Je rang", ar: "ترتيبك" },
+  "lb.toOvertake": { fr: "pour dépasser", en: "to overtake", nl: "om in te halen", ar: "لتجاوز" },
+  "lb.nextLeague": { fr: "Prochaine ligue :", en: "Next league:", nl: "Volgende competitie:", ar: "الدوري التالي:" },
+  "lb.weekly": { fr: "Hebdo", en: "Weekly", nl: "Week", ar: "أسبوعي" },
+  "lb.country": { fr: "Pays", en: "Country", nl: "Land", ar: "البلد" },
+  "lb.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى" },
+  "lb.class": { fr: "Classe", en: "Class", nl: "Klas", ar: "الفصل" },
+  "lb.beginner": { fr: "Débutant", en: "Beginner", nl: "Beginner", ar: "مبتدئ" },
+  "lb.intermediate": { fr: "Intermédiaire", en: "Intermediate", nl: "Gevorderd", ar: "متوسط" },
+  "lb.advanced": { fr: "Avancé", en: "Advanced", nl: "Expert", ar: "متقدم" },
 
   // Announcements
   "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },
