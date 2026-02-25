@@ -70,7 +70,7 @@ export default function ClassroomDetail() {
   } = useWeeklyChallenge(classId ?? undefined);
 
   const classroom = classrooms.find((c) => c.id === classId || c.id === rawClassId);
-  const isTeacher = !!(user && classroom && (classroom as any).teacherId === user.id);
+  const isTeacher = !!(user && classroom && classroom.teacherId === user.id);
   const [dbTeacherId, setDbTeacherId] = useState<string | null>(null);
   useEffect(() => {
     if (!classId) return;
