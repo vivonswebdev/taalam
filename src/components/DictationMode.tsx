@@ -10,6 +10,7 @@ import {
   compareSurahDictation,
   type DictationWordResult,
 } from "@/hooks/useVoiceRecognition";
+import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
@@ -60,6 +61,18 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
 
   const allArabicTexts = surah.ayahs.map((a) => a.arabic);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
+
+  // Live word-by-word feedback
+  const { liveWords, currentWordIndex, totalMatched } = useLiveWordFeedback(allArabicTexts, liveTranscript);
+
+  const getLiveWordColor = (status: LiveWordStatus) => {
+    switch (status) {
+      case "correct": return "text-success bg-success/10";
+      case "almost": return "text-warning bg-warning/10";
+      case "incorrect": return "text-destructive bg-destructive/10";
+      case "pending": return "text-muted-foreground/40";
+    }
+  };
 
   const voice = useVoiceRecognition({
     lang: "ar-SA",
@@ -143,66 +156,56 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     return slices;
   }, [liveResult, surah.ayahs]);
 
-  // An aya is revealed only when ALL its expected words are resolved (correct or incorrect).
-  const isAyahReached = useCallback((ayaIdx: number) => {
-    const slice = ayahWordSlices[ayaIdx];
-    if (!slice || slice.length === 0) return false;
-    const expected = slice.filter(w => w.status !== "extra");
-    if (expected.length === 0) return false;
-    const done = expected.filter(w => w.status === "correct" || w.status === "incorrect").length;
-    return done === expected.length;
-  }, [ayahWordSlices]);
 
-  // ─── Render Mushaf page with hide/reveal logic ───
-  const renderMushafWithReveal = (isRecording: boolean) => {
+  // ─── Render Mushaf page with live word-by-word coloring ───
+  const renderMushafLive = (isRecording: boolean) => {
     return (
       <div className="bg-card border border-border rounded-2xl p-5 space-y-0" dir="rtl">
         {surah.ayahs.map((ayah, i) => {
           const waqfSigns = detectWaqfSigns(ayah.arabic);
-          const reached = isRecording && isAyahReached(i);
           const words = ayah.arabic.split(/\s+/).filter(Boolean);
-          const sliceWords = reached ? (ayahWordSlices[i] || []) : [];
+          const ayahLiveWords = isRecording ? (liveWords[i] || []) : [];
 
           return (
             <span key={i} className="inline">
               {isRecording ? (
-                // During recording: hidden until reached, then revealed with colors
-                reached ? (
-                  // Revealed: show each word colored
-                  <span className="arabic-text text-xl leading-[3]">
-                    {words.map((word, wi) => {
-                      // Find matching result word
-                      const resultWord = sliceWords.filter(w => w.status !== "extra")[wi];
-                      const status = resultWord?.status;
-                      const colorClass = status ? getWordColor(status) : "text-foreground";
-                      return (
-                        <span key={wi} className={colorClass}>
-                          {word}{" "}
-                        </span>
-                      );
-                    })}
-                  </span>
-                ) : (
-                  // Hidden: show invisible placeholder to preserve layout
-                  <span className="arabic-text text-xl leading-[3] select-none" style={{ color: "transparent" }}>
-                    {ayah.arabic}
-                  </span>
-                )
+                // During recording: show all words, colored live as spoken
+                <span className="arabic-text text-xl leading-[3]">
+                  {words.map((word, wi) => {
+                    const lw = ayahLiveWords[wi];
+                    const status = lw?.status || "pending";
+                    const colorClass = getLiveWordColor(status);
+                    const isPending = status === "pending";
+                    return (
+                      <motion.span
+                        key={wi}
+                        initial={!isPending ? { scale: 1.1 } : false}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${colorClass} ${
+                          isPending ? "opacity-40" : "opacity-100"
+                        }`}
+                      >
+                        {word}{" "}
+                      </motion.span>
+                    );
+                  })}
+                </span>
               ) : (
-                // Not recording (ready/result): show normally
+                // Not recording: show normally
                 <span className="arabic-text text-xl text-foreground leading-[3]">
                   {ayah.arabic}
                 </span>
               )}
 
-              {/* Aya end marker - always visible */}
+              {/* Aya end marker */}
               <span className="inline-flex items-center mx-1">
                 <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-sans">
                   {ayah.number}
                 </span>
               </span>
 
-              {/* Waqf signs - always visible */}
+              {/* Waqf signs */}
               {waqfSigns.map((ws, j) => {
                 const info = WAQF_SIGNS[ws.sign];
                 if (!info) return null;
@@ -321,7 +324,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
             </button>
           </div>
 
-          {showOriginal && renderMushafWithReveal(false)}
+          {showOriginal && renderMushafLive(false)}
 
           {/* Waqf legend */}
           {showOriginal && (
@@ -387,12 +390,27 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
           </div>
 
           {/* Same mushaf page — ayahs hidden, revealed as recited */}
-          {renderMushafWithReveal(true)}
+          {renderMushafLive(true)}
 
           {/* Color legend during recording */}
           <div className="flex flex-wrap justify-center gap-3 text-xs">
             <span className="flex items-center gap-1 text-success"><CheckCircle2 size={12} /> {t("dictation.legendCorrect")}</span>
+            <span className="flex items-center gap-1 text-warning">⚠️ Presque</span>
             <span className="flex items-center gap-1 text-destructive"><XCircle size={12} /> {t("dictation.legendIncorrect")}</span>
+          </div>
+
+          {/* Live progress */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                animate={{ width: `${(totalMatched / Math.max(1, surah.ayahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0))) * 100}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground font-mono">
+              {totalMatched}/{surah.ayahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0)}
+            </span>
           </div>
 
           {/* Stop button */}
