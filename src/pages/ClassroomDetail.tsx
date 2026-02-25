@@ -147,17 +147,27 @@ export default function ClassroomDetail() {
     const text = newMessage.trim();
     if (!text || !user || !classId || sending) return;
     setSending(true);
+    setNewMessage("");
     try {
       const authorName = user.user_metadata?.display_name || user.email || "Utilisateur";
-      await supabase.from("class_messages").insert({
+      const { error } = await supabase.from("class_messages").insert({
         classroom_id: classId,
         author_id: user.id,
         author_name: authorName,
         message: text.slice(0, 500),
       });
-      setNewMessage("");
+      if (error) throw error;
+      // Refetch messages to ensure they appear even if realtime is slow
+      const { data } = await supabase
+        .from("class_messages")
+        .select("*")
+        .eq("classroom_id", classId)
+        .order("created_at", { ascending: true })
+        .limit(100);
+      if (data) setMessages(data as ChatMessage[]);
     } catch (err) {
       console.error(err);
+      setNewMessage(text); // Restore on error
     } finally {
       setSending(false);
     }
