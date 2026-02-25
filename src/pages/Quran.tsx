@@ -456,49 +456,52 @@ export default function Quran() {
             )}
           </motion.div>
 
-          {/* Browse mode toggle */}
-          <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.chooseSurah")}</p>
-            <div className="flex gap-2 mb-3">
-              <button
-                onClick={() => setBrowseMode("local")}
-                className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                  browseMode === "local" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {t("recitation.difficulty")}
-              </button>
-              <button
-                onClick={() => setBrowseMode("all")}
-                className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-colors ${
-                  browseMode === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                📖 114 sourates
-              </button>
-            </div>
-          </div>
+          {/* ─── Quick Pick Card ─── */}
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="bg-card border border-border rounded-2xl p-4 space-y-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t("recitation.chooseSurah")}</p>
 
+            {/* Difficulty pills */}
+            <div className="flex gap-1.5">
+              {(["easy", "medium", "hard"] as const).map((d) => (
+                <button key={d}
+                  onClick={() => { setDifficulty(d); setBrowseMode("local"); }}
+                  className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
+                    browseMode === "local" && difficulty === d
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-muted text-muted-foreground hover:bg-accent/50"
+                  }`}>
+                  {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
+                   d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
+                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
+                </button>
+              ))}
+            </div>
+
+            {/* Browse all link */}
+            <button
+              onClick={() => setBrowseMode(browseMode === "all" ? "local" : "all")}
+              className={`w-full text-xs font-medium py-1.5 transition-colors ${
+                browseMode === "all" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+              }`}>
+              📖 {browseMode === "all" ? t("recitation.difficulty") : "114 sourates"}
+            </button>
+          </motion.div>
+
+          {/* ─── Surah Selector ─── */}
           {browseMode === "local" && (
-            <>
-              {/* Difficulty */}
-              <div>
-                <div className="flex gap-2">
-                  {(["easy", "medium", "hard"] as const).map((d) => (
-                    <button key={d}
-                      onClick={() => { setDifficulty(d); }}
-                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                        difficulty === d ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                      }`}>
-                      {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
-                       d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
-                       (isChildMode ? "💪 " : "") + t("recitation.hard")}
-                    </button>
-                  ))}
-                </div>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <p className={`${bodyTextClass} font-semibold text-foreground`}>Sourate</p>
+                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                  difficulty === "easy" ? "bg-green-500/15 text-green-600" :
+                  difficulty === "medium" ? "bg-amber-500/15 text-amber-600" :
+                  "bg-red-500/15 text-red-600"
+                }`}>
+                  {t(`recitation.${difficulty}`)}
+                </span>
               </div>
 
-              {/* Surah dropdown (local) */}
               <div className="relative">
                 <button onClick={() => setShowDropdown(!showDropdown)}
                   className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left">
@@ -527,13 +530,13 @@ export default function Quran() {
                   )}
                 </AnimatePresence>
               </div>
-            </>
+            </div>
           )}
 
           {browseMode === "all" && (
-            <>
+            <div>
               {/* Search bar */}
-              <div className="relative">
+              <div className="relative mb-3">
                 <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
@@ -544,7 +547,6 @@ export default function Quran() {
                 />
               </div>
 
-              {/* Loading overlay */}
               {loadingSurah && (
                 <div className="flex items-center justify-center py-8 gap-2 text-primary">
                   <Loader2 size={20} className="animate-spin" />
@@ -552,7 +554,6 @@ export default function Quran() {
                 </div>
               )}
 
-              {/* Full 114 surahs list */}
               {!loadingSurah && (
                 <div className="space-y-1.5 max-h-[50vh] overflow-y-auto">
                   {filteredAllSurahs.map((s, i) => (
@@ -581,39 +582,40 @@ export default function Quran() {
                   )}
                 </div>
               )}
-            </>
+            </div>
           )}
 
-          {/* Mode toggle: Aya by aya / Full surah dictation */}
-          <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("dictation.title")}</p>
-            <div className="flex gap-2">
+          {/* ─── Mode Toggle Card ─── */}
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="bg-card border border-border rounded-2xl p-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">{t("dictation.title")}</p>
+            <div className="flex gap-1.5">
               <button
                 onClick={() => setRecitationMode("aya")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
-                  recitationMode === "aya" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "aya" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <BookOpen size={14} />
                 {t("dictation.modeAya")}
               </button>
               <button
                 onClick={() => setRecitationMode("dictation")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
-                  recitationMode === "dictation" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "dictation" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <PenTool size={14} />
                 {t("dictation.modeSurah")}
               </button>
               <button
                 onClick={() => setRecitationMode("readOnly")}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
-                  recitationMode === "readOnly" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "readOnly" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
                 }`}>
                 <Headphones size={14} />
                 {t("quran.readOnly")}
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
