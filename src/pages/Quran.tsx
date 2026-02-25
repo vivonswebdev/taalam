@@ -22,6 +22,7 @@ import HifzControl from "@/components/HifzControl";
 import TahaddiMode from "@/components/TahaddiMode";
 import FindAyah from "@/components/FindAyah";
 import MushafReader from "@/components/MushafReader";
+import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 import { useSearchParams } from "react-router-dom";
 
@@ -481,6 +482,10 @@ export default function Quran() {
               <span className="text-sm font-bold">{streak.currentStreak}</span>
             </div>
           </div>
+        </div>
+        {/* Active child banner */}
+        <div className="px-6 pb-2">
+          <ActiveChildBanner />
         </div>
       </div>
 

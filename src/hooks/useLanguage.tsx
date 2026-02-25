@@ -922,6 +922,23 @@ const translations = {
   "reading.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جاري التحميل..." },
   "reading.noResults": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا توجد نتائج" },
   "nav.reading": { fr: "Lecture", en: "Reading", nl: "Lezen", ar: "قراءة" },
+
+  // Active Child
+  "activeChild.workingWith": { fr: "Tu travailles avec :", en: "Working with:", nl: "Je werkt met:", ar: "تعمل مع:" },
+  "activeChild.chooseChild": { fr: "Choisir un enfant", en: "Choose a child", nl: "Kies een kind", ar: "اختر طفلاً" },
+  "activeChild.noChild": { fr: "Aucun enfant sélectionné", en: "No child selected", nl: "Geen kind geselecteerd", ar: "لم يتم اختيار طفل" },
+  "activeChild.startSession": { fr: "Travailler avec", en: "Work with", nl: "Werken met", ar: "العمل مع" },
+
+  // Backup & Restore
+  "backup.title": { fr: "Sauvegarde & Restauration", en: "Backup & Restore", nl: "Back-up & Herstel", ar: "النسخ الاحتياطي والاستعادة" },
+  "backup.export": { fr: "Exporter la sauvegarde", en: "Export backup", nl: "Back-up exporteren", ar: "تصدير النسخة الاحتياطية" },
+  "backup.exportDesc": { fr: "Téléchargez un fichier JSON avec tous vos profils et sessions", en: "Download a JSON file with all profiles and sessions", nl: "Download een JSON-bestand met alle profielen en sessies", ar: "تحميل ملف JSON بجميع الملفات والجلسات" },
+  "backup.import": { fr: "Importer une sauvegarde", en: "Import backup", nl: "Back-up importeren", ar: "استيراد نسخة احتياطية" },
+  "backup.importDesc": { fr: "Charger un fichier JSON pour restaurer les données", en: "Load a JSON file to restore data", nl: "Laad een JSON-bestand om gegevens te herstellen", ar: "تحميل ملف JSON لاستعادة البيانات" },
+  "backup.importWarning": { fr: "⚠️ Cela remplacera toutes les données actuelles (profils, sessions, PIN).", en: "⚠️ This will replace all current data (profiles, sessions, PIN).", nl: "⚠️ Dit vervangt alle huidige gegevens (profielen, sessies, PIN).", ar: "⚠️ سيؤدي هذا إلى استبدال جميع البيانات الحالية (الملفات، الجلسات، الرمز السري)." },
+  "backup.importSuccess": { fr: "✅ Données restaurées avec succès !", en: "✅ Data restored successfully!", nl: "✅ Gegevens succesvol hersteld!", ar: "✅ تمت استعادة البيانات بنجاح!" },
+  "backup.importError": { fr: "❌ Fichier invalide", en: "❌ Invalid file", nl: "❌ Ongeldig bestand", ar: "❌ ملف غير صالح" },
+  "backup.lastActivity": { fr: "Dernière activité", en: "Last activity", nl: "Laatste activiteit", ar: "آخر نشاط" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

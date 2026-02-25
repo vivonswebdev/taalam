@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Edit3, ChevronRight, Lock, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit3, ChevronRight, Lock, ShieldCheck, Download, Upload, Play } from "lucide-react";
 import { useChildProfiles, type ChildProfile } from "@/hooks/useChildProfiles";
+import { useActiveChild } from "@/hooks/useActiveChild";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -10,9 +11,12 @@ export default function ParentDashboard() {
   const {
     profiles, addProfile, updateProfile, deleteProfile,
     getChildMastery, getPin, setPin, verifyPin, AVATAR_EMOJIS,
+    exportBackup, importBackup, getLastActivity,
   } = useChildProfiles();
+  const { setActiveChild } = useActiveChild();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [unlocked, setUnlocked] = useState(false);
   const [pinInput, setPinInput] = useState("");
@@ -25,6 +29,7 @@ export default function ParentDashboard() {
   const [formAge, setFormAge] = useState("");
   const [formEmoji, setFormEmoji] = useState("👦");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [backupMsg, setBackupMsg] = useState<string | null>(null);
 
   const existingPin = getPin();
 
@@ -77,6 +82,45 @@ export default function ParentDashboard() {
     setFormEmoji(p.avatarEmoji);
     setShowAdd(true);
   };
+
+  const handleStartSession = (childId: string) => {
+    setActiveChild(childId);
+    navigate("/quran");
+  };
+
+  const handleExport = () => {
+    const json = exportBackup();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `quran-easy-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      const ok = importBackup(text);
+      setBackupMsg(ok ? t("backup.importSuccess") : t("backup.importError"));
+      setTimeout(() => setBackupMsg(null), 3000);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  function relativeActivity(d: string | null): string {
+    if (!d) return "—";
+    const days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
+    if (days === 0) return "Aujourd'hui";
+    if (days === 1) return "Hier";
+    if (days < 7) return `Il y a ${days}j`;
+    return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  }
 
   // ─── PIN Screen ───────────────────────────────────────────
   if (!unlocked) {
@@ -190,6 +234,9 @@ export default function ParentDashboard() {
                   <p className="text-xs text-muted-foreground">
                     {p.age ? `${p.age} ${t("parent.years")}` : ""}{p.age ? " · " : ""}{t("parent.mastery")}: {mastery}%
                   </p>
+                  <p className="text-[10px] text-muted-foreground/70">
+                    {t("backup.lastActivity")}: {relativeActivity(getLastActivity(p.id))}
+                  </p>
                 </div>
                 {/* Mini progress bar */}
                 <div className="flex items-center gap-2 shrink-0">
@@ -205,6 +252,14 @@ export default function ParentDashboard() {
 
               {/* Quick actions */}
               <div className="flex border-t border-border">
+                <button
+                  onClick={() => handleStartSession(p.id)}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs text-primary font-semibold hover:bg-primary/5 transition-colors"
+                >
+                  <Play size={12} />
+                  {t("activeChild.startSession")}
+                </button>
+                <div className="w-px bg-border" />
                 <button
                   onClick={() => startEdit(p)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
@@ -224,6 +279,55 @@ export default function ParentDashboard() {
             </motion.div>
           );
         })}
+
+        {/* ─── Backup & Restore ─────────────────────────────── */}
+        {profiles.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="bg-card border border-border rounded-2xl p-4 space-y-3 mt-4"
+          >
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {t("backup.title")}
+            </p>
+
+            <button
+              onClick={handleExport}
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border hover:bg-accent/30 transition-colors text-left"
+            >
+              <Download size={18} className="text-primary shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">{t("backup.export")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("backup.exportDesc")}</p>
+              </div>
+            </button>
+
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border hover:bg-accent/30 transition-colors text-left"
+            >
+              <Upload size={18} className="text-secondary shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">{t("backup.import")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("backup.importDesc")}</p>
+              </div>
+            </button>
+
+            <p className="text-[10px] text-muted-foreground/80">{t("backup.importWarning")}</p>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleImportFile}
+              className="hidden"
+            />
+
+            {backupMsg && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs font-medium text-center py-1">
+                {backupMsg}
+              </motion.p>
+            )}
+          </motion.div>
+        )}
       </div>
 
       {/* Add/Edit Modal */}

@@ -198,6 +198,45 @@ export function useChildProfiles() {
     return stored === input;
   }, []);
 
+  // ─── Backup / Restore ─────────────────────────────────────
+  const exportBackup = useCallback((): string => {
+    const pin = localStorage.getItem(PIN_KEY);
+    const backup = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      profiles,
+      sessions,
+      pin,
+    };
+    return JSON.stringify(backup, null, 2);
+  }, [profiles, sessions]);
+
+  const importBackup = useCallback((json: string): boolean => {
+    try {
+      const data = JSON.parse(json);
+      if (!data.version || !Array.isArray(data.profiles) || !Array.isArray(data.sessions)) {
+        return false;
+      }
+      setProfiles(data.profiles);
+      setSessions(data.sessions);
+      if (data.pin) {
+        localStorage.setItem(PIN_KEY, data.pin);
+      } else {
+        localStorage.removeItem(PIN_KEY);
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  // ─── Last activity per child ──────────────────────────────
+  const getLastActivity = useCallback((childId: string): string | null => {
+    const childSessions = sessions.filter(s => s.childId === childId);
+    if (childSessions.length === 0) return null;
+    return childSessions.sort((a, b) => b.date.localeCompare(a.date))[0].date;
+  }, [sessions]);
+
   return {
     profiles,
     sessions,
@@ -212,6 +251,9 @@ export function useChildProfiles() {
     getPin,
     setPin,
     verifyPin,
+    exportBackup,
+    importBackup,
+    getLastActivity,
     AVATAR_EMOJIS,
   };
 }
