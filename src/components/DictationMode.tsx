@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Eye, EyeOff, AlertCircle, CheckCircle2, XCircle,
-  Volume2, Wifi, Info,
+  Volume2, Info,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
 import {
@@ -288,19 +288,10 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
       </div>
 
       {/* Mode indicator */}
-      {voice.mode !== "none" && phase === "recording" && (
+      {phase === "recording" && (
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          {voice.mode === "server-fallback" ? (
-            <>
-              <Wifi size={12} className="text-secondary" />
-              <span>{t("dictation.serverMode")}</span>
-            </>
-          ) : (
-            <>
-              <Mic size={12} className="text-primary" />
-              <span>{t("dictation.webSpeechMode")}</span>
-            </>
-          )}
+          <Mic size={12} className="text-primary" />
+          <span>{t("dictation.serverMode")}</span>
         </div>
       )}
 
