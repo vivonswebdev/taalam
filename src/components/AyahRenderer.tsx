@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { Mic, Pause, SkipBack, SkipForward, AlertCircle, CheckCircle2 } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mic, X, SkipForward, CheckCircle2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Surah } from "@/data/surahs";
 import { compareTexts } from "@/hooks/useVoiceRecognition";
 import { useTarteelAyah } from "@/hooks/useTarteelAyah";
+import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 
 interface AyaScore {
   ayaIndex: number;
@@ -12,16 +13,21 @@ interface AyaScore {
   transcript: string;
 }
 
+type ScreenMode = "intro" | "recitation" | "validated";
+
 interface AyahRendererProps {
   surah: Surah;
   translations: Record<number, string>;
   lang: string;
   isChildMode: boolean;
   onFinish: (scores: AyaScore[]) => void;
+  onBack?: () => void;
 }
 
-export default function AyahRenderer({ surah, translations, lang, isChildMode, onFinish }: AyahRendererProps) {
+export default function AyahRenderer({ surah, translations, lang, isChildMode, onFinish, onBack }: AyahRendererProps) {
   const [scores, setScores] = useState<AyaScore[]>([]);
+  const [screenMode, setScreenMode] = useState<ScreenMode>("intro");
+  const globalAudio = useGlobalAudio();
 
   const {
     currentAyahIndex,
@@ -39,7 +45,22 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
   } = useTarteelAyah({ ayahs: surah.ayahs.map((a) => a.arabic), lang: "ar-SA" });
 
   const ayah = surah.ayahs[currentAyahIndex];
-  const progress = useMemo(() => Math.round(((currentAyahIndex + 1) / surah.ayahs.length) * 100), [currentAyahIndex, surah.ayahs.length]);
+  const progress = useMemo(
+    () => Math.round(((currentAyahIndex + 1) / surah.ayahs.length) * 100),
+    [currentAyahIndex, surah.ayahs.length]
+  );
+
+  // Stop global audio when entering recitation
+  useEffect(() => {
+    globalAudio.requestExclusiveAudio();
+  }, []);
+
+  // When micro starts → enter recitation mode
+  const handleStartMicro = () => {
+    globalAudio.requestExclusiveAudio();
+    startMicro();
+    setScreenMode("recitation");
+  };
 
   const handleValidate = () => {
     if (!ayah) return;
@@ -61,119 +82,270 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
       return;
     }
 
+    setScreenMode("validated");
+  };
+
+  const handleContinue = () => {
     nextAyah();
+    setScreenMode("intro");
+  };
+
+  const handleSkip = () => {
+    stopMicro();
+    const nextScore: AyaScore = {
+      ayaIndex: currentAyahIndex,
+      score: 0,
+      correct: false,
+      transcript: "",
+    };
+    const updated = [...scores, nextScore];
+    setScores(updated);
+
+    if (currentAyahIndex >= surah.ayahs.length - 1) {
+      onFinish(updated);
+      return;
+    }
+
+    nextAyah();
+    setScreenMode("intro");
+  };
+
+  const handleExit = () => {
+    stopMicro();
+    onBack?.();
   };
 
   const canGoPrev = currentAyahIndex > 0;
   const canGoNext = currentAyahIndex < surah.ayahs.length - 1;
 
-  return (
-    <div className="px-6 space-y-4 pb-32">
-      <div className="text-center">
-        <p className="font-arabic text-2xl text-primary">{surah.nameArabic}</p>
-        <p className="text-xs text-muted-foreground">Ayah {currentAyahIndex + 1}/{surah.ayahs.length} · {progress}%</p>
-      </div>
-
-      <div className="h-2 bg-muted rounded-full overflow-hidden">
-        <motion.div className="h-full bg-primary" animate={{ width: `${progress}%` }} />
-      </div>
-
-      <div className="bg-card border border-border rounded-2xl p-5 space-y-4">
-        <p className={`${isChildMode ? "text-base" : "text-sm"} text-muted-foreground`}>
-          {lang === "ar" ? ayah.translation : (translations[currentAyahIndex] || ayah.translation)}
-        </p>
-
-        <p className="text-sm text-primary/70 italic">{ayah.transliteration}</p>
-
-        <div className="rounded-xl bg-muted/40 p-4" dir="rtl">
-          {showArabic ? (
-            <p className="arabic-text text-2xl text-foreground leading-loose">{currentAyahText}</p>
-          ) : (
-            <p className="arabic-text text-2xl text-foreground/20 leading-loose select-none">░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</p>
-          )}
-        </div>
-
-        {!isSupported && (
-          <div className="bg-destructive/10 text-destructive rounded-xl p-3 text-sm text-center">
-            <AlertCircle size={16} className="inline mr-1" />
-            Micro indisponible sur ce navigateur
-          </div>
-        )}
-
-        <div className="flex flex-col items-center gap-2">
-          <button
-            onClick={recognitionError ? startMicro : (isListening ? stopMicro : startMicro)}
-            className={`${isChildMode ? "w-20 h-20" : "w-16 h-16"} rounded-full flex items-center justify-center transition-all shadow-lg ${
-              recognitionError
-                ? "bg-destructive text-destructive-foreground shadow-destructive/30"
-                : isListening
-                  ? "bg-success text-success-foreground shadow-success/30"
-                  : "bg-primary text-primary-foreground shadow-primary/30"
-            }`}
-          >
-            <Mic size={isChildMode ? 32 : 24} />
+  // ─── INTRO mode: show full ayah before starting ───
+  if (screenMode === "intro") {
+    return (
+      <div className="fixed inset-0 z-50 bg-background flex flex-col">
+        {/* Mini header */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
+          <button onClick={handleExit} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+            <ArrowLeft size={18} className="text-foreground" />
           </button>
-          <p className="text-xs text-muted-foreground text-center">
-            {recognitionError ? `Micro bloqué (${recognitionError})` : isListening ? "Micro actif" : "Touchez le micro"}
-          </p>
-        </div>
-
-        {transcript && (
-          <div className="bg-accent/40 rounded-xl p-3" dir="rtl">
-            <p className="arabic-text text-lg text-foreground">{transcript}</p>
+          <div className="flex-1 text-center">
+            <p className="font-arabic text-lg text-primary">{surah.nameArabic}</p>
+            <p className="text-[10px] text-muted-foreground">
+              Ayah {currentAyahIndex + 1}/{surah.ayahs.length}
+            </p>
           </div>
-        )}
-
-        <div className="bg-accent/20 rounded-xl p-3" dir="rtl">
-          <div className="arabic-text text-xl leading-loose">
-            {wordResults.map((result, i) => (
-              <span
-                key={`${result.word}-${i}`}
-                className={result.status === "correct" ? "text-success" : result.status === "almost" ? "text-warning" : "text-muted-foreground/40"}
-              >
-                {result.status === "correct" && <CheckCircle2 size={14} className="inline mr-1" />}
-                {result.word}{" "}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <button
-          onClick={handleValidate}
-          disabled={!transcript}
-          className="w-full py-3 rounded-xl bg-success text-success-foreground font-semibold disabled:opacity-50"
-        >
-          Valider cette aya
-        </button>
-      </div>
-
-      <div className="fixed bottom-16 left-0 right-0 z-40">
-        <div className="max-w-lg mx-auto px-4">
-          <div className="bg-card border border-border rounded-2xl shadow-xl p-3 flex items-center justify-between gap-2">
+          {/* Surah stepper */}
+          <div className="flex items-center gap-1">
             <button
               onClick={() => canGoPrev && setAyah(currentAyahIndex - 1)}
               disabled={!canGoPrev}
-              className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center disabled:opacity-30"
+              className="w-8 h-8 rounded-full bg-muted flex items-center justify-center disabled:opacity-30"
             >
-              <SkipBack size={18} />
+              <ChevronLeft size={16} className="text-foreground" />
             </button>
-
-            <button
-              onClick={stopMicro}
-              className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20"
-            >
-              <Pause size={24} />
-            </button>
-
             <button
               onClick={() => canGoNext && setAyah(currentAyahIndex + 1)}
               disabled={!canGoNext}
-              className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center disabled:opacity-30"
+              className="w-8 h-8 rounded-full bg-muted flex items-center justify-center disabled:opacity-30"
             >
-              <SkipForward size={18} />
+              <ChevronRight size={16} className="text-foreground" />
             </button>
           </div>
         </div>
+
+        {/* Progress */}
+        <div className="px-4 pt-3">
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <motion.div className="h-full bg-primary" animate={{ width: `${progress}%` }} />
+          </div>
+          <p className="text-[10px] text-muted-foreground text-right mt-1">{progress}%</p>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
+          {/* Arabic text visible */}
+          <div className="bg-card border border-border rounded-2xl p-6 w-full" dir="rtl">
+            <p className="arabic-text text-2xl text-foreground leading-loose text-center">
+              {currentAyahText}
+            </p>
+          </div>
+
+          {/* Translation */}
+          <p className="text-sm text-muted-foreground text-center leading-relaxed">
+            {translations[currentAyahIndex] || ayah?.translation}
+          </p>
+
+          {/* Transliteration */}
+          {ayah?.transliteration && (
+            <p className="text-sm text-primary/70 italic text-center">{ayah.transliteration}</p>
+          )}
+
+          {!isSupported ? (
+            <div className="bg-destructive/10 text-destructive rounded-xl p-3 text-sm text-center w-full">
+              Micro indisponible sur ce navigateur
+            </div>
+          ) : (
+            <button
+              onClick={handleStartMicro}
+              className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 transition-transform active:scale-95"
+            >
+              <Mic size={32} />
+            </button>
+          )}
+          <p className="text-xs text-muted-foreground">Touchez le micro pour réciter</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── VALIDATED mode: "Cliquez pour poursuivre" ───
+  if (screenMode === "validated") {
+    const lastScore = scores[scores.length - 1];
+    return (
+      <div className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center px-6 gap-8">
+        {/* Score feedback */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="text-center space-y-3"
+        >
+          <div className={`w-20 h-20 rounded-full mx-auto flex items-center justify-center text-2xl font-bold ${
+            lastScore?.correct ? "bg-success/15 text-success" : "bg-warning/15 text-warning"
+          }`}>
+            {lastScore?.score ?? 0}%
+          </div>
+          <p className="text-lg font-semibold text-foreground">
+            {lastScore?.correct ? "Excellent ! ✅" : "Continue ! 💪"}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Ayah {currentAyahIndex + 1}/{surah.ayahs.length}
+          </p>
+        </motion.div>
+
+        {/* Continue button */}
+        <motion.button
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          onClick={handleContinue}
+          className="w-full max-w-xs py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+        >
+          Cliquez pour poursuivre →
+        </motion.button>
+      </div>
+    );
+  }
+
+  // ─── RECITATION mode: clean, minimal ───
+  return (
+    <div className="fixed inset-0 z-50 bg-background flex flex-col">
+      {/* Minimal top bar */}
+      <div className="flex items-center justify-between px-4 py-3 shrink-0">
+        <button onClick={handleExit} className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center">
+          <X size={16} className="text-muted-foreground" />
+        </button>
+        <p className="text-xs text-muted-foreground">
+          Ayah {currentAyahIndex + 1}/{surah.ayahs.length} · {progress}%
+        </p>
+        <button onClick={handleSkip} className="text-xs text-muted-foreground px-3 py-1.5 rounded-lg bg-muted/50">
+          Passer →
+        </button>
+      </div>
+
+      {/* Progress */}
+      <div className="px-4">
+        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
+      {/* Main content - centered */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 gap-5">
+        {/* Translation always visible */}
+        <p className="text-sm text-muted-foreground text-center leading-relaxed max-w-sm">
+          {translations[currentAyahIndex] || ayah?.translation}
+        </p>
+
+        {/* Transliteration always visible */}
+        {ayah?.transliteration && (
+          <p className="text-sm text-primary/70 italic text-center">{ayah.transliteration}</p>
+        )}
+
+        {/* Arabic: hidden (masked) */}
+        <div className="bg-card border border-border rounded-2xl p-5 w-full" dir="rtl">
+          {showArabic ? (
+            <p className="arabic-text text-2xl text-foreground leading-loose text-center">
+              {currentAyahText}
+            </p>
+          ) : (
+            <p className="arabic-text text-2xl text-foreground/10 leading-loose text-center select-none">
+              ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+            </p>
+          )}
+        </div>
+
+        {/* Word results coloring */}
+        {wordResults.length > 0 && (
+          <div className="bg-muted/30 rounded-xl p-3 w-full" dir="rtl">
+            <div className="arabic-text text-xl leading-loose text-center">
+              {wordResults.map((result, i) => (
+                <span
+                  key={`${result.word}-${i}`}
+                  className={
+                    result.status === "correct"
+                      ? "text-success"
+                      : result.status === "almost"
+                        ? "text-warning"
+                        : "text-muted-foreground/30"
+                  }
+                >
+                  {result.status === "correct" && <CheckCircle2 size={12} className="inline mr-0.5" />}
+                  {result.word}{" "}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Live transcript */}
+        {transcript && (
+          <div className="bg-accent/30 rounded-xl p-3 w-full" dir="rtl">
+            <p className="arabic-text text-base text-foreground/70 text-center">{transcript}</p>
+          </div>
+        )}
+
+        {/* Micro button */}
+        <button
+          onClick={recognitionError ? handleStartMicro : (isListening ? stopMicro : handleStartMicro)}
+          className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shadow-lg ${
+            recognitionError
+              ? "bg-destructive text-destructive-foreground shadow-destructive/30 animate-pulse"
+              : isListening
+                ? "bg-success text-success-foreground shadow-success/30 animate-pulse"
+                : "bg-primary text-primary-foreground shadow-primary/30"
+          }`}
+        >
+          <Mic size={24} />
+        </button>
+        <p className="text-[10px] text-muted-foreground">
+          {recognitionError ? `Erreur (${recognitionError})` : isListening ? "🟢 Micro actif — Récitez..." : "Micro en pause"}
+        </p>
+      </div>
+
+      {/* Bottom action bar */}
+      <div className="px-4 pb-6 pt-2 shrink-0 space-y-2">
+        <button
+          onClick={handleValidate}
+          disabled={!transcript}
+          className="w-full py-3.5 rounded-xl bg-success text-success-foreground font-semibold disabled:opacity-40 transition-opacity"
+        >
+          ✅ Valider cette aya
+        </button>
+        <button
+          onClick={handleSkip}
+          className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground font-medium text-sm"
+        >
+          Passer à l'ayah suivante →
+        </button>
       </div>
     </div>
   );
