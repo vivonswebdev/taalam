@@ -61,11 +61,12 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
     }
   }, [voice, allArabicTexts, liveTranscript]);
 
-  // Award XP once
+  // Award x2 XP for daily challenge
+  const xpGain = Math.max(10, Math.round(finalScore / 2) * 2);
+
   useEffect(() => {
     if (phase === "result" && !xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      const xpGain = Math.max(5, Math.round(finalScore / 2));
       xp.addXP(xpGain);
     }
   }, [phase, finalScore]);
@@ -133,10 +134,19 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                 >
                   {t("daily.title")}
                 </motion.h2>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-1.5 bg-secondary/15 text-secondary rounded-full px-3 py-1 mt-2 font-bold text-sm"
+                >
+                  <Star size={14} className="fill-secondary" />
+                  x2 XP {t("daily.bonus")}
+                </motion.div>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.25 }}
+                  transition={{ delay: 0.3 }}
                   className="text-sm text-muted-foreground mt-1"
                 >
                   {t("daily.subtitle")}
@@ -324,15 +334,20 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                 </p>
               </motion.div>
 
-              {/* XP earned */}
+              {/* XP earned with x2 badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 mx-auto"
+                className="flex flex-col items-center gap-2"
               >
-                <Star size={16} className="fill-primary" />
-                <span className="font-bold text-sm">+{Math.max(5, Math.round(finalScore / 2))} XP</span>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2">
+                  <Star size={16} className="fill-primary" />
+                  <span className="font-bold text-sm">+{xpGain} XP</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 bg-secondary/15 text-secondary rounded-full px-3 py-1 text-xs font-bold">
+                  🔥 x2 XP · {t("daily.challengeBadge")}
+                </div>
               </motion.div>
 
               {/* Badges */}

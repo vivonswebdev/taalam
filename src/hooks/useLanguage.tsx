@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from "react";
 
-export type Lang = "fr" | "en" | "nl" | "ar";
+export type Lang = "fr" | "en" | "nl" | "ar" | "tr" | "ur";
 
 export const LANGUAGES: { code: Lang; label: string; flag: string; dir: "ltr" | "rtl" }[] = [
   { code: "fr", label: "Français", flag: "🇫🇷", dir: "ltr" },
   { code: "en", label: "English", flag: "🇬🇧", dir: "ltr" },
   { code: "nl", label: "Nederlands", flag: "🇳🇱", dir: "ltr" },
   { code: "ar", label: "العربية", flag: "🇸🇦", dir: "rtl" },
+  { code: "tr", label: "Türkçe", flag: "🇹🇷", dir: "ltr" },
+  { code: "ur", label: "اردو", flag: "🇵🇰", dir: "rtl" },
 ];
 
 // Translation API identifiers for AlQuran Cloud
@@ -14,7 +16,9 @@ export const QURAN_TRANSLATION_IDS: Record<Lang, string> = {
   fr: "fr.hamidullah",
   en: "en.asad",
   nl: "nl.siregar",
-  ar: "ar.alafasy", // Arabic uses original text
+  ar: "ar.alafasy",
+  tr: "tr.diyanet",
+  ur: "ur.jalandhry",
 };
 
 const LANG_KEY = "quranEasyLang";
@@ -25,6 +29,8 @@ function detectBrowserLang(): Lang {
     if (nav.startsWith("fr")) return "fr";
     if (nav.startsWith("nl")) return "nl";
     if (nav.startsWith("ar")) return "ar";
+    if (nav.startsWith("tr")) return "tr";
+    if (nav.startsWith("ur")) return "ur";
     return "en";
   } catch {
     return "fr";
@@ -34,7 +40,7 @@ function detectBrowserLang(): Lang {
 function loadLang(): Lang {
   try {
     const stored = localStorage.getItem(LANG_KEY) as Lang;
-    if (stored && ["fr", "en", "nl", "ar"].includes(stored)) return stored;
+    if (stored && ["fr", "en", "nl", "ar", "tr", "ur"].includes(stored)) return stored;
   } catch {}
   return detectBrowserLang();
 }
@@ -1086,7 +1092,9 @@ const translations = {
   "daily.notBad": { fr: "Pas mal ! Tu progresses !", en: "Not bad! You're improving!", nl: "Niet slecht! Je verbetert!", ar: "ليس سيئاً! أنت تتحسن!" },
   "daily.tryAgain": { fr: "Continue à t'entraîner !", en: "Keep practicing!", nl: "Blijf oefenen!", ar: "واصل التدريب!" },
   "daily.perfectBadge": { fr: "Récitation parfaite !", en: "Perfect recitation!", nl: "Perfecte recitatie!", ar: "تلاوة مثالية!" },
-  "daily.continue": { fr: "Continuer", en: "Continue", nl: "Doorgaan", ar: "متابعة" },
+  "daily.continue": { fr: "Continuer", en: "Continue", nl: "Doorgaan", ar: "متابعة", tr: "Devam", ur: "جاری رکھیں" },
+  "daily.bonus": { fr: "bonus !", en: "bonus!", nl: "bonus!", ar: "مكافأة!", tr: "bonus!", ur: "بونس!" },
+  "daily.challengeBadge": { fr: "Défi du jour !", en: "Daily challenge!", nl: "Dagelijkse uitdaging!", ar: "تحدي اليوم!", tr: "Günün meydan okuması!", ur: "روزانہ چیلنج!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
@@ -1125,7 +1133,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang, langInfo.dir]);
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t, dir: langInfo.dir, isRTL: lang === "ar" }}>
+    <LanguageContext.Provider value={{ lang, setLang, t, dir: langInfo.dir, isRTL: lang === "ar" || lang === "ur" }}>
       {children}
     </LanguageContext.Provider>
   );
