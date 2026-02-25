@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target, Bookmark,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -21,11 +21,13 @@ import ReadOnlyMode from "@/components/ReadOnlyMode";
 import HifzControl from "@/components/HifzControl";
 import TahaddiMode from "@/components/TahaddiMode";
 import FindAyah from "@/components/FindAyah";
+import MushafReader from "@/components/MushafReader";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
+import { useSearchParams } from "react-router-dom";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah";
+type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah" | "mushaf";
 
 // ─── Easy surahs for beginners / first-time users ───────────
 const EASY_SURAH_NUMBERS = [114, 113, 112, 108, 111, 110, 109, 107, 106, 105];
@@ -45,12 +47,19 @@ export default function Quran() {
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t, lang } = useLanguage();
   const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
+  const [searchParams] = useSearchParams();
+
+  // URL params for deep-linking (from bookmarks)
+  const urlSurahParam = searchParams.get("surah");
+  const urlAyahParam = searchParams.get("ayah");
+  const urlModeParam = searchParams.get("mode");
 
   // Selection
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [recitationMode, setRecitationMode] = useState<RecitationMode>("aya");
+  const [mushafStartAyah, setMushafStartAyah] = useState(0);
 
   // Last used surah
   const [lastUsedSurahNumber, setLastUsedSurahNumber] = useState<number | null>(() => {
@@ -94,6 +103,25 @@ export default function Quran() {
   const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
   const filteredSurahs = getSurahsByDifficulty(difficulty);
+
+  // Handle deep-link from bookmarks
+  useEffect(() => {
+    if (urlSurahParam && urlModeParam === "mushaf") {
+      const num = Number(urlSurahParam);
+      const local = surahs.find(s => s.number === num);
+      if (local) {
+        setSelectedSurah(local);
+        setRecitationMode("mushaf");
+        setMushafStartAyah(urlAyahParam ? Number(urlAyahParam) : 0);
+      } else {
+        fetchFullSurah(num).then((full) => {
+          setSelectedSurah(full);
+          setRecitationMode("mushaf");
+          setMushafStartAyah(urlAyahParam ? Number(urlAyahParam) : 0);
+        }).catch(console.error);
+      }
+    }
+  }, []);
 
   // Fetch all 114 surahs metadata
   useEffect(() => {
@@ -711,6 +739,14 @@ export default function Quran() {
                 <Search size={14} />
                 {t("findAyah.modeLabel")}
               </button>
+              <button
+                onClick={() => setRecitationMode("mushaf")}
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "mushaf" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
+                }`}>
+                <Bookmark size={14} />
+                {t("mushaf.modeLabel")}
+              </button>
             </div>
           </motion.div>
         </div>
@@ -760,6 +796,18 @@ export default function Quran() {
           isChildMode={isChildMode}
         />
       )}
+      {/* ═══ MUSHAF MODE ═══ */}
+      {selectedSurah && recitationMode === "mushaf" && (
+        <MushafReader
+          surah={selectedSurah}
+          translations={translations}
+          isArabicOnly={isArabicOnly}
+          onBack={handleNewSurah}
+          t={t}
+          startAtAyah={mushafStartAyah}
+        />
+      )}
+
       {/* ═══ DICTATION MODE ═══ */}
       {selectedSurah && recitationMode === "dictation" && !surahFinished && (
         <div className="px-6">

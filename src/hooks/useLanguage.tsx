@@ -882,6 +882,32 @@ const translations = {
   "parent.noSessionsThisWeek": { fr: "Aucune session cette semaine", en: "No sessions this week", nl: "Geen sessies deze week", ar: "لا توجد جلسات هذا الأسبوع" },
   "parent.access": { fr: "Espace parent", en: "Parent area", nl: "Ouder sectie", ar: "مساحة الوالدين" },
   "parent.accessDesc": { fr: "Suivi des enfants / élèves", en: "Track children / students", nl: "Kinderen / studenten volgen", ar: "متابعة الأطفال / الطلاب" },
+
+  // Mushaf Reader
+  "mushaf.title": { fr: "Mode Mushaf", en: "Mushaf Mode", nl: "Mushaf Modus", ar: "وضع المصحف" },
+  "mushaf.autoScroll": { fr: "Défilement auto", en: "Auto-scroll", nl: "Auto-scroll", ar: "تمرير تلقائي" },
+  "mushaf.scrollSpeed": { fr: "Vitesse", en: "Speed", nl: "Snelheid", ar: "السرعة" },
+  "mushaf.darkMode": { fr: "Mode sombre", en: "Dark mode", nl: "Donkere modus", ar: "الوضع الداكن" },
+  "mushaf.addBookmark": { fr: "Ajouter aux favoris", en: "Add to bookmarks", nl: "Toevoegen aan bladwijzers", ar: "إضافة للمفضلة" },
+  "mushaf.removeBookmark": { fr: "Retirer des favoris", en: "Remove bookmark", nl: "Bladwijzer verwijderen", ar: "إزالة من المفضلة" },
+  "mushaf.modeLabel": { fr: "Mushaf", en: "Mushaf", nl: "Mushaf", ar: "المصحف" },
+
+  // Bookmarks
+  "bookmarks.title": { fr: "Favoris", en: "Bookmarks", nl: "Bladwijzers", ar: "المفضلة" },
+  "bookmarks.subtitle": { fr: "Vos versets et plages favorites", en: "Your favorite verses & ranges", nl: "Je favoriete verzen & bereiken", ar: "آياتك ونطاقاتك المفضلة" },
+  "bookmarks.ayahs": { fr: "Versets", en: "Verses", nl: "Verzen", ar: "آيات" },
+  "bookmarks.ranges": { fr: "Plages", en: "Ranges", nl: "Bereiken", ar: "نطاقات" },
+  "bookmarks.noAyahs": { fr: "Aucun verset en favori", en: "No bookmarked verses", nl: "Geen bladwijzers", ar: "لا توجد آيات مفضلة" },
+  "bookmarks.noAyahsHint": { fr: "Appui long sur un verset pour l'ajouter", en: "Long press a verse to bookmark it", nl: "Lang indrukken om toe te voegen", ar: "اضغط مطولاً على آية لإضافتها" },
+  "bookmarks.noRanges": { fr: "Aucune plage favorite", en: "No favorite ranges", nl: "Geen favoriete bereiken", ar: "لا توجد نطاقات مفضلة" },
+  "bookmarks.addRange": { fr: "Ajouter une plage", en: "Add a range", nl: "Bereik toevoegen", ar: "إضافة نطاق" },
+  "bookmarks.labelPlaceholder": { fr: "Label (ex: Chapitre patience)", en: "Label (e.g. Patience chapter)", nl: "Label (bv. Geduld hoofdstuk)", ar: "التسمية (مثال: باب الصبر)" },
+  "bookmarks.fromSurah": { fr: "Sourate début", en: "From surah", nl: "Van soera", ar: "من سورة" },
+  "bookmarks.fromAyah": { fr: "Verset début", en: "From verse", nl: "Van vers", ar: "من آية" },
+  "bookmarks.toSurah": { fr: "Sourate fin", en: "To surah", nl: "Tot soera", ar: "إلى سورة" },
+  "bookmarks.toAyah": { fr: "Verset fin", en: "To verse", nl: "Tot vers", ar: "إلى آية" },
+  "bookmarks.from": { fr: "De", en: "From", nl: "Van", ar: "من" },
+  "bookmarks.navLabel": { fr: "Favoris", en: "Bookmarks", nl: "Bladwijzers", ar: "المفضلة" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
