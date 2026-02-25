@@ -808,6 +808,11 @@ const translations = {
   "findAyah.searchError": { fr: "Erreur de recherche", en: "Search error", nl: "Zoekfout", ar: "خطأ في البحث" },
   "findAyah.dismiss": { fr: "Fermer", en: "Dismiss", nl: "Sluiten", ar: "إغلاق" },
   "findAyah.modeLabel": { fr: "Trouve l'ayah", en: "Find Ayah", nl: "Vind Ayah", ar: "اعثر على الآية" },
+
+  // Surah selector
+  "surah.lastUsed": { fr: "Dernière sourate utilisée", en: "Last used surah", nl: "Laatst gebruikte soera", ar: "آخر سورة مستخدمة" },
+  "surah.recommended": { fr: "Recommandées pour débuter", en: "Recommended for beginners", nl: "Aanbevolen voor beginners", ar: "موصى بها للمبتدئين" },
+  "surah.continueWith": { fr: "Reprendre", en: "Continue", nl: "Doorgaan", ar: "متابعة" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

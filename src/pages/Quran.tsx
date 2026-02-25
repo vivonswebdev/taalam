@@ -27,6 +27,10 @@ import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData"
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
 type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah";
 
+// ─── Easy surahs for beginners / first-time users ───────────
+const EASY_SURAH_NUMBERS = [114, 113, 112, 108, 111, 110, 109, 107, 106, 105];
+const LAST_USED_KEY = "quranEasyLastSurah";
+
 interface AyaScore {
   ayaIndex: number;
   score: number;
@@ -47,6 +51,20 @@ export default function Quran() {
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [recitationMode, setRecitationMode] = useState<RecitationMode>("aya");
+
+  // Last used surah
+  const [lastUsedSurahNumber, setLastUsedSurahNumber] = useState<number | null>(() => {
+    try {
+      const stored = localStorage.getItem(LAST_USED_KEY);
+      return stored ? Number(stored) : null;
+    } catch { return null; }
+  });
+
+  const lastUsedSurah = lastUsedSurahNumber
+    ? surahs.find(s => s.number === lastUsedSurahNumber) || null
+    : null;
+
+  const easySurahsList = surahs.filter(s => EASY_SURAH_NUMBERS.includes(s.number));
 
   // Full Quran list (114 surahs)
   const [allSurahsMeta, setAllSurahsMeta] = useState<SurahMeta[]>([]);
@@ -142,6 +160,9 @@ export default function Quran() {
   const handleSelectSurah = (surah: Surah) => {
     setSelectedSurah(surah);
     setShowDropdown(false);
+    // Save as last used
+    setLastUsedSurahNumber(surah.number);
+    try { localStorage.setItem(LAST_USED_KEY, String(surah.number)); } catch {}
     setCurrentAya(0);
     setAyaPhase("idle");
     setScores([]);
@@ -491,6 +512,28 @@ export default function Quran() {
             </button>
           </motion.div>
 
+          {/* ─── Last Used Surah Card ─── */}
+          {lastUsedSurah && browseMode === "local" && (
+            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+              <button
+                onClick={() => handleSelectSurah(lastUsedSurah)}
+                className="w-full flex items-center gap-3 bg-primary/5 border-2 border-primary/20 rounded-2xl px-4 py-3 text-left hover:bg-primary/10 transition-colors"
+              >
+                <span className="w-10 h-10 rounded-xl bg-primary/15 text-primary text-sm font-bold flex items-center justify-center shrink-0">
+                  {lastUsedSurah.number}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">{t("surah.lastUsed")}</p>
+                  <p className="font-arabic text-lg text-foreground">{lastUsedSurah.nameArabic}</p>
+                  <p className="text-xs text-muted-foreground truncate">{lastUsedSurah.frenchName} · {lastUsedSurah.versesCount} {t("detail.verses")}</p>
+                </div>
+                <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-lg shrink-0">
+                  {t("surah.continueWith")} →
+                </span>
+              </button>
+            </motion.div>
+          )}
+
           {/* ─── Surah Selector ─── */}
           {browseMode === "local" && (
             <div>
@@ -515,7 +558,34 @@ export default function Quran() {
                 <AnimatePresence>
                   {showDropdown && (
                     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                      className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto">
+                      className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-72 overflow-y-auto">
+
+                      {/* Recommended easy surahs section (only in easy mode) */}
+                      {difficulty === "easy" && easySurahsList.length > 0 && (
+                        <>
+                          <p className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                            ⭐ {t("surah.recommended")}
+                          </p>
+                          {easySurahsList
+                            .filter(s => filteredSurahs.some(fs => fs.number === s.number))
+                            .map((s) => (
+                            <button key={`rec-${s.number}`}
+                              onClick={() => handleSelectSurah(s)}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-primary/5 transition-colors text-left border-b border-border">
+                              <span className="w-7 h-7 rounded-lg bg-primary/15 text-primary text-[10px] font-bold flex items-center justify-center shrink-0">
+                                {s.number}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-arabic text-base text-foreground">{s.nameArabic}</p>
+                                <p className="text-[10px] text-muted-foreground truncate">{s.frenchName} · {s.versesCount} {t("detail.verses")}</p>
+                              </div>
+                              <span className="text-[10px] text-primary">⭐</span>
+                            </button>
+                          ))}
+                          <div className="h-px bg-border mx-3 my-1" />
+                        </>
+                      )}
+
                       {filteredSurahs.map((s) => (
                         <button key={s.number}
                           onClick={() => handleSelectSurah(s)}
