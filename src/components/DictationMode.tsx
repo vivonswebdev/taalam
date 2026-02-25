@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { motion } from "framer-motion";
 import {
@@ -49,6 +50,7 @@ function detectWaqfSigns(text: string): { sign: string; position: number }[] {
 
 export default function DictationMode({ surah, onBack, isChildMode }: DictationModeProps) {
   const { t } = useLanguage();
+  const { playSafely: safePlay } = useAntiDoubleAudio();
   const [phase, setPhase] = useState<DictationPhase>("ready");
   const [showOriginal, setShowOriginal] = useState(true);
   const [liveTranscript, setLiveTranscript] = useState("");
@@ -297,7 +299,7 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
                       fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
                         .then((r) => r.json())
                         .then((data) => {
-                          if (data.data?.audio) new Audio(data.data.audio).play();
+                          if (data.data?.audio) safePlay(data.data.audio);
                         }).catch(() => {});
                     }}
                     className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"
