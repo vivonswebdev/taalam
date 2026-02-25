@@ -60,10 +60,17 @@ export default function Quran() {
 
   const filteredSurahs = getSurahsByDifficulty(difficulty);
 
+  const [micError, setMicError] = useState<string | null>(null);
+
   const voice = useVoiceRecognition({
     lang: "ar-SA",
     continuous: true,
     onResult: (transcript) => setCurrentTranscript(transcript),
+    onError: (error) => {
+      if (error === "not-allowed") {
+        setMicError("not-allowed");
+      }
+    },
   });
 
   // Cleanup
@@ -573,6 +580,18 @@ export default function Quran() {
                         <div className="bg-destructive/10 text-destructive rounded-xl p-3 text-center text-sm">
                           <AlertCircle size={16} className="inline mr-1" />
                           {t("aya.voiceUnsupported")}
+                        </div>
+                      ) : voice.permissionDenied || micError === "not-allowed" ? (
+                        <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-2">
+                          <AlertCircle size={20} className="inline" />
+                          <p className="text-sm font-semibold">{t("aya.micDenied") || "Microphone permission denied"}</p>
+                          <p className="text-xs opacity-80">{t("aya.micDeniedHint") || "Go to your browser settings and allow microphone access for this site, then try again."}</p>
+                          <button
+                            onClick={() => { setMicError(null); voice.start(); }}
+                            className="mt-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold"
+                          >
+                            {t("aya.retryMic") || "Retry"}
+                          </button>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center gap-3">

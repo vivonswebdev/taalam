@@ -363,6 +363,15 @@ const translations = {
   "aya.tapToRecite": {
     fr: "Appuyez sur le micro pour réciter", en: "Tap the mic to recite", nl: "Tik op de microfoon om te reciteren", ar: "اضغط على الميكروفون للتلاوة",
   },
+  "aya.micDenied": {
+    fr: "Permission micro refusée", en: "Microphone permission denied", nl: "Microfoontoestemming geweigerd", ar: "تم رفض إذن الميكروفون",
+  },
+  "aya.micDeniedHint": {
+    fr: "Allez dans les réglages de votre navigateur et autorisez l'accès au micro pour ce site, puis réessayez.", en: "Go to your browser settings and allow microphone access for this site, then try again.", nl: "Ga naar je browserinstellingen en sta microfoontoegang toe voor deze site.", ar: "اذهب إلى إعدادات المتصفح واسمح بالوصول إلى الميكروفون لهذا الموقع.",
+  },
+  "aya.retryMic": {
+    fr: "Réessayer", en: "Retry", nl: "Opnieuw proberen", ar: "إعادة المحاولة",
+  },
   "aya.correct": {
     fr: "Correct ! ✓", en: "Correct! ✓", nl: "Correct! ✓", ar: "صحيح! ✓",
   },
