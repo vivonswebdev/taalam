@@ -2,11 +2,14 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Bookmark, BookmarkCheck, Settings2,
-  ChevronDown, Moon, Gauge, BookOpen,
+  ChevronDown, Moon, Gauge, BookOpen, Palette,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import AudioPlayer from "@/components/AudioPlayer";
+import TajwidBar from "@/components/TajwidBar";
+import TajwidAyahText from "@/components/TajwidAyahText";
+import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import TafsirSheet from "@/components/TafsirSheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
@@ -39,6 +42,8 @@ export default function MushafReader({
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [currentAyah, setCurrentAyah] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [tajwidEnabled, setTajwidEnabled] = useState(true);
+  const [activeWordIndex, setActiveWordIndex] = useState(-1);
 
   // Tafsir state
   const [tafsirAyahIndex, setTafsirAyahIndex] = useState<number | null>(null);
@@ -221,6 +226,13 @@ export default function MushafReader({
                 </div>
                 <Switch checked={darkOverride} onCheckedChange={setDarkOverride} />
               </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Palette size={14} className="text-muted-foreground" />
+                  <span className="text-sm font-medium">Tajwid</span>
+                </div>
+                <Switch checked={tajwidEnabled} onCheckedChange={setTajwidEnabled} />
+              </div>
             </div>
           </motion.div>
         )}
@@ -239,6 +251,33 @@ export default function MushafReader({
           compact
         />
       </div>
+
+      {/* Tajwid Bar */}
+      {tajwidEnabled && (
+        <div className="px-4 py-1.5 shrink-0">
+          <TajwidBar
+            activeRules={(() => {
+              const ayah = surah.ayahs[currentAyah];
+              if (!ayah) return [];
+              const words = analyzeAyahTajwid(ayah.arabic);
+              const idx = activeWordIndex >= 0 ? activeWordIndex : 0;
+              return words[idx]?.rules || [];
+            })()}
+            nextRule={(() => {
+              const ayah = surah.ayahs[currentAyah];
+              if (!ayah) return null;
+              const words = analyzeAyahTajwid(ayah.arabic);
+              const start = (activeWordIndex >= 0 ? activeWordIndex : 0) + 1;
+              for (let j = start; j < words.length; j++) {
+                if (words[j].rules.length > 0) {
+                  return { rule: words[j].rules[0], wordsAhead: j - (activeWordIndex >= 0 ? activeWordIndex : 0) };
+                }
+              }
+              return null;
+            })()}
+          />
+        </div>
+      )}
 
       {/* Ayahs scrollable area */}
       <div ref={containerRef} className="flex-1 overflow-y-auto px-4 pb-8 space-y-2">
@@ -288,7 +327,16 @@ export default function MushafReader({
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-2 align-middle">
                 {ayah.number}
               </span>
-              <span className="arabic-text text-xl leading-[2.2] text-foreground">{ayah.arabic}</span>
+              <TajwidAyahText
+                arabicText={ayah.arabic}
+                activeWordIndex={isActive ? activeWordIndex : -1}
+                onWordTap={(wi) => {
+                  setCurrentAyah(i);
+                  setActiveWordIndex(wi);
+                }}
+                tajwidEnabled={tajwidEnabled}
+                className="arabic-text text-xl leading-[2.2] text-foreground"
+              />
 
               {!isArabicOnly && (
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
