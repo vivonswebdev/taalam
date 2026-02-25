@@ -1030,6 +1030,18 @@ const translations = {
   "lb.beginner": { fr: "Débutant", en: "Beginner", nl: "Beginner", ar: "مبتدئ" },
   "lb.intermediate": { fr: "Intermédiaire", en: "Intermediate", nl: "Gevorderd", ar: "متوسط" },
   "lb.advanced": { fr: "Avancé", en: "Advanced", nl: "Expert", ar: "متقدم" },
+  "lb.createClass": { fr: "Créer une classe", en: "Create a class", nl: "Klas aanmaken", ar: "إنشاء فصل" },
+  "lb.joinClass": { fr: "Rejoindre", en: "Join", nl: "Deelnemen", ar: "انضمام" },
+  "lb.classNamePlaceholder": { fr: "Nom de la classe", en: "Class name", nl: "Klasnaam", ar: "اسم الفصل" },
+  "lb.joinCodePlaceholder": { fr: "Code (6 lettres)", en: "Code (6 letters)", nl: "Code (6 letters)", ar: "الرمز (6 أحرف)" },
+  "lb.create": { fr: "Créer", en: "Create", nl: "Aanmaken", ar: "إنشاء" },
+  "lb.join": { fr: "Rejoindre", en: "Join", nl: "Deelnemen", ar: "انضمام" },
+  "lb.classNotFound": { fr: "Classe introuvable", en: "Class not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },
+  "lb.alreadyMember": { fr: "Déjà membre", en: "Already a member", nl: "Al lid", ar: "عضو بالفعل" },
+  "lb.code": { fr: "Code", en: "Code", nl: "Code", ar: "الرمز" },
+  "lb.members": { fr: "membres", en: "members", nl: "leden", ar: "أعضاء" },
+  "lb.noClasses": { fr: "Crée ou rejoins une classe", en: "Create or join a class", nl: "Maak of neem deel aan een klas", ar: "أنشئ أو انضم إلى فصل" },
+  "lb.emptyClass": { fr: "Aucun membre dans cette classe", en: "No members in this class", nl: "Geen leden in deze klas", ar: "لا يوجد أعضاء في هذا الفصل" },
 
   // Announcements
   "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },
