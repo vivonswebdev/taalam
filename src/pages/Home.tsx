@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GraduationCap, Clock, Settings, LogOut, Megaphone, Trophy, Zap, Share2, Users, Plus } from "lucide-react";
@@ -13,6 +14,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,6 +26,24 @@ export default function Home() {
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
+
+  // Fetch member counts per classroom
+  const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
+  useEffect(() => {
+    if (classrooms.length === 0) return;
+    const ids = classrooms.map((c) => c.id);
+    supabase
+      .from("classroom_members")
+      .select("classroom_id")
+      .in("classroom_id", ids)
+      .then(({ data }) => {
+        const counts: Record<string, number> = {};
+        (data || []).forEach((m: any) => {
+          counts[m.classroom_id] = (counts[m.classroom_id] || 0) + 1;
+        });
+        setMemberCounts(counts);
+      });
+  }, [classrooms]);
 
   return (
     <div className="min-h-screen pb-24">
@@ -178,17 +198,23 @@ export default function Home() {
 
           {classrooms.length > 0 ? (
             <div className="space-y-2">
-              {classrooms.slice(0, 2).map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => navigate(`/classrooms/${c.id}`)}
-                  className="w-full flex items-center gap-3 bg-background/60 rounded-xl px-3 py-2.5 text-left active:scale-[0.98] transition-transform"
-                >
-                  <Users size={16} className="text-primary shrink-0" />
-                  <span className="text-sm font-medium text-foreground flex-1 truncate">{c.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-mono">{c.joinCode}</span>
-                </button>
-              ))}
+              {classrooms.slice(0, 2).map((c) => {
+                const count = memberCounts[c.id] || 0;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => navigate(`/classrooms/${c.id}`)}
+                    className="w-full flex items-center gap-3 bg-background/60 rounded-xl px-3 py-2.5 text-left active:scale-[0.98] transition-transform"
+                  >
+                    <Users size={16} className="text-primary shrink-0" />
+                    <span className="text-sm font-medium text-foreground flex-1 truncate">{c.name}</span>
+                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+                      <Users size={10} /> {count} membre{count > 1 ? "s" : ""}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-mono">{c.joinCode}</span>
+                  </button>
+                );
+              })}
               {classrooms.length > 2 && (
                 <button onClick={() => navigate("/classrooms")} className="text-xs text-primary font-semibold">
                   Voir les {classrooms.length} classes →
