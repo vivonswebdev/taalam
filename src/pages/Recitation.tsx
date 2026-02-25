@@ -204,11 +204,15 @@ export default function Recitation() {
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
       setRecitingAyah((p) => p + 1);
       setCurrentTranscript("");
-      setShowArabic(true);
+      setShowArabic(false); // Hide text immediately for next verse
+      // Auto-start mic after a short delay to let UI settle
+      setTimeout(() => {
+        voice.start();
+      }, 300);
     } else {
       finishRecitation(ayahResults);
     }
-  }, [selectedSurah, recitingAyah, ayahResults]);
+  }, [selectedSurah, recitingAyah, ayahResults, voice]);
 
   const finishRecitation = (results: AyahResult[]) => {
     if (!selectedSurah) return;
