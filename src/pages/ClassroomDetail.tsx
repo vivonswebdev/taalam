@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History } from "lucide-react";
 import { toast } from "sonner";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useWeeklyChallenge } from "@/hooks/useWeeklyChallenge";
 import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
+import { surahs } from "@/data/surahs";
 import WeeklyChallengeCard from "@/components/WeeklyChallengeCard";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS, nl, ar } from "date-fns/locale";
@@ -134,7 +135,7 @@ export default function ClassroomDetail() {
 
   const {
     challenge, results, myResult, loading: challengeLoading,
-    createChallenge, submitResult, weekStart,
+    createChallenge, submitResult, weekStart, pastChallenges,
   } = useWeeklyChallenge(classId ?? undefined);
 
   const classroom = classrooms.find((c) => c.id === classId || c.id === rawClassId);
@@ -213,6 +214,66 @@ export default function ClassroomDetail() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Share my progress in chat
+  const handleShareProgress = async () => {
+    if (!user || !classId) return;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name, avatar_emoji, xp_total, sessions_count, mastery_score")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    const { data: progress } = await supabase
+      .from("user_progress")
+      .select("streak_days, xp_total")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const name = profile?.display_name || "Élève";
+    const emoji = profile?.avatar_emoji || "🌙";
+    const xp = progress?.xp_total || profile?.xp_total || 0;
+    const streak = progress?.streak_days || 0;
+    const sessions = profile?.sessions_count || 0;
+    const mastery = profile?.mastery_score || 0;
+
+    const msg = `📊 ${emoji} ${name} partage sa progression !\n🔥 Série : ${streak} jours\n⭐ XP : ${xp}\n📖 Sessions : ${sessions}\n🎯 Maîtrise : ${Math.round(mastery)}%`;
+
+    const authorName = user.user_metadata?.display_name || user.email || "Utilisateur";
+    await supabase.from("class_messages").insert({
+      classroom_id: classId,
+      author_id: user.id,
+      author_name: `📊 ${authorName}`,
+      message: msg,
+    });
+    const { data } = await supabase
+      .from("class_messages")
+      .select("*")
+      .eq("classroom_id", classId)
+      .order("created_at", { ascending: true })
+      .limit(100);
+    if (data) setMessages(data as ChatMessage[]);
+    toast.success("Progression partagée !");
+  };
+
+  // Auto-announce challenge creation
+  const handleCreateChallengeWithAnnounce = async (sn: number, af: number, at: number, dx: boolean) => {
+    const ch = await createChallenge(sn, af, at, dx);
+    if (!ch || !user || !classId) return;
+
+    const { surahs } = await import("@/data/surahs");
+    const surah = surahs.find((s: any) => s.number === sn);
+    const surahLabel = surah ? `${surah.nameArabic} (${surah.name})` : `Sourate ${sn}`;
+
+    const authorName = user.user_metadata?.display_name || user.email || "Professeur";
+    const msg = `🏆 Nouveau défi de la semaine !\n📖 ${surahLabel} — Ayahs ${af} à ${at}${dx ? "\n⚡ Double XP activé !" : ""}\n\n🎤 Commencez maintenant depuis l'onglet Défi !`;
+
+    await supabase.from("class_messages").insert({
+      classroom_id: classId,
+      author_id: user.id,
+      author_name: `🏆 ${authorName}`,
+      message: msg,
+    });
+  };
+
   const handleSend = async () => {
     const text = newMessage.trim();
     if (!text || !user || !classId || sending) return;
@@ -227,7 +288,6 @@ export default function ClassroomDetail() {
         message: text.slice(0, 500),
       });
       if (error) throw error;
-      // Refetch messages to ensure they appear even if realtime is slow
       const { data } = await supabase
         .from("class_messages")
         .select("*")
@@ -237,7 +297,7 @@ export default function ClassroomDetail() {
       if (data) setMessages(data as ChatMessage[]);
     } catch (err) {
       console.error(err);
-      setNewMessage(text); // Restore on error
+      setNewMessage(text);
     } finally {
       setSending(false);
     }
@@ -294,15 +354,14 @@ export default function ClassroomDetail() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Challenge tab */}
-        <TabsContent value="challenge" className="mt-3">
+        <TabsContent value="challenge" className="mt-3 space-y-4">
           <WeeklyChallengeCard
             challenge={challenge}
             results={results}
             myResult={myResult}
             isTeacher={!!isTeacherFinal}
             loading={challengeLoading}
-            onCreateChallenge={(sn, af, at, dx) => createChallenge(sn, af, at, dx)}
+            onCreateChallenge={(sn, af, at, dx) => handleCreateChallengeWithAnnounce(sn, af, at, dx)}
             onStartChallenge={() => {
               if (challenge) {
                 const surahNum = challenge.surah_number;
@@ -311,6 +370,47 @@ export default function ClassroomDetail() {
             }}
             memberProfiles={dbMembers}
           />
+
+          {/* Past challenges history */}
+          {pastChallenges.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <History size={14} />
+                <p className="text-xs font-semibold">Défis précédents</p>
+              </div>
+              {pastChallenges.map((pc) => {
+                const s = surahs.find((s) => s.number === pc.surah_number);
+                return (
+                  <div key={pc.id} className="bg-card border border-border rounded-xl p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold">
+                        {s ? `${s.nameArabic} (${s.name})` : `Sourate ${pc.surah_number}`}
+                      </p>
+                      <span className="text-[10px] text-muted-foreground">
+                        Semaine du {new Date(pc.week_start).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      Ayahs {pc.ayah_from}–{pc.ayah_to} · {pc.results.length} participant{pc.results.length > 1 ? "s" : ""}
+                    </p>
+                    {pc.results.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {pc.results.slice(0, 5).map((r, i) => {
+                          const prof = dbMembers.get(r.user_id);
+                          return (
+                            <span key={r.id} className="flex items-center gap-1 text-[10px] bg-muted rounded-full px-2 py-0.5">
+                              <span className="font-bold text-primary">{i + 1}.</span>
+                              {prof?.emoji || "👤"} {prof?.name || "Membre"} — {Math.round(r.score)}%
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </TabsContent>
 
         {/* Students tab */}
@@ -421,22 +521,30 @@ export default function ClassroomDetail() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="border-t border-border p-2 flex gap-2">
-              <input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value.slice(0, 500))}
-                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-                placeholder={t("classrooms.typeMessage")}
-                className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm outline-none"
-              />
+            {/* Input + share progress */}
+            <div className="border-t border-border p-2 space-y-2">
               <button
-                onClick={handleSend}
-                disabled={!newMessage.trim() || sending}
-                className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
+                onClick={handleShareProgress}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-primary bg-primary/5 border border-primary/20 rounded-lg"
               >
-                <Send size={16} />
+                <Sparkles size={12} /> Partager ma progression
               </button>
+              <div className="flex gap-2">
+                <input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value.slice(0, 500))}
+                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+                  placeholder={t("classrooms.typeMessage")}
+                  className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm outline-none"
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={!newMessage.trim() || sending}
+                  className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
+                >
+                  <Send size={16} />
+                </button>
+              </div>
             </div>
           </div>
         </TabsContent>
