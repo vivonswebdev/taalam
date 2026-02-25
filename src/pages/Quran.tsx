@@ -884,6 +884,7 @@ export default function Quran() {
           translations={translations}
           lang={lang}
           isChildMode={isChildMode}
+          onBack={handleNewSurah}
           onFinish={(finalScores) => {
             setScores(finalScores);
             finishSurah(finalScores);
