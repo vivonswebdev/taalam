@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Users, Share2, ChevronUp, Plus } from "lucide-react";
+import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Users, Share2, ChevronUp, Plus, Maximize2 } from "lucide-react";
 import { useLeaderboard, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useClassLeaderboard } from "@/hooks/useClassLeaderboard";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -10,6 +10,8 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import LigueBadge, { getLigue, getNextLigue, LIGUES, type Ligue } from "@/components/LigueBadge";
+import ClassLeaderboardFullscreen from "@/components/ClassLeaderboardFullscreen";
+import { AnimatePresence } from "framer-motion";
 
 const COUNTRY_FLAGS: Record<string, string> = {
   FR: "🇫🇷", BE: "🇧🇪", MA: "🇲🇦", DZ: "🇩🇿", TN: "🇹🇳", NL: "🇳🇱",
@@ -114,6 +116,7 @@ function ClassTabContent({
   const { myClassrooms, classBoard, classStats, selectedClassId, loading, setSelectedClassId, createClassroom, joinByCode } = useClassLeaderboard();
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const [newClassName, setNewClassName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [joinError, setJoinError] = useState("");
@@ -240,9 +243,37 @@ function ClassTabContent({
               <Share2 size={14} />
               {t("lb.shareCode")}
             </Button>
+            {classBoard.length > 0 && (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="w-full mt-2 rounded-xl text-xs gap-2"
+                onClick={() => setFullscreen(true)}
+              >
+                <Maximize2 size={14} />
+                {t("lb.fullscreen")}
+              </Button>
+            )}
           </div>
         );
       })()}
+
+      {/* Fullscreen overlay */}
+      <AnimatePresence>
+        {fullscreen && selectedClassId && (() => {
+          const sc = myClassrooms.find((c) => c.id === selectedClassId);
+          if (!sc) return null;
+          return (
+            <ClassLeaderboardFullscreen
+              className={sc.name}
+              board={classBoard}
+              stats={classStats}
+              userId={userId}
+              onClose={() => setFullscreen(false)}
+            />
+          );
+        })()}
+      </AnimatePresence>
 
       {/* Class Stats */}
       {selectedClassId && classBoard.length > 0 && (

@@ -1047,6 +1047,7 @@ const translations = {
   "lb.statAvgStreak": { fr: "Streak moyen", en: "Avg streak", nl: "Gem. reeks", ar: "متوسط السلسلة" },
   "lb.statTotalSessions": { fr: "Sessions totales", en: "Total sessions", nl: "Totale sessies", ar: "إجمالي الجلسات" },
   "lb.statMembers": { fr: "Élèves", en: "Students", nl: "Studenten", ar: "طلاب" },
+  "lb.fullscreen": { fr: "Mode plein écran", en: "Fullscreen mode", nl: "Volledig scherm", ar: "وضع ملء الشاشة" },
 
   // Announcements
   "announcements.title": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "إعلانات" },
