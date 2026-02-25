@@ -23,6 +23,7 @@ interface MushafReaderProps {
   onBack: () => void;
   t: (key: string) => string;
   startAtAyah?: number;
+  onRequestNextSurah?: () => void;
 }
 
 export default function MushafReader({
@@ -32,6 +33,7 @@ export default function MushafReader({
   onBack,
   t,
   startAtAyah = 0,
+  onRequestNextSurah,
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
 
@@ -248,6 +250,7 @@ export default function MushafReader({
           onAyahChange={setCurrentAyah}
           onPlayStateChange={setPlaying}
           jumpToAyahRef={jumpToAyahRef}
+          onRequestNextSurah={onRequestNextSurah}
           compact
         />
       </div>
