@@ -127,19 +127,14 @@ export default function DictationMode({ surah, onBack, isChildMode }: DictationM
     return slices;
   }, [liveResult, surah.ayahs]);
 
-  // Determine which ayahs have been "reached" by the recitation
+  // An ayah is "reached" only if its slice contains at least one
+  // correct or incorrect word (not just "missing" placeholders).
   const isAyahReached = useCallback((ayaIdx: number) => {
-    if (!liveResult || ayahWordSlices.length === 0) return false;
-    // An ayah is reached if the previous ayah has at least some words processed,
-    // or it's the first ayah and we have any results
-    if (ayaIdx === 0) return liveResult.wordResults.length > 0;
-    // Check if the previous ayah's slice has words
-    for (let i = 0; i <= ayaIdx; i++) {
-      if (ayahWordSlices[i] && ayahWordSlices[i].length > 0) continue;
-      return false;
-    }
-    return true;
-  }, [liveResult, ayahWordSlices]);
+    if (!ayahWordSlices[ayaIdx] || ayahWordSlices[ayaIdx].length === 0) return false;
+    return ayahWordSlices[ayaIdx].some(
+      (w) => w.status === "correct" || w.status === "incorrect" || w.status === "extra"
+    );
+  }, [ayahWordSlices]);
 
   // ─── Render Mushaf page with hide/reveal logic ───
   const renderMushafWithReveal = (isRecording: boolean) => {
