@@ -208,19 +208,41 @@ function ClassTabContent({
       )}
 
       {/* Selected class info */}
-      {selectedClassId && myClassrooms.length > 0 && (
-        <div className="mb-3 bg-card/60 border border-border rounded-xl p-3">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-foreground">
-              {myClassrooms.find((c) => c.id === selectedClassId)?.name}
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              {t("lb.code")}: <span className="font-mono font-bold text-foreground">{myClassrooms.find((c) => c.id === selectedClassId)?.join_code}</span>
-            </p>
+      {selectedClassId && myClassrooms.length > 0 && (() => {
+        const selectedClass = myClassrooms.find((c) => c.id === selectedClassId);
+        if (!selectedClass) return null;
+        const shareLink = `https://iqraacoran.lovable.app/join/${selectedClass.join_code}`;
+        const handleShareCode = () => {
+          const text = `📚 Rejoins ma classe "${selectedClass.name}" sur Iqraa !\n🔗 ${shareLink}`;
+          if (navigator.share) {
+            navigator.share({ title: `Classe ${selectedClass.name}`, text, url: shareLink }).catch(() => {});
+          } else {
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+          }
+        };
+        return (
+          <div className="mb-3 bg-card/60 border border-border rounded-xl p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-foreground">
+                {selectedClass.name}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {t("lb.code")}: <span className="font-mono font-bold text-foreground">{selectedClass.join_code}</span>
+              </p>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1">{classBoard.length} {t("lb.members")}</p>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full mt-2 rounded-xl text-xs gap-2"
+              onClick={handleShareCode}
+            >
+              <Share2 size={14} />
+              {t("lb.shareCode")}
+            </Button>
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1">{classBoard.length} {t("lb.members")}</p>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Rank card */}
       {classBoard.length > 0 && userId && (
