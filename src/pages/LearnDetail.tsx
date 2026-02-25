@@ -7,6 +7,7 @@ import { getSurahByNumber } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
+import { useLanguage } from "@/hooks/useLanguage";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 
@@ -17,6 +18,7 @@ export default function LearnDetail() {
   const navigate = useNavigate();
   const { updateSurahProgress } = useProgress();
   const { isChildMode, earnSticker } = useChildMode();
+  const { t } = useLanguage();
   const [playing, setPlaying] = useState(false);
   const [currentAyah, setCurrentAyah] = useState(-1);
   const [audioLoading, setAudioLoading] = useState(false);

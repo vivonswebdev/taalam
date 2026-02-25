@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Globe, Baby } from "lucide-react";
+import { RotateCcw, Info, Baby } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
+import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
 import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
   const { isChildMode, toggleChildMode, stickers, resetStickers } = useChildMode();
+  const { t, lang, setLang } = useLanguage();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -19,94 +21,78 @@ export default function Settings() {
     navigate("/");
   };
 
+  const currentLangInfo = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
+
   return (
     <div className="min-h-screen pb-24">
       <div className="px-6 pt-14 pb-4">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          Réglages
+          {t("settings.title")}
         </motion.h1>
       </div>
 
       <div className="px-6 space-y-3">
         {/* Child Mode Toggle */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-card border border-border rounded-2xl overflow-hidden"
-        >
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <button onClick={toggleChildMode} className="w-full flex items-center gap-4 p-4 text-left">
             <Baby size={20} className={isChildMode ? "text-secondary" : "text-primary"} />
             <div className="flex-1">
-              <p className="text-sm font-medium text-card-foreground">Mode Enfant</p>
-              <p className="text-xs text-muted-foreground">Texte plus gros, stickers et confettis</p>
+              <p className="text-sm font-medium text-card-foreground">{t("settings.childMode")}</p>
+              <p className="text-xs text-muted-foreground">{t("settings.childModeDesc")}</p>
             </div>
             <div className={`w-12 h-7 rounded-full transition-colors relative ${isChildMode ? "bg-success" : "bg-muted"}`}>
-              <motion.div
-                animate={{ x: isChildMode ? 20 : 2 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md"
-              />
+              <motion.div animate={{ x: isChildMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
           </button>
         </motion.div>
 
-        {/* Sticker Collection (only in child mode) */}
+        {/* Sticker Collection */}
         {isChildMode && stickers.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-card border border-border rounded-2xl p-4"
-          >
-            <p className="text-sm font-semibold text-card-foreground mb-3">🎁 Ma collection de stickers</p>
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-4">
+            <p className="text-sm font-semibold text-card-foreground mb-3">{t("progress.stickers")}</p>
             <StickerCollection stickers={stickers} />
           </motion.div>
         )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-card border border-border rounded-2xl overflow-hidden"
-        >
-          <button className="w-full flex items-center gap-4 p-4 text-left opacity-50 cursor-not-allowed">
-            <Globe size={20} className="text-primary" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-card-foreground">Langue</p>
-              <p className="text-xs text-muted-foreground">Français (bientôt : العربية)</p>
+        {/* Language selector */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="p-4">
+            <p className="text-sm font-medium text-card-foreground mb-3">{t("settings.language")}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border-2 transition-colors ${
+                    lang === l.code ? "border-primary bg-primary/10" : "border-border hover:bg-accent/50"
+                  }`}
+                >
+                  <span className="text-lg">{l.flag}</span>
+                  <span className={`text-xs font-medium ${lang === l.code ? "text-primary" : "text-foreground"}`}>{l.label}</span>
+                </button>
+              ))}
             </div>
-          </button>
+          </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-card border border-border rounded-2xl overflow-hidden"
-        >
-          <button
-            onClick={() => setShowConfirm(true)}
-            className="w-full flex items-center gap-4 p-4 text-left"
-          >
+        {/* Reset */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => setShowConfirm(true)} className="w-full flex items-center gap-4 p-4 text-left">
             <RotateCcw size={20} className="text-destructive" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-card-foreground">Réinitialiser la progression</p>
-              <p className="text-xs text-muted-foreground">Remet tout à zéro</p>
+              <p className="text-sm font-medium text-card-foreground">{t("settings.reset")}</p>
+              <p className="text-xs text-muted-foreground">{t("settings.resetDesc")}</p>
             </div>
           </button>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-card border border-border rounded-2xl overflow-hidden"
-        >
+        {/* Version */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4 p-4">
             <Info size={20} className="text-muted-foreground" />
             <div>
               <p className="text-sm font-medium text-card-foreground">QuranEasy v1.0</p>
-              <p className="text-xs text-muted-foreground">Apprendre le Coran facilement</p>
+              <p className="text-xs text-muted-foreground">{t("settings.version")}</p>
             </div>
           </div>
         </motion.div>
@@ -114,32 +100,16 @@ export default function Settings() {
 
       {/* Reset confirmation */}
       {showConfirm && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8"
-        >
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm"
-          >
-            <h3 className="text-lg font-bold text-card-foreground mb-2">Confirmer</h3>
-            <p className="text-sm text-muted-foreground mb-6">
-              Toute votre progression sera perdue. Voulez-vous continuer ?
-            </p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8">
+          <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm">
+            <h3 className="text-lg font-bold text-card-foreground mb-2">{t("settings.confirmTitle")}</h3>
+            <p className="text-sm text-muted-foreground mb-6">{t("settings.confirmMessage")}</p>
             <div className="flex gap-3">
-              <button
-                onClick={() => setShowConfirm(false)}
-                className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground active:scale-[0.98] transition-transform"
-              >
-                Annuler
+              <button onClick={() => setShowConfirm(false)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground active:scale-[0.98] transition-transform">
+                {t("settings.cancel")}
               </button>
-              <button
-                onClick={handleReset}
-                className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium active:scale-[0.98] transition-transform"
-              >
-                Réinitialiser
+              <button onClick={handleReset} className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium active:scale-[0.98] transition-transform">
+                {t("settings.confirmReset")}
               </button>
             </div>
           </motion.div>

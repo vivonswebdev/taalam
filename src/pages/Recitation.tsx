@@ -7,6 +7,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
 import { useStreak } from "@/hooks/useStreak";
+import { useLanguage } from "@/hooks/useLanguage";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
@@ -33,6 +34,7 @@ export default function Recitation() {
   const { updateSurahProgress } = useProgress();
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
+  const { t } = useLanguage();
 
   // Selection state
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
@@ -248,10 +250,10 @@ export default function Recitation() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
-              {isChildMode ? "🎤 Récitation Tarteel" : "Récitation Tarteel"}
+              {isChildMode ? "🎤 " : ""}{t("recitation.title")}
             </h1>
             <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
-              Écoute, mémorise, récite
+              {t("recitation.subtitle")}
             </p>
           </div>
           {/* Streak badge */}
@@ -278,22 +280,22 @@ export default function Recitation() {
               <div>
                 <p className="font-bold text-foreground">
                   {streak.currentStreak > 0
-                    ? `${streak.currentStreak} jour${streak.currentStreak > 1 ? "s" : ""} de suite !`
-                    : "Commence ton streak !"}
+                    ? `${streak.currentStreak} ${t("recitation.daysStreak")}`
+                    : t("recitation.startStreak")}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Record : {streak.longestStreak} jours · {streak.totalSessions} sessions
+                  {t("recitation.record")} : {streak.longestStreak} {t("recitation.days")} · {streak.totalSessions} {t("recitation.sessions")}
                 </p>
               </div>
             </div>
             {hasPracticedToday && (
-              <p className="text-xs text-success font-medium">✅ Tu as pratiqué aujourd'hui !</p>
+              <p className="text-xs text-success font-medium">{t("recitation.practicedToday")}</p>
             )}
           </motion.div>
 
           {/* Difficulty selector */}
           <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>Niveau de difficulté</p>
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
             <div className="flex gap-2">
               {(["easy", "medium", "hard"] as const).map((d) => (
                 <button
@@ -305,9 +307,9 @@ export default function Recitation() {
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {d === "easy" ? (isChildMode ? "😊 Facile" : "Facile") :
-                   d === "medium" ? (isChildMode ? "🤔 Moyen" : "Moyen") :
-                   (isChildMode ? "💪 Difficile" : "Difficile")}
+                  {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
+                   d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
+                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
                 </button>
               ))}
             </div>
@@ -315,13 +317,13 @@ export default function Recitation() {
 
           {/* Surah dropdown */}
           <div className="relative">
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>Choisis une sourate</p>
+            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.chooseSurah")}</p>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="w-full flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3 text-left"
             >
               <span className={`${bodyTextClass} ${selectedSurah ? "text-foreground" : "text-muted-foreground"}`}>
-                {selectedSurah ? `${selectedSurah.nameArabic} - ${selectedSurah.frenchName}` : "Sélectionner une sourate..."}
+                {selectedSurah ? `${selectedSurah.nameArabic} - ${selectedSurah.frenchName}` : t("recitation.selectSurah")}
               </span>
               <ChevronDown size={18} className={`text-muted-foreground transition-transform ${showDropdown ? "rotate-180" : ""}`} />
             </button>
@@ -643,13 +645,13 @@ export default function Recitation() {
               onClick={handleRestart}
               className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl border-2 border-border text-foreground font-semibold active:scale-[0.98] transition-transform`}
             >
-              <RotateCcw size={18} /> {isChildMode ? "🔄 Répéter" : "Recommencer"}
+              <RotateCcw size={18} /> {isChildMode ? "🔄 " : ""}{t("recitation.restart")}
             </button>
             <button
               onClick={handleNewSurah}
               className={`flex-1 flex items-center justify-center gap-2 ${isChildMode ? "py-4 text-lg" : "py-3.5"} rounded-2xl bg-primary text-primary-foreground font-semibold active:scale-[0.98] transition-transform`}
             >
-              {isChildMode ? "📖 Autre sourate" : "Changer de sourate"}
+              {isChildMode ? "📖 " : ""}{t("recitation.changeSurah")}
             </button>
           </div>
         </div>

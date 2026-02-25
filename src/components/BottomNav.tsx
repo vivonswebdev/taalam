@@ -1,21 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, BookOpen, Mic, BarChart3, Settings } from "lucide-react";
 import { motion } from "framer-motion";
-
-const tabs = [
-  { path: "/", icon: Home, label: "Accueil" },
-  { path: "/learn", icon: BookOpen, label: "Apprendre" },
-  { path: "/recitation", icon: Mic, label: "Récitation" },
-  { path: "/progress", icon: BarChart3, label: "Progrès" },
-  { path: "/settings", icon: Settings, label: "Réglages" },
-];
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const currentPath = location.pathname;
 
-  // Hide on quiz and learn detail pages
+  const tabs = [
+    { path: "/", icon: Home, label: t("nav.home") },
+    { path: "/learn", icon: BookOpen, label: t("nav.learn") },
+    { path: "/recitation", icon: Mic, label: t("nav.recitation") },
+    { path: "/progress", icon: BarChart3, label: t("nav.progress") },
+    { path: "/settings", icon: Settings, label: t("nav.settings") },
+  ];
+
   if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/")) return null;
 
   return (
@@ -25,29 +26,12 @@ export default function BottomNav() {
           const isActive = currentPath === tab.path;
           const Icon = tab.icon;
           return (
-            <button
-              key={tab.path}
-              onClick={() => navigate(tab.path)}
-              className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors"
-            >
+            <button key={tab.path} onClick={() => navigate(tab.path)} className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors">
               {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-x-2 -top-px h-0.5 bg-primary rounded-full"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
+                <motion.div layoutId="activeTab" className="absolute inset-x-2 -top-px h-0.5 bg-primary rounded-full" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
               )}
-              <Icon
-                size={22}
-                className={isActive ? "text-primary" : "text-muted-foreground"}
-              />
-              <span
-                className={`text-[10px] font-medium ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                {tab.label}
-              </span>
+              <Icon size={22} className={isActive ? "text-primary" : "text-muted-foreground"} />
+              <span className={`text-[10px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>{tab.label}</span>
             </button>
           );
         })}
