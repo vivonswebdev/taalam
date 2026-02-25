@@ -91,6 +91,9 @@ export default function Recitation() {
     onResult: (transcript) => {
       setCurrentTranscript(transcript);
     },
+    onError: (error) => {
+      console.warn("[Recitation] voice error:", error);
+    },
   });
   // Rewards
   const [showConfetti, setShowConfetti] = useState(false);
@@ -682,10 +685,13 @@ export default function Recitation() {
                     </motion.button>
                     <p className={`${bodyTextClass} text-muted-foreground`}>
                       {voice.isListening
-                        ? (isChildMode ? "🎤 Récite maintenant !" : "Récitez... Appuyez pour arrêter")
+                        ? (isChildMode ? "🎤 Récite maintenant !" : "J'écoute... Appuyez pour arrêter")
                         : showArabic
                           ? (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez sur le micro — le texte disparaîtra")
                           : (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez pour recommencer")}
+                    </p>
+                    <p className="text-xs text-muted-foreground/80">
+                      {voice.mode === "server" ? "Mode micro sécurisé actif" : "Mode micro instantané actif"}
                     </p>
 
                     {/* Hide hint before first press */}
@@ -696,6 +702,14 @@ export default function Recitation() {
                       </div>
                     )}
                   </>
+                )}
+
+                {!showArabic && (
+                  <div className="w-full max-w-xl bg-muted/30 border border-border rounded-2xl px-4 py-3">
+                    <p className="arabic-text text-xl text-foreground text-right" dir="rtl">
+                      {currentTranscript || "… en attente de ta récitation"}
+                    </p>
+                  </div>
                 )}
 
                 {currentTranscript && !voice.isListening && (

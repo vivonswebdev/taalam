@@ -16,7 +16,7 @@ interface UseVoiceRecognitionOptions {
 // ─── Constants for server fallback ──────────────────────────
 const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 2_000;
-const MIN_CHUNK_SIZE = 500;
+const MIN_CHUNK_SIZE = 120;
 const NATIVE_SILENCE_TIMEOUT_MS = 4_000; // Auto-fallback if no result after 4s
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
@@ -45,6 +45,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const hasReceivedResultRef = useRef(false);
 
   const hasNativeSR = useRef(false);
+  const forceServerRef = useRef(false);
 
   useEffect(() => { onResultRef.current = onResult; }, [onResult]);
   useEffect(() => { onEndRef.current = onEnd; }, [onEnd]);
@@ -114,6 +115,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [lang]);
 
   const startServer = useCallback(async () => {
+    console.info("[VoiceRecognition] Starting server STT");
     setPermissionDenied(false);
     setTranscript("");
     transcriptRef.current = "";
@@ -130,11 +132,15 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) { chunkQueueRef.current.push(e.data); processQueue(); }
       };
+      recorder.onstop = () => {
+        processQueue();
+      };
       recorder.start(TIMESLICE_MS);
       isListeningRef.current = true;
       setIsListening(true);
       maxDurationTimeoutRef.current = setTimeout(() => { if (isListeningRef.current) stop(); }, MAX_RECORDING_DURATION_MS);
     } catch (e: any) {
+      console.warn("[VoiceRecognition] Server STT start error:", e);
       if (e?.name === "NotAllowedError") { setPermissionDenied(true); onErrorRef.current?.("not-allowed"); }
       else { onErrorRef.current?.("mic-error"); }
       setIsListening(false);
@@ -143,7 +149,12 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [processQueue]);
 
   const stopServer = useCallback(() => {
+    console.info("[VoiceRecognition] Stopping server STT");
     isListeningRef.current = false;
+    const recorder = mediaRecorderRef.current;
+    try {
+      if (recorder?.state === "recording") recorder.requestData();
+    } catch {}
     cleanupServer();
     setIsListening(false);
     onEndRef.current?.();
@@ -161,8 +172,16 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, []);
 
   const startNative = useCallback(() => {
+    console.info("[VoiceRecognition] Starting native SpeechRecognition");
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) return;
+    if (!SR) {
+      console.warn("[VoiceRecognition] Native SpeechRecognition unavailable, forcing server mode");
+      forceServerRef.current = true;
+      setMode("server");
+      onErrorRef.current?.("not-supported");
+      startServer();
+      return;
+    }
 
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
@@ -200,14 +219,23 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       if (isListeningRef.current && recognitionRef.current === recognition) {
         // If we never got results and it ended, fallback to server
         if (!hasReceivedResultRef.current) {
-          console.warn("[VoiceRecognition] Native ended with no results, falling back to server STT");
+          console.warn("[VoiceRecognition] Native ended with no results, forcing server STT");
+          forceServerRef.current = true;
           recognitionRef.current = null;
           setMode("server");
           startServer();
           return;
         }
-        try { recognition.start(); return; } catch (e) {
-          console.warn("[VoiceRecognition] Restart failed:", e);
+        try {
+          recognition.start();
+          return;
+        } catch (e) {
+          console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
+          forceServerRef.current = true;
+          recognitionRef.current = null;
+          setMode("server");
+          startServer();
+          return;
         }
       }
       if (recognitionRef.current === recognition) {
@@ -221,7 +249,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       console.warn("[VoiceRecognition] Error:", error);
       if (error === "not-allowed" || error === "service-not-allowed") {
         // Try server fallback instead of just giving up
-        console.warn("[VoiceRecognition] Permission denied for native, trying server fallback...");
+        console.warn("[VoiceRecognition] Permission denied for native, forcing server fallback...");
+        forceServerRef.current = true;
         isListeningRef.current = false;
         recognitionRef.current = null;
         setMode("server");
@@ -230,6 +259,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       }
       if (error === "no-speech" || error === "aborted") return;
       if (recognitionRef.current === recognition) {
+        forceServerRef.current = true;
         isListeningRef.current = false;
         setIsListening(false);
       }
@@ -246,7 +276,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       // Set a silence timeout: if no result in 4s, fallback to server
       nativeSilenceTimerRef.current = setTimeout(() => {
         if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, falling back to server STT");
+          console.warn("[VoiceRecognition] No results after timeout, forcing server STT");
+          forceServerRef.current = true;
           try { recognition.abort(); } catch {}
           recognitionRef.current = null;
           setMode("server");
@@ -280,7 +311,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    if (hasNativeSR.current) {
+    const shouldUseNative = hasNativeSR.current && !forceServerRef.current;
+    if (shouldUseNative) {
       setMode("native");
       startNative();
     } else {
@@ -290,9 +322,11 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [startNative, startServer]);
 
   const stop = useCallback(() => {
-    if (mode === "native") stopNative();
-    else stopServer();
-  }, [mode, stopNative, stopServer]);
+    console.info("[VoiceRecognition] Stop requested");
+    // Stop both engines to avoid mode-race inconsistencies.
+    stopNative();
+    stopServer();
+  }, [stopNative, stopServer]);
 
   return { isListening, transcript, isSupported, permissionDenied, mode, start, stop };
 }
