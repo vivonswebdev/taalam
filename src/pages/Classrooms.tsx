@@ -36,9 +36,22 @@ export default function Classrooms() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!newName.trim()) return;
-    createClassroom(newName.trim(), teacherName.trim());
+    const localClass = createClassroom(newName.trim(), teacherName.trim());
+    // Also persist to DB so join-by-code works
+    if (user) {
+      try {
+        await supabase.from("classrooms").insert({
+          id: localClass.id,
+          name: localClass.name,
+          join_code: localClass.joinCode,
+          teacher_id: user.id,
+        });
+      } catch (err) {
+        console.error("Failed to sync classroom to DB:", err);
+      }
+    }
     setNewName("");
     setTeacherName("");
     setShowCreate(false);
@@ -51,7 +64,11 @@ export default function Classrooms() {
 
   const handleJoin = async () => {
     const code = joinCode.trim().toUpperCase();
-    if (!code || !user) return;
+    if (!code) return;
+    if (!user) {
+      toast({ title: "Connectez-vous d'abord", description: "Allez sur la page de connexion", variant: "destructive" });
+      return;
+    }
     setJoining(true);
     try {
       // Look up classroom by join_code
