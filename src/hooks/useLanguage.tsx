@@ -433,7 +433,7 @@ const translations = {
     fr: "Aya suivante dans...", en: "Next aya in...", nl: "Volgende aya in...", ar: "...الآية التالية في",
   },
   "nav.quran": {
-    fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن",
+    fr: "Tarteel", en: "Tarteel", nl: "Tarteel", ar: "ترتيل",
   },
   "nav.prayers": {
     fr: "Prières", en: "Prayers", nl: "Gebeden", ar: "الصلوات",
@@ -926,7 +926,7 @@ const translations = {
   "reading.searchPlaceholder": { fr: "Rechercher une sourate...", en: "Search a surah...", nl: "Zoek een soera...", ar: "ابحث عن سورة..." },
   "reading.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جاري التحميل..." },
   "reading.noResults": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا توجد نتائج" },
-  "nav.reading": { fr: "Lecture", en: "Reading", nl: "Lezen", ar: "قراءة" },
+  "nav.reading": { fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن" },
 
   // Active Child
   "activeChild.workingWith": { fr: "Tu travailles avec :", en: "Working with:", nl: "Je werkt met:", ar: "تعمل مع:" },

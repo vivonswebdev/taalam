@@ -68,10 +68,17 @@ export default function AudioPlayer({
     return [];
   }, [surahNumber]);
 
-  // Cleanup
+  // Cleanup on unmount — stop audio completely
   useEffect(() => {
     return () => {
-      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
+        audioRef.current.onloadedmetadata = null;
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
