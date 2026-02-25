@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Share2, ChevronUp } from "lucide-react";
+import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Users, Share2, ChevronUp, Plus } from "lucide-react";
 import { useLeaderboard, LeaderboardEntry } from "@/hooks/useLeaderboard";
+import { useClassLeaderboard } from "@/hooks/useClassLeaderboard";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import LigueBadge, { getLigue, getNextLigue, LIGUES, type Ligue } from "@/components/LigueBadge";
 
 const COUNTRY_FLAGS: Record<string, string> = {
@@ -101,6 +103,154 @@ function MyRankCard({ board, userId, ligue }: { board: LeaderboardEntry[]; userI
   );
 }
 
+function ClassTabContent({
+  userId,
+  ligue,
+}: {
+  userId: string | undefined;
+  ligue: Ligue;
+}) {
+  const { t } = useLanguage();
+  const { myClassrooms, classBoard, selectedClassId, loading, setSelectedClassId, createClassroom, joinByCode } = useClassLeaderboard();
+  const [showCreate, setShowCreate] = useState(false);
+  const [showJoin, setShowJoin] = useState(false);
+  const [newClassName, setNewClassName] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [joinError, setJoinError] = useState("");
+
+  const handleCreate = async () => {
+    if (!newClassName.trim()) return;
+    await createClassroom(newClassName.trim());
+    setNewClassName("");
+    setShowCreate(false);
+  };
+
+  const handleJoin = async () => {
+    if (!joinCode.trim()) return;
+    const result = await joinByCode(joinCode.trim());
+    if (result.error === "not_found") setJoinError(t("lb.classNotFound"));
+    else if (result.error === "already_member") setJoinError(t("lb.alreadyMember"));
+    else if (result.error) setJoinError(result.error);
+    else {
+      setJoinCode("");
+      setShowJoin(false);
+      setJoinError("");
+    }
+  };
+
+  return (
+    <div>
+      {/* Actions */}
+      <div className="flex gap-2 mb-3">
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 rounded-xl text-xs"
+          onClick={() => { setShowCreate(!showCreate); setShowJoin(false); }}
+        >
+          <Plus size={14} /> {t("lb.createClass")}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex-1 rounded-xl text-xs"
+          onClick={() => { setShowJoin(!showJoin); setShowCreate(false); }}
+        >
+          <Users size={14} /> {t("lb.joinClass")}
+        </Button>
+      </div>
+
+      {/* Create form */}
+      {showCreate && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mb-3 flex gap-2">
+          <Input
+            value={newClassName}
+            onChange={(e) => setNewClassName(e.target.value)}
+            placeholder={t("lb.classNamePlaceholder")}
+            className="rounded-xl text-sm"
+          />
+          <Button size="sm" className="rounded-xl" onClick={handleCreate}>{t("lb.create")}</Button>
+        </motion.div>
+      )}
+
+      {/* Join form */}
+      {showJoin && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mb-3">
+          <div className="flex gap-2">
+            <Input
+              value={joinCode}
+              onChange={(e) => { setJoinCode(e.target.value.toUpperCase()); setJoinError(""); }}
+              placeholder={t("lb.joinCodePlaceholder")}
+              className="rounded-xl text-sm uppercase tracking-widest"
+              maxLength={6}
+            />
+            <Button size="sm" className="rounded-xl" onClick={handleJoin}>{t("lb.join")}</Button>
+          </div>
+          {joinError && <p className="text-xs text-destructive mt-1">{joinError}</p>}
+        </motion.div>
+      )}
+
+      {/* Class selector */}
+      {myClassrooms.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mb-2">
+          {myClassrooms.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => setSelectedClassId(c.id)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                selectedClassId === c.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              📚 {c.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Selected class info */}
+      {selectedClassId && myClassrooms.length > 0 && (
+        <div className="mb-3 bg-card/60 border border-border rounded-xl p-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-foreground">
+              {myClassrooms.find((c) => c.id === selectedClassId)?.name}
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {t("lb.code")}: <span className="font-mono font-bold text-foreground">{myClassrooms.find((c) => c.id === selectedClassId)?.join_code}</span>
+            </p>
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-1">{classBoard.length} {t("lb.members")}</p>
+        </div>
+      )}
+
+      {/* Rank card */}
+      {classBoard.length > 0 && userId && (
+        <MyRankCard board={classBoard} userId={userId} ligue={ligue} />
+      )}
+
+      {/* Board */}
+      {loading ? (
+        <div className="text-center py-8 text-muted-foreground text-sm">{t("reading.loading")}</div>
+      ) : myClassrooms.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-3xl mb-2">📚</p>
+          <p className="text-sm text-muted-foreground">{t("lb.noClasses")}</p>
+        </div>
+      ) : classBoard.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-3xl mb-2">👥</p>
+          <p className="text-sm text-muted-foreground">{t("lb.emptyClass")}</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {classBoard.map((entry, i) => (
+            <LeaderboardRow key={entry.id} entry={entry} rank={i + 1} isMe={!!userId && entry.user_id === userId} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 type Tab = "weekly" | "country" | "level" | "class";
 
 export default function Leaderboard() {
@@ -115,7 +265,6 @@ export default function Leaderboard() {
 
   const board = tab === "weekly" ? globalBoard : tab === "country" ? countryBoard : tab === "level" ? levelBoard : [];
 
-  // Filter weekly by ligue
   const filteredBoard = tab === "weekly"
     ? globalBoard.filter((e) => e.ligue === myLigue).slice(0, 50)
     : board;
@@ -133,6 +282,7 @@ export default function Leaderboard() {
     { key: "weekly", icon: Trophy, label: t("lb.weekly") },
     { key: "country", icon: Flag, label: t("lb.country") },
     { key: "level", icon: GraduationCap, label: t("lb.level") },
+    { key: "class", icon: Users, label: t("lb.class") },
   ];
 
   return (
@@ -151,8 +301,8 @@ export default function Leaderboard() {
           </Button>
         </div>
 
-        {/* My Rank Card */}
-        {user && profile && (
+        {/* My Rank Card (non-class tabs) */}
+        {user && profile && tab !== "class" && (
           <MyRankCard board={tab === "weekly" ? filteredBoard : board} userId={user.id} ligue={myLigue} />
         )}
 
@@ -166,88 +316,98 @@ export default function Leaderboard() {
                 if (key === "country" && !selectedCountry) fetchByCountry(profile?.country_code || "FR");
                 if (key === "level") fetchByLevel(selectedLevel);
               }}
-              className={`flex-1 py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors ${
+              className={`flex-1 py-2 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1 transition-colors ${
                 tab === key ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               }`}
             >
-              <Icon size={13} /> {label}
+              <Icon size={12} /> {label}
             </button>
           ))}
         </div>
 
-        {/* League selector for weekly */}
-        {tab === "weekly" && (
-          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mb-2">
-            {(Object.entries(LIGUES) as [Ligue, typeof LIGUES[Ligue]][]).map(([key, config]) => (
-              <button
-                key={key}
-                onClick={() => {/* Could filter by ligue */}}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs flex items-center gap-1 ${
-                  myLigue === key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {config.emoji} {config.name}
-              </button>
-            ))}
-          </div>
+        {/* Class tab */}
+        {tab === "class" && (
+          <ClassTabContent userId={user?.id} ligue={myLigue} />
         )}
 
-        {/* Country selector */}
-        {tab === "country" && (
-          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mb-2">
-            {Object.entries(COUNTRY_FLAGS).map(([code, flag]) => (
-              <button
-                key={code}
-                onClick={() => fetchByCountry(code)}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs ${selectedCountry === code ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-              >
-                {flag} {code}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Level selector */}
-        {tab === "level" && (
-          <div className="flex gap-2 mb-3">
-            {(["beginner", "intermediate", "advanced"] as const).map((lvl) => (
-              <button
-                key={lvl}
-                onClick={() => fetchByLevel(lvl)}
-                className={`flex-1 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  selectedLevel === lvl ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {lvl === "beginner" ? "🌱" : lvl === "intermediate" ? "📚" : "🏆"} {t(`lb.${lvl}` as any)}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Board */}
-        {loading ? (
-          <div className="text-center py-12 text-muted-foreground">{t("reading.loading")}</div>
-        ) : (tab === "weekly" ? filteredBoard : board).length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-4xl mb-3">🏆</p>
-            <p className="text-muted-foreground text-sm">{t("leaderboard.empty")}</p>
-            {!user && (
-              <Button onClick={() => navigate("/auth")} className="mt-4 rounded-xl">
-                {t("auth.signup")}
-              </Button>
+        {/* Non-class tabs content */}
+        {tab !== "class" && (
+          <>
+            {/* League selector for weekly */}
+            {tab === "weekly" && (
+              <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mb-2">
+                {(Object.entries(LIGUES) as [Ligue, typeof LIGUES[Ligue]][]).map(([key, config]) => (
+                  <button
+                    key={key}
+                    onClick={() => {}}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs flex items-center gap-1 ${
+                      myLigue === key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {config.emoji} {config.name}
+                  </button>
+                ))}
+              </div>
             )}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {(tab === "weekly" ? filteredBoard : board).map((entry, i) => (
-              <LeaderboardRow
-                key={entry.id}
-                entry={entry}
-                rank={i + 1}
-                isMe={!!user && entry.user_id === user.id}
-              />
-            ))}
-          </div>
+
+            {/* Country selector */}
+            {tab === "country" && (
+              <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide mb-2">
+                {Object.entries(COUNTRY_FLAGS).map(([code, flag]) => (
+                  <button
+                    key={code}
+                    onClick={() => fetchByCountry(code)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs ${selectedCountry === code ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  >
+                    {flag} {code}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Level selector */}
+            {tab === "level" && (
+              <div className="flex gap-2 mb-3">
+                {(["beginner", "intermediate", "advanced"] as const).map((lvl) => (
+                  <button
+                    key={lvl}
+                    onClick={() => fetchByLevel(lvl)}
+                    className={`flex-1 py-2 rounded-xl text-xs font-medium transition-colors ${
+                      selectedLevel === lvl ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {lvl === "beginner" ? "🌱" : lvl === "intermediate" ? "📚" : "🏆"} {t(`lb.${lvl}` as any)}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Board */}
+            {loading ? (
+              <div className="text-center py-12 text-muted-foreground">{t("reading.loading")}</div>
+            ) : (tab === "weekly" ? filteredBoard : board).length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-4xl mb-3">🏆</p>
+                <p className="text-muted-foreground text-sm">{t("leaderboard.empty")}</p>
+                {!user && (
+                  <Button onClick={() => navigate("/auth")} className="mt-4 rounded-xl">
+                    {t("auth.signup")}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {(tab === "weekly" ? filteredBoard : board).map((entry, i) => (
+                  <LeaderboardRow
+                    key={entry.id}
+                    entry={entry}
+                    rank={i + 1}
+                    isMe={!!user && entry.user_id === user.id}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
