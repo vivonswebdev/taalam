@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -19,11 +19,12 @@ import DictationMode from "@/components/DictationMode";
 import AudioPlayer from "@/components/AudioPlayer";
 import ReadOnlyMode from "@/components/ReadOnlyMode";
 import HifzControl from "@/components/HifzControl";
+import TahaddiMode from "@/components/TahaddiMode";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz";
+type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi";
 
 interface AyaScore {
   ayaIndex: number;
@@ -623,6 +624,14 @@ export default function Quran() {
                 <Award size={14} />
                 {t("hifz.modeLabel")}
               </button>
+              <button
+                onClick={() => setRecitationMode("tahaddi")}
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  recitationMode === "tahaddi" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
+                }`}>
+                <Target size={14} />
+                {t("tahaddi.modeLabel")}
+              </button>
             </div>
           </motion.div>
         </div>
@@ -655,6 +664,16 @@ export default function Quran() {
       {/* ═══ HIFZ CONTROL MODE ═══ */}
       {selectedSurah && recitationMode === "hifz" && (
         <HifzControl
+          surah={selectedSurah}
+          onBack={handleNewSurah}
+          isChildMode={isChildMode}
+          t={t}
+        />
+      )}
+
+      {/* ═══ TAHADDI MODE ═══ */}
+      {selectedSurah && recitationMode === "tahaddi" && (
+        <TahaddiMode
           surah={selectedSurah}
           onBack={handleNewSurah}
           isChildMode={isChildMode}
