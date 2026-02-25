@@ -127,6 +127,11 @@ export default function Reading() {
               handleSelectSurah(selectedSurah.number + 1, 0);
             }
           }}
+          onRequestPrevSurah={() => {
+            if (selectedSurah.number > 1) {
+              handleSelectSurah(selectedSurah.number - 1, 0);
+            }
+          }}
         />
       </div>
     );

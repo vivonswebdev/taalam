@@ -24,6 +24,7 @@ interface MushafReaderProps {
   t: (key: string) => string;
   startAtAyah?: number;
   onRequestNextSurah?: () => void;
+  onRequestPrevSurah?: () => void;
 }
 
 export default function MushafReader({
@@ -34,6 +35,7 @@ export default function MushafReader({
   t,
   startAtAyah = 0,
   onRequestNextSurah,
+  onRequestPrevSurah,
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
 
@@ -251,6 +253,29 @@ export default function MushafReader({
           onPlayStateChange={setPlaying}
           jumpToAyahRef={jumpToAyahRef}
           onRequestNextSurah={onRequestNextSurah}
+          onRequestPrevSurah={onRequestPrevSurah}
+          isCurrentAyahBookmarked={surah.ayahs[currentAyah] ? isBookmarked(surah.number, surah.ayahs[currentAyah].number) : false}
+          onToggleBookmark={(ayahIdx) => {
+            const ayah = surah.ayahs[ayahIdx];
+            if (!ayah) return;
+            if (isBookmarked(surah.number, ayah.number)) {
+              removeBookmark(surah.number, ayah.number);
+            } else {
+              addBookmark({
+                surahNumber: surah.number, surahName: surah.name,
+                surahNameArabic: surah.nameArabic, ayahNumber: ayah.number,
+                arabicText: ayah.arabic.slice(0, 80),
+              });
+            }
+          }}
+          onGoToBookmark={() => {
+            if (readingPosition && readingPosition.surahNumber === surah.number) {
+              const el = ayahRefs.current.get(readingPosition.ayahIndex);
+              el?.scrollIntoView({ behavior: "smooth", block: "center" });
+              jumpToAyahRef.current?.(readingPosition.ayahIndex);
+            }
+          }}
+          hasBookmark={!!readingPosition && readingPosition.surahNumber === surah.number}
           compact
         />
       </div>
