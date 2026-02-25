@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Clock, Settings, LogOut, Megaphone, Trophy, Zap } from "lucide-react";
+import { GraduationCap, Clock, Settings, LogOut, Megaphone, Trophy, Zap, Share2, Users, Plus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
@@ -109,21 +109,102 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 3 Big Round Buttons */}
-      <div className="px-6 mt-4 space-y-4">
+      {/* Classroom Mode – Hero Card */}
+      <div className="px-6 mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="relative overflow-hidden bg-gradient-to-br from-primary/15 via-primary/5 to-card border border-primary/20 rounded-2xl p-5 space-y-3"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <GraduationCap size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="font-bold text-foreground text-sm">{t("home.classMode")}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {classrooms.length > 0 
+                    ? `${classrooms.length} classe${classrooms.length > 1 ? "s" : ""} active${classrooms.length > 1 ? "s" : ""}`
+                    : "Créer ou rejoindre une classe"
+                  }
+                </p>
+              </div>
+            </div>
+            {classrooms.length > 0 && (
+              <button
+                onClick={() => {
+                  const c = classrooms[0];
+                  const url = `https://iqraacoran.lovable.app/join/${c.joinCode}`;
+                  const text = `Rejoignez ma classe Iqraa "${c.name}" avec le code : ${c.joinCode}\n${url}`;
+                  if (navigator.share) {
+                    navigator.share({ title: `Classe Iqraa: ${c.name}`, text }).catch(() => {});
+                  } else {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+                  }
+                }}
+                className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1.5 text-xs font-semibold text-primary"
+              >
+                <Share2 size={12} /> Partager
+              </button>
+            )}
+          </div>
+
+          {/* Quick class list */}
+          {classrooms.length > 0 ? (
+            <div className="space-y-2">
+              {classrooms.slice(0, 2).map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => navigate(`/classrooms/${c.id}`)}
+                  className="w-full flex items-center gap-3 bg-background/60 rounded-xl px-3 py-2.5 text-left active:scale-[0.98] transition-transform"
+                >
+                  <Users size={16} className="text-primary shrink-0" />
+                  <span className="text-sm font-medium text-foreground flex-1 truncate">{c.name}</span>
+                  <span className="text-[10px] text-muted-foreground font-mono">{c.joinCode}</span>
+                </button>
+              ))}
+              {classrooms.length > 2 && (
+                <button onClick={() => navigate("/classrooms")} className="text-xs text-primary font-semibold">
+                  Voir les {classrooms.length} classes →
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={() => navigate("/classrooms")}
+                className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-2.5 text-sm font-bold"
+              >
+                <Plus size={14} /> Créer une classe
+              </button>
+              <button
+                onClick={() => navigate("/classrooms")}
+                className="flex-1 flex items-center justify-center gap-2 bg-muted text-foreground rounded-xl py-2.5 text-sm font-semibold"
+              >
+                Rejoindre
+              </button>
+            </div>
+          )}
+        </motion.div>
+      </div>
+
+      {/* 2 Action Buttons (Quiz removed from hero, kept here) */}
+      <div className="px-6 mt-4 space-y-3">
         <RoundActionButton
           icon="🧠"
           title={t("home.quizButton")}
           subtitle={t("home.quizButtonDesc")}
           onClick={() => navigate("/quiz")}
-          delay={0.3}
+          delay={0.4}
         />
         <RoundActionButton
           icon="🎤"
           title={t("home.tarteelButton")}
           subtitle={t("home.tarteelButtonDesc")}
           onClick={() => navigate("/recitation")}
-          delay={0.4}
+          delay={0.45}
         />
         <RoundActionButton
           icon="🏆"
@@ -140,15 +221,8 @@ export default function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="grid grid-cols-3 gap-3"
+          className="grid grid-cols-2 gap-3"
         >
-          <button
-            onClick={() => navigate("/classrooms")}
-            className="flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
-          >
-            <GraduationCap size={22} className="text-primary" />
-            <span className="text-xs font-semibold text-foreground">{t("home.classMode")}</span>
-          </button>
           <button
             onClick={() => navigate("/announcements")}
             className="relative flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
