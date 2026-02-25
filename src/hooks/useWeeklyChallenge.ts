@@ -38,12 +38,15 @@ export function useWeeklyChallenge(classId?: string) {
   const [results, setResults] = useState<ChallengeResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [myResult, setMyResult] = useState<ChallengeResult | null>(null);
+  const [pastChallenges, setPastChallenges] = useState<(WeeklyChallenge & { results: ChallengeResult[] })[]>([]);
 
   const weekStart = getCurrentWeekStart();
 
   const fetchChallenge = useCallback(async () => {
     if (!classId) return;
     setLoading(true);
+
+    // Current week challenge
     const { data } = await supabase
       .from("class_weekly_challenges")
       .select("*")
@@ -68,6 +71,34 @@ export function useWeeklyChallenge(classId?: string) {
       setResults([]);
       setMyResult(null);
     }
+
+    // Past challenges (not current week)
+    const { data: pastData } = await supabase
+      .from("class_weekly_challenges")
+      .select("*")
+      .eq("class_id", classId)
+      .neq("week_start", weekStart)
+      .order("week_start", { ascending: false })
+      .limit(10);
+
+    if (pastData && pastData.length > 0) {
+      const pastIds = (pastData as WeeklyChallenge[]).map((c) => c.id);
+      const { data: pastResults } = await supabase
+        .from("class_challenge_results")
+        .select("*")
+        .in("challenge_id", pastIds);
+      const allPastResults = (pastResults || []) as ChallengeResult[];
+
+      setPastChallenges(
+        (pastData as WeeklyChallenge[]).map((c) => ({
+          ...c,
+          results: allPastResults.filter((r) => r.challenge_id === c.id).sort((a, b) => b.score - a.score),
+        }))
+      );
+    } else {
+      setPastChallenges([]);
+    }
+
     setLoading(false);
   }, [classId, weekStart, user]);
 
@@ -91,9 +122,9 @@ export function useWeeklyChallenge(classId?: string) {
       .select()
       .single();
     if (error) { console.error(error); return null; }
-    const ch = data as WeeklyChallenge;
-    setChallenge(ch);
-    return ch;
+    const newCh = data as WeeklyChallenge;
+    setChallenge(newCh);
+    return newCh;
   }, [user, classId, weekStart]);
 
   const submitResult = useCallback(async (score: number) => {
@@ -127,6 +158,7 @@ export function useWeeklyChallenge(classId?: string) {
     submitResult,
     refetch: fetchChallenge,
     weekStart,
+    pastChallenges,
   };
 }
 
