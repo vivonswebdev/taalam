@@ -24,6 +24,7 @@ import Bookmarks from "./pages/Bookmarks";
 import Classrooms from "./pages/Classrooms";
 import ClassroomDetail from "./pages/ClassroomDetail";
 import NotFound from "./pages/NotFound";
+import JoinClassroom from "./pages/JoinClassroom";
 import BottomNav from "./components/BottomNav";
 import DedicationPopup from "./components/DedicationPopup";
 
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/classrooms/:classId" element={<ClassroomDetail />} />
               <Route path="/parent/child/:childId" element={<ChildDetail />} />
               <Route path="/parent/child/:childId/report" element={<ChildReport />} />
+              <Route path="/join/:code" element={<JoinClassroom />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <BottomNav />

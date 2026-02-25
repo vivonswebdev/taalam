@@ -964,6 +964,28 @@ const translations = {
   "classrooms.notFound": { fr: "Classe introuvable", en: "Class not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },
   "classrooms.homeTitle": { fr: "Mode Classe (Professeur)", en: "Classroom Mode (Teacher)", nl: "Klassenmodus (Leraar)", ar: "وضع الفصل (المعلم)" },
   "classrooms.homeDesc": { fr: "Gérez vos classes et suivez les progrès", en: "Manage classes & track progress", nl: "Beheer klassen & volg voortgang", ar: "إدارة الفصول ومتابعة التقدم" },
+  // Join Classroom
+  "join.title": { fr: "Rejoindre une classe", en: "Join a classroom", nl: "Klas bijtreden", ar: "الانضمام إلى فصل" },
+  "join.notFound": { fr: "Classe introuvable", en: "Classroom not found", nl: "Klas niet gevonden", ar: "الفصل غير موجود" },
+  "join.notFoundDesc": { fr: "Aucune classe ne correspond au code", en: "No classroom matches the code", nl: "Geen klas gevonden met code", ar: "لا يوجد فصل يطابق الرمز" },
+  "join.backHome": { fr: "Retour à l'accueil", en: "Back to home", nl: "Terug naar home", ar: "العودة للرئيسية" },
+  "join.success": { fr: "Inscription réussie !", en: "Successfully joined!", nl: "Succesvol ingeschreven!", ar: "تم الانضمام بنجاح!" },
+  "join.successDesc": { fr: "Vous avez rejoint la classe", en: "You joined the classroom", nl: "Je bent lid van de klas", ar: "لقد انضممت إلى الفصل" },
+  "join.teacher": { fr: "Enseignant", en: "Teacher", nl: "Leraar", ar: "المعلم" },
+  "join.createChild": { fr: "Créer un profil enfant", en: "Create a child profile", nl: "Kindprofiel aanmaken", ar: "إنشاء ملف طفل" },
+  "join.createChildDesc": { fr: "Nouveau profil pour cet élève", en: "New profile for this student", nl: "Nieuw profiel voor deze leerling", ar: "ملف جديد لهذا الطالب" },
+  "join.useExisting": { fr: "Utiliser un profil existant", en: "Use an existing profile", nl: "Bestaand profiel gebruiken", ar: "استخدام ملف موجود" },
+  "join.profilesAvailable": { fr: "profil(s) disponible(s)", en: "profile(s) available", nl: "profiel(en) beschikbaar", ar: "ملف(ات) متاحة" },
+  "join.back": { fr: "Retour", en: "Back", nl: "Terug", ar: "رجوع" },
+  "join.avatar": { fr: "Avatar", en: "Avatar", nl: "Avatar", ar: "الصورة الرمزية" },
+  "join.childName": { fr: "Prénom de l'enfant", en: "Child's name", nl: "Naam van het kind", ar: "اسم الطفل" },
+  "join.childNamePlaceholder": { fr: "Ex: Adam", en: "E.g. Adam", nl: "Bijv. Adam", ar: "مثال: آدم" },
+  "join.childAge": { fr: "Âge (optionnel)", en: "Age (optional)", nl: "Leeftijd (optioneel)", ar: "العمر (اختياري)" },
+  "join.joinButton": { fr: "Rejoindre la classe", en: "Join classroom", nl: "Klas bijtreden", ar: "انضم للفصل" },
+  "join.errorName": { fr: "Le prénom est requis", en: "Name is required", nl: "Naam is verplicht", ar: "الاسم مطلوب" },
+  "join.errorNameLong": { fr: "50 caractères max", en: "50 characters max", nl: "Max 50 tekens", ar: "50 حرفًا كحد أقصى" },
+  "join.errorAge": { fr: "Âge invalide (1-99)", en: "Invalid age (1-99)", nl: "Ongeldige leeftijd (1-99)", ar: "عمر غير صالح (1-99)" },
+  "join.years": { fr: "ans", en: "years", nl: "jaar", ar: "سنة" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
