@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -46,6 +47,7 @@ function getBadge(score: number) {
 export default function Recitation() {
   const { updateSurahProgress } = useProgress();
   const { shareSuccess } = useClassSuccessShare();
+  const { playSafely: safePlay } = useAntiDoubleAudio();
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t } = useLanguage();
@@ -258,8 +260,7 @@ export default function Recitation() {
       const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
       const data = await res.json();
       if (data.data?.ayahs?.[ayahIndex]) {
-        const audio = new Audio(data.data.ayahs[ayahIndex].audio);
-        audio.play();
+        safePlay(data.data.ayahs[ayahIndex].audio);
       }
     } catch {}
   };

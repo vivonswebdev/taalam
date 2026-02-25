@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Volume2, BookOpen, Loader2 } from "lucide-react";
 import type { TajwidRule } from "@/data/tajwidRules";
@@ -11,6 +12,7 @@ interface TajwidTutorialSheetProps {
 export default function TajwidTutorialSheet({ rule, onClose }: TajwidTutorialSheetProps) {
   const [playingExample, setPlayingExample] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { playSafely: safePlay } = useAntiDoubleAudio();
 
   if (!rule) return null;
 
@@ -34,11 +36,8 @@ export default function TajwidTutorialSheet({ rule, onClose }: TajwidTutorialShe
         );
         const audioData = await audioRes.json();
         if (audioData.data?.audio) {
-          const audio = new Audio(audioData.data.audio);
-          audioRef.current = audio;
-          audio.onended = () => setPlayingExample(null);
-          audio.onerror = () => setPlayingExample(null);
-          await audio.play();
+          const ok = await safePlay(audioData.data.audio);
+          if (!ok) setPlayingExample(null);
           return;
         }
       }

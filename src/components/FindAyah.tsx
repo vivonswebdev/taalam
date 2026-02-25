@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mic, MicOff, Search, ArrowLeft, BookOpen, Volume2,
@@ -32,6 +33,7 @@ const TIMESLICE_MS = 2_000;
 
 export default function FindAyah({ onBack, onOpenSurah, onStartHifz, isChildMode }: FindAyahProps) {
   const { t } = useLanguage();
+  const { playSafely: safePlay } = useAntiDoubleAudio();
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [scope, setScope] = useState<SearchScope>({ type: "all" });
@@ -156,7 +158,7 @@ export default function FindAyah({ onBack, onOpenSurah, onStartHifz, isChildMode
     fetch(`https://api.alquran.cloud/v1/ayah/${surahNumber}:${ayahNumber}/ar.husary`)
       .then(r => r.json())
       .then(data => {
-        if (data.data?.audio) new Audio(data.data.audio).play();
+        if (data.data?.audio) safePlay(data.data.audio);
       })
       .catch(() => {});
   };

@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Play, Square, Volume2, Mic, MicOff, RotateCcw, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
@@ -18,6 +19,7 @@ export default function LearnDetail() {
   const { surahNumber } = useParams();
   const navigate = useNavigate();
   const { updateSurahProgress } = useProgress();
+  const { playSafely: safePlay } = useAntiDoubleAudio();
   const { shareSuccess } = useClassSuccessShare();
   const { isChildMode, earnSticker } = useChildMode();
   const { t } = useLanguage();

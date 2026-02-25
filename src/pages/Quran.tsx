@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
@@ -46,6 +47,7 @@ interface AyaScore {
 export default function Quran() {
   const { updateSurahProgress } = useProgress();
   const { shareSuccess } = useClassSuccessShare();
+  const { playSafely: safePlay } = useAntiDoubleAudio();
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t, lang } = useLanguage();
@@ -1170,7 +1172,7 @@ export default function Quran() {
                             fetch(`https://api.alquran.cloud/v1/ayah/${selectedSurah.number}:${ayah.number}/ar.husary`)
                               .then((r) => r.json())
                               .then((data) => {
-                                if (data.data?.audio) new Audio(data.data.audio).play();
+                                if (data.data?.audio) safePlay(data.data.audio);
                               }).catch(() => {});
                           }}
                           className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center">
