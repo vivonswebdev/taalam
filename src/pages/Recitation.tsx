@@ -536,18 +536,18 @@ export default function Recitation() {
                   </div>
                 )}
 
-                {/* Divider */}
-                <div className="border-t border-border my-3" />
-
-                {/* Translation — ALWAYS visible */}
-                <p className={`${bodyTextClass} text-muted-foreground mb-1`}>
-                  🇫🇷 {selectedSurah.ayahs[recitingAyah].translation}
-                </p>
-
-                {/* Phonetics — ALWAYS visible */}
-                <p className={`text-primary/60 italic ${bodyTextClass}`}>
-                  🔤 {selectedSurah.ayahs[recitingAyah].transliteration}
-                </p>
+                {/* Translation & Phonetics — HIDDEN during recording */}
+                {showArabic && (
+                  <>
+                    <div className="border-t border-border my-3" />
+                    <p className={`${bodyTextClass} text-muted-foreground mb-1`}>
+                      🇫🇷 {selectedSurah.ayahs[recitingAyah].translation}
+                    </p>
+                    <p className={`text-primary/60 italic ${bodyTextClass}`}>
+                      🔤 {selectedSurah.ayahs[recitingAyah].transliteration}
+                    </p>
+                  </>
+                )}
               </div>
 
               {/* Mic controls */}
