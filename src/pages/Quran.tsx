@@ -156,10 +156,16 @@ export default function Quran() {
     },
   });
 
-  // Cleanup
+  // Cleanup on unmount — stop audio completely
   useEffect(() => {
     return () => {
-      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
       if (autoNextRef.current) clearTimeout(autoNextRef.current);
     };
   }, []);
@@ -743,14 +749,6 @@ export default function Quran() {
                 }`}>
                 <Search size={14} />
                 {t("findAyah.modeLabel")}
-              </button>
-              <button
-                onClick={() => setRecitationMode("mushaf")}
-                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  recitationMode === "mushaf" ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:bg-accent/50"
-                }`}>
-                <Bookmark size={14} />
-                {t("mushaf.modeLabel")}
               </button>
             </div>
           </motion.div>
