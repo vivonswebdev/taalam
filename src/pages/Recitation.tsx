@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff } from "lucide-react";
+import AudioPlayer from "@/components/AudioPlayer";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
@@ -358,30 +359,24 @@ export default function Recitation() {
       {/* LISTEN PHASE */}
       {phase === "listen" && selectedSurah && (
         <div className="px-6 space-y-5">
-          <div className="text-center">
-            <p className="font-arabic text-3xl text-primary mb-1">{selectedSurah.nameArabic}</p>
-            <p className={`${bodyTextClass} text-muted-foreground`}>{selectedSurah.frenchName} · {selectedSurah.versesCount} versets</p>
-          </div>
-
-          {/* Play button */}
-          <div className="flex justify-center">
-            <motion.button
-              whileTap={{ scale: 0.93 }}
-              onClick={startListening}
-              disabled={audioLoading}
-              className={`flex items-center gap-3 ${isChildMode ? "px-10 py-4 text-lg" : "px-8 py-3.5"} rounded-full font-semibold transition-colors ${
-                playing ? "bg-destructive/10 text-destructive border-2 border-destructive" : "bg-primary text-primary-foreground"
-              }`}
-            >
-              {audioLoading ? (
-                <><div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> Chargement...</>
-              ) : playing ? (
-                <><Square size={18} /> Arrêter</>
-              ) : (
-                <><Play size={18} /> {isChildMode ? "▶️ Écouter" : "Écouter la sourate"}</>
-              )}
-            </motion.button>
-          </div>
+          {/* Audio Player */}
+          <AudioPlayer
+            surahNumber={selectedSurah.number}
+            surahName={selectedSurah.frenchName}
+            surahNameArabic={selectedSurah.nameArabic}
+            totalAyahs={selectedSurah.ayahs.length}
+            onAyahChange={(i) => setCurrentAyah(i)}
+            onPlayStateChange={(p) => {
+              setPlaying(p);
+              if (p && !textMasked) {
+                maskTimerRef.current = setTimeout(() => setTextMasked(true), 5000);
+              }
+            }}
+            onFinished={() => {
+              setTextMasked(true);
+              setTimeout(() => { setPhase("recite"); setRecitingAyah(0); setRevealedWords(new Set()); }, 500);
+            }}
+          />
 
           {/* Mask indicator */}
           {textMasked && (
@@ -399,8 +394,6 @@ export default function Recitation() {
           <div className="flex justify-center">
             <button
               onClick={() => {
-                audioRef.current?.pause();
-                setPlaying(false);
                 setTextMasked(true);
                 setPhase("recite");
                 setRecitingAyah(0);

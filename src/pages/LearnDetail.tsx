@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Play, Square, Volume2, Mic, MicOff, RotateCcw, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import AudioPlayer from "@/components/AudioPlayer";
 import { getSurahByNumber } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
@@ -185,23 +186,16 @@ export default function LearnDetail() {
       {/* LISTEN PHASE */}
       {phase === "listen" && (
         <>
-          <div className="flex justify-center gap-3 mb-6">
-            <motion.button
-              whileTap={{ scale: 0.93 }}
-              onClick={fetchAndPlayAudio}
-              disabled={audioLoading}
-              className={`flex items-center gap-3 ${isChildMode ? "px-10 py-4 text-lg" : "px-8 py-3.5"} rounded-full font-semibold transition-colors ${
-                playing ? "bg-destructive/10 text-destructive border-2 border-destructive" : "bg-primary text-primary-foreground"
-              }`}
-            >
-              {audioLoading ? (
-                <><div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> Chargement...</>
-              ) : playing ? (
-                <><Square size={18} /> Arrêter</>
-              ) : (
-                <><Play size={18} /> {isChildMode ? "▶️ Écouter" : "Écouter la récitation"}</>
-              )}
-            </motion.button>
+          <div className="px-6 mb-5">
+            <AudioPlayer
+              surahNumber={surah.number}
+              surahName={surah.frenchName}
+              surahNameArabic={surah.nameArabic}
+              totalAyahs={surah.ayahs.length}
+              onAyahChange={(i) => setCurrentAyah(i)}
+              onPlayStateChange={(p) => setPlaying(p)}
+              onFinished={() => { setPhase("recite"); setRecitingAyah(0); }}
+            />
           </div>
 
           <div className="flex justify-center mb-6">
