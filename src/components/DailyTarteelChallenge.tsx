@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, X, CheckCircle2, XCircle, Trophy, Star, Sparkles } from "lucide-react";
+import { Mic, X, CheckCircle2, XCircle, Trophy, Star, Sparkles, EyeOff } from "lucide-react";
 import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
@@ -185,7 +185,7 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                 <span className="text-xs text-muted-foreground font-mono">0/{surah.versesCount}</span>
               </motion.div>
 
-              {/* Mushaf preview */}
+              {/* Mushaf preview — full text visible before recording */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -204,6 +204,17 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                     {i < surah.ayahs.length - 1 && <span className="text-muted-foreground mx-0.5">·</span>}
                   </span>
                 ))}
+              </motion.div>
+
+              {/* Hide & Recite hint */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45 }}
+                className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground"
+              >
+                <EyeOff size={12} />
+                <span>{t("daily.hideHint")}</span>
               </motion.div>
 
               {/* CTA */}
@@ -241,8 +252,8 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                 </div>
               </div>
 
-              {/* Live mushaf with word coloring */}
-              <div className="bg-card border border-border rounded-2xl p-4 max-h-52 overflow-y-auto" dir="rtl">
+              {/* Hide & Recite: text hidden, reveals word-by-word */}
+              <div className="bg-muted/30 border border-border rounded-2xl p-4 max-h-52 overflow-y-auto" dir="rtl">
                 {surah.ayahs.map((ayah, i) => {
                   const words = ayah.arabic.split(/\s+/).filter(Boolean);
                   const ayahLiveWords = liveWords[i] || [];
@@ -252,17 +263,21 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
                         {words.map((word, wi) => {
                           const lw = ayahLiveWords[wi];
                           const status = lw?.status || "pending";
+                          const isRevealed = status !== "pending";
                           const colorClass = getLiveWordColor(status);
-                          const isPending = status === "pending";
                           return (
                             <motion.span
                               key={wi}
-                              initial={!isPending ? { scale: 1.1 } : false}
-                              animate={{ scale: 1 }}
+                              initial={isRevealed ? { scale: 1.15, opacity: 0 } : false}
+                              animate={isRevealed ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
                               transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                              className={`inline-block px-0.5 py-0.5 rounded-md transition-colors duration-300 ${colorClass} ${isPending ? "opacity-40" : "opacity-100"}`}
+                              className={`inline-block px-0.5 py-0.5 rounded-md transition-all duration-300 ${
+                                isRevealed
+                                  ? colorClass
+                                  : "text-transparent bg-muted/60 select-none"
+                              }`}
                             >
-                              {word}{" "}
+                              {isRevealed ? word : "████"}{" "}
                             </motion.span>
                           );
                         })}

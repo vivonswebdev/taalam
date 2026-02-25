@@ -1101,6 +1101,7 @@ const translations = {
   "daily.continue": { fr: "Continuer", en: "Continue", nl: "Doorgaan", ar: "متابعة", tr: "Devam", ur: "جاری رکھیں" },
   "daily.bonus": { fr: "bonus !", en: "bonus!", nl: "bonus!", ar: "مكافأة!", tr: "bonus!", ur: "بونس!" },
   "daily.challengeBadge": { fr: "Défi du jour !", en: "Daily challenge!", nl: "Dagelijkse uitdaging!", ar: "تحدي اليوم!", tr: "Günün meydan okuması!", ur: "روزانہ چیلنج!" },
+  "daily.hideHint": { fr: "Le texte disparaît quand tu récites !", en: "Text disappears when you recite!", nl: "Tekst verdwijnt als je reciteert!", ar: "النص يختفي عند التلاوة!", tr: "Okurken metin kaybolur!", ur: "تلاوت کرتے وقت متن غائب ہو جاتا ہے!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
