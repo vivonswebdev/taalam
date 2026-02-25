@@ -1,18 +1,29 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff } from "lucide-react";
+import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode, type EarnedSticker } from "@/hooks/useChildMode";
 import { useVoiceRecognition, compareTexts, type WordResult } from "@/hooks/useVoiceRecognition";
+import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
 import { useStreak } from "@/hooks/useStreak";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSound } from "@/hooks/useSound";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
 
 type TarteelPhase = "select" | "listen" | "recite" | "results";
+
+const getLiveWordColor = (status: LiveWordStatus) => {
+  switch (status) {
+    case "correct": return "text-success bg-success/10";
+    case "almost": return "text-warning bg-warning/10";
+    case "incorrect": return "text-destructive bg-destructive/10";
+    case "pending": return "text-muted-foreground/30";
+  }
+};
 
 interface AyahResult {
   ayahIndex: number;
@@ -35,6 +46,7 @@ export default function Recitation() {
   const { isChildMode, earnSticker } = useChildMode();
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t } = useLanguage();
+  const { play, vibrate } = useSound();
 
   // Selection state
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
@@ -56,29 +68,25 @@ export default function Recitation() {
   const [recitingAyah, setRecitingAyah] = useState(0);
   const [currentTranscript, setCurrentTranscript] = useState("");
   const [ayahResults, setAyahResults] = useState<AyahResult[]>([]);
-  const [revealedWords, setRevealedWords] = useState<Set<number>>(new Set());
+  const [showArabic, setShowArabic] = useState(true); // Arabic visible before mic
 
-  // Rewards
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
+  // Live word feedback for current ayah only
+  const currentAyahTexts = selectedSurah && phase === "recite"
+    ? [selectedSurah.ayahs[recitingAyah]?.arabic || ""]
+    : [""];
+  const { liveWords, totalMatched: ayahMatched } = useLiveWordFeedback(currentAyahTexts, currentTranscript);
+  const currentAyahWordCount = currentAyahTexts[0].split(/\s+/).filter(Boolean).length;
 
   const voice = useVoiceRecognition({
     lang: "ar-SA",
     continuous: true,
     onResult: (transcript) => {
       setCurrentTranscript(transcript);
-      if (selectedSurah) {
-        const ayah = selectedSurah.ayahs[recitingAyah];
-        const { results } = compareTexts(ayah.arabic, transcript);
-        // Reveal incorrect words
-        const errorIndices = new Set<number>();
-        results.forEach((r, i) => {
-          if (!r.correct) errorIndices.add(i);
-        });
-        setRevealedWords(errorIndices);
-      }
     },
   });
+  // Rewards
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
   const filteredSurahs = getSurahsByDifficulty(difficulty);
 
@@ -99,7 +107,7 @@ export default function Recitation() {
       setTimeout(() => {
         setPhase("recite");
         setRecitingAyah(0);
-        setRevealedWords(new Set());
+        setShowArabic(true);
       }, 500);
       return;
     }
@@ -144,7 +152,7 @@ export default function Recitation() {
     setAyahResults([]);
     setRecitingAyah(0);
     setCurrentTranscript("");
-    setRevealedWords(new Set());
+    setShowArabic(true);
   };
 
   const handleFinishAyah = useCallback(() => {
@@ -158,7 +166,7 @@ export default function Recitation() {
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
       setRecitingAyah((p) => p + 1);
       setCurrentTranscript("");
-      setRevealedWords(new Set());
+      setShowArabic(true);
     } else {
       finishRecitation(newResults);
     }
@@ -175,7 +183,7 @@ export default function Recitation() {
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
       setRecitingAyah((p) => p + 1);
       setCurrentTranscript("");
-      setRevealedWords(new Set());
+      setShowArabic(true);
     } else {
       finishRecitation(newResults);
     }
@@ -206,7 +214,7 @@ export default function Recitation() {
     setRecitingAyah(0);
     setAyahResults([]);
     setCurrentTranscript("");
-    setRevealedWords(new Set());
+    setShowArabic(true);
     setShowConfetti(false);
     setEarnedSticker(null);
   };
@@ -218,7 +226,7 @@ export default function Recitation() {
     setAyahResults([]);
     setRecitingAyah(0);
     setCurrentTranscript("");
-    setRevealedWords(new Set());
+    setShowArabic(true);
     setShowConfetti(false);
     setEarnedSticker(null);
   };
@@ -376,7 +384,7 @@ export default function Recitation() {
             }}
             onFinished={() => {
               setTextMasked(true);
-              setTimeout(() => { setPhase("recite"); setRecitingAyah(0); setRevealedWords(new Set()); }, 500);
+              setTimeout(() => { setPhase("recite"); setRecitingAyah(0); setShowArabic(true); }, 500);
             }}
           />
 
@@ -465,30 +473,80 @@ export default function Recitation() {
               exit={{ opacity: 0, x: -30 }}
               className="space-y-5"
             >
-              {/* Current ayah card - masked with error reveals */}
-              <div className={`bg-card border-2 border-primary/30 rounded-2xl ${isChildMode ? "p-8" : "p-6"} text-center`}>
-                <span className={`inline-block ${isChildMode ? "w-10 h-10 text-lg leading-10" : "w-8 h-8 text-sm leading-8"} rounded-full bg-primary text-primary-foreground font-bold mb-4`}>
-                  {selectedSurah.ayahs[recitingAyah].number}
-                </span>
-
-                {/* Masked text with error word reveals */}
-                <div className={`arabic-text ${isChildMode ? "text-3xl" : "text-2xl"} leading-[2.4] flex flex-wrap gap-x-2 justify-center mb-3`}>
-                  {selectedSurah.ayahs[recitingAyah].arabic.split(/\s+/).map((word, wi) => (
-                    <span
-                      key={wi}
-                      className={`transition-all duration-300 ${
-                        revealedWords.has(wi)
-                          ? "text-destructive font-bold"
-                          : "text-muted-foreground/20 blur-sm select-none"
-                      }`}
-                    >
-                      {revealedWords.has(wi) ? word : "████"}
-                    </span>
-                  ))}
+              {/* Current ayah card */}
+              <div className={`bg-card border-2 border-primary/30 rounded-2xl ${isChildMode ? "p-8" : "p-6"}`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`inline-flex items-center justify-center ${isChildMode ? "w-10 h-10 text-lg" : "w-8 h-8 text-sm"} rounded-full bg-primary text-primary-foreground font-bold`}>
+                    {selectedSurah.ayahs[recitingAyah].number}
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {t("detail.verses")} {recitingAyah + 1}/{selectedSurah.ayahs.length}
+                  </span>
                 </div>
 
+                {/* Arabic text: visible before mic, hidden/revealed during recitation */}
+                <div className={`arabic-text ${isChildMode ? "text-3xl" : "text-2xl"} leading-[2.4] flex flex-wrap gap-x-2 justify-center mb-4`} dir="rtl">
+                  {showArabic ? (
+                    // Full text visible before recording
+                    <span className="text-foreground">{selectedSurah.ayahs[recitingAyah].arabic}</span>
+                  ) : (
+                    // Word-by-word reveal with colors during recording
+                    selectedSurah.ayahs[recitingAyah].arabic.split(/\s+/).filter(Boolean).map((word, wi) => {
+                      const lw = liveWords[0]?.[wi];
+                      const status = lw?.status || "pending";
+                      const isRevealed = status !== "pending";
+                      const colorClass = getLiveWordColor(status);
+                      return (
+                        <motion.span
+                          key={wi}
+                          initial={isRevealed ? { scale: 1.15, opacity: 0 } : false}
+                          animate={isRevealed ? { scale: 1, opacity: 1 } : { scale: 1, opacity: 1 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                          className={`inline-block px-1 py-0.5 rounded-md transition-all duration-300 ${
+                            isRevealed ? colorClass : "text-transparent bg-muted/50 select-none"
+                          }`}
+                        >
+                          {isRevealed ? word : "████"}
+                        </motion.span>
+                      );
+                    })
+                  )}
+                </div>
+
+                {/* Word progress during recording */}
+                {!showArabic && (
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-success rounded-full"
+                        animate={{ width: `${(ayahMatched / Math.max(1, currentAyahWordCount)) * 100}%` }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-muted-foreground font-mono">{ayahMatched}/{currentAyahWordCount}</span>
+                  </div>
+                )}
+
+                {/* Legend during recording */}
+                {!showArabic && (
+                  <div className="flex flex-wrap justify-center gap-3 text-[10px] mb-3">
+                    <span className="flex items-center gap-1 text-success"><CheckCircle2 size={10} /> {t("dictation.legendCorrect")}</span>
+                    <span className="flex items-center gap-1 text-warning">⚠️ {t("daily.almost")}</span>
+                    <span className="flex items-center gap-1 text-destructive"><XCircle size={10} /> {t("dictation.legendIncorrect")}</span>
+                  </div>
+                )}
+
+                {/* Divider */}
+                <div className="border-t border-border my-3" />
+
+                {/* Translation — ALWAYS visible */}
+                <p className={`${bodyTextClass} text-muted-foreground mb-1`}>
+                  🇫🇷 {selectedSurah.ayahs[recitingAyah].translation}
+                </p>
+
+                {/* Phonetics — ALWAYS visible */}
                 <p className={`text-primary/60 italic ${bodyTextClass}`}>
-                  {selectedSurah.ayahs[recitingAyah].transliteration}
+                  🔤 {selectedSurah.ayahs[recitingAyah].transliteration}
                 </p>
               </div>
 
@@ -502,7 +560,15 @@ export default function Recitation() {
                   <>
                     <motion.button
                       whileTap={{ scale: 0.9 }}
-                      onClick={voice.isListening ? voice.stop : voice.start}
+                      onClick={() => {
+                        if (voice.isListening) {
+                          voice.stop();
+                        } else {
+                          setShowArabic(false); // Hide Arabic on mic press
+                          setCurrentTranscript("");
+                          voice.start();
+                        }
+                      }}
                       className={`${isChildMode ? "w-24 h-24" : "w-20 h-20"} rounded-full flex items-center justify-center transition-all ${
                         voice.isListening
                           ? "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30 animate-pulse"
@@ -514,22 +580,19 @@ export default function Recitation() {
                     <p className={`${bodyTextClass} text-muted-foreground`}>
                       {voice.isListening
                         ? (isChildMode ? "🎤 Récite maintenant !" : "Récitez... Appuyez pour arrêter")
-                        : (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez pour commencer")}
+                        : showArabic
+                          ? (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez sur le micro — le texte disparaîtra")
+                          : (isChildMode ? "👆 Appuie pour réciter !" : "Appuyez pour recommencer")}
                     </p>
-                  </>
-                )}
 
-                {currentTranscript && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="w-full bg-accent/50 rounded-2xl p-4"
-                  >
-                    <p className="text-xs text-muted-foreground mb-1">
-                      {isChildMode ? "🗣️ Ta récitation :" : "Votre récitation :"}
-                    </p>
-                    <p className={`arabic-text ${isChildMode ? "text-xl" : "text-lg"} text-foreground`}>{currentTranscript}</p>
-                  </motion.div>
+                    {/* Hide hint before first press */}
+                    {showArabic && (
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <EyeOff size={12} />
+                        <span>{t("daily.hideHint")}</span>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {currentTranscript && !voice.isListening && (
