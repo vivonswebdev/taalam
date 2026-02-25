@@ -23,6 +23,7 @@ import ReadOnlyMode from "@/components/ReadOnlyMode";
 import HifzControl from "@/components/HifzControl";
 import TahaddiMode from "@/components/TahaddiMode";
 import FindAyah from "@/components/FindAyah";
+import AyahRenderer from "@/components/AyahRenderer";
 import MushafReader from "@/components/MushafReader";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
@@ -876,238 +877,18 @@ export default function Quran() {
         />
       )}
 
-      {/* ═══ AYA LIST + ACTIVE AYA ═══ */}
+      {/* ═══ AYA MODE (NOUVEAU TARTEEL AYA PAR AYA) ═══ */}
       {selectedSurah && recitationMode === "aya" && !surahFinished && (
-        <div className="px-6 space-y-4">
-          {/* Surah header */}
-          <div className="text-center mb-2">
-            <p className="font-arabic text-2xl text-primary">{selectedSurah.nameArabic}</p>
-            <p className="text-xs text-muted-foreground">{selectedSurah.frenchName} · {t("aya.progress")} {currentAya + 1}/{selectedSurah.ayahs.length}</p>
-          </div>
-
-          {/* Progress bar */}
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-primary rounded-full"
-              animate={{ width: `${((currentAya + (ayaPhase === "result" ? 1 : 0)) / selectedSurah.ayahs.length) * 100}%` }}
-            />
-          </div>
-
-          {/* Aya cards - scrollable list */}
-          <div className="space-y-3">
-            {selectedSurah.ayahs.map((ayah, i) => {
-              const isActive = i === currentAya;
-              const scoreForAya = scores.find((s) => s.ayaIndex === i);
-              const isDone = !!scoreForAya;
-              const isCorrect = scoreForAya?.correct;
-
-              return (
-                <motion.div
-                  key={ayah.number}
-                  id={`aya-${i}`}
-                  initial={isActive ? { opacity: 0, y: 10 } : { opacity: 1 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`bg-card border-2 rounded-2xl transition-all ${
-                    isActive
-                      ? "border-primary shadow-lg shadow-primary/10"
-                      : isDone
-                        ? isCorrect
-                          ? "border-success/50 bg-success/5"
-                          : "border-destructive/50 bg-destructive/5"
-                        : "border-border opacity-60"
-                  } ${isActive ? (isChildMode ? "p-6" : "p-5") : "p-3"}`}
-                >
-                  {/* Aya number + status */}
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`${isActive ? (isChildMode ? "w-10 h-10 text-base" : "w-8 h-8 text-sm") : "w-6 h-6 text-[10px]"} rounded-full flex items-center justify-center font-bold ${
-                      isDone
-                        ? isCorrect ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive"
-                        : isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    }`}>
-                      {isDone ? (isCorrect ? "✓" : "✗") : ayah.number}
-                    </span>
-                    {isDone && (
-                      <span className={`text-xs font-bold ${isCorrect ? "text-success" : "text-destructive"}`}>
-                        {scoreForAya.score}%
-                      </span>
-                    )}
-                    {isActive && ayaPhase === "playing" && (
-                      <Volume2 size={16} className="text-primary animate-pulse" />
-                    )}
-                  </div>
-
-                  {/* Arabic text */}
-                  <p className={`arabic-text ${isActive ? (isChildMode ? "text-3xl" : "text-2xl") : "text-lg"} text-foreground mb-1 ${
-                    isActive && ayaPhase === "reciting" ? "blur-sm select-none transition-all duration-500" : ""
-                  }`}>
-                    {ayah.arabic}
-                  </p>
-
-                  {/* Transliteration + translation only for active aya */}
-                  {isActive && (
-                    <>
-                      <p className={`${bodyTextClass} text-primary/70 italic mb-1`}>
-                        {ayah.transliteration}
-                      </p>
-                      <p className={`${bodyTextClass} text-muted-foreground`}>
-                        {lang === "ar" ? ayah.translation : (translations[i] || ayah.translation)}
-                      </p>
-                    </>
-                  )}
-
-                  {/* ── Active aya controls ── */}
-                  {isActive && ayaPhase === "idle" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 flex justify-center">
-                      <button
-                        onClick={() => playAyaAudio(i)}
-                        className={`flex items-center gap-2 ${isChildMode ? "px-6 py-3 text-lg" : "px-5 py-2.5"} rounded-2xl bg-primary text-primary-foreground font-semibold active:scale-[0.97] transition-transform`}
-                      >
-                        <Play size={18} />
-                        {t("aya.playAya")}
-                      </button>
-                    </motion.div>
-                  )}
-
-                  {/* Playing indicator */}
-                  {isActive && ayaPhase === "playing" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className="mt-4 flex flex-col items-center gap-2">
-                      <div className="flex items-center gap-2 text-primary">
-                        <div className="flex gap-1">
-                          {[0, 1, 2].map((b) => (
-                            <motion.div key={b}
-                              animate={{ scaleY: [1, 2, 1] }}
-                              transition={{ duration: 0.6, delay: b * 0.15, repeat: Infinity }}
-                              className="w-1 h-3 bg-primary rounded-full"
-                            />
-                          ))}
-                        </div>
-                        <span className={`${bodyTextClass} font-medium`}>
-                          {repeatCount > 0 ? `${t("aya.repeatX3")} (${repeatCount})` : "..."}
-                        </span>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Reciting UI */}
-                  {isActive && ayaPhase === "reciting" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className="mt-4 space-y-4">
-                      <p className={`text-center font-semibold ${bodyTextClass} text-secondary`}>
-                        {t("aya.reciteNow")}
-                      </p>
-
-                      {!voice.isSupported ? (
-                        <div className="bg-destructive/10 text-destructive rounded-xl p-3 text-center text-sm">
-                          <AlertCircle size={16} className="inline mr-1" />
-                          {t("aya.voiceUnsupported")}
-                        </div>
-                      ) : voice.permissionDenied || micError === "not-allowed" ? (
-                        <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-2">
-                          <AlertCircle size={20} className="inline" />
-                          <p className="text-sm font-semibold">{t("aya.micDenied") || "Microphone permission denied"}</p>
-                          <p className="text-xs opacity-80">{t("aya.micDeniedHint") || "Go to your browser settings and allow microphone access for this site, then try again."}</p>
-                          <button
-                            onClick={() => { setMicError(null); voice.start(); }}
-                            className="mt-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold"
-                          >
-                            {t("aya.retryMic") || "Retry"}
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center gap-3">
-                          <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={voice.isListening ? voice.stop : voice.start}
-                            className={`${isChildMode ? "w-20 h-20" : "w-16 h-16"} rounded-full flex items-center justify-center transition-all ${
-                              voice.isListening
-                                ? "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30 animate-pulse"
-                                : "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                            }`}
-                          >
-                            {voice.isListening ? <MicOff size={isChildMode ? 32 : 26} /> : <Mic size={isChildMode ? 32 : 26} />}
-                          </motion.button>
-                          <p className={`text-xs text-muted-foreground`}>
-                            {voice.isListening ? t("aya.listening") : t("aya.tapToRecite")}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Live transcript */}
-                      {currentTranscript && (
-                        <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                          className="bg-accent/50 rounded-xl p-3">
-                          <p className={`arabic-text ${isChildMode ? "text-xl" : "text-lg"} text-foreground`}>
-                            {currentTranscript}
-                          </p>
-                        </motion.div>
-                      )}
-
-                      {/* Validate + Skip */}
-                      <div className="flex items-center justify-center gap-3">
-                        {currentTranscript && (
-                          <button onClick={handleValidateRecitation}
-                            className={`flex items-center gap-2 bg-success text-success-foreground ${isChildMode ? "px-6 py-3" : "px-4 py-2.5"} rounded-xl font-semibold text-sm`}>
-                            <CheckCircle2 size={16} />
-                            {t("detail.validate")}
-                          </button>
-                        )}
-                        <button onClick={handleSkipAya}
-                          className="text-xs text-muted-foreground underline">
-                          {t("aya.skip")}
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Result for this aya */}
-                  {isActive && ayaPhase === "result" && (
-                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                      className="mt-4 space-y-3">
-                      {/* Feedback banner */}
-                      <div className={`rounded-xl p-4 text-center font-bold ${
-                        scores[scores.length - 1]?.correct
-                          ? "bg-success/15 text-success"
-                          : "bg-destructive/15 text-destructive"
-                      }`}>
-                        <p className={`${isChildMode ? "text-xl" : "text-lg"}`}>
-                          {scores[scores.length - 1]?.correct
-                            ? (isChildMode ? "🌟 Bravo ! Correct !" : t("aya.correct"))
-                            : (isChildMode ? "📖 Réessaie !" : t("aya.incorrect"))}
-                        </p>
-                        <p className="text-sm mt-1">
-                          {scores[scores.length - 1]?.score}%
-                        </p>
-                      </div>
-
-                      {/* Auto-next countdown */}
-                      {autoNextTimer !== null && autoNextTimer > 0 && (
-                        <p className="text-center text-xs text-muted-foreground">
-                          {t("aya.autoNext")} {autoNextTimer}s
-                        </p>
-                      )}
-
-                      {/* Retry / Skip buttons for incorrect */}
-                      {!scores[scores.length - 1]?.correct && (
-                        <div className="flex items-center justify-center gap-3">
-                          <button onClick={handleRetryAya}
-                            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl font-semibold text-sm">
-                            <RotateCcw size={14} />
-                            {t("aya.retry")}
-                          </button>
-                          <button onClick={() => goToNextAya(scores)}
-                            className="text-xs text-muted-foreground underline">
-                            {t("aya.skip")}
-                          </button>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+        <AyahRenderer
+          surah={selectedSurah}
+          translations={translations}
+          lang={lang}
+          isChildMode={isChildMode}
+          onFinish={(finalScores) => {
+            setScores(finalScores);
+            finishSurah(finalScores);
+          }}
+        />
       )}
 
       {/* ═══ SURAH FINISHED ═══ */}
@@ -1202,45 +983,6 @@ export default function Quran() {
         </div>
       )}
 
-      {/* ═══ BOTTOM CONTROLS BAR ═══ */}
-      {selectedSurah && recitationMode === "aya" && !surahFinished && (
-        <div className="fixed bottom-16 left-0 right-0 z-40">
-          <div className="max-w-lg mx-auto px-4">
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="bg-card border border-border rounded-2xl shadow-xl p-3 flex items-center justify-between gap-2"
-            >
-              {/* Prev */}
-              <button onClick={goToPrevAya} disabled={currentAya === 0}
-                className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center disabled:opacity-30">
-                <SkipBack size={18} />
-              </button>
-
-              {/* Play / Pause */}
-              <button onClick={() => {
-                if (ayaPhase === "idle") playAyaAudio(currentAya);
-                else handlePauseResume();
-              }}
-                className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20">
-                {ayaPhase === "playing" && !isPaused ? <Pause size={24} /> : <Play size={24} className="ml-0.5" />}
-              </button>
-
-              {/* Next */}
-              <button onClick={goToNextAyaManual} disabled={currentAya >= (selectedSurah?.ayahs.length || 1) - 1}
-                className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center disabled:opacity-30">
-                <SkipForward size={18} />
-              </button>
-
-              {/* Repeat x3 */}
-              <button onClick={handleRepeatX3}
-                className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center">
-                <Repeat size={16} />
-              </button>
-            </motion.div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
