@@ -13,6 +13,7 @@ import Prayers from "./pages/Prayers";
 import PrayerSettings from "./pages/PrayerSettings";
 import Progress from "./pages/Progress";
 import Juz from "./pages/Juz";
+import HifzMap from "./pages/HifzMap";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/prayer-settings" element={<PrayerSettings />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/juz" element={<Juz />} />
+              <Route path="/hifz-map" element={<HifzMap />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
