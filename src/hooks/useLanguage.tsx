@@ -504,7 +504,7 @@ const translations = {
     fr: "Retravailler les erreurs", en: "Retry errors", nl: "Fouten herhalen", ar: "إعادة الأخطاء",
   },
   "dictation.modeAya": {
-    fr: "Aya par aya", en: "Aya by aya", nl: "Aya per aya", ar: "آية بآية",
+    fr: "Verset par verset", en: "Verse by verse", nl: "Vers per vers", ar: "آية بآية",
   },
   "dictation.modeSurah": {
     fr: "Sourate complète", en: "Full surah", nl: "Volledige soera", ar: "سورة كاملة",
