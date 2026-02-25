@@ -693,6 +693,25 @@ const translations = {
   "juz.progress": {
     fr: "Progression par Juz", en: "Juz progress", nl: "Juz voortgang", ar: "تقدم الجزء",
   },
+
+  // Translation settings
+  "settings.translationAuto": {
+    fr: "Traduction automatique", en: "Auto translation", nl: "Automatische vertaling", ar: "ترجمة تلقائية",
+  },
+  "settings.translationAutoDesc": {
+    fr: "Selon la langue du système", en: "Based on system language", nl: "Op basis van systeemtaal", ar: "حسب لغة النظام",
+  },
+  "settings.translationManual": {
+    fr: "Édition de traduction", en: "Translation edition", nl: "Vertalingseditie", ar: "إصدار الترجمة",
+  },
+
+  // Read-only mode
+  "quran.readOnly": {
+    fr: "Lecture seule", en: "Read only", nl: "Alleen lezen", ar: "قراءة فقط",
+  },
+  "quran.readOnlyDesc": {
+    fr: "Écoutez et lisez sans micro ni correction", en: "Listen and read without mic or correction", nl: "Luister en lees zonder microfoon of correctie", ar: "استمع واقرأ بدون ميكروفون أو تصحيح",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;
