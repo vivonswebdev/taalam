@@ -109,12 +109,37 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Action Buttons – Tarteel first */}
+      <div className="px-6 mt-4 space-y-3">
+        <RoundActionButton
+          icon="🎤"
+          title={t("home.tarteelButton")}
+          subtitle={t("home.tarteelButtonDesc")}
+          onClick={() => navigate("/recitation")}
+          delay={0.3}
+        />
+        <RoundActionButton
+          icon="🧠"
+          title={t("home.quizButton")}
+          subtitle={t("home.quizButtonDesc")}
+          onClick={() => navigate("/quiz")}
+          delay={0.38}
+        />
+        <RoundActionButton
+          icon="🏆"
+          title={t("home.leaderboardButton")}
+          subtitle={t("home.leaderboardButtonDesc")}
+          onClick={() => navigate("/leaderboard")}
+          delay={0.45}
+        />
+      </div>
+
       {/* Classroom Mode – Hero Card */}
       <div className="px-6 mt-4">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.5 }}
           className="relative overflow-hidden bg-gradient-to-br from-primary/15 via-primary/5 to-card border border-primary/20 rounded-2xl p-5 space-y-3"
         >
           <div className="flex items-center justify-between">
@@ -151,7 +176,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* Quick class list */}
           {classrooms.length > 0 ? (
             <div className="space-y-2">
               {classrooms.slice(0, 2).map((c) => (
@@ -190,33 +214,8 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* 2 Action Buttons (Quiz removed from hero, kept here) */}
-      <div className="px-6 mt-4 space-y-3">
-        <RoundActionButton
-          icon="🧠"
-          title={t("home.quizButton")}
-          subtitle={t("home.quizButtonDesc")}
-          onClick={() => navigate("/quiz")}
-          delay={0.4}
-        />
-        <RoundActionButton
-          icon="🎤"
-          title={t("home.tarteelButton")}
-          subtitle={t("home.tarteelButtonDesc")}
-          onClick={() => navigate("/recitation")}
-          delay={0.45}
-        />
-        <RoundActionButton
-          icon="🏆"
-          title={t("home.leaderboardButton")}
-          subtitle={t("home.leaderboardButtonDesc")}
-          onClick={() => navigate("/leaderboard")}
-          delay={0.5}
-        />
-      </div>
-
-      {/* Quick actions */}
-      <div className="px-6 mt-6">
+      {/* Quick actions: Annonces + Réglages */}
+      <div className="px-6 mt-4">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
