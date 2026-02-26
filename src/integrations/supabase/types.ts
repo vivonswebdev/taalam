@@ -344,6 +344,65 @@ export type Database = {
           },
         ]
       }
+      perfect_challenge_scores: {
+        Row: {
+          best_score: number
+          challenge_id: string
+          id: string
+          plays: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          best_score?: number
+          challenge_id: string
+          id?: string
+          plays?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          best_score?: number
+          challenge_id?: string
+          id?: string
+          plays?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "perfect_challenge_scores_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "perfect_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      perfect_challenges: {
+        Row: {
+          created_at: string
+          end_at: string
+          id: string
+          start_at: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          end_at: string
+          id?: string
+          start_at: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          end_at?: string
+          id?: string
+          start_at?: string
+          type?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_emoji: string

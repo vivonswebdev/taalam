@@ -8,6 +8,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 
 // Persist quiz stats in localStorage
 const QUIZ_STATS_KEY = "quranEasyQuizStats";
@@ -55,6 +56,7 @@ export default function Quiz() {
   const [selected, setSelected] = useState<number | null>(null);
   const [finished, setFinished] = useState(false);
   const xp = useXP();
+  const perfectChallenge = usePerfectChallenge();
   const xpAwardedRef = useRef(false);
 
   // Pre-shuffled session: built once when category is selected
@@ -217,6 +219,10 @@ export default function Quiz() {
         : category === "tajweed" ? finalScore * 3
         : finalScore * 3;
       if (xpGain > 0) xp.addXP(xpGain);
+      // Submit to weekly perfect challenge if category is "perfect"
+      if (category === "perfect" && perfectChallenge.challenge) {
+        perfectChallenge.submitScore(finalScore);
+      }
     }
 
     return (
@@ -243,13 +249,20 @@ export default function Quiz() {
           />
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex gap-3 mt-6">
-          <button onClick={handleBackToCategories} className="bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-            {t("quiz.otherQuiz")}
-          </button>
-          <button onClick={() => handleSelectCategory(category)} className="bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-            {t("quiz.retry")}
-          </button>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-col gap-3 mt-6 w-full max-w-xs">
+          {category === "perfect" && perfectChallenge.challenge && (
+            <button onClick={() => navigate("/perfect-leaderboard")} className="bg-secondary text-secondary-foreground rounded-2xl px-6 py-3 font-semibold text-sm flex items-center justify-center gap-2">
+              <Trophy size={16} /> Classement de la semaine
+            </button>
+          )}
+          <div className="flex gap-3">
+            <button onClick={handleBackToCategories} className="flex-1 bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
+              {t("quiz.otherQuiz")}
+            </button>
+            <button onClick={() => handleSelectCategory(category)} className="flex-1 bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
+              {t("quiz.retry")}
+            </button>
+          </div>
         </motion.div>
       </div>
     );

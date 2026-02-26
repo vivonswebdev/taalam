@@ -31,6 +31,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Announcements from "./pages/Announcements";
 import FindAyahPage from "./pages/FindAyahPage";
 import FamilyDashboard from "./pages/FamilyDashboard";
+import PerfectLeaderboard from "./pages/PerfectLeaderboard";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -74,6 +75,7 @@ const App = () => (
               <Route path="/join/:code" element={<JoinClassroom />} />
               <Route path="/find-ayah" element={<FindAyahPage />} />
               <Route path="/family" element={<FamilyDashboard />} />
+              <Route path="/perfect-leaderboard" element={<PerfectLeaderboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
