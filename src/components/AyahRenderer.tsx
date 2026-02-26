@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, X, SkipForward, CheckCircle2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Surah } from "@/data/surahs";
