@@ -276,12 +276,13 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
             {currentAyahText.split(/\s+/).filter(Boolean).map((word, i) => {
               const wr = wordResults[i];
               const status = wr?.status;
-              const isRevealed = status === "correct" || status === "almost";
+              const isRevealed = status === "correct" || status === "almost" || status === "wrong";
               const isPending = !status || status === "pending";
 
               let colorClass = "text-foreground/10 bg-muted/40 select-none";
               if (status === "correct") colorClass = "text-success bg-success/10";
               else if (status === "almost") colorClass = "text-warning bg-warning/10";
+              else if (status === "wrong") colorClass = "text-destructive bg-destructive/10";
 
               return (
                 <motion.span
