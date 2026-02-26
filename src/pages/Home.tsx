@@ -14,6 +14,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
+import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 
@@ -122,7 +123,7 @@ export default function Home() {
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-2xl font-bold text-foreground tracking-tight">
-            Iqraa – <span className="text-primary">{t("home.hifzTitle")}</span>
+            Taaloum – <span className="text-primary">{t("home.hifzTitle")}</span>
           </motion.h1>
 
           {/* Stats */}
@@ -144,6 +145,19 @@ export default function Home() {
               <span className="text-base">🏅</span>
               <span className="text-sm font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
             </div>
+          </motion.div>
+
+          {/* Logo + Name */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mt-3 flex items-center justify-center gap-2"
+          >
+            <img src={taaloumLogo} alt="Taaloum" className="w-7 h-7 rounded-full" />
+            <span className="text-xs font-semibold" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Taaloum
+            </span>
           </motion.div>
         </div>
       </div>
