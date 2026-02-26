@@ -65,6 +65,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [hoveredWaqf, setHoveredWaqf] = useState<string | null>(null);
   const [listeningAyahIdx, setListeningAyahIdx] = useState(0);
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
 
   const allArabicTexts = surah.ayahs.map((a) => a.arabic);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
