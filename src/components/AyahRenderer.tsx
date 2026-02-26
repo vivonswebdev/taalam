@@ -300,10 +300,11 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
         </div>
 
         {/* Incorrect words shown separately */}
-        {wordResults.some(wr => wr.status === "correct" || wr.status === "almost") && (
+        {wordResults.some(wr => wr.status === "correct" || wr.status === "almost" || wr.status === "wrong") && (
           <div className="flex flex-wrap justify-center gap-3 text-[10px]">
             <span className="flex items-center gap-1 text-success"><CheckCircle2 size={10} /> Correct</span>
             <span className="flex items-center gap-1 text-warning">🟠 Presque</span>
+            <span className="flex items-center gap-1 text-destructive">🔴 Faux</span>
             <span className="flex items-center gap-1 text-muted-foreground/40">⬜ En attente</span>
           </div>
         )}
