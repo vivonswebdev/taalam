@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target, Bookmark,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target, Bookmark, ArrowLeft,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
