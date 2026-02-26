@@ -55,9 +55,25 @@ export default function Recitation() {
   const { play, vibrate } = useSound();
 
   // Selection state
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard" | "favorites">("easy");
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Favorites
+  const [favorites, setFavorites] = useState<number[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("taaloum_fav_surahs") || "[]");
+    } catch { return []; }
+  });
+
+  const toggleFavorite = (surahNum: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setFavorites(prev => {
+      const next = prev.includes(surahNum) ? prev.filter(n => n !== surahNum) : [...prev, surahNum];
+      localStorage.setItem("taaloum_fav_surahs", JSON.stringify(next));
+      return next;
+    });
+  };
 
   // Phase state
   const [phase, setPhase] = useState<TarteelPhase>("select");
