@@ -731,6 +731,9 @@ const translations = {
   "mode.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
   "mode.all": { fr: "Tout", en: "All", nl: "Alles", ar: "الكل", tr: "Tümü", ur: "سب" },
   "mode.resume": { fr: "Reprendre", en: "Resume", nl: "Hervatten", ar: "متابعة", tr: "Devam et", ur: "جاری رکھیں" },
+  "mode.search": { fr: "Rechercher...", en: "Search...", nl: "Zoeken...", ar: "بحث...", tr: "Ara...", ur: "تلاش..." },
+  "mode.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جارٍ التحميل...", tr: "Yükleniyor...", ur: "لوڈ ہو رہا ہے..." },
+  "mode.noResult": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا نتائج", tr: "Sonuç yok", ur: "کوئی نتیجہ نہیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
