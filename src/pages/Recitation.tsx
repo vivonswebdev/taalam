@@ -3,6 +3,7 @@ import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
+import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
 import { useClassSuccessShare } from "@/hooks/useClassSuccessShare";
@@ -68,6 +69,10 @@ export default function Recitation() {
   const [textMasked, setTextMasked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const maskTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
+  const preListenRef = useRef<HTMLAudioElement | null>(null);
+  const [preListening, setPreListening] = useState(false);
+  const [preListenAyahIdx, setPreListenAyahIdx] = useState(-1);
 
   // Recite state
   const [recitingAyah, setRecitingAyah] = useState(0);
@@ -105,6 +110,7 @@ export default function Recitation() {
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
+      preListenRef.current?.pause();
       if (maskTimerRef.current) clearTimeout(maskTimerRef.current);
     };
   }, []);
@@ -140,7 +146,7 @@ export default function Recitation() {
     }
     setAudioLoading(true);
     try {
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/${reciter.apiEdition}`);
       const data = await res.json();
       if (data.data?.ayahs) {
         const urls = data.data.ayahs.map((a: { audio: string }) => a.audio);
@@ -153,7 +159,7 @@ export default function Recitation() {
     } catch {
       setAudioLoading(false);
     }
-  }, [playing, selectedSurah, playAyahSequence]);
+  }, [playing, selectedSurah, playAyahSequence, reciter]);
 
   const handleSelectSurah = (surah: Surah) => {
     setSelectedSurah(surah);
@@ -200,20 +206,46 @@ export default function Recitation() {
     setShowArabic(true);
   }, [recitingAyah]);
 
+  // Play pre-listen audio for a single ayah, then call onDone
+  const playPreListenAyah = useCallback((surahNum: number, ayahNum: number, onDone: () => void) => {
+    setPreListening(true);
+    fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/${reciter.apiEdition}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.audio) {
+          const audio = new Audio(data.data.audio);
+          preListenRef.current = audio;
+          audio.onended = () => { preListenRef.current = null; setPreListening(false); onDone(); };
+          audio.onerror = () => { preListenRef.current = null; setPreListening(false); onDone(); };
+          audio.play().catch(() => { setPreListening(false); onDone(); });
+        } else {
+          setPreListening(false); onDone();
+        }
+      })
+      .catch(() => { setPreListening(false); onDone(); });
+  }, [reciter]);
+
   const goNextAyah = useCallback(() => {
     if (!selectedSurah) return;
     setShowAyahResult(false);
     setLastAyahResult(null);
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
-      setRecitingAyah((p) => p + 1);
+      const nextIdx = recitingAyah + 1;
+      setRecitingAyah(nextIdx);
       setCurrentTranscript("");
-      setShowArabic(false); // Hide text immediately for next verse
-      // Must stay synchronous in click handler (user gesture) for Web Speech API
-      voice.start();
+      setShowArabic(true); // Show text during pre-listen
+      setPreListenAyahIdx(nextIdx);
+      // Play audio first, then start recording
+      const nextAyah = selectedSurah.ayahs[nextIdx];
+      playPreListenAyah(selectedSurah.number, nextAyah.number, () => {
+        setShowArabic(false);
+        setPreListenAyahIdx(-1);
+        voice.start();
+      });
     } else {
       finishRecitation(ayahResults);
     }
-  }, [selectedSurah, recitingAyah, ayahResults, voice]);
+  }, [selectedSurah, recitingAyah, ayahResults, voice, playPreListenAyah]);
 
   const finishRecitation = (results: AyahResult[]) => {
     if (!selectedSurah) return;
@@ -262,7 +294,7 @@ export default function Recitation() {
 
   const replayAyahAudio = async (surahNum: number, ayahIndex: number) => {
     try {
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciter.apiEdition}`);
       const data = await res.json();
       if (data.data?.ayahs?.[ayahIndex]) {
         safePlay(data.data.ayahs[ayahIndex].audio);
@@ -389,6 +421,9 @@ export default function Recitation() {
               ))}
             </div>
           </div>
+
+          {/* Reciter picker */}
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
 
           {/* Surah dropdown */}
           <div className="relative">
@@ -655,6 +690,20 @@ export default function Recitation() {
                   🔤 {selectedSurah.ayahs[recitingAyah].transliteration}
                 </p>
               </div>
+
+              {/* Pre-listen indicator */}
+              {preListening && (
+                <div className="flex items-center justify-center gap-2 py-3">
+                  <motion.div
+                    animate={{ scale: [1, 1.15, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center"
+                  >
+                    <Volume2 size={18} />
+                  </motion.div>
+                  <span className="text-xs text-muted-foreground">{t("dictation.listening")}...</span>
+                </div>
+              )}
 
               {/* Mic controls */}
               <div className="flex flex-col items-center gap-4">

@@ -16,6 +16,7 @@ import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFee
 import { useLanguage } from "@/hooks/useLanguage";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 
 interface DictationModeProps {
   surah: Surah;
@@ -64,6 +65,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [hoveredWaqf, setHoveredWaqf] = useState<string | null>(null);
   const [listeningAyahIdx, setListeningAyahIdx] = useState(0);
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
 
   const allArabicTexts = surah.ayahs.map((a) => a.arabic);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
@@ -104,7 +106,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       return;
     }
     setListeningAyahIdx(ayahIdx);
-    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/${reciter.apiEdition}`)
       .then(r => r.json())
       .then(data => {
         if (data.data?.audio) {
@@ -124,7 +126,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         }
       })
       .catch(() => playAyahAudio(ayahIdx + 1));
-  }, [surah, voice]);
+  }, [surah, voice, reciter]);
 
   const handleStart = useCallback(() => {
     setPhase("listening");
@@ -346,7 +348,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
                   </span>
                   <button
                     onClick={() => {
-                      fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+                      fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/${reciter.apiEdition}`)
                         .then((r) => r.json())
                         .then((data) => {
                           if (data.data?.audio) safePlay(data.data.audio);
@@ -414,6 +416,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
               </div>
             </div>
           )}
+
+          {/* Reciter picker */}
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
 
           {/* Instructions */}
           <div className="bg-accent/30 rounded-xl p-4 text-center">
