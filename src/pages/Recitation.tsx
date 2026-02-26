@@ -110,6 +110,7 @@ export default function Recitation() {
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
+      preListenRef.current?.pause();
       if (maskTimerRef.current) clearTimeout(maskTimerRef.current);
     };
   }, []);
