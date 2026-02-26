@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -173,6 +173,17 @@ export default function Settings() {
             <div className="flex-1">
               <p className="text-sm font-medium text-card-foreground">{t("parent.access")}</p>
               <p className="text-xs text-muted-foreground">{t("parent.accessDesc")}</p>
+            </div>
+          </button>
+        </motion.div>
+
+        {/* Announcements */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.17 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => navigate("/announcements")} className="w-full flex items-center gap-4 p-4 text-left">
+            <Megaphone size={20} className="text-secondary" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">{t("home.announcements")}</p>
+              <p className="text-xs text-muted-foreground">{t("announcements.title")}</p>
             </div>
           </button>
         </motion.div>
