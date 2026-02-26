@@ -16,6 +16,7 @@ import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFee
 import { useLanguage } from "@/hooks/useLanguage";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 
 interface DictationModeProps {
   surah: Surah;
