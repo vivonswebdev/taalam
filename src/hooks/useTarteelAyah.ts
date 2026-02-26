@@ -53,7 +53,7 @@ function buildWordResults(originalAyah: string, spoken: string): TarteelWordResu
       return { word, status: "almost" };
     }
 
-    return { word, status: "pending" };
+    return { word, status: "wrong" };
   });
 }
 
