@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import AudioPlayer from "@/components/AudioPlayer";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
@@ -55,9 +55,25 @@ export default function Recitation() {
   const { play, vibrate } = useSound();
 
   // Selection state
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard" | "favorites">("easy");
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Favorites
+  const [favorites, setFavorites] = useState<number[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("taaloum_fav_surahs") || "[]");
+    } catch { return []; }
+  });
+
+  const toggleFavorite = (surahNum: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setFavorites(prev => {
+      const next = prev.includes(surahNum) ? prev.filter(n => n !== surahNum) : [...prev, surahNum];
+      localStorage.setItem("taaloum_fav_surahs", JSON.stringify(next));
+      return next;
+    });
+  };
 
   // Phase state
   const [phase, setPhase] = useState<TarteelPhase>("select");
@@ -104,7 +120,9 @@ export default function Recitation() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
-  const filteredSurahs = getSurahsByDifficulty(difficulty);
+  const filteredSurahs = difficulty === "favorites"
+    ? surahs.filter(s => favorites.includes(s.number))
+    : getSurahsByDifficulty(difficulty);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -402,9 +420,9 @@ export default function Recitation() {
 
           {/* Difficulty selector */}
           <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
+           <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
             <div className="flex gap-2">
-              {(["easy", "medium", "hard"] as const).map((d) => (
+              {(["easy", "medium", "hard", "favorites"] as const).map((d) => (
                 <button
                   key={d}
                   onClick={() => { setDifficulty(d); setSelectedSurah(null); }}
@@ -416,7 +434,8 @@ export default function Recitation() {
                 >
                   {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
                    d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
-                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
+                   d === "hard" ? (isChildMode ? "💪 " : "") + t("recitation.hard") :
+                   "❤️ Favoris"}
                 </button>
               ))}
             </div>
@@ -446,20 +465,36 @@ export default function Recitation() {
                   exit={{ opacity: 0, y: -8 }}
                   className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto"
                 >
+                  {filteredSurahs.length === 0 && (
+                    <p className="text-sm text-muted-foreground text-center py-6">Aucun favori pour le moment</p>
+                  )}
                   {filteredSurahs.map((s) => (
-                    <button
+                    <div
                       key={s.number}
-                      onClick={() => handleSelectSurah(s)}
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0"
                     >
-                      <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                        {s.number}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
-                        <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} versets</p>
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => handleSelectSurah(s)}
+                        className="flex items-center gap-3 flex-1 min-w-0"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                          {s.number}
+                        </span>
+                        <div className="flex-1 min-w-0 text-left">
+                          <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
+                          <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} versets</p>
+                        </div>
+                      </button>
+                      <button
+                        onClick={(e) => toggleFavorite(s.number, e)}
+                        className="shrink-0 p-1.5"
+                      >
+                        <Heart
+                          size={18}
+                          className={favorites.includes(s.number) ? "text-destructive fill-destructive" : "text-muted-foreground/40"}
+                        />
+                      </button>
+                    </div>
                   ))}
                 </motion.div>
               )}
