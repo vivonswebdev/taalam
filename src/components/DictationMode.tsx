@@ -106,7 +106,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       return;
     }
     setListeningAyahIdx(ayahIdx);
-    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/${reciter.apiEdition}`)
       .then(r => r.json())
       .then(data => {
         if (data.data?.audio) {
