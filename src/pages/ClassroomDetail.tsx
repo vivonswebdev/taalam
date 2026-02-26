@@ -84,12 +84,11 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
   }
 
   return (
-    <div className="px-4 mt-3">
+    <div className="px-4 mt-6 flex justify-center">
       <button
         onClick={() => setConfirm(true)}
-        className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-destructive bg-destructive/10 rounded-xl border border-destructive/20"
+        className="text-[11px] text-muted-foreground hover:text-destructive/70 transition-colors underline underline-offset-2"
       >
-        <LogOut size={16} />
         {isTeacher ? "Supprimer la classe" : "Quitter le groupe"}
       </button>
     </div>
