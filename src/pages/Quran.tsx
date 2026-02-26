@@ -36,6 +36,7 @@ type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "f
 // ─── Easy surahs for beginners / first-time users ───────────
 const EASY_SURAH_NUMBERS = [114, 113, 112, 108, 111, 110, 109, 107, 106, 105];
 const LAST_USED_KEY = "quranEasyLastSurah";
+const LAST_MODE_KEY = "quranEasyLastMode";
 
 interface AyaScore {
   ayaIndex: number;
@@ -65,7 +66,13 @@ export default function Quran() {
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [recitationMode, setRecitationMode] = useState<RecitationMode>("aya");
+  const [recitationMode, setRecitationMode] = useState<RecitationMode>(() => {
+    try {
+      const stored = localStorage.getItem(LAST_MODE_KEY) as RecitationMode | null;
+      if (stored && ["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(stored)) return stored;
+    } catch {}
+    return "aya";
+  });
   const [mushafStartAyah, setMushafStartAyah] = useState(0);
 
   // Last used surah
@@ -136,6 +143,13 @@ export default function Quran() {
       handleSelectSurah(lastUsedSurah);
     }
   }, [lastUsedSurah]);
+
+  // Persist recitation mode
+  useEffect(() => {
+    if (["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(recitationMode)) {
+      try { localStorage.setItem(LAST_MODE_KEY, recitationMode); } catch {}
+    }
+  }, [recitationMode]);
 
   // Fetch all 114 surahs metadata
   useEffect(() => {
