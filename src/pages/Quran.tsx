@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Mic, MicOff, SkipForward, SkipBack, RotateCcw,
   ChevronDown, Flame, Award, Volume2, CheckCircle2, XCircle,
-  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target, Bookmark,
+  Repeat, AlertCircle, BookOpen, PenTool, Search, Loader2, Headphones, Target, Bookmark, ArrowLeft,
 } from "lucide-react";
 import { surahs, getSurahsByDifficulty, type Surah } from "@/data/surahs";
 import { useProgress } from "@/hooks/useProgress";
@@ -501,13 +501,20 @@ export default function Quran() {
       {/* Header */}
       <div className="px-6 pt-14 pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
-              {isChildMode ? "📖 " : ""}{t("nav.quran")}
-            </h1>
-            <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
-              {t("recitation.subtitle")}
-            </p>
+          <div className="flex items-center gap-2">
+            {selectedSurah && (
+              <button onClick={handleNewSurah} className="p-1.5 rounded-full bg-secondary/20 hover:bg-secondary/40 transition-colors">
+                <ArrowLeft size={18} className="text-foreground" />
+              </button>
+            )}
+            <div>
+              <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
+                {isChildMode ? "📖 " : ""}{t("nav.quran")}
+              </h1>
+              <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
+                {t("recitation.subtitle")}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
