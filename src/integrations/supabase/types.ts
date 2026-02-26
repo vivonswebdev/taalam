@@ -247,6 +247,103 @@ export type Database = {
         }
         Relationships: []
       }
+      families: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          invite_code: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          invite_code?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          invite_code?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      family_members: {
+        Row: {
+          created_at: string
+          family_id: string
+          id: string
+          role_in_family: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          family_id: string
+          id?: string
+          role_in_family?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          family_id?: string
+          id?: string
+          role_in_family?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_notifications: {
+        Row: {
+          created_at: string
+          family_id: string
+          from_user_id: string
+          id: string
+          payload: Json
+          read_at: string | null
+          to_user_id: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          family_id: string
+          from_user_id: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          to_user_id: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          family_id?: string
+          from_user_id?: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          to_user_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_notifications_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_emoji: string
@@ -330,6 +427,14 @@ export type Database = {
       }
       is_classroom_teacher: {
         Args: { _classroom_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_family_member: {
+        Args: { _family_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_family_parent: {
+        Args: { _family_id: string; _user_id: string }
         Returns: boolean
       }
     }

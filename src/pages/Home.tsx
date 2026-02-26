@@ -263,8 +263,23 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Quick actions: Annonces + Réglages */}
+      {/* Quick actions: Famille + Annonces + Réglages */}
       <div className="px-6 mt-4">
+        {/* Family card */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          onClick={() => navigate("/family")}
+          className="w-full flex items-center gap-3 bg-card border border-border rounded-2xl p-4 mb-3 text-left active:scale-[0.98] transition-transform"
+        >
+          <span className="text-2xl">👨‍👩‍👧‍👦</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-foreground">Classe Famille</p>
+            <p className="text-[11px] text-muted-foreground">Suivez les progrès de vos enfants</p>
+          </div>
+        </motion.button>
+
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
