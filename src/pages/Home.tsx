@@ -86,10 +86,10 @@ export default function Home() {
             <Trophy size={24} className="text-primary shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold truncate">
-                Défi Hifz – {ch.className}
+                {t("home.hifzChallenge")} – {ch.className}
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {surah ? `${surah.name} (${surah.nameArabic})` : `Sourate ${ch.surah_number}`} · Ayahs {ch.ayah_from}–{ch.ayah_to}
+                {surah ? `${surah.name} (${surah.nameArabic})` : `${t("home.surah")} ${ch.surah_number}`} · Ayahs {ch.ayah_from}–{ch.ayah_to}
                 {ch.double_xp && <span className="ml-1 text-yellow-600 font-bold">⚡ x2 XP</span>}
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
               <span className="text-base">🏅</span>
-              <span className="text-sm font-semibold text-foreground">Niv. {xp.level}</span>
+              <span className="text-sm font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
             </div>
           </motion.div>
         </div>
@@ -188,10 +188,10 @@ export default function Home() {
               <div>
                 <p className="font-bold text-foreground text-sm">{t("home.classMode")}</p>
                 <p className="text-[11px] text-muted-foreground">
-                  {classrooms.length > 0 
-                    ? `${classrooms.length} classe${classrooms.length > 1 ? "s" : ""} active${classrooms.length > 1 ? "s" : ""}`
-                    : "Créer ou rejoindre une classe"
-                  }
+                   {classrooms.length > 0 
+                     ? `${classrooms.length} ${classrooms.length > 1 ? t("home.classesActive") : t("home.classActive")}`
+                     : t("home.createOrJoin")
+                   }
                 </p>
               </div>
             </div>
@@ -209,7 +209,7 @@ export default function Home() {
                 }}
                 className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1.5 text-xs font-semibold text-primary"
               >
-                <Share2 size={12} /> Partager
+                <Share2 size={12} /> {t("home.share")}
               </button>
             )}
           </div>
@@ -232,7 +232,7 @@ export default function Home() {
                       </span>
                     )}
                     <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted rounded-full px-2 py-0.5">
-                      <Users size={10} /> {count} membre{count > 1 ? "s" : ""}
+                      <Users size={10} /> {count} {count > 1 ? t("home.members") : t("home.member")}
                     </span>
                     <span className="text-[10px] text-muted-foreground font-mono">{c.joinCode}</span>
                   </button>
@@ -240,7 +240,7 @@ export default function Home() {
               })}
               {classrooms.length > 2 && (
                 <button onClick={() => navigate("/classrooms")} className="text-xs text-primary font-semibold">
-                  Voir les {classrooms.length} classes →
+                  {t("home.viewAllClasses")} ({classrooms.length}) →
                 </button>
               )}
             </div>
@@ -250,13 +250,13 @@ export default function Home() {
                 onClick={() => navigate("/classrooms")}
                 className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-2.5 text-sm font-bold"
               >
-                <Plus size={14} /> Créer une classe
+                <Plus size={14} /> {t("home.createClass")}
               </button>
               <button
                 onClick={() => navigate("/classrooms")}
                 className="flex-1 flex items-center justify-center gap-2 bg-muted text-foreground rounded-xl py-2.5 text-sm font-semibold"
               >
-                Rejoindre
+                {t("home.joinClass")}
               </button>
             </div>
           )}

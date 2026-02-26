@@ -20,6 +20,7 @@ const COUNTRY_FLAGS: Record<string, string> = {
 };
 
 function LeaderboardRow({ entry, rank, isMe }: { entry: LeaderboardEntry; rank: number; isMe: boolean }) {
+  const { t } = useLanguage();
   const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
   return (
     <motion.div
@@ -42,7 +43,7 @@ function LeaderboardRow({ entry, rank, isMe }: { entry: LeaderboardEntry; rank: 
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-semibold text-foreground truncate">
             {entry.display_name}
-            {isMe && <span className="text-xs text-primary ml-1">← toi</span>}
+            {isMe && <span className="text-xs text-primary ml-1">{t("lb.you")}</span>}
           </p>
         </div>
         <p className="text-xs text-muted-foreground">{entry.xp_total} XP · {Number(entry.mastery_score).toFixed(0)}%</p>

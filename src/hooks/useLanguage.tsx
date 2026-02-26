@@ -734,6 +734,31 @@ const translations = {
   "mode.search": { fr: "Rechercher...", en: "Search...", nl: "Zoeken...", ar: "بحث...", tr: "Ara...", ur: "تلاش..." },
   "mode.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جارٍ التحميل...", tr: "Yükleniyor...", ur: "لوڈ ہو رہا ہے..." },
   "mode.noResult": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا نتائج", tr: "Sonuç yok", ur: "کوئی نتیجہ نہیں" },
+
+  // Settings - Appearance
+  "settings.appearance": { fr: "Apparence", en: "Appearance", nl: "Weergave", ar: "المظهر", tr: "Görünüm", ur: "ظاہری شکل" },
+  "settings.light": { fr: "☀️ Clair", en: "☀️ Light", nl: "☀️ Licht", ar: "☀️ فاتح", tr: "☀️ Açık", ur: "☀️ ہلکا" },
+  "settings.dark": { fr: "🌙 Sombre", en: "🌙 Dark", nl: "🌙 Donker", ar: "🌙 داكن", tr: "🌙 Koyu", ur: "🌙 گہرا" },
+  "settings.auto": { fr: "⚙️ Auto", en: "⚙️ Auto", nl: "⚙️ Auto", ar: "⚙️ تلقائي", tr: "⚙️ Otomatik", ur: "⚙️ خودکار" },
+  "settings.dedication": { fr: "إعادة عرض الإهداء", en: "Show dedication", nl: "Opdracht tonen", ar: "إعادة عرض الإهداء", tr: "İthafı göster", ur: "اہداء دکھائیں" },
+  "settings.dedicationDesc": { fr: "Dedication / Dédicace", en: "Dedication / Dédicace", nl: "Opdracht / Dédicace", ar: "إهداء / Dédicace", tr: "İthaf / Dédicace", ur: "اہداء / Dédicace" },
+
+  // Home - Classroom
+  "home.classActive": { fr: "classe active", en: "active class", nl: "actieve klas", ar: "فصل نشط", tr: "aktif sınıf", ur: "فعال کلاس" },
+  "home.classesActive": { fr: "classes actives", en: "active classes", nl: "actieve klassen", ar: "فصول نشطة", tr: "aktif sınıflar", ur: "فعال کلاسیں" },
+  "home.createOrJoin": { fr: "Créer ou rejoindre une classe", en: "Create or join a class", nl: "Maak of neem deel aan een klas", ar: "إنشاء أو الانضمام لفصل", tr: "Sınıf oluştur veya katıl", ur: "کلاس بنائیں یا شامل ہوں" },
+  "home.share": { fr: "Partager", en: "Share", nl: "Delen", ar: "مشاركة", tr: "Paylaş", ur: "شیئر کریں" },
+  "home.member": { fr: "membre", en: "member", nl: "lid", ar: "عضو", tr: "üye", ur: "ممبر" },
+  "home.members": { fr: "membres", en: "members", nl: "leden", ar: "أعضاء", tr: "üyeler", ur: "ممبران" },
+  "home.viewAllClasses": { fr: "Voir les classes", en: "View all classes", nl: "Alle klassen bekijken", ar: "عرض كل الفصول", tr: "Tüm sınıfları gör", ur: "تمام کلاسیں دیکھیں" },
+  "home.createClass": { fr: "Créer une classe", en: "Create a class", nl: "Klas aanmaken", ar: "إنشاء فصل", tr: "Sınıf oluştur", ur: "کلاس بنائیں" },
+  "home.joinClass": { fr: "Rejoindre", en: "Join", nl: "Deelnemen", ar: "انضمام", tr: "Katıl", ur: "شامل ہوں" },
+  "home.hifzChallenge": { fr: "Défi Hifz", en: "Hifz Challenge", nl: "Hifz Uitdaging", ar: "تحدي الحفظ", tr: "Hıfz Meydan Okuması", ur: "حفظ چیلنج" },
+  "home.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
+  "home.level.label": { fr: "Niv.", en: "Lv.", nl: "Niv.", ar: "مست.", tr: "Sv.", ur: "سطح" },
+
+  // Leaderboard
+  "lb.you": { fr: "← toi", en: "← you", nl: "← jij", ar: "← أنت", tr: "← sen", ur: "← آپ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
