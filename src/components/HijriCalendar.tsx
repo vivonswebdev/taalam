@@ -1,38 +1,31 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Loader2, Star } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface HijriDay {
   gregorian: { day: string; month: { number: number; en: string }; year: string; date: string };
   hijri: { day: string; month: { number: number; en: string; ar: string }; year: string; holidays: string[] };
 }
 
-// Major Islamic events to highlight
 const IMPORTANT_EVENTS = [
-  "Isra and Mi'raj",
-  "Lailat-ul-Qadr",
-  "Eid-ul-Fitr",
-  "Eid-ul-Adha",
-  "1st Muharram",
-  "Ashura",
-  "Mawlid al-Nabi",
-  "15th Shaban",
-  "1st Ramadan",
+  "Isra and Mi'raj", "Lailat-ul-Qadr", "Eid-ul-Fitr", "Eid-ul-Adha",
+  "1st Muharram", "Ashura", "Mawlid al-Nabi", "15th Shaban", "1st Ramadan",
 ];
 
 function isImportantHoliday(holidays: string[]): boolean {
   return holidays.some((h) => IMPORTANT_EVENTS.some((e) => h.toLowerCase().includes(e.toLowerCase())));
 }
 
-const WEEKDAYS = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+const WEEKDAY_KEYS = ["calendar.sun", "calendar.mon", "calendar.tue", "calendar.wed", "calendar.thu", "calendar.fri", "calendar.sat"] as const;
 
 export default function HijriCalendar() {
+  const { t } = useLanguage();
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [year, setYear] = useState(today.getFullYear());
   const [days, setDays] = useState<HijriDay[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hijriMonthLabel, setHijriMonthLabel] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -41,39 +34,29 @@ export default function HijriCalendar() {
       .then((r) => r.json())
       .then((json) => {
         if (cancelled) return;
-        const data: HijriDay[] = json.data || [];
-        setDays(data);
-        // Derive hijri month label from the middle of the month
-        const mid = data[Math.floor(data.length / 2)];
-        if (mid) {
-          const unique = [...new Set(data.map((d) => `${d.hijri.month.ar} ${d.hijri.year}`))];
-          setHijriMonthLabel(unique.join(" / "));
-        }
+        setDays(json.data || []);
         setLoading(false);
       })
-      .catch(() => {
-        if (!cancelled) setLoading(false);
-      });
+      .catch(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [month, year]);
 
-  const goNext = () => {
-    if (month === 12) { setMonth(1); setYear(year + 1); }
-    else setMonth(month + 1);
-  };
-  const goPrev = () => {
-    if (month === 1) { setMonth(12); setYear(year - 1); }
-    else setMonth(month - 1);
-  };
+  const goNext = () => { if (month === 12) { setMonth(1); setYear(year + 1); } else setMonth(month + 1); };
+  const goPrev = () => { if (month === 1) { setMonth(12); setYear(year - 1); } else setMonth(month - 1); };
 
-  // Build calendar grid
   const firstDayOfWeek = days.length > 0 ? new Date(`${year}-${String(month).padStart(2, "0")}-01`).getDay() : 0;
-  const totalSlots = firstDayOfWeek + days.length;
-  const rows = Math.ceil(totalSlots / 7);
-
+  const rows = Math.ceil((firstDayOfWeek + days.length) / 7);
   const todayStr = `${String(today.getDate()).padStart(2, "0")}-${String(today.getMonth() + 1).padStart(2, "0")}-${today.getFullYear()}`;
 
-  const gregMonthNames = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+  // Translated gregorian month
+  const gregMonth = t(`calendar.month.${month}` as any);
+
+  // Derive hijri month labels (translated)
+  const hijriMonthNums = [...new Set(days.map((d) => d.hijri.month.number))];
+  const hijriYears = [...new Set(days.map((d) => d.hijri.year))];
+  const hijriLabel = hijriMonthNums
+    .map((n) => t(`calendar.hijriMonth.${n}` as any))
+    .join(" / ") + " " + hijriYears.join("/");
 
   return (
     <motion.div
@@ -88,8 +71,8 @@ export default function HijriCalendar() {
           <ChevronLeft size={18} className="text-foreground" />
         </button>
         <div className="text-center">
-          <p className="text-sm font-bold text-foreground">{gregMonthNames[month]} {year}</p>
-          {hijriMonthLabel && <p className="text-xs text-primary font-arabic mt-0.5">{hijriMonthLabel}</p>}
+          <p className="text-sm font-bold text-foreground">{gregMonth} {year}</p>
+          {days.length > 0 && <p className="text-xs text-primary font-arabic mt-0.5">{hijriLabel}</p>}
         </div>
         <button onClick={goNext} className="p-2 rounded-full hover:bg-muted active:scale-95 transition-transform">
           <ChevronRight size={18} className="text-foreground" />
@@ -104,8 +87,10 @@ export default function HijriCalendar() {
         <>
           {/* Weekday headers */}
           <div className="grid grid-cols-7 mb-1">
-            {WEEKDAYS.map((d) => (
-              <div key={d} className="text-center text-[10px] font-semibold text-muted-foreground py-1">{d}</div>
+            {WEEKDAY_KEYS.map((key) => (
+              <div key={key} className="text-center text-[10px] font-semibold text-muted-foreground py-1">
+                {t(key as any)}
+              </div>
             ))}
           </div>
 
@@ -147,14 +132,13 @@ export default function HijriCalendar() {
           {/* Events legend */}
           {days.some((d) => d.hijri.holidays.length > 0) && (
             <div className="mt-3 pt-3 border-t border-border space-y-1">
+              <p className="text-[10px] font-semibold text-muted-foreground mb-1">{t("calendar.events" as any)}</p>
               {days
                 .filter((d) => d.hijri.holidays.length > 0)
                 .map((d, i) => (
                   <div key={i} className="flex items-start gap-2 text-[11px]">
                     <span className="text-primary font-bold shrink-0">{parseInt(d.gregorian.day)}</span>
-                    <span className="text-muted-foreground">
-                      {d.hijri.holidays.join(", ")}
-                    </span>
+                    <span className="text-muted-foreground">{d.hijri.holidays.join(", ")}</span>
                   </div>
                 ))}
             </div>
