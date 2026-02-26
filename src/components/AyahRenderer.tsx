@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, X, SkipForward, CheckCircle2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Surah } from "@/data/surahs";
@@ -55,15 +55,25 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
     globalAudio.requestExclusiveAudio();
   }, []);
 
-  // Auto-validate when all words are revealed (no pending left)
+  // Auto-validate when all words are revealed (no pending left) after 1s delay
+  const autoValidateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
+    if (autoValidateTimer.current) {
+      clearTimeout(autoValidateTimer.current);
+      autoValidateTimer.current = null;
+    }
     if (
       screenMode === "recitation" &&
       wordResults.length > 0 &&
       wordResults.every(wr => wr.status !== "pending")
     ) {
-      handleValidate();
+      autoValidateTimer.current = setTimeout(() => {
+        handleValidate();
+      }, 1000);
     }
+    return () => {
+      if (autoValidateTimer.current) clearTimeout(autoValidateTimer.current);
+    };
   }, [wordResults, screenMode]);
 
   // When micro starts → enter recitation mode
