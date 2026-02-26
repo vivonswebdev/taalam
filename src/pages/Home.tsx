@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Clock, Settings, LogOut, Megaphone, Trophy, Zap } from "lucide-react";
+import { GraduationCap, Clock, LogOut, Trophy, Zap } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
@@ -230,43 +230,16 @@ export default function Home() {
       {/* Weak Surahs Section */}
       <WeakSurahsSection />
 
-      {/* Quick actions: Annonces + Réglages */}
-      <div className="px-6 mt-4">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="grid grid-cols-2 gap-3"
-        >
-          <button
-            onClick={() => navigate("/announcements")}
-            className="relative flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
-          >
-            <Megaphone size={22} className="text-secondary" />
-            <span className="text-xs font-semibold text-foreground">{t("home.announcements")}</span>
-            {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 w-5 h-5 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
-                {unreadCount}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => navigate("/settings")}
-            className="flex flex-col items-center gap-1.5 p-4 bg-card border border-border rounded-2xl active:scale-[0.97] transition-transform"
-          >
-            <Settings size={22} className="text-muted-foreground" />
-            <span className="text-xs font-semibold text-foreground">{t("nav.settings")}</span>
-          </button>
-        </motion.div>
 
-        {/* Join community CTA */}
-        {!user && (
+      {/* Join community CTA */}
+      {!user && (
+        <div className="px-6 mt-4">
           <motion.button
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
             onClick={() => navigate("/auth")}
-            className="mt-4 w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
+            className="w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
           >
             <span className="text-2xl">👤</span>
             <div className="flex-1 min-w-0">
@@ -274,8 +247,8 @@ export default function Home() {
               <p className="text-xs text-muted-foreground">{t("home.joinCommunityDesc")}</p>
             </div>
           </motion.button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
