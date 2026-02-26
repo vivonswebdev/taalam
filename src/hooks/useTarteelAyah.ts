@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export type TarteelWordStatus = "correct" | "almost" | "pending";
+export type TarteelWordStatus = "correct" | "almost" | "wrong" | "pending";
 
 export interface TarteelWordResult {
   word: string;
@@ -53,7 +53,7 @@ function buildWordResults(originalAyah: string, spoken: string): TarteelWordResu
       return { word, status: "almost" };
     }
 
-    return { word, status: "pending" };
+    return { word, status: "wrong" };
   });
 }
 

@@ -55,6 +55,17 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
     globalAudio.requestExclusiveAudio();
   }, []);
 
+  // Auto-validate when all words are revealed (no pending left)
+  useEffect(() => {
+    if (
+      screenMode === "recitation" &&
+      wordResults.length > 0 &&
+      wordResults.every(wr => wr.status !== "pending")
+    ) {
+      handleValidate();
+    }
+  }, [wordResults, screenMode]);
+
   // When micro starts → enter recitation mode
   const handleStartMicro = () => {
     globalAudio.requestExclusiveAudio();
@@ -276,12 +287,13 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
             {currentAyahText.split(/\s+/).filter(Boolean).map((word, i) => {
               const wr = wordResults[i];
               const status = wr?.status;
-              const isRevealed = status === "correct" || status === "almost";
+              const isRevealed = status === "correct" || status === "almost" || status === "wrong";
               const isPending = !status || status === "pending";
 
               let colorClass = "text-foreground/10 bg-muted/40 select-none";
               if (status === "correct") colorClass = "text-success bg-success/10";
               else if (status === "almost") colorClass = "text-warning bg-warning/10";
+              else if (status === "wrong") colorClass = "text-destructive bg-destructive/10";
 
               return (
                 <motion.span
@@ -299,10 +311,11 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
         </div>
 
         {/* Incorrect words shown separately */}
-        {wordResults.some(wr => wr.status === "correct" || wr.status === "almost") && (
+        {wordResults.some(wr => wr.status === "correct" || wr.status === "almost" || wr.status === "wrong") && (
           <div className="flex flex-wrap justify-center gap-3 text-[10px]">
             <span className="flex items-center gap-1 text-success"><CheckCircle2 size={10} /> Correct</span>
             <span className="flex items-center gap-1 text-warning">🟠 Presque</span>
+            <span className="flex items-center gap-1 text-destructive">🔴 Faux</span>
             <span className="flex items-center gap-1 text-muted-foreground/40">⬜ En attente</span>
           </div>
         )}
