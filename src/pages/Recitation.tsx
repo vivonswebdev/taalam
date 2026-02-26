@@ -158,7 +158,7 @@ export default function Recitation() {
     } catch {
       setAudioLoading(false);
     }
-  }, [playing, selectedSurah, playAyahSequence]);
+  }, [playing, selectedSurah, playAyahSequence, reciter]);
 
   const handleSelectSurah = (surah: Surah) => {
     setSelectedSurah(surah);
