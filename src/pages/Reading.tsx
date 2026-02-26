@@ -259,20 +259,22 @@ export default function Reading() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => handleSelectSurah(readingPosition.surahNumber, readingPosition.ayahIndex)}
-            className="w-full flex items-center gap-3 bg-primary/5 border-2 border-primary/20 rounded-2xl px-4 py-3 text-left hover:bg-primary/10 transition-colors"
+            className="w-full flex items-center gap-4 bg-primary/10 border-2 border-primary/30 rounded-2xl px-5 py-4 text-left hover:bg-primary/15 transition-colors shadow-lg"
           >
-            <span className="w-10 h-10 rounded-xl bg-primary/15 text-primary text-sm font-bold flex items-center justify-center shrink-0">
+            <span className="w-12 h-12 rounded-xl bg-primary/20 text-primary text-lg font-bold flex items-center justify-center shrink-0">
               📖
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">
+              <p className="text-xs text-primary font-bold uppercase tracking-wider">
                 {t("reading.resume")}
               </p>
-              <p className="text-sm text-foreground font-medium">
+              <p className="text-sm text-foreground font-semibold mt-0.5">
                 {t("reading.resumeSurah")} {readingPosition.surahNumber} · {t("detail.verse")} {readingPosition.ayahIndex + 1}
               </p>
             </div>
-            <ChevronRight size={18} className="text-primary shrink-0" />
+            <span className="text-sm font-extrabold text-primary-foreground bg-primary px-4 py-2 rounded-xl shrink-0 shadow-md animate-pulse">
+              {t("mode.resume")} →
+            </span>
           </motion.button>
         </div>
       )}
