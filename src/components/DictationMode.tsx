@@ -417,6 +417,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
             </div>
           )}
 
+          {/* Reciter picker */}
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
+
           {/* Instructions */}
           <div className="bg-accent/30 rounded-xl p-4 text-center">
             <p className={`${bodyTextClass} text-foreground font-medium mb-1`}>
