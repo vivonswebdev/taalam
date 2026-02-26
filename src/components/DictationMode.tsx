@@ -24,7 +24,7 @@ interface DictationModeProps {
   onRequestNextSurah?: () => void;
 }
 
-type DictationPhase = "ready" | "recording" | "result";
+type DictationPhase = "ready" | "listening" | "recording" | "result";
 
 // ─── Waqf signs data ─────────────────────────────────────────
 const WAQF_SIGNS: Record<string, { symbol: string; translationKey: string; color: string }> = {
@@ -62,6 +62,8 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   } | null>(null);
   const [micError, setMicError] = useState<string | null>(null);
   const [hoveredWaqf, setHoveredWaqf] = useState<string | null>(null);
+  const [listeningAyahIdx, setListeningAyahIdx] = useState(0);
+  const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const allArabicTexts = surah.ayahs.map((a) => a.arabic);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
@@ -91,11 +93,54 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     },
   });
 
+  // Play ayah audio sequentially before recording
+  const playAyahAudio = useCallback((ayahIdx: number) => {
+    const ayah = surah.ayahs[ayahIdx];
+    if (!ayah) {
+      // All ayahs played, start recording
+      setPhase("recording");
+      setShowOriginal(true);
+      voice.start();
+      return;
+    }
+    setListeningAyahIdx(ayahIdx);
+    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.audio) {
+          const audio = new Audio(data.data.audio);
+          preListenAudioRef.current = audio;
+          audio.onended = () => {
+            preListenAudioRef.current = null;
+            playAyahAudio(ayahIdx + 1);
+          };
+          audio.onerror = () => {
+            preListenAudioRef.current = null;
+            playAyahAudio(ayahIdx + 1);
+          };
+          audio.play().catch(() => playAyahAudio(ayahIdx + 1));
+        } else {
+          playAyahAudio(ayahIdx + 1);
+        }
+      })
+      .catch(() => playAyahAudio(ayahIdx + 1));
+  }, [surah, voice]);
+
   const handleStart = useCallback(() => {
-    setPhase("recording");
+    setPhase("listening");
     setLiveTranscript("");
     setLiveResult(null);
     setMicError(null);
+    setListeningAyahIdx(0);
+    playAyahAudio(0);
+  }, [playAyahAudio]);
+
+  const skipPreListen = useCallback(() => {
+    if (preListenAudioRef.current) {
+      preListenAudioRef.current.pause();
+      preListenAudioRef.current = null;
+    }
+    setPhase("recording");
     setShowOriginal(true);
     voice.start();
   }, [voice]);
@@ -124,6 +169,10 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   }, [phase, liveResult]);
 
   const handleRestart = useCallback(() => {
+    if (preListenAudioRef.current) {
+      preListenAudioRef.current.pause();
+      preListenAudioRef.current = null;
+    }
     setPhase("ready");
     setLiveTranscript("");
     setLiveResult(null);
@@ -392,6 +441,40 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
             <Mic size={24} />
             {t("dictation.startReciting")}
           </motion.button>
+        </motion.div>
+      )}
+
+      {/* ═══ LISTENING PHASE — Pre-listen before recording ═══ */}
+      {phase === "listening" && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          <div className="text-center py-6 space-y-3">
+            <motion.div
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="w-16 h-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto"
+            >
+              <Volume2 size={28} />
+            </motion.div>
+            <p className="text-sm font-semibold text-foreground">{t("dictation.listening")}...</p>
+            <p className="text-xs text-muted-foreground">
+              {t("aya.progress")} {listeningAyahIdx + 1} / {surah.ayahs.length}
+            </p>
+            <div className="w-48 mx-auto h-1.5 bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                animate={{ width: `${((listeningAyahIdx) / surah.ayahs.length) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {renderMushafLive(false)}
+
+          <button
+            onClick={skipPreListen}
+            className="w-full py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm"
+          >
+            {t("dictation.startReciting")} →
+          </button>
         </motion.div>
       )}
 
