@@ -541,7 +541,11 @@ export default function Quran() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.03 }}
-                onClick={() => item.mode === "findAyah" ? navigate("/find-ayah") : setRecitationMode(item.mode)}
+                onClick={() => {
+                  if (item.mode === "findAyah") { navigate("/find-ayah"); return; }
+                  setRecitationMode(item.mode);
+                  if (lastUsedSurah) { handleSelectSurah(lastUsedSurah); }
+                }}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   recitationMode === item.mode
                     ? "bg-primary text-primary-foreground shadow-sm"
@@ -691,7 +695,7 @@ export default function Quran() {
           {/* ─── Lecture seule (full width, bottom) ─── */}
           <motion.button
             initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            onClick={() => setRecitationMode("readOnly")}
+            onClick={() => { setRecitationMode("readOnly"); if (lastUsedSurah) handleSelectSurah(lastUsedSurah); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
               recitationMode === "readOnly"
                 ? "bg-primary text-primary-foreground shadow-sm"
