@@ -270,39 +270,40 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
           <p className="text-sm text-primary/70 italic text-center">{ayah.transliteration}</p>
         )}
 
-        {/* Arabic: hidden (masked) */}
+        {/* Arabic: word-by-word reveal with colors */}
         <div className="bg-card border border-border rounded-2xl p-5 w-full" dir="rtl">
-          {showArabic ? (
-            <p className="arabic-text text-2xl text-foreground leading-loose text-center">
-              {currentAyahText}
-            </p>
-          ) : (
-            <p className="arabic-text text-2xl text-foreground/10 leading-loose text-center select-none">
-              ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-            </p>
-          )}
+          <div className="arabic-text text-2xl leading-loose text-center flex flex-wrap gap-x-2 justify-center">
+            {currentAyahText.split(/\s+/).filter(Boolean).map((word, i) => {
+              const wr = wordResults[i];
+              const status = wr?.status;
+              const isRevealed = status === "correct" || status === "almost";
+              const isPending = !status || status === "pending";
+
+              let colorClass = "text-foreground/10 bg-muted/40 select-none";
+              if (status === "correct") colorClass = "text-success bg-success/10";
+              else if (status === "almost") colorClass = "text-warning bg-warning/10";
+
+              return (
+                <motion.span
+                  key={i}
+                  initial={isRevealed ? { scale: 1.15 } : false}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className={`inline-block px-1 py-0.5 rounded-md transition-colors duration-300 ${colorClass}`}
+                >
+                  {isPending ? "████" : word}
+                </motion.span>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Word results coloring */}
-        {wordResults.length > 0 && (
-          <div className="bg-muted/30 rounded-xl p-3 w-full" dir="rtl">
-            <div className="arabic-text text-xl leading-loose text-center">
-              {wordResults.map((result, i) => (
-                <span
-                  key={`${result.word}-${i}`}
-                  className={
-                    result.status === "correct"
-                      ? "text-success"
-                      : result.status === "almost"
-                        ? "text-warning"
-                        : "text-muted-foreground/30"
-                  }
-                >
-                  {result.status === "correct" && <CheckCircle2 size={12} className="inline mr-0.5" />}
-                  {result.word}{" "}
-                </span>
-              ))}
-            </div>
+        {/* Incorrect words shown separately */}
+        {wordResults.some(wr => wr.status === "correct" || wr.status === "almost") && (
+          <div className="flex flex-wrap justify-center gap-3 text-[10px]">
+            <span className="flex items-center gap-1 text-success"><CheckCircle2 size={10} /> Correct</span>
+            <span className="flex items-center gap-1 text-warning">🟠 Presque</span>
+            <span className="flex items-center gap-1 text-muted-foreground/40">⬜ En attente</span>
           </div>
         )}
 
