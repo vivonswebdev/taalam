@@ -421,6 +421,9 @@ export default function Recitation() {
             </div>
           </div>
 
+          {/* Reciter picker */}
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
+
           {/* Surah dropdown */}
           <div className="relative">
             <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.chooseSurah")}</p>
