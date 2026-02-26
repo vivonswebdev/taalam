@@ -440,6 +440,40 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         </motion.div>
       )}
 
+      {/* ═══ LISTENING PHASE — Pre-listen before recording ═══ */}
+      {phase === "listening" && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          <div className="text-center py-6 space-y-3">
+            <motion.div
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="w-16 h-16 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto"
+            >
+              <Volume2 size={28} />
+            </motion.div>
+            <p className="text-sm font-semibold text-foreground">{t("dictation.listening")}...</p>
+            <p className="text-xs text-muted-foreground">
+              {t("aya.progress")} {listeningAyahIdx + 1} / {surah.ayahs.length}
+            </p>
+            <div className="w-48 mx-auto h-1.5 bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary rounded-full"
+                animate={{ width: `${((listeningAyahIdx) / surah.ayahs.length) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {renderMushafLive(false)}
+
+          <button
+            onClick={skipPreListen}
+            className="w-full py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm"
+          >
+            {t("dictation.startReciting")} →
+          </button>
+        </motion.div>
+      )}
+
       {/* ═══ RECORDING PHASE — Same mushaf page with hidden→reveal ═══ */}
       {phase === "recording" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
