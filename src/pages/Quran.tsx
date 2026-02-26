@@ -130,6 +130,13 @@ export default function Quran() {
     }
   }, []);
 
+  // Auto-resume last used surah if no URL params
+  useEffect(() => {
+    if (!urlSurahParam && !urlModeParam && !selectedSurah && lastUsedSurah) {
+      handleSelectSurah(lastUsedSurah);
+    }
+  }, [lastUsedSurah]);
+
   // Fetch all 114 surahs metadata
   useEffect(() => {
     fetchSurahList().then(setAllSurahsMeta).catch(console.error);
