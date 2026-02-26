@@ -77,13 +77,13 @@ export default function Settings() {
           <div className="p-4">
             <p className="text-sm font-medium text-card-foreground mb-3 flex items-center gap-2">
               {theme === "dark" ? <Moon size={18} className="text-primary" /> : <Sun size={18} className="text-primary" />}
-              Apparence
+              {t("settings.appearance")}
             </p>
             <div className="grid grid-cols-3 gap-2">
               {([
-                { key: "light" as const, label: "☀️ Clair", icon: <Sun size={14} /> },
-                { key: "dark" as const, label: "🌙 Sombre", icon: <Moon size={14} /> },
-                { key: "system" as const, label: "⚙️ Auto", icon: null },
+                { key: "light" as const, label: t("settings.light"), icon: <Sun size={14} /> },
+                { key: "dark" as const, label: t("settings.dark"), icon: <Moon size={14} /> },
+                { key: "system" as const, label: t("settings.auto"), icon: null },
               ]).map((opt) => (
                 <button
                   key={opt.key}
@@ -192,8 +192,8 @@ export default function Settings() {
           <button onClick={() => setShowDedication(true)} className="w-full flex items-center gap-4 p-4 text-left">
             <Heart size={20} className="text-primary" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-card-foreground">إعادة عرض الإهداء</p>
-              <p className="text-xs text-muted-foreground">Dedication / Dédicace</p>
+              <p className="text-sm font-medium text-card-foreground">{t("settings.dedication")}</p>
+              <p className="text-xs text-muted-foreground">{t("settings.dedicationDesc")}</p>
             </div>
           </button>
         </motion.div>
