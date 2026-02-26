@@ -55,6 +55,17 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
     globalAudio.requestExclusiveAudio();
   }, []);
 
+  // Auto-validate when all words are revealed (no pending left)
+  useEffect(() => {
+    if (
+      screenMode === "recitation" &&
+      wordResults.length > 0 &&
+      wordResults.every(wr => wr.status !== "pending")
+    ) {
+      handleValidate();
+    }
+  }, [wordResults, screenMode]);
+
   // When micro starts → enter recitation mode
   const handleStartMicro = () => {
     globalAudio.requestExclusiveAudio();
