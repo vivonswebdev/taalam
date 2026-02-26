@@ -126,7 +126,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         }
       })
       .catch(() => playAyahAudio(ayahIdx + 1));
-  }, [surah, voice]);
+  }, [surah, voice, reciter]);
 
   const handleStart = useCallback(() => {
     setPhase("listening");
