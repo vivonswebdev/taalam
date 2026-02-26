@@ -305,7 +305,7 @@ export default function AyahRenderer({ surah, translations, lang, isChildMode, o
             <span className="flex items-center gap-1 text-warning">🟠 Presque</span>
             <span className="flex items-center gap-1 text-muted-foreground/40">⬜ En attente</span>
           </div>
-        )
+        )}
 
         {/* Live transcript */}
         {transcript && (
