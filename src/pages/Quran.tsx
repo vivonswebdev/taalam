@@ -661,7 +661,7 @@ export default function Quran() {
                 <p className="text-[10px] text-primary font-semibold uppercase tracking-wider">{t("surah.lastUsed")}</p>
                 <p className="font-arabic text-sm text-foreground">{lastUsedSurah.nameArabic}</p>
               </div>
-              <span className="text-xs font-bold text-primary-foreground bg-primary px-3 py-1.5 rounded-lg shrink-0">
+              <span className="text-sm font-extrabold text-primary-foreground bg-primary px-5 py-2.5 rounded-xl shrink-0 shadow-lg animate-pulse">
                 {t("mode.resume")} →
               </span>
             </motion.button>
