@@ -69,6 +69,10 @@ export default function Recitation() {
   const [textMasked, setTextMasked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const maskTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
+  const preListenRef = useRef<HTMLAudioElement | null>(null);
+  const [preListening, setPreListening] = useState(false);
+  const [preListenAyahIdx, setPreListenAyahIdx] = useState(-1);
 
   // Recite state
   const [recitingAyah, setRecitingAyah] = useState(0);
