@@ -120,7 +120,9 @@ export default function Recitation() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
-  const filteredSurahs = getSurahsByDifficulty(difficulty);
+  const filteredSurahs = difficulty === "favorites"
+    ? surahs.filter(s => favorites.includes(s.number))
+    : getSurahsByDifficulty(difficulty);
 
   // Cleanup on unmount
   useEffect(() => {
