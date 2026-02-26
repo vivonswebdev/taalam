@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -9,6 +9,8 @@ import ProphetFlashcards from "@/components/ProphetFlashcards";
 import { useXP } from "@/hooks/useXP";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
+import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
+import WeakCardsPanel from "@/components/WeakCardsPanel";
 
 // Persist quiz stats in localStorage
 const QUIZ_STATS_KEY = "quranEasyQuizStats";
@@ -19,6 +21,7 @@ interface QuizStats {
   tajweed: { completed: number; totalCorrect: number; totalQuestions: number };
   kids: { completed: number; totalCorrect: number; totalQuestions: number };
   perfect: { completed: number; totalCorrect: number; totalQuestions: number };
+  adaptive: { completed: number; totalCorrect: number; totalQuestions: number };
 }
 
 function loadQuizStats(): QuizStats {
@@ -27,6 +30,7 @@ function loadQuizStats(): QuizStats {
     if (stored) {
       const parsed = JSON.parse(stored);
       if (!parsed.perfect) parsed.perfect = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      if (!parsed.adaptive) parsed.adaptive = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
       return parsed;
     }
   } catch {}
@@ -36,6 +40,7 @@ function loadQuizStats(): QuizStats {
     tajweed: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     kids: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     perfect: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    adaptive: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
   };
 }
 
@@ -57,7 +62,9 @@ export default function Quiz() {
   const [finished, setFinished] = useState(false);
   const xp = useXP();
   const perfectChallenge = usePerfectChallenge();
+  const questionStats = useQuestionStats();
   const xpAwardedRef = useRef(false);
+  const answersRef = useRef<{ question: QuizQuestion; selectedIndex: number }[]>([]);
 
   // Pre-shuffled session: built once when category is selected
   const [session, setSession] = useState<QuizQuestion[]>([]);
@@ -71,9 +78,13 @@ export default function Quiz() {
     setScore(0);
     setSelected(null);
     setFinished(false);
-    // Build a shuffled session of 10 from the full pool
+    answersRef.current = [];
     const pool = getQuizByCategory(cat);
-    setSession(buildQuizSession(pool, 10));
+    if (cat === "adaptive") {
+      setSession(buildAdaptiveSession(pool, questionStats.stats, 10));
+    } else {
+      setSession(buildQuizSession(pool, 10));
+    }
   };
 
   const handleSelect = useCallback(
@@ -82,6 +93,8 @@ export default function Quiz() {
       setSelected(idx);
       const correct = idx === question.correctIndex;
       if (correct) setScore((s) => s + 1);
+      // Track answer for SRS
+      answersRef.current.push({ question, selectedIndex: idx });
 
       setTimeout(() => {
         if (current < questions.length - 1) {
@@ -133,6 +146,7 @@ export default function Quiz() {
       { id: "general", icon: Star, emoji: "📚", color: "bg-primary/10 text-primary" },
       { id: "memorization", icon: BookOpen, emoji: "🧠", color: "bg-secondary/10 text-secondary" },
       { id: "perfect", icon: Trophy, emoji: "🌟", color: "bg-secondary/10 text-secondary" },
+      { id: "adaptive", icon: Brain, emoji: "🔄", color: "bg-destructive/10 text-destructive" },
       { id: "tajweed", icon: Sparkles, emoji: "📖", color: "bg-success/10 text-success" },
       { id: "kids", icon: Baby, emoji: "🧒", color: "bg-accent text-accent-foreground" },
     ];
@@ -170,7 +184,7 @@ export default function Quiz() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-foreground">{t(`quiz.category.${cat.id}` as any)}</p>
-                    {cat.id === "perfect" && (
+                    {(cat.id === "perfect" || cat.id === "adaptive") && (
                       <span className="text-[9px] font-bold uppercase bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full">
                         {t("quiz.new")}
                       </span>
@@ -223,7 +237,12 @@ export default function Quiz() {
       if (category === "perfect" && perfectChallenge.challenge) {
         perfectChallenge.submitScore(finalScore);
       }
+      // Record answers for SRS stats
+      questionStats.recordSession(answersRef.current);
     }
+
+    const weakCards = questionStats.getWeakCards(5);
+    const allPoolQuestions = getQuizByCategory(category);
 
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
@@ -264,6 +283,13 @@ export default function Quiz() {
             </button>
           </div>
         </motion.div>
+
+        {/* Weak cards panel */}
+        <WeakCardsPanel
+          weakCards={weakCards}
+          allQuestions={allPoolQuestions}
+          onReviewNow={() => handleSelectCategory("adaptive")}
+        />
       </div>
     );
   }
