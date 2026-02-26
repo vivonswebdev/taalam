@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, RotateCcw, Trophy } from "lucide-react";
 import { prophetFlashcards, type ProphetFlashcard } from "@/data/quizQuestions";
@@ -8,24 +8,50 @@ interface ProphetFlashcardsProps {
   onBack: () => void;
 }
 
+// Simple spaced repetition: shuffle cards but push recently-seen ones to end
+function buildFlashcardOrder(cards: ProphetFlashcard[]): number[] {
+  const indices = cards.map((_, i) => i);
+  // Fisher-Yates shuffle
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
+}
+
 export default function ProphetFlashcards({ onBack }: ProphetFlashcardsProps) {
   const { t } = useLanguage();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [order, setOrder] = useState<number[]>(() => buildFlashcardOrder(prophetFlashcards));
+  const [pointer, setPointer] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [mastered, setMastered] = useState<Set<number>>(new Set());
 
+  const currentIndex = order[pointer];
   const card = prophetFlashcards[currentIndex];
+  const total = order.length;
 
   const handleFlip = useCallback(() => setFlipped((f) => !f), []);
 
   const handleNext = useCallback(() => {
     setFlipped(false);
-    setCurrentIndex((i) => Math.min(i + 1, prophetFlashcards.length - 1));
-  }, []);
+    if (pointer < total - 1) {
+      setPointer((p) => p + 1);
+    } else {
+      // Re-shuffle excluding mastered, or all if all mastered
+      const remaining = order.filter((i) => !mastered.has(i));
+      if (remaining.length > 0) {
+        const reshuffled = [...remaining].sort(() => Math.random() - 0.5);
+        setOrder(reshuffled);
+      } else {
+        setOrder(buildFlashcardOrder(prophetFlashcards));
+      }
+      setPointer(0);
+    }
+  }, [pointer, total, order, mastered]);
 
   const handlePrev = useCallback(() => {
     setFlipped(false);
-    setCurrentIndex((i) => Math.max(i - 1, 0));
+    setPointer((p) => Math.max(p - 1, 0));
   }, []);
 
   const handleMastered = useCallback(() => {
@@ -38,10 +64,14 @@ export default function ProphetFlashcards({ onBack }: ProphetFlashcardsProps) {
   }, [currentIndex]);
 
   const handleRestart = useCallback(() => {
-    setCurrentIndex(0);
+    setOrder(buildFlashcardOrder(prophetFlashcards));
+    setPointer(0);
     setFlipped(false);
     setMastered(new Set());
   }, []);
+
+  // Unique prophets count for display
+  const uniqueProphets = useMemo(() => new Set(prophetFlashcards.map((c) => c.prophet)).size, []);
 
   return (
     <div className="space-y-5">
@@ -53,17 +83,21 @@ export default function ProphetFlashcards({ onBack }: ProphetFlashcardsProps) {
         </button>
         <div className="flex items-center gap-2 bg-secondary/15 text-secondary px-3 py-1.5 rounded-full">
           <Trophy size={14} />
-          <span className="text-xs font-bold">{mastered.size}/{prophetFlashcards.length}</span>
+          <span className="text-xs font-bold">{mastered.size}/{total}</span>
         </div>
       </div>
 
+      <p className="text-center text-xs text-muted-foreground">
+        {uniqueProphets} prophètes · {total} cartes
+      </p>
+
       {/* Progress */}
-      <div className="flex gap-1">
-        {prophetFlashcards.map((_, i) => (
+      <div className="flex gap-0.5">
+        {order.map((origIdx, i) => (
           <div
             key={i}
             className={`h-1.5 flex-1 rounded-full transition-colors ${
-              mastered.has(i) ? "bg-success" : i === currentIndex ? "bg-primary" : "bg-muted"
+              mastered.has(origIdx) ? "bg-success" : i === pointer ? "bg-primary" : i < pointer ? "bg-primary/30" : "bg-muted"
             }`}
           />
         ))}
@@ -90,15 +124,18 @@ export default function ProphetFlashcards({ onBack }: ProphetFlashcardsProps) {
               }`}
             >
               {!flipped ? (
-                /* Front: Prophet name */
                 <>
                   <span className="text-6xl mb-4">{card.emoji}</span>
                   <h2 className="text-2xl font-bold text-foreground mb-2">{card.prophet}</h2>
-                  <p className="font-arabic text-xl text-primary mb-4">{card.prophetAr}</p>
+                  <p className="font-arabic text-xl text-primary mb-2">{card.prophetAr}</p>
+                  {card.cardType && card.cardType !== "main" && (
+                    <span className="text-[10px] font-bold uppercase bg-muted text-muted-foreground px-2 py-0.5 rounded-full mb-2">
+                      {card.cardType === "lesson" ? "Leçon" : card.cardType === "trial" ? "Épreuve" : card.cardType === "people" ? "Peuple" : ""}
+                    </span>
+                  )}
                   <p className="text-xs text-muted-foreground">{t("flashcards.tapToReveal")}</p>
                 </>
               ) : (
-                /* Back: Event + Surah */
                 <>
                   <span className="text-4xl mb-3">{card.emoji}</span>
                   <p className="text-sm text-foreground font-medium leading-relaxed mb-4">{card.event}</p>
@@ -126,25 +163,24 @@ export default function ProphetFlashcards({ onBack }: ProphetFlashcardsProps) {
       <div className="flex items-center justify-between px-4">
         <button
           onClick={handlePrev}
-          disabled={currentIndex === 0}
+          disabled={pointer === 0}
           className="w-12 h-12 rounded-full bg-muted flex items-center justify-center disabled:opacity-30"
         >
           <ArrowLeft size={20} className="text-foreground" />
         </button>
         <span className="text-sm text-muted-foreground font-medium">
-          {currentIndex + 1} / {prophetFlashcards.length}
+          {pointer + 1} / {total}
         </span>
         <button
           onClick={handleNext}
-          disabled={currentIndex === prophetFlashcards.length - 1}
-          className="w-12 h-12 rounded-full bg-primary flex items-center justify-center disabled:opacity-30"
+          className="w-12 h-12 rounded-full bg-primary flex items-center justify-center"
         >
           <ArrowRight size={20} className="text-primary-foreground" />
         </button>
       </div>
 
-      {/* Restart */}
-      {mastered.size === prophetFlashcards.length && (
+      {/* All mastered */}
+      {mastered.size === total && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-3">
           <p className="text-lg font-bold text-success">🌟 Toutes les cartes maîtrisées !</p>
           <button onClick={handleRestart} className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
