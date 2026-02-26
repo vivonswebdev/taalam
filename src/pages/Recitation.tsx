@@ -293,7 +293,7 @@ export default function Recitation() {
 
   const replayAyahAudio = async (surahNum: number, ayahIndex: number) => {
     try {
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciter.apiEdition}`);
       const data = await res.json();
       if (data.data?.ayahs?.[ayahIndex]) {
         safePlay(data.data.ayahs[ayahIndex].audio);
