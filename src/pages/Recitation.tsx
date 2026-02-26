@@ -205,20 +205,46 @@ export default function Recitation() {
     setShowArabic(true);
   }, [recitingAyah]);
 
+  // Play pre-listen audio for a single ayah, then call onDone
+  const playPreListenAyah = useCallback((surahNum: number, ayahNum: number, onDone: () => void) => {
+    setPreListening(true);
+    fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}/${reciter.apiEdition}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.audio) {
+          const audio = new Audio(data.data.audio);
+          preListenRef.current = audio;
+          audio.onended = () => { preListenRef.current = null; setPreListening(false); onDone(); };
+          audio.onerror = () => { preListenRef.current = null; setPreListening(false); onDone(); };
+          audio.play().catch(() => { setPreListening(false); onDone(); });
+        } else {
+          setPreListening(false); onDone();
+        }
+      })
+      .catch(() => { setPreListening(false); onDone(); });
+  }, [reciter]);
+
   const goNextAyah = useCallback(() => {
     if (!selectedSurah) return;
     setShowAyahResult(false);
     setLastAyahResult(null);
     if (recitingAyah < selectedSurah.ayahs.length - 1) {
-      setRecitingAyah((p) => p + 1);
+      const nextIdx = recitingAyah + 1;
+      setRecitingAyah(nextIdx);
       setCurrentTranscript("");
-      setShowArabic(false); // Hide text immediately for next verse
-      // Must stay synchronous in click handler (user gesture) for Web Speech API
-      voice.start();
+      setShowArabic(true); // Show text during pre-listen
+      setPreListenAyahIdx(nextIdx);
+      // Play audio first, then start recording
+      const nextAyah = selectedSurah.ayahs[nextIdx];
+      playPreListenAyah(selectedSurah.number, nextAyah.number, () => {
+        setShowArabic(false);
+        setPreListenAyahIdx(-1);
+        voice.start();
+      });
     } else {
       finishRecitation(ayahResults);
     }
-  }, [selectedSurah, recitingAyah, ayahResults, voice]);
+  }, [selectedSurah, recitingAyah, ayahResults, voice, playPreListenAyah]);
 
   const finishRecitation = (results: AyahResult[]) => {
     if (!selectedSurah) return;
