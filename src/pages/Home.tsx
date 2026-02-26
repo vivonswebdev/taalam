@@ -187,7 +187,7 @@ export default function Home() {
                 <GraduationCap size={20} className="text-primary" />
               </div>
               <div>
-                <p className="font-bold text-foreground text-sm">{t("home.classMode")}</p>
+                <p className="font-bold text-foreground text-sm cursor-pointer hover:text-primary transition-colors" onClick={() => navigate("/classrooms")}>{t("home.classMode")}</p>
                 <p className="text-[11px] text-muted-foreground">
                    {classrooms.length > 0 
                      ? `${classrooms.length} ${classrooms.length > 1 ? t("home.classesActive") : t("home.classActive")}`
