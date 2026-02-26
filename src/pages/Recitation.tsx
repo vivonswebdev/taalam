@@ -145,7 +145,7 @@ export default function Recitation() {
     }
     setAudioLoading(true);
     try {
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/${reciter.apiEdition}`);
       const data = await res.json();
       if (data.data?.ayahs) {
         const urls = data.data.ayahs.map((a: { audio: string }) => a.audio);
