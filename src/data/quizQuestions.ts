@@ -279,7 +279,7 @@ export const prophetFlashcards: ProphetFlashcard[] = [
 ];
 
 // ─── Quiz categories ────────────────────────────────────────
-export type QuizCategory = "general" | "memorization" | "tajweed" | "kids" | "perfect";
+export type QuizCategory = "general" | "memorization" | "tajweed" | "kids" | "perfect" | "adaptive";
 
 import { getPerfectQuizSession } from "./perfectQuizQuestions";
 
@@ -290,6 +290,7 @@ export function getQuizByCategory(category: QuizCategory): QuizQuestion[] {
     case "tajweed": return tajweedQuiz;
     case "kids": return kidsQuiz;
     case "perfect": return getPerfectQuizSession();
+    case "adaptive": return [...quizQuestions, ...quranMemorizationQuiz, ...tajweedQuiz]; // full pool
     default: return quizQuestions;
   }
 }

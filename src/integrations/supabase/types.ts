@@ -478,6 +478,33 @@ export type Database = {
         }
         Relationships: []
       }
+      question_stats: {
+        Row: {
+          correct: number
+          id: string
+          last_seen_at: string
+          question_id: string
+          seen: number
+          user_id: string
+        }
+        Insert: {
+          correct?: number
+          id?: string
+          last_seen_at?: string
+          question_id: string
+          seen?: number
+          user_id: string
+        }
+        Update: {
+          correct?: number
+          id?: string
+          last_seen_at?: string
+          question_id?: string
+          seen?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           created_at: string
