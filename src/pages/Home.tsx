@@ -171,6 +171,13 @@ export default function Home() {
           onClick={() => navigate("/leaderboard")}
           delay={0.45}
         />
+        <RoundActionButton
+          icon="📊"
+          title={t("home.progressButton")}
+          subtitle={t("home.progressButtonDesc")}
+          onClick={() => navigate("/progress")}
+          delay={0.5}
+        />
       </div>
 
       {/* Classroom Mode – Hero Card */}

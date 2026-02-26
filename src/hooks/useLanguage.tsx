@@ -704,6 +704,8 @@ const translations = {
   "home.tarteelButtonDesc": { fr: "Récitation + Correction IA", en: "Recitation + AI Correction", nl: "Recitatie + AI-correctie", ar: "تلاوة + تصحيح ذكي", tr: "Tilavet + Yapay Zeka Düzeltmesi", ur: "تلاوت + AI تصحیح" },
   "home.leaderboardButton": { fr: "Voir votre classement", en: "View your ranking", nl: "Bekijk je ranglijst", ar: "شاهد ترتيبك", tr: "Sıralamamızı görün", ur: "اپنی درجہ بندی دیکھیں" },
   "home.leaderboardButtonDesc": { fr: "Top mondial / pays", en: "Global / country top", nl: "Wereld / land top", ar: "عالمي / حسب البلد", tr: "Dünya / ülke sıralaması", ur: "عالمی / ملکی ٹاپ" },
+  "home.progressButton": { fr: "Voir ma progression", en: "View my progress", nl: "Bekijk mijn voortgang", ar: "عرض تقدمي", tr: "İlerlememimi gör", ur: "میری پیشرفت دیکھیں" },
+  "home.progressButtonDesc": { fr: "Maîtrise & Hifz Map", en: "Mastery & Hifz Map", nl: "Beheersing & Hifz kaart", ar: "إتقان وخريطة الحفظ", tr: "Ustalık & Hıfız Haritası", ur: "مہارت اور حفظ نقشہ" },
   "home.classMode": { fr: "Classe Professeur", en: "Teacher Class", nl: "Lerarenklas", ar: "فصل المعلم", tr: "Öğretmen Sınıfı", ur: "استاد کلاس" },
 
   // Daily Tarteel Challenge
