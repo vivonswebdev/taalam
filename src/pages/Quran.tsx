@@ -501,13 +501,20 @@ export default function Quran() {
       {/* Header */}
       <div className="px-6 pt-14 pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
-              {isChildMode ? "📖 " : ""}{t("nav.quran")}
-            </h1>
-            <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
-              {t("recitation.subtitle")}
-            </p>
+          <div className="flex items-center gap-2">
+            {selectedSurah && (
+              <button onClick={handleNewSurah} className="p-1.5 rounded-full bg-secondary/20 hover:bg-secondary/40 transition-colors">
+                <ArrowLeft size={18} className="text-foreground" />
+              </button>
+            )}
+            <div>
+              <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
+                {isChildMode ? "📖 " : ""}{t("nav.quran")}
+              </h1>
+              <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
+                {t("recitation.subtitle")}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
