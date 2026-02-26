@@ -17,18 +17,25 @@ interface QuizStats {
   memorization: { completed: number; totalCorrect: number; totalQuestions: number };
   tajweed: { completed: number; totalCorrect: number; totalQuestions: number };
   kids: { completed: number; totalCorrect: number; totalQuestions: number };
+  perfect: { completed: number; totalCorrect: number; totalQuestions: number };
 }
 
 function loadQuizStats(): QuizStats {
   try {
     const stored = localStorage.getItem(QUIZ_STATS_KEY);
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Ensure perfect key exists for migration
+      if (!parsed.perfect) parsed.perfect = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      return parsed;
+    }
   } catch {}
   return {
     general: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     memorization: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     tajweed: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     kids: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    perfect: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
   };
 }
 
@@ -50,8 +57,10 @@ export default function Quiz() {
   const [finished, setFinished] = useState(false);
   const xp = useXP();
   const xpAwardedRef = useRef(false);
+  // For perfect mode, we store the shuffled session to avoid re-shuffling on re-render
+  const [perfectSession, setPerfectSession] = useState<QuizQuestion[]>([]);
 
-  const questions = category ? getQuizByCategory(category) : [];
+  const questions = category === "perfect" ? perfectSession : (category ? getQuizByCategory(category) : []);
   const question = questions[current];
 
   const handleSelectCategory = (cat: QuizCategory) => {
@@ -60,6 +69,9 @@ export default function Quiz() {
     setScore(0);
     setSelected(null);
     setFinished(false);
+    if (cat === "perfect") {
+      setPerfectSession(getQuizByCategory("perfect"));
+    }
   };
 
   const handleSelect = useCallback(
@@ -121,6 +133,7 @@ export default function Quiz() {
     const categories: { id: QuizCategory; icon: typeof BookOpen; emoji: string; color: string }[] = [
       { id: "general", icon: Star, emoji: "📚", color: "bg-primary/10 text-primary" },
       { id: "memorization", icon: BookOpen, emoji: "🧠", color: "bg-secondary/10 text-secondary" },
+      { id: "perfect", icon: Trophy, emoji: "🌟", color: "bg-secondary/10 text-secondary" },
       { id: "tajweed", icon: Sparkles, emoji: "📖", color: "bg-success/10 text-success" },
       { id: "kids", icon: Baby, emoji: "🧒", color: "bg-accent text-accent-foreground" },
     ];
@@ -155,9 +168,16 @@ export default function Quiz() {
                   {cat.emoji}
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-foreground">{t(`quiz.category.${cat.id}` as any)}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-foreground">{t(`quiz.category.${cat.id}` as any)}</p>
+                    {cat.id === "perfect" && (
+                      <span className="text-[9px] font-bold uppercase bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full">
+                        {t("quiz.new")}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    {getQuizByCategory(cat.id).length} questions
+                    {cat.id === "perfect" ? t("quiz.perfectDesc") : `${getQuizByCategory(cat.id).length} questions`}
                     {successRate !== null && ` · ${successRate}%`}
                     {stats.completed > 0 && ` · ${stats.completed}x`}
                   </p>
@@ -180,7 +200,7 @@ export default function Quiz() {
             </div>
             <div className="flex-1">
               <p className="font-semibold text-foreground">{t("quiz.flashcards")}</p>
-              <p className="text-xs text-muted-foreground">12 prophètes à découvrir</p>
+              <p className="text-xs text-muted-foreground">{t("quiz.flashcardsDesc")}</p>
             </div>
           </motion.button>
         </div>
@@ -229,10 +249,10 @@ export default function Quiz() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex gap-3 mt-6">
           <button onClick={handleBackToCategories} className="bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-            Autres quiz
+             {t("quiz.otherQuiz")}
           </button>
           <button onClick={() => handleSelectCategory(category)} className="bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-            Recommencer
+             {t("quiz.retry")}
           </button>
         </motion.div>
       </div>
