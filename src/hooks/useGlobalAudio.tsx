@@ -16,6 +16,7 @@ export interface GlobalAudioState {
   totalAyahs: number;
   progress: number;
   continuousMode: boolean;
+  listenTestMode: boolean;
 }
 
 interface GlobalAudioContextType {
@@ -30,10 +31,13 @@ interface GlobalAudioContextType {
   prevSurah: () => void;
   jumpToAyah: (index: number) => void;
   setContinuousMode: (v: boolean) => void;
+  setListenTestMode: (v: boolean) => void;
   /** Call this from any other audio source to stop global player */
   requestExclusiveAudio: () => void;
   /** Subscribe to ayah changes (surahNumber, ayahIndex) */
   onAyahChange: React.MutableRefObject<((surahNumber: number, ayah: number) => void) | null>;
+  /** Subscribe to surah completion (for listen-test redirect) */
+  onSurahComplete: React.MutableRefObject<((surahNumber: number, surahName: string) => void) | null>;
 }
 
 const defaultState: GlobalAudioState = {
@@ -45,6 +49,7 @@ const defaultState: GlobalAudioState = {
   totalAyahs: 0,
   progress: 0,
   continuousMode: true,
+  listenTestMode: false,
 };
 
 const GlobalAudioContext = createContext<GlobalAudioContextType | null>(null);
@@ -62,6 +67,8 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const surahNameRef = useRef("");
   const surahNameArabicRef = useRef("");
   const onAyahChange = useRef<((surahNumber: number, ayah: number) => void) | null>(null);
+  const onSurahComplete = useRef<((surahNumber: number, surahName: string) => void) | null>(null);
+  const listenTestModeRef = useRef(false);
 
   const clearInterval_ = useCallback(() => {
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
@@ -132,10 +139,15 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
         });
         return;
       }
-      // Finished
+      // Finished - fire surah complete callback for listen-test
+      const completedSurahNum = surahNumberRef.current;
+      const completedSurahName = surahNameRef.current;
       stopAudio();
       isPlayingRef.current = false;
       setState(prev => ({ ...prev, isPlaying: false, currentAyah: 0, progress: 0 }));
+      if (listenTestModeRef.current) {
+        onSurahComplete.current?.(completedSurahNum, completedSurahName);
+      }
       return;
     }
 
@@ -172,6 +184,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       totalAyahs: total,
       progress: 0,
       continuousMode: continuousModeRef.current,
+      listenTestMode: listenTestModeRef.current,
     });
 
     const urls = await fetchUrls(surahNum);
@@ -257,6 +270,11 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     setState(prev => ({ ...prev, continuousMode: v }));
   }, []);
 
+  const setListenTestMode = useCallback((v: boolean) => {
+    listenTestModeRef.current = v;
+    setState(prev => ({ ...prev, listenTestMode: v }));
+  }, []);
+
   const requestExclusiveAudio = useCallback(() => {
     if (isPlayingRef.current) {
       pause();
@@ -287,8 +305,8 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   return (
     <GlobalAudioContext.Provider value={{
       state, play, pause, resume, stop, nextAyah, prevAyah,
-      nextSurah, prevSurah, jumpToAyah, setContinuousMode,
-      requestExclusiveAudio, onAyahChange,
+      nextSurah, prevSurah, jumpToAyah, setContinuousMode, setListenTestMode,
+      requestExclusiveAudio, onAyahChange, onSurahComplete,
     }}>
       {children}
     </GlobalAudioContext.Provider>
@@ -309,8 +327,10 @@ const fallback: GlobalAudioContextType = {
   prevSurah: noopFn,
   jumpToAyah: noopFn,
   setContinuousMode: noopFn,
+  setListenTestMode: noopFn,
   requestExclusiveAudio: noopFn,
   onAyahChange: noopRef as any,
+  onSurahComplete: noopRef as any,
 };
 
 export function useGlobalAudio() {
