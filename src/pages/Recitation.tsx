@@ -420,9 +420,9 @@ export default function Recitation() {
 
           {/* Difficulty selector */}
           <div>
-            <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
+           <p className={`${bodyTextClass} font-semibold text-foreground mb-3`}>{t("recitation.difficulty")}</p>
             <div className="flex gap-2">
-              {(["easy", "medium", "hard"] as const).map((d) => (
+              {(["easy", "medium", "hard", "favorites"] as const).map((d) => (
                 <button
                   key={d}
                   onClick={() => { setDifficulty(d); setSelectedSurah(null); }}
@@ -434,7 +434,8 @@ export default function Recitation() {
                 >
                   {d === "easy" ? (isChildMode ? "😊 " : "") + t("recitation.easy") :
                    d === "medium" ? (isChildMode ? "🤔 " : "") + t("recitation.medium") :
-                   (isChildMode ? "💪 " : "") + t("recitation.hard")}
+                   d === "hard" ? (isChildMode ? "💪 " : "") + t("recitation.hard") :
+                   "❤️ Favoris"}
                 </button>
               ))}
             </div>
