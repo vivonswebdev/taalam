@@ -9,6 +9,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useSound } from "@/hooks/useSound";
 import { useNavigate } from "react-router-dom";
 import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation, CheckCircle2 } from "lucide-react";
+import HijriCalendar from "@/components/HijriCalendar";
 import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
 const PRAYER_ICONS: Record<string, string> = {
@@ -293,6 +294,9 @@ export default function Prayers() {
             )}
           </div>
         </motion.div>
+
+        {/* Hijri Calendar */}
+        <HijriCalendar />
 
         {/* Prayer Times List */}
         <motion.div
