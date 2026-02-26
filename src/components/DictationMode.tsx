@@ -169,6 +169,10 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   }, [phase, liveResult]);
 
   const handleRestart = useCallback(() => {
+    if (preListenAudioRef.current) {
+      preListenAudioRef.current.pause();
+      preListenAudioRef.current = null;
+    }
     setPhase("ready");
     setLiveTranscript("");
     setLiveResult(null);
