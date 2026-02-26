@@ -24,7 +24,7 @@ interface DictationModeProps {
   onRequestNextSurah?: () => void;
 }
 
-type DictationPhase = "ready" | "recording" | "result";
+type DictationPhase = "ready" | "listening" | "recording" | "result";
 
 // ─── Waqf signs data ─────────────────────────────────────────
 const WAQF_SIGNS: Record<string, { symbol: string; translationKey: string; color: string }> = {
