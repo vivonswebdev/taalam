@@ -509,11 +509,11 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             className="space-y-1.5">
             {[
-              { mode: "aya" as RecitationMode, emoji: "🎤", label: "Dicté verset", desc: "Écoute un verset puis récite-le au micro" },
-              { mode: "dictation" as RecitationMode, emoji: "✍️", label: "Dicté sourate", desc: "Récite la sourate entière verset par verset" },
-              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: "Tahaddi", desc: "Défi : récite de mémoire sans écouter d'abord" },
-              { mode: "hifz" as RecitationMode, emoji: "📖", label: "Contrôle", desc: "Teste ta mémorisation avec un score final" },
-              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: "Trouver l'Ayah", desc: "Récite un passage et retrouve sa position" },
+              { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc") },
+              { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc") },
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc") },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc") },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc") },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
@@ -540,7 +540,7 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="bg-card border border-border rounded-xl p-3">
             <div className="flex items-center gap-2 mb-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex-shrink-0">Sourate</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex-shrink-0">{t("mode.surah")}</p>
               <div className="flex gap-1 flex-1">
                 {(["easy", "medium", "hard"] as const).map((d) => (
                   <button key={d}
@@ -562,7 +562,7 @@ export default function Quran() {
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground hover:bg-accent/50"
                   }`}>
-                  Tout
+                  {t("mode.all")}
                 </button>
               </div>
             </div>
@@ -618,11 +618,11 @@ export default function Quran() {
                 <div className="relative mb-2">
                   <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Rechercher..." className="w-full bg-muted rounded-lg pl-8 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary" />
+                    placeholder={t("mode.search")} className="w-full bg-muted rounded-lg pl-8 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary" />
                 </div>
                 {loadingSurah && (
                   <div className="flex items-center justify-center py-6 gap-2 text-primary">
-                    <Loader2 size={18} className="animate-spin" /><span className="text-xs">Chargement...</span>
+                    <Loader2 size={18} className="animate-spin" /><span className="text-xs">{t("mode.loading")}</span>
                   </div>
                 )}
                 {!loadingSurah && (
@@ -643,7 +643,7 @@ export default function Quran() {
                       </motion.button>
                     ))}
                     {filteredAllSurahs.length === 0 && (
-                      <p className="text-center text-xs text-muted-foreground py-4">Aucun résultat</p>
+                      <p className="text-center text-xs text-muted-foreground py-4">{t("mode.noResult")}</p>
                     )}
                   </div>
                 )}
@@ -662,7 +662,7 @@ export default function Quran() {
                 <p className="font-arabic text-sm text-foreground">{lastUsedSurah.nameArabic}</p>
               </div>
               <span className="text-xs font-bold text-primary-foreground bg-primary px-3 py-1.5 rounded-lg shrink-0">
-                Reprendre →
+                {t("mode.resume")} →
               </span>
             </motion.button>
           )}
@@ -678,8 +678,8 @@ export default function Quran() {
             }`}>
             <span className="text-base">🔊</span>
             <div className="flex-1 text-left">
-              <span className="block">Lecture seule</span>
-              <span className={`block text-[10px] font-normal ${recitationMode === "readOnly" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>Écoute la récitation sans micro, idéal pour suivre</span>
+              <span className="block">{t("mode.readOnly")}</span>
+              <span className={`block text-[10px] font-normal ${recitationMode === "readOnly" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t("mode.readOnlyDesc")}</span>
             </div>
           </motion.button>
 
