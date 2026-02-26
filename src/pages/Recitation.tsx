@@ -465,20 +465,36 @@ export default function Recitation() {
                   exit={{ opacity: 0, y: -8 }}
                   className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg max-h-64 overflow-y-auto"
                 >
+                  {filteredSurahs.length === 0 && (
+                    <p className="text-sm text-muted-foreground text-center py-6">Aucun favori pour le moment</p>
+                  )}
                   {filteredSurahs.map((s) => (
-                    <button
+                    <div
                       key={s.number}
-                      onClick={() => handleSelectSurah(s)}
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/50 transition-colors text-left border-b border-border last:border-b-0"
                     >
-                      <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                        {s.number}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
-                        <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} versets</p>
-                      </div>
-                    </button>
+                      <button
+                        onClick={() => handleSelectSurah(s)}
+                        className="flex items-center gap-3 flex-1 min-w-0"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                          {s.number}
+                        </span>
+                        <div className="flex-1 min-w-0 text-left">
+                          <p className="font-arabic text-lg text-foreground">{s.nameArabic}</p>
+                          <p className="text-xs text-muted-foreground truncate">{s.frenchName} · {s.versesCount} versets</p>
+                        </div>
+                      </button>
+                      <button
+                        onClick={(e) => toggleFavorite(s.number, e)}
+                        className="shrink-0 p-1.5"
+                      >
+                        <Heart
+                          size={18}
+                          className={favorites.includes(s.number) ? "text-destructive fill-destructive" : "text-muted-foreground/40"}
+                        />
+                      </button>
+                    </div>
                   ))}
                 </motion.div>
               )}
