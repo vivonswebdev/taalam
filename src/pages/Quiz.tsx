@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby } from "lucide-react";
-import { quizQuestions, getQuizByCategory, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
+import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
@@ -25,7 +25,6 @@ function loadQuizStats(): QuizStats {
     const stored = localStorage.getItem(QUIZ_STATS_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Ensure perfect key exists for migration
       if (!parsed.perfect) parsed.perfect = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
       return parsed;
     }
@@ -57,10 +56,11 @@ export default function Quiz() {
   const [finished, setFinished] = useState(false);
   const xp = useXP();
   const xpAwardedRef = useRef(false);
-  // For perfect mode, we store the shuffled session to avoid re-shuffling on re-render
-  const [perfectSession, setPerfectSession] = useState<QuizQuestion[]>([]);
 
-  const questions = category === "perfect" ? perfectSession : (category ? getQuizByCategory(category) : []);
+  // Pre-shuffled session: built once when category is selected
+  const [session, setSession] = useState<QuizQuestion[]>([]);
+
+  const questions = session;
   const question = questions[current];
 
   const handleSelectCategory = (cat: QuizCategory) => {
@@ -69,9 +69,9 @@ export default function Quiz() {
     setScore(0);
     setSelected(null);
     setFinished(false);
-    if (cat === "perfect") {
-      setPerfectSession(getQuizByCategory("perfect"));
-    }
+    // Build a shuffled session of 10 from the full pool
+    const pool = getQuizByCategory(cat);
+    setSession(buildQuizSession(pool, 10));
   };
 
   const handleSelect = useCallback(
@@ -87,8 +87,6 @@ export default function Quiz() {
           setSelected(null);
         } else {
           const finalScore = correct ? score + 1 : score;
-          
-          // Save quiz stats
           const stats = loadQuizStats();
           if (category) {
             stats[category].completed += 1;
@@ -96,8 +94,6 @@ export default function Quiz() {
             stats[category].totalQuestions += questions.length;
             saveQuizStats(stats);
           }
-
-          // Set level for general quiz
           if (category === "general") {
             const level = finalScore <= 2 ? "easy" : finalScore <= 4 ? "medium" : "hard";
             setLevel(level as "easy" | "medium" | "hard", finalScore);
@@ -117,6 +113,7 @@ export default function Quiz() {
     setScore(0);
     setSelected(null);
     setFinished(false);
+    setSession([]);
   };
 
   // Flashcards mode
@@ -151,8 +148,9 @@ export default function Quiz() {
         <div className="px-6 space-y-3">
           {categories.map((cat, i) => {
             const stats = loadQuizStats()[cat.id];
-            const successRate = stats.totalQuestions > 0 
-              ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) 
+            const pool = getQuizByCategory(cat.id);
+            const successRate = stats.totalQuestions > 0
+              ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100)
               : null;
 
             return (
@@ -177,7 +175,7 @@ export default function Quiz() {
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {cat.id === "perfect" ? t("quiz.perfectDesc") : `${getQuizByCategory(cat.id).length} questions`}
+                    {pool.length} questions
                     {successRate !== null && ` · ${successRate}%`}
                     {stats.completed > 0 && ` · ${stats.completed}x`}
                   </p>
@@ -213,7 +211,6 @@ export default function Quiz() {
     const finalScore = score;
     const percentage = Math.round((finalScore / questions.length) * 100);
 
-    // Award XP once
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
       const xpGain = category === "kids" ? finalScore * 5
@@ -234,7 +231,6 @@ export default function Quiz() {
           {t("quiz.score")} : {finalScore}/{questions.length} ({percentage}%)
         </motion.p>
 
-        {/* XP Progress Bar */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="w-full mt-6">
           <ProgressBarDuolingo
             level={xp.level}
@@ -249,10 +245,10 @@ export default function Quiz() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex gap-3 mt-6">
           <button onClick={handleBackToCategories} className="bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-             {t("quiz.otherQuiz")}
+            {t("quiz.otherQuiz")}
           </button>
           <button onClick={() => handleSelectCategory(category)} className="bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-             {t("quiz.retry")}
+            {t("quiz.retry")}
           </button>
         </motion.div>
       </div>
