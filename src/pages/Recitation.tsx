@@ -690,6 +690,20 @@ export default function Recitation() {
                 </p>
               </div>
 
+              {/* Pre-listen indicator */}
+              {preListening && (
+                <div className="flex items-center justify-center gap-2 py-3">
+                  <motion.div
+                    animate={{ scale: [1, 1.15, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center"
+                  >
+                    <Volume2 size={18} />
+                  </motion.div>
+                  <span className="text-xs text-muted-foreground">{t("dictation.listening")}...</span>
+                </div>
+              )}
+
               {/* Mic controls */}
               <div className="flex flex-col items-center gap-4">
                 {!voice.isSupported ? (
