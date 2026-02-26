@@ -344,6 +344,39 @@ export type Database = {
           },
         ]
       }
+      listening_sessions: {
+        Row: {
+          created_at: string
+          end_at: string | null
+          id: string
+          listened_full: boolean
+          source: string
+          start_at: string
+          surah_number: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          listened_full?: boolean
+          source?: string
+          start_at?: string
+          surah_number: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          listened_full?: boolean
+          source?: string
+          start_at?: string
+          surah_number?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       perfect_challenge_scores: {
         Row: {
           best_score: number
@@ -472,6 +505,30 @@ export type Database = {
           user_id?: string
           xp_today?: number
           xp_total?: number
+        }
+        Relationships: []
+      }
+      weak_surahs: {
+        Row: {
+          id: string
+          last_updated_at: string
+          surah_number: number
+          user_id: string
+          weakness_score: number
+        }
+        Insert: {
+          id?: string
+          last_updated_at?: string
+          surah_number: number
+          user_id: string
+          weakness_score?: number
+        }
+        Update: {
+          id?: string
+          last_updated_at?: string
+          surah_number?: number
+          user_id?: string
+          weakness_score?: number
         }
         Relationships: []
       }

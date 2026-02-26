@@ -15,6 +15,7 @@ import RoundActionButton from "@/components/RoundActionButton";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import WeakSurahsSection from "@/components/WeakSurahsSection";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -262,6 +263,9 @@ export default function Home() {
           )}
         </motion.div>
       </div>
+
+      {/* Weak Surahs Section */}
+      <WeakSurahsSection />
 
       {/* Quick actions: Famille + Annonces + Réglages */}
       <div className="px-6 mt-4">
