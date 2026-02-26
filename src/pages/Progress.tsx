@@ -31,6 +31,7 @@ export default function Progress() {
   const quizCategories = [
     { key: "general" as const, icon: Star, label: t("quiz.category.general"), color: "text-primary" },
     { key: "memorization" as const, icon: BookOpen, label: t("quiz.category.memorization"), color: "text-secondary" },
+    { key: "perfect" as const, icon: Trophy, label: t("quiz.category.perfect"), color: "text-secondary" },
     { key: "tajweed" as const, icon: Sparkles, label: t("quiz.category.tajweed"), color: "text-success" },
     { key: "kids" as const, icon: Baby, label: t("quiz.category.kids"), color: "text-accent-foreground" },
   ];

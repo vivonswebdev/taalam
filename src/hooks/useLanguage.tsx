@@ -270,6 +270,12 @@ const translations = {
   "quiz.category.memorization": { fr: "Mémorisation Coran", en: "Quran memorization", nl: "Koran memorisatie", ar: "حفظ القرآن", tr: "Kur'an ezberleme", ur: "قرآن حفظ" },
   "quiz.category.tajweed": { fr: "Tajwid & Signes d'arrêt", en: "Tajweed & Stop signs", nl: "Tajweed & Stoptekens", ar: "التجويد وعلامات الوقف", tr: "Tecvid & Durma işaretleri", ur: "تجوید اور وقف کی علامات" },
   "quiz.category.kids": { fr: "Histoires des Prophètes", en: "Prophet stories", nl: "Profeetverhalen", ar: "قصص الأنبياء", tr: "Peygamber hikayeleri", ur: "انبیاء کے قصے" },
+  "quiz.category.perfect": { fr: "🌟 Mode Parfait", en: "🌟 Perfect Mode", nl: "🌟 Perfect Modus", ar: "🌟 الوضع المثالي", tr: "🌟 Mükemmel Mod", ur: "🌟 کامل موڈ" },
+  "quiz.perfectDesc": { fr: "Teste ta mémorisation sans aucune erreur", en: "Test your memorization with zero errors", nl: "Test je geheugen zonder fouten", ar: "اختبر حفظك بدون أي خطأ", tr: "Ezberini sıfır hatayla test et", ur: "بغیر کسی غلطی حفظ ٹیسٹ کریں" },
+  "quiz.new": { fr: "Nouveau", en: "New", nl: "Nieuw", ar: "جديد", tr: "Yeni", ur: "نیا" },
+  "quiz.otherQuiz": { fr: "Autres quiz", en: "Other quizzes", nl: "Andere quizzen", ar: "اختبارات أخرى", tr: "Diğer quizler", ur: "دیگر کوئزز" },
+  "quiz.retry": { fr: "Recommencer", en: "Retry", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar dene", ur: "دوبارہ کوشش" },
+  "quiz.flashcardsDesc": { fr: "12 prophètes à découvrir", en: "12 prophets to discover", nl: "12 profeten om te ontdekken", ar: "12 نبياً لاكتشافهم", tr: "Keşfedilecek 12 peygamber", ur: "دریافت کرنے کے لیے 12 انبیاء" },
   "quiz.chooseCategory": { fr: "Choisissez une catégorie", en: "Choose a category", nl: "Kies een categorie", ar: "اختر فئة", tr: "Bir kategori seç", ur: "ایک قسم منتخب کریں" },
   "quiz.flashcards": { fr: "Flashcards Prophètes", en: "Prophet Flashcards", nl: "Profeet Flashcards", ar: "بطاقات الأنبياء", tr: "Peygamber Kartları", ur: "انبیاء کارڈز" },
 
