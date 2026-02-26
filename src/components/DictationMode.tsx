@@ -93,11 +93,54 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     },
   });
 
+  // Play ayah audio sequentially before recording
+  const playAyahAudio = useCallback((ayahIdx: number) => {
+    const ayah = surah.ayahs[ayahIdx];
+    if (!ayah) {
+      // All ayahs played, start recording
+      setPhase("recording");
+      setShowOriginal(true);
+      voice.start();
+      return;
+    }
+    setListeningAyahIdx(ayahIdx);
+    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${ayah.number}/ar.husary`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.data?.audio) {
+          const audio = new Audio(data.data.audio);
+          preListenAudioRef.current = audio;
+          audio.onended = () => {
+            preListenAudioRef.current = null;
+            playAyahAudio(ayahIdx + 1);
+          };
+          audio.onerror = () => {
+            preListenAudioRef.current = null;
+            playAyahAudio(ayahIdx + 1);
+          };
+          audio.play().catch(() => playAyahAudio(ayahIdx + 1));
+        } else {
+          playAyahAudio(ayahIdx + 1);
+        }
+      })
+      .catch(() => playAyahAudio(ayahIdx + 1));
+  }, [surah, voice]);
+
   const handleStart = useCallback(() => {
-    setPhase("recording");
+    setPhase("listening");
     setLiveTranscript("");
     setLiveResult(null);
     setMicError(null);
+    setListeningAyahIdx(0);
+    playAyahAudio(0);
+  }, [playAyahAudio]);
+
+  const skipPreListen = useCallback(() => {
+    if (preListenAudioRef.current) {
+      preListenAudioRef.current.pause();
+      preListenAudioRef.current = null;
+    }
+    setPhase("recording");
     setShowOriginal(true);
     voice.start();
   }, [voice]);
