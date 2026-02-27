@@ -4,7 +4,9 @@ import { analyzeAyahTajwid, type TajwidWord } from "@/data/tajwidRules";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mic, MicOff, RotateCcw, Volume2, ArrowLeft, ChevronRight, AlertCircle, BookOpen, Eye,
+  Play, Pause, SkipForward, SkipBack,
 } from "lucide-react";
+import { type Surah } from "@/data/surahs";
 import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
