@@ -387,14 +387,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     );
   }
 
-  // ─── READING PHASE: show full block, then start dictation ───
+  // ─── READING PHASE: mushaf-style layout with audio ───
   if (phase === "reading") {
     const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
     return (
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
         {/* Header */}
         <div className="flex items-center gap-2">
-          <button onClick={() => blocks.length === 1 ? onBack() : setPhase("overview")} className="p-1.5 rounded-full bg-muted hover:bg-accent transition-colors">
+          <button onClick={() => { stopListening(); blocks.length === 1 ? onBack() : setPhase("overview"); }} className="p-1.5 rounded-full bg-muted hover:bg-accent transition-colors">
             <ArrowLeft size={16} className="text-foreground" />
           </button>
           <div className="flex-1 text-center">
@@ -403,55 +403,136 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
               <p className="text-[11px] text-muted-foreground">Bloc {currentBlockIdx + 1} / {blocks.length} · {currentBlock.label}</p>
             )}
           </div>
-          <div className="w-8" /> {/* spacer */}
+          <div className="w-8" />
         </div>
 
         {/* Instruction */}
         <div className="bg-accent/30 rounded-xl p-3 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
             <Eye size={15} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">Lis et mémorise ce bloc</span>
+            <span className="text-sm font-semibold text-foreground">Lis, écoute et mémorise</span>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Prends le temps de lire {blockAyahs.length === 1 ? "ce verset" : `ces ${blockAyahs.length} versets`}. 
+            Écoute et lis {blockAyahs.length === 1 ? "ce verset" : `ces ${blockAyahs.length} versets`}. 
             Quand tu es prêt, lance la dictée de mémoire.
           </p>
         </div>
 
-        {/* Reciter picker */}
-        <ReciterPicker selected={reciter} onChange={setReciter} compact />
-
-        {/* Full block text */}
-        <div className="bg-card border border-border rounded-2xl p-4 space-y-0" dir="rtl">
-          {blockAyahs.map((ayah, idx) => {
-            const tajwidWords = analyzeAyahTajwid(ayah.arabic);
-            const waqf = hasWaqfMarker(ayah.arabic);
-            const globalIdx = currentBlock.start + idx;
-            return (
-              <div key={globalIdx} className="py-3 border-b border-border/20 last:border-b-0">
-                <div className="arabic-text text-xl leading-[2.8] text-center">
-                  {tajwidWords.map((tw, wi) => (
-                    <span key={wi} className="inline-block px-0.5"
-                      style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}>
-                      {tw.text}{" "}
-                    </span>
-                  ))}
-                  {/* Ayah number inline */}
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold mx-1 align-middle" dir="ltr">
-                    {globalIdx + 1}
-                  </span>
-                  {waqf && <span className="text-muted-foreground text-sm mx-0.5">{waqf}</span>}
-                </div>
-              </div>
-            );
-          })}
+        {/* Reciter picker + Play all */}
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <ReciterPicker selected={reciter} onChange={setReciter} compact />
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => isListening ? stopListening() : playAllBlock(0)}
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              isListening
+                ? "bg-destructive/15 text-destructive border border-destructive/30"
+                : "bg-primary/15 text-primary border border-primary/30"
+            }`}
+          >
+            {isListening ? <><Pause size={14} /> Arrêter</> : <><Play size={14} /> Tout écouter</>}
+          </motion.button>
         </div>
 
-        {/* Big start button - mobile friendly */}
+        {/* ─── Mushaf-style text (continuous flow like a Quran page) ─── */}
+        <div className="bg-card border-2 border-primary/10 rounded-2xl overflow-hidden">
+          {/* Decorative top border */}
+          <div className="h-1.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
+
+          <div className="p-5 pt-4" dir="rtl">
+            {/* Bismillah for surah start */}
+            {currentBlock.start === 0 && surah.number !== 1 && surah.number !== 9 && (
+              <p className="font-arabic text-lg text-primary/70 text-center mb-4 leading-relaxed">
+                بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+              </p>
+            )}
+
+            {/* Continuous mushaf text */}
+            <div className="font-arabic text-[1.35rem] sm:text-2xl leading-[2.8] sm:leading-[3] text-justify text-foreground">
+              {blockAyahs.map((ayah, idx) => {
+                const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+                const globalIdx = currentBlock.start + idx;
+                const isCurrentlyListening = listeningAyahIdx === globalIdx;
+                return (
+                  <span key={globalIdx} className="inline">
+                    {/* Ayah text - inline for continuous flow */}
+                    <span
+                      className={`transition-all duration-300 rounded-sm ${
+                        isCurrentlyListening ? "bg-primary/15 ring-1 ring-primary/30" : ""
+                      }`}
+                      onClick={() => isListening ? undefined : playAyahAudio(globalIdx)}
+                      style={{ cursor: isListening ? "default" : "pointer" }}
+                    >
+                      {tajwidWords.map((tw, wi) => (
+                        <span key={wi} className="inline"
+                          style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}>
+                          {tw.text}{" "}
+                        </span>
+                      ))}
+                    </span>
+                    {/* Ayah end marker ۝ style */}
+                    <span
+                      className={`inline-flex items-center justify-center w-7 h-7 mx-1 rounded-full text-[10px] font-bold align-middle select-none ${
+                        isCurrentlyListening
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
+                          : "bg-primary/10 text-primary"
+                      }`}
+                      dir="ltr"
+                    >
+                      {globalIdx + 1}
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Decorative bottom border */}
+          <div className="h-1.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
+        </div>
+
+        {/* Listening indicator */}
+        <AnimatePresence>
+          {isListening && listeningAyahIdx !== null && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              className="flex items-center justify-between bg-primary/10 border border-primary/20 rounded-xl px-4 py-3"
+            >
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  {[0, 1, 2, 3].map((b) => (
+                    <motion.div key={b} animate={{ scaleY: [1, 2.5, 1] }}
+                      transition={{ duration: 0.5, delay: b * 0.1, repeat: Infinity }}
+                      className="w-1 h-3 bg-primary rounded-full" />
+                  ))}
+                </div>
+                <span className="text-xs font-semibold text-foreground">
+                  {isAudioLoading ? "Chargement..." : `Écoute Ayah ${listeningAyahIdx + 1}`}
+                </span>
+              </div>
+              <button onClick={stopListening} className="text-xs text-destructive font-semibold px-2 py-1 rounded-lg bg-destructive/10">
+                Arrêter
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Hint: tap ayah to listen */}
+        {!isListening && (
+          <p className="text-[10px] text-muted-foreground text-center">
+            💡 Touche un verset pour l'écouter individuellement
+          </p>
+        )}
+
+        {/* Big start button */}
         <div className="pt-2 pb-4">
           <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={startDictation}
+            onClick={() => { stopListening(); startDictation(); }}
             className={`w-full flex items-center justify-center gap-3 ${
               isChildMode ? "py-6 text-xl" : "py-5 text-lg"
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
