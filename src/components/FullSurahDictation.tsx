@@ -107,6 +107,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   });
 
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
