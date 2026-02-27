@@ -8,7 +8,7 @@ import { useTranslationPreference, AVAILABLE_EDITIONS } from "@/hooks/useTransla
 import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
-import { useImmersiveBg } from "@/hooks/useImmersiveBg";
+import BackgroundPicker from "@/components/BackgroundPicker";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
