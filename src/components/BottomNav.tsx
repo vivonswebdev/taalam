@@ -20,7 +20,7 @@ export default function BottomNav() {
     { path: "/settings", icon: Settings, label: t("nav.settings") },
   ];
 
-  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/")) return null;
+  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods")) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-border safe-area-bottom">
