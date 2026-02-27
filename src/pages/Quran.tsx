@@ -562,7 +562,6 @@ export default function Quran() {
               { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500", nav: null },
               { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500", nav: null },
               { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900", nav: "/find-ayah" },
-              { mode: "liveQuran" as any, emoji: "📻", label: "Live Coran", desc: "Radio Coran 24/7", gradient: "from-indigo-700 to-blue-950", nav: "/live-quran" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
