@@ -37,6 +37,7 @@ import Moods from "./pages/Moods";
 import MoodDetail from "./pages/MoodDetail";
 import MoodRead from "./pages/MoodRead";
 import LiveQuran from "./pages/LiveQuran";
+import Habits from "./pages/Habits";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -86,6 +87,7 @@ const App = () => (
               <Route path="/moods/:id" element={<MoodDetail />} />
               <Route path="/moods/:id/read" element={<MoodRead />} />
               <Route path="/live-quran" element={<LiveQuran />} />
+              <Route path="/habits" element={<Habits />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

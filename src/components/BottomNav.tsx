@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Clock, Settings, BookOpenText, Heart } from "lucide-react";
+import { Home, BookOpen, Mic, Clock, Settings, BookOpenText, Heart, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
@@ -15,8 +15,8 @@ export default function BottomNav() {
     { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
     { path: "/reading", icon: BookOpenText, label: t("nav.reading") },
     { path: "/quran", icon: Mic, label: t("nav.quran") },
+    { path: "/habits", icon: BarChart3, label: "Habitudes" },
     { path: "/moods", icon: Heart, label: t("nav.moods") },
-    { path: "/prayers", icon: Clock, label: t("nav.prayers") },
     { path: "/settings", icon: Settings, label: t("nav.settings") },
   ];
 
