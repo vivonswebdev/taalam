@@ -33,7 +33,9 @@ export default function MoodRead() {
   const navigate = useNavigate();
   const mood = getMoodById(id || "");
 
-  const [fontSize, setFontSize] = useState(30);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("taaloum_mood_fontsize") || "30") || 30; } catch { return 30; }
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loopEnabled, setLoopEnabled] = useState(mood?.loop ?? false);
@@ -179,11 +181,11 @@ export default function MoodRead() {
             <p className="text-white/80 text-xs font-medium">{mood.title}</p>
           </div>
           <div className="flex items-center gap-1">
-            <button onClick={() => setFontSize(s => Math.max(18, s - 2))} className="p-2 rounded-full bg-white/10 text-white">
+            <button onClick={() => setFontSize(s => { const v = Math.max(18, s - 2); localStorage.setItem("taaloum_mood_fontsize", String(v)); return v; })} className="p-2 rounded-full bg-white/10 text-white">
               <Minus size={16} />
             </button>
             <span className="text-white/60 text-xs w-6 text-center">{fontSize}</span>
-            <button onClick={() => setFontSize(s => Math.min(50, s + 2))} className="p-2 rounded-full bg-white/10 text-white">
+            <button onClick={() => setFontSize(s => { const v = Math.min(50, s + 2); localStorage.setItem("taaloum_mood_fontsize", String(v)); return v; })} className="p-2 rounded-full bg-white/10 text-white">
               <Plus size={16} />
             </button>
           </div>
