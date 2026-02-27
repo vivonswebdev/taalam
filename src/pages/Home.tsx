@@ -181,7 +181,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/recitation")}
+          onClick={() => navigate("/quran?mode=dictation")}
           className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: -10 }} transition={{ type: "spring", stiffness: 400 }}>🎤</motion.span>
