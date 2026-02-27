@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -9,6 +9,9 @@ import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
 import BackgroundPicker from "@/components/BackgroundPicker";
+import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
+import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
+import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
 
 export default function Settings() {
