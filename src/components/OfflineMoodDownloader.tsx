@@ -112,7 +112,7 @@ export default function OfflineMoodDownloader() {
               <span className="text-lg">{mood.emoji}</span>
               <span className="flex-1 text-xs font-medium text-card-foreground">{mood.title}</span>
               {downloaded.has(mood.id) ? (
-                <Check size={16} className="text-green-500" />
+                <Check size={16} className="text-emerald-500" />
               ) : downloading === mood.id ? (
                 <Loader2 size={16} className="text-primary animate-spin" />
               ) : null}

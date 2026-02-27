@@ -102,6 +102,7 @@ export default function Settings() {
         </motion.div>
 
         <BackgroundPicker />
+        <OfflineMoodDownloader />
         {isChildMode && stickers.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-4">
             <p className="text-sm font-semibold text-card-foreground mb-3">{t("progress.stickers")}</p>
