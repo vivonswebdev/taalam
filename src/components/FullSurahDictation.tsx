@@ -100,11 +100,26 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     onError: (error) => { if (error === "not-allowed") setMicError("not-allowed"); },
   });
 
+  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     return () => {
       if (preListenAudioRef.current) { preListenAudioRef.current.pause(); preListenAudioRef.current = null; }
+      if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
     };
   }, []);
+
+  // Auto-advance after feedback (1s delay), only if not last ayah in block
+  useEffect(() => {
+    if (phase === "feedback" && currentAyahIdx + 1 < blockAyahCount) {
+      autoAdvanceRef.current = setTimeout(() => {
+        nextAyah();
+      }, 1000);
+    }
+    return () => {
+      if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
+    };
+  }, [phase, currentAyahIdx, blockAyahCount, nextAyah]);
 
   // ─── Start block (go to reading phase) ───
   const startBlock = useCallback((blockIdx: number) => {
