@@ -155,7 +155,7 @@ export default function Quiz() {
     ];
 
     return (
-      <div className="min-h-screen pb-24">
+      <div className={`min-h-screen pb-24 ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
         <div className="px-6 pt-14 pb-6">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-6">
             <ArrowLeft size={20} />
