@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
 import BackgroundPicker from "@/components/BackgroundPicker";
 import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
+import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
+import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
@@ -19,6 +21,8 @@ export default function Settings() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showDedication, setShowDedication] = useState(false);
+  const [showDailyChallenge, setShowDailyChallenge] = useState(false);
+  const dailyChallenge = useDailyTarteelChallenge();
 
   // Theme state: "light" | "dark" | "system"
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
@@ -71,6 +75,26 @@ export default function Settings() {
             <div className={`w-12 h-7 rounded-full transition-colors relative ${isChildMode ? "bg-success" : "bg-muted"}`}>
               <motion.div animate={{ x: isChildMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
+          </button>
+        </motion.div>
+
+        {/* Daily Challenge */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => setShowDailyChallenge(true)} className="w-full flex items-center gap-4 p-4 text-left">
+            <Flame size={20} className="text-orange-500" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">Défi du jour</p>
+              <p className="text-xs text-muted-foreground">
+                {dailyChallenge.surah
+                  ? dailyChallenge.isCompleted
+                    ? `✅ ${dailyChallenge.surah.nameArabic} – ${dailyChallenge.score ?? 0}%`
+                    : `📖 ${dailyChallenge.surah.nameArabic} – En attente`
+                  : "Aucun défi disponible"}
+              </p>
+            </div>
+            {!dailyChallenge.isCompleted && (
+              <span className="text-[10px] font-bold bg-orange-500 text-white px-2 py-1 rounded-full animate-pulse">GO</span>
+            )}
           </button>
         </motion.div>
 
@@ -245,6 +269,18 @@ export default function Settings() {
 
       {showDedication && (
         <DedicationPopup forceShow onClose={() => setShowDedication(false)} />
+      )}
+
+      {showDailyChallenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 bg-foreground/30 backdrop-blur-sm flex items-end justify-center">
+          <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="w-full max-w-lg">
+            <DailyTarteelChallenge
+              surah={dailyChallenge.surah}
+              onComplete={(score) => { dailyChallenge.complete(score); setShowDailyChallenge(false); }}
+              onDismiss={() => setShowDailyChallenge(false)}
+            />
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
