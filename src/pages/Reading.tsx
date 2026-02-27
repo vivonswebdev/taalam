@@ -117,8 +117,8 @@ export default function Reading() {
   if (selectedSurah) {
     return (
       <div
-        className={immersiveEnabled ? "reading-epic-bg" : "min-h-screen"}
-        style={immersiveEnabled ? { backgroundImage: `url(${readingBg})`, "--arabic-font": arabicFontFamily } as React.CSSProperties : { "--arabic-font": arabicFontFamily } as React.CSSProperties}
+        className={epicBg ? epicBg.className : "min-h-screen"}
+        style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})`, "--arabic-font": arabicFontFamily } as React.CSSProperties : { "--arabic-font": arabicFontFamily } as React.CSSProperties}
       >
         <style>{`
           .arabic-text { font-family: ${arabicFontFamily} !important; }
