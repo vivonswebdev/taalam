@@ -199,7 +199,7 @@ export default function Home() {
           onClick={() => navigate("/quiz")}
           className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
-          <span className="text-2xl mb-2">🧠</span>
+          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, y: -4 }} transition={{ type: "spring", stiffness: 400 }}>🧠</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.quizButton")}</p>
           <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.quizButtonDesc")}</p>
           <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">Ouvrir →</span>
