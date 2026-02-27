@@ -220,6 +220,11 @@ export default function MoodRead() {
                   {currentAyah.text}
                   <span className="text-white/40 text-lg mr-2">﴿{currentAyah.ayahNumber}﴾</span>
                 </p>
+                {currentAyah.translation && (
+                  <p className="text-white/60 text-sm leading-relaxed mb-4 max-w-md mx-auto italic">
+                    {currentAyah.translation}
+                  </p>
+                )}
                 <p className="text-white/50 text-sm">
                   {currentAyah.surahNameArabic} · {t("moods.ayah")} {currentAyah.ayahNumber}
                 </p>
