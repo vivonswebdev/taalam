@@ -182,7 +182,7 @@ export default function Home() {
           transition={{ delay: 0.3 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/recitation")}
-          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: -10 }} transition={{ type: "spring", stiffness: 400 }}>🎤</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.tarteelButton")}</p>
