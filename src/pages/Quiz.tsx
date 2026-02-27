@@ -248,7 +248,7 @@ export default function Quiz() {
     const allPoolQuestions = getQuizByCategory(category);
 
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+      <div className={`min-h-screen flex flex-col items-center justify-center px-6 text-center ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }} className="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center mb-6">
           <Trophy size={36} className="text-secondary" />
         </motion.div>
