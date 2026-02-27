@@ -327,8 +327,8 @@ export default function FindAyah({ onBack, onOpenSurah, onStartHifz, isChildMode
 
           {results.length === 0 && (
             <div className="text-center py-8">
-              <Search size={32} className="mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm text-muted-foreground">{t("findAyah.noResults")}</p>
+              <Search size={32} className="mx-auto text-white/40 mb-3" />
+              <p className="text-sm text-white/60">{t("findAyah.noResults")}</p>
             </div>
           )}
 
