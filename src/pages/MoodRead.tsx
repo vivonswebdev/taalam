@@ -36,7 +36,7 @@ export default function MoodRead() {
   const navigate = useNavigate();
   const mood = getMoodById(id || "");
   const { t } = useLanguage();
-
+  const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
   const [fontSize, setFontSize] = useState(() => {
     try { return parseInt(localStorage.getItem("taaloum_mood_fontsize") || "30") || 30; } catch { return 30; }
   });
