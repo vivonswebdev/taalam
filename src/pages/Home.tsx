@@ -24,6 +24,8 @@ export default function Home() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const xp = useXP();
+  const { immersiveEnabled, choices } = useImmersiveBg();
+  const epicBg = immersiveEnabled ? getEpicBg(choices.home) : null;
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const classCodes = classrooms.map((c) => c.joinCode);
