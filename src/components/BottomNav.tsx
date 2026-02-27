@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Clock, Settings, BookOpenText, Heart, BarChart3 } from "lucide-react";
+import { Home, BookOpen, Mic, Clock, Settings, BookOpenText, Heart, BarChart3, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
