@@ -48,6 +48,7 @@ function getBadge(score: number) {
 }
 
 export default function Recitation() {
+  const { immersiveEnabled } = useImmersiveBg();
   const { updateSurahProgress } = useProgress();
   const { shareSuccess } = useClassSuccessShare();
   const { playSafely: safePlay } = useAntiDoubleAudio();

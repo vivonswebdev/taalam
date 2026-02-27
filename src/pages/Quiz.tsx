@@ -54,6 +54,7 @@ export { loadQuizStats, type QuizStats };
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const { immersiveEnabled } = useImmersiveBg();
   const { setLevel } = useProgress();
   const { t } = useLanguage();
   const [category, setCategory] = useState<QuizCategory | null>(null);
