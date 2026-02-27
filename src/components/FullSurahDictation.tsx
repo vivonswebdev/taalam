@@ -107,13 +107,18 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   });
 
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoStopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
       if (preListenAudioRef.current) { preListenAudioRef.current.pause(); preListenAudioRef.current = null; }
       if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
+      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
     };
   }, []);
+
+  // Auto-stop flag: set by effect, checked in a later effect after stopRecording is defined
+  const shouldAutoStopRef = useRef(false);
 
   // ─── Audio playback helpers for reading phase ───
   const playAyahAudio = useCallback((globalIdx: number) => {
@@ -235,7 +240,20 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setPhase("feedback");
   }, [voice, currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx]);
 
-  // ─── Next ayah in block ───
+  // Auto-stop recording when all words are matched
+  useEffect(() => {
+    if (phase !== "recording" || !currentAyah) return;
+    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+    if (totalMatched >= totalWords && totalWords > 0) {
+      autoStopRef.current = setTimeout(() => {
+        stopRecording();
+      }, 600);
+    }
+    return () => {
+      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
+    };
+  }, [phase, totalMatched, currentAyah, stopRecording]);
+
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
       setAllResults(prev => {
