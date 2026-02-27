@@ -442,8 +442,12 @@ const translations = {
   "tahaddi.hintUsed": { fr: "indice utilisé", en: "hint used", nl: "hint gebruikt", ar: "تم استخدام التلميح", tr: "ipucu kullanıldı", ur: "اشارہ استعمال ہوا" },
 
   // Find Ayah (voice search)
-  "findAyah.title": { fr: "Trouve l'ayah", en: "Find the Ayah", nl: "Vind de Ayah", ar: "اعثر على الآية", tr: "Ayeti Bul", ur: "آیت تلاش کریں" },
+  "findAyah.title": { fr: "Trouver mon ayah", en: "Find my Ayah", nl: "Vind mijn Ayah", ar: "اعثر على آيتي", tr: "Ayetimi Bul", ur: "میری آیت تلاش کریں" },
   "findAyah.subtitle": { fr: "Récitez et identifiez le verset", en: "Recite and identify the verse", nl: "Reciteer en identificeer het vers", ar: "اتلُ وحدد الآية", tr: "Oku ve ayeti tanımla", ur: "پڑھیں اور آیت شناخت کریں" },
+  "findAyah.heroSubtitle": { fr: "Récite, on retrouve pour toi la sourate et l'ayah exacte", en: "Recite, we'll find the exact surah and ayah for you", nl: "Reciteer, wij vinden de exacte soera en ayah voor je", ar: "اتلُ، وسنجد لك السورة والآية بالضبط", tr: "Oku, senin için tam sureyi ve ayeti bulalım", ur: "پڑھیں، ہم آپ کے لیے صحیح سورۃ اور آیت تلاش کریں گے" },
+  "findAyah.step1": { fr: "Appuie sur le micro", en: "Tap the mic", nl: "Druk op de mic", ar: "اضغط المايك", tr: "Mikrofona bas", ur: "مائیک دبائیں" },
+  "findAyah.step2": { fr: "Récite 3–10s", en: "Recite 3–10s", nl: "Reciteer 3–10s", ar: "اتلُ 3–10 ثوان", tr: "3–10sn oku", ur: "3–10 سیکنڈ پڑھیں" },
+  "findAyah.step3": { fr: "On te trouve le verset", en: "We find your verse", nl: "Wij vinden je vers", ar: "نجد لك الآية", tr: "Ayetini buluruz", ur: "ہم آیت تلاش کرتے ہیں" },
   "findAyah.searchIn": { fr: "Chercher dans", en: "Search in", nl: "Zoeken in", ar: "البحث في", tr: "Ara:", ur: "تلاش کریں:" },
   "findAyah.scopeAll": { fr: "Tout le Coran", en: "Whole Quran", nl: "Hele Koran", ar: "القرآن كاملاً", tr: "Tüm Kur'an", ur: "پورا قرآن" },
   "findAyah.scopeSurah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
