@@ -14,7 +14,7 @@ export interface MoodPreset {
   emoji: string;
   subtitle: string;
   loop: boolean;
-  type: "sleep" | "emotion" | "study" | "ruqya";
+  type: "sleep" | "emotion" | "study" | "ruqya" | "success";
   color: string; // gradient accent
   verses: MoodVerse[];
 }
