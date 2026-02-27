@@ -113,8 +113,23 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     return () => {
       if (preListenAudioRef.current) { preListenAudioRef.current.pause(); preListenAudioRef.current = null; }
       if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
+      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
     };
   }, []);
+
+  // Auto-stop recording when all words are matched
+  useEffect(() => {
+    if (phase !== "recording" || !currentAyah) return;
+    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+    if (totalMatched >= totalWords && totalWords > 0) {
+      autoStopRef.current = setTimeout(() => {
+        stopRecording();
+      }, 600);
+    }
+    return () => {
+      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
+    };
+  }, [phase, totalMatched, currentAyah, stopRecording]);
 
   // ─── Audio playback helpers for reading phase ───
   const playAyahAudio = useCallback((globalIdx: number) => {
