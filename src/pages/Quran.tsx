@@ -18,6 +18,7 @@ import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DictationMode from "@/components/DictationMode";
+import FullSurahDictation from "@/components/FullSurahDictation";
 import AudioPlayer from "@/components/AudioPlayer";
 import ReadOnlyMode from "@/components/ReadOnlyMode";
 import HifzControl from "@/components/HifzControl";
@@ -819,7 +820,7 @@ export default function Quran() {
       {/* ═══ FULL SURAH MODE (Verset → Sourate complète) ═══ */}
       {selectedSurah && recitationMode === "fullSurah" && !surahFinished && (
         <div className="px-6">
-          <DictationMode
+          <FullSurahDictation
             surah={selectedSurah}
             onBack={handleNewSurah}
             isChildMode={isChildMode}
