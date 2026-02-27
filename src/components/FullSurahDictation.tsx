@@ -85,6 +85,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<string>>(new Set());
 
+  // Audio playback state for reading phase
+  const [listeningAyahIdx, setListeningAyahIdx] = useState<number | null>(null);
+  const [isListening, setIsListening] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+
   const currentBlock = blocks[currentBlockIdx];
   const absoluteAyahIdx = currentBlock.start + currentAyahIdx;
   const currentAyah = surah.ayahs[absoluteAyahIdx];
