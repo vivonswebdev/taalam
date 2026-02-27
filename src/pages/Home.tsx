@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, LogOut, Trophy } from "lucide-react";
+import { LogOut, Trophy } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
