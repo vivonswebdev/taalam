@@ -13,6 +13,7 @@ import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import readingBg from "@/assets/reading-bg.jpg";
 
 export default function Reading() {
   const { t } = useLanguage();
@@ -112,7 +113,10 @@ export default function Reading() {
   // ─── Reader View ──────────────────────────────────────────
   if (selectedSurah) {
     return (
-      <div style={{ "--arabic-font": arabicFontFamily } as React.CSSProperties}>
+      <div
+        className="reading-epic-bg"
+        style={{ backgroundImage: `url(${readingBg})`, "--arabic-font": arabicFontFamily } as React.CSSProperties}
+      >
         <style>{`
           .arabic-text { font-family: ${arabicFontFamily} !important; }
         `}</style>
@@ -142,26 +146,26 @@ export default function Reading() {
 
   // ─── Surah List View ──────────────────────────────────────
   return (
-    <div className="min-h-screen pb-28">
+    <div className="reading-epic-bg pb-28" style={{ backgroundImage: `url(${readingBg})` }}>
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-foreground">📖 {t("reading.title")}</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">{t("reading.subtitle")}</p>
+            <h1 className="text-xl font-bold epic-text-light">📖 {t("reading.title")}</h1>
+            <p className="text-sm epic-text-muted mt-0.5">{t("reading.subtitle")}</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate("/bookmarks")}
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
             >
-              <Bookmark size={18} className="text-foreground" />
+              <Bookmark size={18} className="epic-text-gold" />
             </button>
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
             >
-              <Settings2 size={18} className="text-foreground" />
+              <Settings2 size={18} className="epic-text-light" />
             </button>
           </div>
         </div>
@@ -282,13 +286,13 @@ export default function Reading() {
       {/* Search */}
       <div className="px-6 mb-4">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 epic-text-muted" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t("reading.searchPlaceholder")}
-            className="w-full bg-card border border-border rounded-xl pl-9 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-black/40 backdrop-blur border border-white/10 rounded-xl pl-9 pr-4 py-3 text-sm epic-text-light placeholder:text-white/30 outline-none focus:ring-2 focus:ring-yellow-500/40"
           />
         </div>
       </div>
@@ -310,24 +314,24 @@ export default function Reading() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: Math.min(i * 0.008, 0.4) }}
             onClick={() => handleSelectSurah(s.number)}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:bg-accent/30 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-3 ayah-card-epic rounded-xl hover:bg-white/5 transition-colors text-left"
           >
-            <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+            <span className="w-8 h-8 rounded-lg bg-yellow-500/15 epic-text-gold text-xs font-bold flex items-center justify-center shrink-0">
               {s.number}
             </span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-arabic text-lg text-foreground">{s.nameArabic}</span>
-                <span className="text-[10px] text-muted-foreground">{s.revelationType}</span>
+                <span className="font-arabic text-lg epic-text-light">{s.nameArabic}</span>
+                <span className="text-[10px] epic-text-muted">{s.revelationType}</span>
               </div>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs epic-text-muted truncate">
                 {s.name} · {s.englishName} · {s.versesCount} {t("detail.verses")}
               </p>
             </div>
           </motion.button>
         ))}
         {filteredSurahs.length === 0 && !loading && (
-          <p className="text-center text-sm text-muted-foreground py-6">{t("reading.noResults")}</p>
+          <p className="text-center text-sm epic-text-muted py-6">{t("reading.noResults")}</p>
         )}
       </div>
     </div>
