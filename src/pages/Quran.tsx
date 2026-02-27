@@ -31,7 +31,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah" | "mushaf";
+type RecitationMode = "aya" | "dictation" | "fullSurah" | "readOnly" | "hifz" | "tahaddi" | "findAyah" | "mushaf";
 
 // ─── Easy surahs for beginners / first-time users ───────────
 const EASY_SURAH_NUMBERS = [114, 113, 112, 108, 111, 110, 109, 107, 106, 105];
@@ -69,7 +69,7 @@ export default function Quran() {
   const [recitationMode, setRecitationMode] = useState<RecitationMode>(() => {
     try {
       const stored = localStorage.getItem(LAST_MODE_KEY) as RecitationMode | null;
-      if (stored && ["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(stored)) return stored;
+      if (stored && ["aya", "dictation", "fullSurah", "readOnly", "hifz", "tahaddi"].includes(stored)) return stored;
     } catch {}
     return "aya";
   });
@@ -146,7 +146,7 @@ export default function Quran() {
 
   // Persist recitation mode
   useEffect(() => {
-    if (["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(recitationMode)) {
+    if (["aya", "dictation", "fullSurah", "readOnly", "hifz", "tahaddi"].includes(recitationMode)) {
       try { localStorage.setItem(LAST_MODE_KEY, recitationMode); } catch {}
     }
   }, [recitationMode]);
@@ -539,6 +539,7 @@ export default function Quran() {
             {[
               { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc") },
               { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc") },
+              { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc") },
               { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc") },
               { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc") },
               { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc") },
@@ -686,7 +687,7 @@ export default function Quran() {
           {/* ─── Reprendre (Last Used) ─── */}
           {lastUsedSurah && browseMode === "local" && (
             <motion.button initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              onClick={() => handleSelectSurah(lastUsedSurah)}
+              onClick={() => { setRecitationMode("fullSurah"); handleSelectSurah(lastUsedSurah); }}
               className="w-full flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2.5 text-left hover:bg-primary/10 transition-colors">
               <span className="w-8 h-8 rounded-lg bg-primary/15 text-primary text-xs font-bold flex items-center justify-center shrink-0">{lastUsedSurah.number}</span>
               <div className="flex-1 min-w-0">
@@ -792,6 +793,32 @@ export default function Quran() {
                   fetchFullSurah(nextNum).then((full) => {
                     handleSelectSurah(full);
                     setRecitationMode("dictation");
+                  }).catch(console.error);
+                }
+              }
+            }}
+          />
+        </div>
+      )}
+
+      {/* ═══ FULL SURAH MODE (Verset → Sourate complète) ═══ */}
+      {selectedSurah && recitationMode === "fullSurah" && !surahFinished && (
+        <div className="px-6">
+          <DictationMode
+            surah={selectedSurah}
+            onBack={handleNewSurah}
+            isChildMode={isChildMode}
+            onRequestNextSurah={() => {
+              if (selectedSurah.number < 114) {
+                const nextNum = selectedSurah.number + 1;
+                const local = surahs.find(s => s.number === nextNum);
+                if (local) {
+                  handleSelectSurah(local);
+                  setRecitationMode("fullSurah");
+                } else {
+                  fetchFullSurah(nextNum).then((full) => {
+                    handleSelectSurah(full);
+                    setRecitationMode("fullSurah");
                   }).catch(console.error);
                 }
               }
