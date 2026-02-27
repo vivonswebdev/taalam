@@ -115,16 +115,73 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     };
   }, []);
 
-  // (auto-advance effect is below, after nextAyah definition)
+  // ─── Audio playback helpers for reading phase ───
+  const playAyahAudio = useCallback((globalIdx: number) => {
+    if (preListenAudioRef.current) { preListenAudioRef.current.pause(); }
+    setIsAudioLoading(true);
+    setListeningAyahIdx(globalIdx);
+    setIsListening(true);
+
+    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${globalIdx + 1}/${reciter.apiEdition}`)
+      .then(r => r.json())
+      .then(data => {
+        const audioUrl = data.data?.audio;
+        if (!audioUrl) { setIsAudioLoading(false); setIsListening(false); return; }
+        const audio = new Audio(audioUrl);
+        preListenAudioRef.current = audio;
+        audio.onplaying = () => setIsAudioLoading(false);
+        audio.onended = () => {
+          setIsListening(false);
+          setListeningAyahIdx(null);
+        };
+        audio.onerror = () => { setIsAudioLoading(false); setIsListening(false); };
+        audio.play().catch(() => { setIsAudioLoading(false); setIsListening(false); });
+      })
+      .catch(() => { setIsAudioLoading(false); setIsListening(false); });
+  }, [surah.number, reciter.apiEdition]);
+
+  const playAllBlock = useCallback((startFrom: number = 0) => {
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    let idx = startFrom;
+    const playNext = () => {
+      if (idx >= blockAyahs.length) { setIsListening(false); setListeningAyahIdx(null); return; }
+      const globalIdx = currentBlock.start + idx;
+      setListeningAyahIdx(globalIdx);
+      setIsListening(true);
+      setIsAudioLoading(true);
+      fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${globalIdx + 1}/${reciter.apiEdition}`)
+        .then(r => r.json())
+        .then(data => {
+          const audioUrl = data.data?.audio;
+          if (!audioUrl) { idx++; playNext(); return; }
+          const audio = new Audio(audioUrl);
+          preListenAudioRef.current = audio;
+          audio.onplaying = () => setIsAudioLoading(false);
+          audio.onended = () => { idx++; playNext(); };
+          audio.onerror = () => { idx++; playNext(); };
+          audio.play().catch(() => { idx++; playNext(); });
+        })
+        .catch(() => { idx++; playNext(); });
+    };
+    playNext();
+  }, [surah, currentBlock, reciter.apiEdition]);
+
+  const stopListening = useCallback(() => {
+    if (preListenAudioRef.current) { preListenAudioRef.current.pause(); preListenAudioRef.current = null; }
+    setIsListening(false);
+    setListeningAyahIdx(null);
+    setIsAudioLoading(false);
+  }, []);
 
   // ─── Start block (go to reading phase) ───
   const startBlock = useCallback((blockIdx: number) => {
+    stopListening();
     setCurrentBlockIdx(blockIdx);
     setCurrentAyahIdx(0);
     setBlockResults([]);
     setLiveTranscript("");
     setPhase("reading");
-  }, []);
+  }, [stopListening]);
 
   // ─── Start dictation (from reading → recording on first ayah) ───
   const startDictation = useCallback(() => {
