@@ -33,7 +33,9 @@ export default function MoodRead() {
   const navigate = useNavigate();
   const mood = getMoodById(id || "");
 
-  const [fontSize, setFontSize] = useState(30);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("taaloum_mood_fontsize") || "30") || 30; } catch { return 30; }
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loopEnabled, setLoopEnabled] = useState(mood?.loop ?? false);
