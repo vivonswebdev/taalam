@@ -801,6 +801,32 @@ export default function Quran() {
         </div>
       )}
 
+      {/* ═══ FULL SURAH MODE (Verset → Sourate complète) ═══ */}
+      {selectedSurah && recitationMode === "fullSurah" && !surahFinished && (
+        <div className="px-6">
+          <DictationMode
+            surah={selectedSurah}
+            onBack={handleNewSurah}
+            isChildMode={isChildMode}
+            onRequestNextSurah={() => {
+              if (selectedSurah.number < 114) {
+                const nextNum = selectedSurah.number + 1;
+                const local = surahs.find(s => s.number === nextNum);
+                if (local) {
+                  handleSelectSurah(local);
+                  setRecitationMode("fullSurah");
+                } else {
+                  fetchFullSurah(nextNum).then((full) => {
+                    handleSelectSurah(full);
+                    setRecitationMode("fullSurah");
+                  }).catch(console.error);
+                }
+              }
+            }}
+          />
+        </div>
+      )}
+
       {/* ═══ READ-ONLY MODE ═══ */}
       {selectedSurah && recitationMode === "readOnly" && (
         <ReadOnlyMode
