@@ -7,7 +7,6 @@ import {
   Play, Pause, SkipForward, SkipBack,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
-import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
