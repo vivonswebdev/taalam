@@ -151,21 +151,21 @@ export default function Reading() {
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-foreground">📖 {t("reading.title")}</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">{t("reading.subtitle")}</p>
+            <h1 className="text-xl font-bold epic-text-light">📖 {t("reading.title")}</h1>
+            <p className="text-sm epic-text-muted mt-0.5">{t("reading.subtitle")}</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate("/bookmarks")}
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
             >
-              <Bookmark size={18} className="text-foreground" />
+              <Bookmark size={18} className="epic-text-gold" />
             </button>
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className="w-9 h-9 rounded-full bg-muted flex items-center justify-center"
+              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
             >
-              <Settings2 size={18} className="text-foreground" />
+              <Settings2 size={18} className="epic-text-light" />
             </button>
           </div>
         </div>
