@@ -74,7 +74,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
   const [currentBlockIdx, setCurrentBlockIdx] = useState(0);
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0); // relative to block start
-  const [phase, setPhase] = useState<Phase>("overview");
+  const [phase, setPhase] = useState<Phase>(() => blocks.length === 1 ? "listen" : "overview");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [micError, setMicError] = useState<string | null>(null);
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
