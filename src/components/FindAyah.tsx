@@ -169,17 +169,11 @@ export default function FindAyah({ onBack, onOpenSurah, onStartHifz, isChildMode
 
   return (
     <div className="px-6 pb-28 space-y-5">
-      {/* Header */}
+      {/* Back button only – header is in the page */}
       <div className="flex items-center gap-3">
-        <button onClick={onBack} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
-          <ArrowLeft size={18} className="text-foreground" />
+        <button onClick={onBack} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+          <ArrowLeft size={18} className="text-white" />
         </button>
-        <div>
-          <h2 className={`${isChildMode ? "text-xl" : "text-lg"} font-bold text-foreground`}>
-            {isChildMode ? "🔍 " : ""}{t("findAyah.title")}
-          </h2>
-          <p className="text-xs text-muted-foreground">{t("findAyah.subtitle")}</p>
-        </div>
       </div>
 
       {/* Scope selector */}
