@@ -91,6 +91,7 @@ const App = () => (
               <Route path="/live-quran" element={<LiveQuran />} />
               <Route path="/habits" element={<Habits />} />
               <Route path="/more" element={<More />} />
+              <Route path="/hifz-plan" element={<HifzPlanPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
