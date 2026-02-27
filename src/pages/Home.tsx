@@ -157,57 +157,71 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ SECTION B – États du cœur ═══ */}
-      <div className="px-5 mt-5">
+      {/* ═══ SECTION B+C – 4 features en grille 2×2 ═══ */}
+      <div className="px-5 mt-5 grid grid-cols-2 gap-3">
+        {/* ❤️ États du cœur */}
         <motion.button
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/moods")}
-          className="w-full relative overflow-hidden rounded-2xl p-5 text-left border border-white/10"
+          className="relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
           style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
         >
-          <span className="absolute top-2 right-3 text-[10px] font-bold bg-emerald-400 text-emerald-950 px-2 py-0.5 rounded-full">
-            🆕 Taaloum
+          <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
+            🆕
           </span>
-          <div className="flex items-start gap-4">
-            <span className="text-4xl mt-0.5">❤️</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-white">{t("home.moodsTitle")}</p>
-              <p className="text-sm text-white/70 mt-0.5">{t("home.moodsSubtitle")}</p>
-              <p className="text-[11px] text-white/40 mt-1">{t("home.moodsDesc")}</p>
-              <span className="inline-block mt-3 px-4 py-1.5 text-xs font-semibold bg-white/15 text-white rounded-full border border-white/20">
-                {t("home.moodsButton")} →
-              </span>
-            </div>
-          </div>
+          <span className="text-2xl mb-2">❤️</span>
+          <p className="text-sm font-bold text-white leading-tight">{t("home.moodsTitle")}</p>
+          <p className="text-[11px] text-white/60 mt-1 line-clamp-2">{t("home.moodsSubtitle")}</p>
+          <span className="mt-auto pt-3 text-[11px] font-semibold text-white/50">{t("home.moodsButton")} →</span>
         </motion.button>
-      </div>
 
-      {/* ═══ SECTION C – 3 actions principales ═══ */}
-      <div className="px-5 mt-5 space-y-3">
-        <RoundActionButton
-          icon="🎤"
-          title={t("home.tarteelButton")}
-          subtitle={t("home.tarteelButtonDesc")}
+        {/* 🎤 Tarteel */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/recitation")}
-          delay={0.3}
-        />
-        <RoundActionButton
-          icon="🧠"
-          title={t("home.quizButton")}
-          subtitle={t("home.quizButtonDesc")}
+          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+        >
+          <span className="text-2xl mb-2">🎤</span>
+          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.tarteelButton")}</p>
+          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.tarteelButtonDesc")}</p>
+          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">Ouvrir →</span>
+        </motion.button>
+
+        {/* 🧠 Quiz */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/quiz")}
-          delay={0.35}
-        />
-        <RoundActionButton
-          icon="🔍"
-          title={t("home.findAyahButton")}
-          subtitle={t("home.findAyahButtonDesc")}
+          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+        >
+          <span className="text-2xl mb-2">🧠</span>
+          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.quizButton")}</p>
+          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.quizButtonDesc")}</p>
+          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">Ouvrir →</span>
+        </motion.button>
+
+        {/* 🔍 Trouver mon ayah */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/find-ayah")}
-          delay={0.4}
-        />
+          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+        >
+          <span className="text-2xl mb-2">🔍</span>
+          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.findAyahButton")}</p>
+          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.findAyahButtonDesc")}</p>
+          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">Ouvrir →</span>
+        </motion.button>
       </div>
 
       {/* ═══ SECTION D – Suivi & Classes ═══ */}
