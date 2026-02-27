@@ -99,13 +99,24 @@
     background: hsl(var(--background) / 0.85);
   }
 
-  /* ── Epic Reading Background ── */
-  .reading-epic-bg {
+  /* ═══════════════════════════════════════════════════
+     EPIC BACKGROUNDS — shared base
+     ═══════════════════════════════════════════════════ */
+  .epic-bg-base {
     position: relative;
     min-height: 100vh;
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
+  }
+  .epic-bg-base > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── 1) Reading — Mountain / Moon ── */
+  .reading-epic-bg {
+    composes: epic-bg-base;
   }
   .reading-epic-bg::before {
     content: '';
@@ -120,12 +131,6 @@
     pointer-events: none;
     z-index: 0;
   }
-  .reading-epic-bg > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Waterfall particle animation */
   .reading-epic-bg::after {
     content: '';
     position: fixed;
@@ -144,29 +149,106 @@
     opacity: 0.6;
   }
 
+  /* ── 2) Tarteel — Desert Night ── */
+  .tarteel-epic-bg {
+    composes: epic-bg-base;
+  }
+  .tarteel-epic-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 5, 20, 0.5) 0%,
+      rgba(5, 10, 35, 0.65) 40%,
+      rgba(15, 10, 5, 0.8) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .tarteel-epic-bg::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(0.8px 0.8px at 35% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.2px 1.2px at 55% 15%, rgba(255,215,0,0.25) 0%, transparent 100%),
+      radial-gradient(0.6px 0.6px at 75% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(255,215,0,0.15) 0%, transparent 100%),
+      radial-gradient(0.8px 0.8px at 10% 85%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    background-size: 300px 300px, 250px 250px, 200px 200px, 280px 280px, 320px 320px, 260px 260px;
+    animation: star-twinkle 6s ease-in-out infinite alternate;
+    opacity: 0.8;
+  }
+
+  /* ── 3) Quiz — Mosque Interior ── */
+  .quiz-epic-bg {
+    composes: epic-bg-base;
+  }
+  .quiz-epic-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(30, 20, 5, 0.4) 0%,
+      rgba(20, 15, 5, 0.55) 40%,
+      rgba(10, 8, 3, 0.75) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .quiz-epic-bg::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(60px 60px at 30% 25%, rgba(255,215,0,0.06) 0%, transparent 100%),
+      radial-gradient(80px 80px at 70% 35%, rgba(255,215,0,0.04) 0%, transparent 100%),
+      radial-gradient(40px 40px at 50% 60%, rgba(255,255,255,0.03) 0%, transparent 100%);
+    background-size: 400px 400px, 500px 500px, 350px 350px;
+    animation: light-shimmer 10s ease-in-out infinite alternate;
+    opacity: 0.7;
+  }
+
+  /* ── Keyframes ── */
   @keyframes waterfall-drift {
     0%   { background-position: 0 0, 50px 0, 100px 0, 150px 0, 200px 0, 30px 0; }
     100% { background-position: 0 300px, 50px 350px, 100px 280px, 150px 320px, 200px 290px, 30px 310px; }
   }
+  @keyframes star-twinkle {
+    0%   { opacity: 0.5; }
+    50%  { opacity: 0.9; }
+    100% { opacity: 0.6; }
+  }
+  @keyframes light-shimmer {
+    0%   { opacity: 0.4; }
+    50%  { opacity: 0.8; }
+    100% { opacity: 0.5; }
+  }
 
-  /* Ayah cards on epic bg */
-  .reading-epic-bg .ayah-card-epic {
+  /* ── Shared epic card styles ── */
+  .epic-bg-base .epic-card {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 215, 0, 0.12);
   }
-  .reading-epic-bg .ayah-card-epic.active {
+  .epic-bg-base .epic-card.active {
     background: rgba(255, 215, 0, 0.08);
     border-color: rgba(255, 215, 0, 0.3);
     box-shadow: 0 0 24px rgba(255, 215, 0, 0.1);
   }
-  .reading-epic-bg .epic-text-gold {
-    color: #ffd700;
-  }
-  .reading-epic-bg .epic-text-light {
-    color: rgba(255, 255, 255, 0.92);
-  }
-  .reading-epic-bg .epic-text-muted {
-    color: rgba(255, 255, 255, 0.55);
-  }
+
+  /* Legacy aliases */
+  .reading-epic-bg .ayah-card-epic { background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,215,0,0.12); }
+  .reading-epic-bg .ayah-card-epic.active { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.3); box-shadow: 0 0 24px rgba(255,215,0,0.1); }
+
+  .epic-bg-base .epic-text-gold { color: #ffd700; }
+  .epic-bg-base .epic-text-light { color: rgba(255, 255, 255, 0.92); }
+  .epic-bg-base .epic-text-muted { color: rgba(255, 255, 255, 0.55); }
 }
