@@ -4,6 +4,7 @@ import { ArrowLeft, Play, Pause, Repeat, Minus, Plus } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslationPreference } from "@/hooks/useTranslationPreference";
 
 interface FlatAyah {
   surahNumber: number;
@@ -11,6 +12,7 @@ interface FlatAyah {
   surahNameArabic: string;
   ayahNumber: number;
   text: string;
+  translation: string;
 }
 
 function expandVerses(verses: MoodVerse[]): { surahNumber: number; surahName: string; surahNameArabic: string; ayahNumber: number }[] {
