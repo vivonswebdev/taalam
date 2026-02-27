@@ -39,28 +39,72 @@ export default function LiveQuran() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Cleanup on unmount
+  // Keep audio alive across navigations — only destroy on explicit stop
   useEffect(() => {
     return () => {
+      // Don't destroy audio on unmount to allow background playback
+      // Audio will be cleaned up when user explicitly stops or plays a new station
+    };
+  }, []);
+
+  // Sync play/pause state from system controls (lock screen, notification center)
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+    return () => {
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+    };
+  }, [activeStation]);
+
+  // MediaSession integration for background control (lock screen, notification)
+  useEffect(() => {
+    if (!("mediaSession" in navigator) || !activeStation) return;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: activeStation.name,
+      artist: activeStation.reciter,
+      album: "Live Coran – Radio Quran 24/7",
+      artwork: [
+        { src: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+      ],
+    });
+
+    const handleMediaPlay = () => {
+      audioRef.current?.play().catch(() => {});
+    };
+    const handleMediaPause = () => {
+      audioRef.current?.pause();
+    };
+    const handleMediaStop = () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = "";
         audioRef.current = null;
       }
+      setActiveStation(null);
+      setIsPlaying(false);
     };
-  }, []);
 
-  // MediaSession integration for background control
-  useEffect(() => {
-    if (!("mediaSession" in navigator) || !activeStation) return;
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: activeStation.name,
-      artist: activeStation.reciter,
-      album: "Live Coran",
-    });
-    navigator.mediaSession.setActionHandler("play", () => resumePlayback());
-    navigator.mediaSession.setActionHandler("pause", () => pausePlayback());
-  }, [activeStation]);
+    navigator.mediaSession.setActionHandler("play", handleMediaPlay);
+    navigator.mediaSession.setActionHandler("pause", handleMediaPause);
+    navigator.mediaSession.setActionHandler("stop", handleMediaStop);
+
+    // Update playback state
+    navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+    return () => {
+      navigator.mediaSession.setActionHandler("play", null);
+      navigator.mediaSession.setActionHandler("pause", null);
+      navigator.mediaSession.setActionHandler("stop", null);
+    };
+  }, [activeStation, isPlaying]);
 
   const playStation = useCallback((station: QuranStation) => {
     setError(null);
@@ -82,7 +126,6 @@ export default function LiveQuran() {
       setIsPlaying(false);
       setError("Impossible de se connecter à cette station pour le moment");
     };
-    audio.onpause = () => setIsPlaying(false);
 
     setActiveStation(station);
     audio.play().catch(() => {
@@ -93,13 +136,11 @@ export default function LiveQuran() {
 
   const pausePlayback = useCallback(() => {
     audioRef.current?.pause();
-    setIsPlaying(false);
   }, []);
 
   const resumePlayback = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.play().catch(() => {});
-      setIsPlaying(true);
     }
   }, []);
 
