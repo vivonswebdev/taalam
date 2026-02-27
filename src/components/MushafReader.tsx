@@ -393,7 +393,118 @@ export default function MushafReader({
       )}
 
       {/* Ayahs scrollable area */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto px-4 pb-8 space-y-3">
+      {readingStyle === "immersive" ? (
+        /* ═══ IMMERSIVE MODE ═══ */
+        <div ref={containerRef} className="flex-1 overflow-y-auto relative">
+          {/* Gradient background */}
+          <div className="fixed inset-0 pointer-events-none -z-10 bg-gradient-to-br from-primary/20 via-background to-accent/30" />
+          
+          <div className="min-h-full flex flex-col items-center justify-center px-4 py-8 space-y-6">
+            {surah.ayahs.map((ayah, i) => {
+              const isActive = i === currentAyah;
+              const bookmarked = isBookmarked(surah.number, ayah.number);
+
+              return (
+                <motion.div
+                  key={ayah.number}
+                  ref={(el) => setAyahRef(i, el)}
+                  onClick={() => handleAyahTap(i)}
+                  onTouchStart={() => handleLongPressStart(i)}
+                  onTouchEnd={handleLongPressEnd}
+                  onMouseDown={() => handleLongPressStart(i)}
+                  onMouseUp={handleLongPressEnd}
+                  onMouseLeave={handleLongPressEnd}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ 
+                    opacity: isActive ? 1 : 0.4,
+                    y: 0,
+                    scale: isActive ? 1 : 0.95,
+                  }}
+                  transition={{ duration: 0.4 }}
+                  className={`w-full max-w-lg mx-auto rounded-3xl p-6 cursor-pointer select-none transition-all ${
+                    isActive
+                      ? "bg-card/90 backdrop-blur-xl border-2 border-primary/40 shadow-2xl shadow-primary/20"
+                      : "bg-card/40 backdrop-blur-sm border border-border/20"
+                  }`}
+                >
+                  {bookmarked && (
+                    <BookmarkCheck size={14} className="absolute top-3 right-3 text-primary" />
+                  )}
+
+                  <AnimatePresence>
+                    {longPressAyah === i && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="absolute -top-10 left-1/2 -translate-x-1/2 z-50"
+                      >
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleBookmark(i); }}
+                          className="flex items-center gap-1.5 bg-card border border-border shadow-lg rounded-full px-3 py-1.5 text-xs font-semibold"
+                        >
+                          {bookmarked ? <BookmarkCheck size={14} className="text-primary" /> : <Bookmark size={14} />}
+                          {bookmarked ? t("mushaf.removeBookmark") : t("mushaf.addBookmark")}
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Ayah number badge */}
+                  <div className="flex items-center justify-center mb-4">
+                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold ${
+                      isActive ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground"
+                    }`}>
+                      {ayah.number}
+                    </span>
+                  </div>
+
+                  {/* Arabic text — extra large for immersive */}
+                  <div className="text-center" dir="rtl">
+                    <TajwidAyahText
+                      arabicText={ayah.arabic}
+                      activeWordIndex={isActive ? activeWordIndex : -1}
+                      onWordTap={(wi) => {
+                        globalAudio.jumpToAyah(i);
+                        setActiveWordIndex(wi);
+                      }}
+                      tajwidEnabled={tajwidEnabled}
+                      className={`arabic-text leading-[2.6] ${isActive ? "text-3xl text-foreground" : "text-2xl text-foreground/60"}`}
+                    />
+                  </div>
+
+                  {/* Translation */}
+                  {!isArabicOnly && (translations[i] || ayah.translation) && (
+                    <p className={`text-center mt-4 leading-relaxed border-t pt-4 ${
+                      isActive 
+                        ? "text-sm text-muted-foreground border-border/40" 
+                        : "text-xs text-muted-foreground/50 border-border/20"
+                    }`}>
+                      {translations[i] || ayah.translation}
+                    </p>
+                  )}
+
+                  {/* Transliteration */}
+                  {ayah.transliteration && (
+                    <p className={`italic mt-2 leading-relaxed text-center ${
+                      isActive ? "text-xs text-primary/60" : "text-[10px] text-primary/30"
+                    }`}>
+                      {ayah.transliteration}
+                    </p>
+                  )}
+
+                  {/* Footer */}
+                  <p className={`text-center mt-3 ${isActive ? "text-[11px] text-muted-foreground/60" : "text-[9px] text-muted-foreground/30"}`}>
+                    {surah.nameArabic} · Ayah {ayah.number}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        /* ═══ CARDS MODE (existing) ═══ */
+        <div ref={containerRef} className="flex-1 overflow-y-auto px-4 pb-8 space-y-3">
         {surah.ayahs.map((ayah, i) => {
           const isActive = i === currentAyah && playing;
           const bookmarked = isBookmarked(surah.number, ayah.number);
