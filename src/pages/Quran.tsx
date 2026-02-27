@@ -31,7 +31,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
-type RecitationMode = "aya" | "dictation" | "readOnly" | "hifz" | "tahaddi" | "findAyah" | "mushaf";
+type RecitationMode = "aya" | "dictation" | "fullSurah" | "readOnly" | "hifz" | "tahaddi" | "findAyah" | "mushaf";
 
 // ─── Easy surahs for beginners / first-time users ───────────
 const EASY_SURAH_NUMBERS = [114, 113, 112, 108, 111, 110, 109, 107, 106, 105];

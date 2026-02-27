@@ -792,8 +792,10 @@ const translations = {
   // Quran page mode labels & descriptions
   "mode.dictVerse": { fr: "Dicté verset", en: "Verse dictation", nl: "Vers dictee", ar: "إملاء آية", tr: "Ayet diktesi", ur: "آیت ڈکٹیشن" },
   "mode.dictVerseDesc": { fr: "Écoute un verset puis récite-le au micro", en: "Listen to a verse then recite it to the mic", nl: "Luister naar een vers en reciteer het", ar: "استمع لآية ثم اتلها في المايك", tr: "Bir ayet dinle sonra mikrofona oku", ur: "آیت سنیں پھر مائیک میں پڑھیں" },
-  "mode.dictSurah": { fr: "Dicté sourate", en: "Surah dictation", nl: "Soera dictee", ar: "إملاء سورة", tr: "Sure diktesi", ur: "سورۃ ڈکٹیشن" },
-  "mode.dictSurahDesc": { fr: "Récite la sourate entière verset par verset", en: "Recite the entire surah verse by verse", nl: "Reciteer de volledige soera vers per vers", ar: "اتلُ السورة كاملة آية بآية", tr: "Tüm sureyi ayet ayet oku", ur: "پوری سورۃ آیت بہ آیت پڑھیں" },
+  "mode.dictSurah": { fr: "Dictée ayah", en: "Ayah dictation", nl: "Ayah dictee", ar: "إملاء آية واحدة", tr: "Ayet diktesi", ur: "آیت ڈکٹیشن" },
+  "mode.dictSurahDesc": { fr: "Travaille une seule ayah de ton choix", en: "Work on a single ayah of your choice", nl: "Werk aan één ayah naar keuze", ar: "تدرّب على آية واحدة من اختيارك", tr: "Seçtiğin bir ayet üzerinde çalış", ur: "اپنی پسند کی ایک آیت پر کام کریں" },
+  "mode.fullSurah": { fr: "Verset → Sourate complète", en: "Verse → Full Surah", nl: "Vers → Volledige Soera", ar: "آية → سورة كاملة", tr: "Ayet → Tam Sure", ur: "آیت → مکمل سورۃ" },
+  "mode.fullSurahDesc": { fr: "Apprends toute la sourate, verset par verset avec feedback", en: "Learn the full surah, verse by verse with feedback", nl: "Leer de volledige soera, vers per vers met feedback", ar: "تعلّم السورة كاملة آية بآية مع تقييم", tr: "Tüm sureyi ayet ayet geri bildirimle öğren", ur: "فیڈبیک کے ساتھ آیت بہ آیت پوری سورۃ سیکھیں" },
   "mode.tahaddi": { fr: "Tahaddi", en: "Tahaddi", nl: "Tahaddi", ar: "تحدي", tr: "Tahaddi", ur: "تحدی" },
   "mode.tahaddiDesc": { fr: "Défi : récite de mémoire sans écouter d'abord", en: "Challenge: recite from memory without listening first", nl: "Uitdaging: reciteer uit het hoofd zonder te luisteren", ar: "تحدي: اتلُ من الحفظ بدون استماع أولاً", tr: "Meydan okuma: önce dinlemeden ezbere oku", ur: "چیلنج: پہلے سنے بغیر حفظ سے پڑھیں" },
   "mode.control": { fr: "Contrôle", en: "Hifz Check", nl: "Controle", ar: "اختبار", tr: "Kontrol", ur: "جانچ" },
