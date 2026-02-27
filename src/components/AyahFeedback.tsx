@@ -50,11 +50,11 @@ export default function AyahFeedback({
     .map((ws, i) => {
       if (ws.status !== "incorrect" && ws.status !== "almost") return null;
       const tw = tajwidWords[i];
-      if (!tw?.primaryRule) return null;
-      return { word: ws.word, rule: tw.primaryRule };
+      if (!tw?.rules?.length) return null;
+      return { word: ws.word, rule: tw.rules[0].name };
     })
     .filter(Boolean)
-    .slice(0, 2); // Max 2 tips
+    .slice(0, 2);
 
   const feedbackEmoji = score >= 90 ? "🌟" : score >= 70 ? "💪" : score >= 50 ? "📖" : "🔁";
   const feedbackText = score >= 90
