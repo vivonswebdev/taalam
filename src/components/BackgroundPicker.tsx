@@ -8,6 +8,7 @@ import quizBg from "@/assets/quiz-bg.jpg";
 import galaxyBg from "@/assets/bg-galaxy.jpg";
 import gardenBg from "@/assets/bg-garden.jpg";
 import oceanBg from "@/assets/bg-ocean.jpg";
+import starryBg from "@/assets/bg-starry-calligraphy.jpg";
 
 const BG_THUMBS: Record<BgTheme, string | null> = {
   mountain: readingBg,
@@ -16,6 +17,7 @@ const BG_THUMBS: Record<BgTheme, string | null> = {
   galaxy: galaxyBg,
   garden: gardenBg,
   ocean: oceanBg,
+  starry: starryBg,
   none: null,
 };
 
