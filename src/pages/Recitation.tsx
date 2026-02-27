@@ -48,7 +48,8 @@ function getBadge(score: number) {
 }
 
 export default function Recitation() {
-  const { immersiveEnabled } = useImmersiveBg();
+  const { immersiveEnabled, choices } = useImmersiveBg();
+  const epicBg = immersiveEnabled ? getEpicBg(choices.tarteel) : null;
   const { updateSurahProgress } = useProgress();
   const { shareSuccess } = useClassSuccessShare();
   const { playSafely: safePlay } = useAntiDoubleAudio();
