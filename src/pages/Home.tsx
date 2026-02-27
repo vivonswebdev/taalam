@@ -70,7 +70,7 @@ export default function Home() {
   }, [classrooms]);
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
       {/* Daily Tarteel Challenge */}
       {!dailyChallenge.isCompleted && dailyChallenge.surah && (
         <DailyTarteelChallenge
