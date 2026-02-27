@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, BookOpen, Clock, Target, ChevronLeft, TrendingUp, Award } from "lucide-react";
+import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
+import { useProgress } from "@/hooks/useProgress";
+import { useChildMode } from "@/hooks/useChildMode";
+import { useXP } from "@/hooks/useXP";
+import { surahs } from "@/data/surahs";
+import { loadQuizStats } from "@/pages/Quiz";
+import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
+import { StickerCollection } from "@/components/StickerReward";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 
 const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: string }[] = [
   { type: "minutes", target: 10, label: "10 min", icon: "⏱️" },
@@ -23,9 +31,7 @@ function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ay
     if (score < 30) return "bg-primary/60";
     return "bg-primary";
   };
-
   const dayLabels = ["L", "M", "M", "J", "V", "S", "D"];
-
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-7 gap-1">
@@ -35,14 +41,9 @@ function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ay
       </div>
       <div className="grid grid-cols-7 gap-1">
         {days.map((d, i) => (
-          <motion.div
-            key={d.date}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: i * 0.015 }}
+          <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
             className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
-            title={`${d.date}: ${d.minutes_quran}min, ${d.ayat_recited} ayat`}
-          />
+            title={`${d.date}: ${d.minutes_quran}min, ${d.ayat_recited} ayat`} />
         ))}
       </div>
       <div className="flex items-center justify-end gap-1 text-[9px] text-muted-foreground">
@@ -64,21 +65,40 @@ export default function Habits() {
   const { today, streak, last30Days, goal, setGoal, goalProgress, isAuthenticated } = useQuranHabits();
   const [showGoalPicker, setShowGoalPicker] = useState(false);
 
+  // Progress data
+  const { progress, getMasteredCount } = useProgress();
+  const { isChildMode, stickers } = useChildMode();
+  const xp = useXP();
+  const mastered = getMasteredCount();
+  const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
+
+  const quizStats = loadQuizStats();
+  const quizCategories = [
+    { key: "general" as const, icon: Star, label: t("quiz.category.general"), color: "text-primary" },
+    { key: "memorization" as const, icon: BookOpen, label: t("quiz.category.memorization"), color: "text-secondary" },
+    { key: "perfect" as const, icon: Trophy, label: t("quiz.category.perfect"), color: "text-secondary" },
+    { key: "tajweed" as const, icon: Sparkles, label: t("quiz.category.tajweed"), color: "text-success" },
+    { key: "kids" as const, icon: Baby, label: t("quiz.category.kids"), color: "text-accent-foreground" },
+  ];
+  const totalQuizCompleted = Object.values(quizStats).reduce((a, s) => a + s.completed, 0);
+
+  const chartData = progress.surahProgress.map((sp) => {
+    const surah = surahs.find((s) => s.number === sp.surahNumber);
+    return { name: surah?.nameArabic || `${sp.surahNumber}`, score: sp.bestScore };
+  });
+
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-muted-foreground text-sm mb-3">
-          <ChevronLeft size={16} /> {t("detail.back")}
-        </button>
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          📊 Habitudes Qur'an
+          📊 Habitudes & progression
         </motion.h1>
-        <p className="text-sm text-muted-foreground mt-1">Suis ta progression quotidienne</p>
+        <p className="text-sm text-muted-foreground mt-1">Suis ta progression quotidienne et ton avancement dans le Qur'an</p>
       </div>
 
       <div className="px-6 space-y-4">
-        {/* Today Stats */}
+        {/* ───── SECTION: Aujourd'hui ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-3 gap-3">
           <div className="bg-card border border-border rounded-2xl p-4 text-center">
             <Clock size={20} className="mx-auto text-primary mb-1" />
@@ -97,7 +117,7 @@ export default function Habits() {
           </div>
         </motion.div>
 
-        {/* Goal Progress */}
+        {/* ───── SECTION: Objectif quotidien ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -108,16 +128,12 @@ export default function Habits() {
               {showGoalPicker ? "Fermer" : "Modifier"}
             </button>
           </div>
-
-          {/* Progress bar */}
           <div className="flex items-center gap-3 mb-2">
             <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
               <motion.div
                 className={`h-full rounded-full ${goalProgress.percent >= 100 ? "bg-success" : "bg-primary"}`}
-                initial={{ width: 0 }}
-                animate={{ width: `${goalProgress.percent}%` }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              />
+                initial={{ width: 0 }} animate={{ width: `${goalProgress.percent}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }} />
             </div>
             <span className="text-sm font-bold text-foreground min-w-[60px] text-right">
               {goalProgress.current}/{goalProgress.target}
@@ -127,26 +143,20 @@ export default function Habits() {
             {goal.type === "minutes" ? "minutes de Qur'an" : "ayat récitées"} ·{" "}
             {goalProgress.percent >= 100 ? (
               <span className="text-success font-semibold">✅ Objectif atteint !</span>
-            ) : (
-              `${goalProgress.percent}%`
-            )}
+            ) : `${goalProgress.percent}%`}
           </p>
-
-          {/* Goal picker */}
           {showGoalPicker && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="mt-4 pt-3 border-t border-border">
               <p className="text-xs font-medium text-muted-foreground mb-2">Choisis ton objectif :</p>
               <div className="grid grid-cols-3 gap-2">
                 {GOAL_PRESETS.map((preset) => (
-                  <button
-                    key={`${preset.type}-${preset.target}`}
+                  <button key={`${preset.type}-${preset.target}`}
                     onClick={() => { setGoal({ type: preset.type, target: preset.target }); setShowGoalPicker(false); }}
                     className={`flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl border-2 transition-colors text-xs font-medium ${
                       goal.type === preset.type && goal.target === preset.target
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border hover:bg-accent/50 text-foreground"
-                    }`}
-                  >
+                    }`}>
                     <span>{preset.icon}</span>
                     <span>{preset.label}</span>
                   </button>
@@ -156,7 +166,7 @@ export default function Habits() {
           )}
         </motion.div>
 
-        {/* Heatmap */}
+        {/* ───── SECTION: Heatmap 30 jours ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={18} className="text-primary" />
@@ -165,7 +175,7 @@ export default function Habits() {
           <HeatmapGrid days={last30Days} />
         </motion.div>
 
-        {/* Weekly summary */}
+        {/* ───── SECTION: Résumé semaine ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Award size={18} className="text-secondary" />
@@ -178,18 +188,9 @@ export default function Habits() {
             const activeDays = last7.filter((d) => d.minutes_quran > 0 || d.ayat_recited > 0).length;
             return (
               <div className="grid grid-cols-3 gap-3 text-center">
-                <div>
-                  <p className="text-lg font-bold text-foreground">{totalMin}</p>
-                  <p className="text-[10px] text-muted-foreground">minutes</p>
-                </div>
-                <div>
-                  <p className="text-lg font-bold text-foreground">{totalAyat}</p>
-                  <p className="text-[10px] text-muted-foreground">ayat</p>
-                </div>
-                <div>
-                  <p className="text-lg font-bold text-foreground">{activeDays}/7</p>
-                  <p className="text-[10px] text-muted-foreground">jours actifs</p>
-                </div>
+                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">minutes</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">ayat</p></div>
+                <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">jours actifs</p></div>
               </div>
             );
           })()}
@@ -197,13 +198,155 @@ export default function Habits() {
 
         {/* Cloud sync hint */}
         {!isAuthenticated && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
-            <p className="text-xs text-muted-foreground">
-              📱 Connecte-toi pour synchroniser tes habitudes entre appareils
-            </p>
-            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">
-              Se connecter →
-            </button>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
+            <p className="text-xs text-muted-foreground">📱 Connecte-toi pour synchroniser tes habitudes entre appareils</p>
+            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">Se connecter →</button>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════
+            SECTION: Progression Qur'an
+            ═══════════════════════════════════════════ */}
+        <div className="pt-2">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Progression Qur'an</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+        </div>
+
+        {/* XP Progress Bar */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <ProgressBarDuolingo
+            level={xp.level} xpInLevel={xp.xpInLevel} xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal} xpToday={xp.xpToday} streakDays={xp.streakDays} lastGain={xp.lastGain}
+          />
+        </motion.div>
+
+        {/* Stats grid */}
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { icon: Trophy, value: mastered, label: t("progress.mastered"), color: "text-secondary" },
+            { icon: BookOpen, value: totalAttempts, label: t("progress.attempts"), color: "text-primary" },
+            { icon: TrendingUp, value: totalQuizCompleted, label: t("progress.quizCompleted"), color: "text-success" },
+          ].map((stat, i) => (
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 + i * 0.05 }}
+              className="bg-card border border-border rounded-2xl p-4 text-center">
+              <stat.icon size={20} className={`${stat.color} mx-auto mb-2`} />
+              <p className="text-2xl font-bold text-card-foreground">{stat.value}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Quiz stats */}
+        {totalQuizCompleted > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-card-foreground mb-4">{t("progress.quizStats")}</h3>
+            <div className="space-y-3">
+              {quizCategories.map((cat) => {
+                const stats = quizStats[cat.key];
+                if (stats.completed === 0) return null;
+                const successRate = stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) : 0;
+                return (
+                  <div key={cat.key} className="flex items-center gap-3">
+                    <cat.icon size={16} className={cat.color} />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-foreground">{cat.label}</span>
+                        <span className="text-xs font-bold text-muted-foreground">{successRate}%</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full rounded-full transition-all bg-primary" style={{ width: `${successRate}%` }} />
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground w-8 text-right">{stats.completed}x</span>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Surah score chart */}
+        {chartData.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="bg-card border border-border rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-card-foreground mb-4">{t("progress.scores")}</h3>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" tick={{ fontSize: 14, fontFamily: "Amiri" }} tickLine={false} axisLine={false} />
+                <YAxis hide domain={[0, 100]} />
+                <Bar dataKey="score" radius={[6, 6, 0, 0]}>
+                  {chartData.map((entry, index) => (
+                    <Cell key={index} fill={entry.score >= 80 ? "hsl(var(--success))" : "hsl(var(--primary))"} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </motion.div>
+        )}
+
+        {/* Juz & Hifz Map shortcuts */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}>
+          <button onClick={() => navigate("/juz")}
+            className="w-full flex items-center justify-between bg-card border border-border rounded-2xl p-4 active:scale-[0.98] transition-transform">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center"><Layers size={20} className="text-primary" /></div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-card-foreground">{t("juz.progress")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("juz.viewAll")}</p>
+              </div>
+            </div>
+            <span className="text-muted-foreground text-lg">→</span>
+          </button>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+          <button onClick={() => navigate("/hifz-map")}
+            className="w-full flex items-center justify-between bg-card border border-border rounded-2xl p-4 active:scale-[0.98] transition-transform">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center"><Map size={20} className="text-secondary" /></div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-card-foreground">{t("hifzMap.title")}</p>
+                <p className="text-[10px] text-muted-foreground">{t("hifzMap.subtitle")}</p>
+              </div>
+            </div>
+            <span className="text-muted-foreground text-lg">→</span>
+          </button>
+        </motion.div>
+
+        {/* Surah details */}
+        <div>
+          <h3 className="text-sm font-semibold text-foreground mb-3">{t("progress.details")}</h3>
+          {progress.surahProgress.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-8">{t("progress.noSurahs")}</p>
+          ) : (
+            <div className="space-y-2">
+              {progress.surahProgress.map((sp, i) => {
+                const surah = surahs.find((s) => s.number === sp.surahNumber);
+                if (!surah) return null;
+                return (
+                  <motion.div key={sp.surahNumber} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.75 + i * 0.03 }}
+                    className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
+                    <span className="font-arabic text-lg text-primary w-16 text-right">{surah.nameArabic}</span>
+                    <div className="flex-1">
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full rounded-full transition-all bg-primary" style={{ width: `${sp.bestScore}%` }} />
+                      </div>
+                    </div>
+                    <span className="text-xs font-semibold text-muted-foreground w-10 text-right">{sp.bestScore}%</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Stickers */}
+        {isChildMode && stickers.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-card-foreground mb-4">{t("progress.stickers")}</h3>
+            <StickerCollection stickers={stickers} />
           </motion.div>
         )}
       </div>

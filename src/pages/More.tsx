@@ -48,7 +48,7 @@ export default function More() {
 
   const accountSection: MenuItem[] = [
     { icon: <Settings size={20} className="text-muted-foreground" />, label: t("nav.settings"), desc: "Langue, thème, traduction", path: "/settings" },
-    { icon: <BarChart3 size={20} className="text-primary" />, label: "Progression", desc: "Carte Hifz et statistiques", path: "/progress" },
+    { icon: <BarChart3 size={20} className="text-primary" />, label: "Habitudes & progression", desc: "Stats, objectifs et avancement", path: "/habits" },
     { icon: <User size={20} className="text-blue-500" />, label: "Connexion / Profil", path: "/auth" },
   ];
 
