@@ -365,7 +365,7 @@ export default function MushafReader({
       )}
 
       {/* Ayahs scrollable area */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto px-4 pb-8 space-y-2">
+      <div ref={containerRef} className="flex-1 overflow-y-auto px-4 pb-8 space-y-3">
         {surah.ayahs.map((ayah, i) => {
           const isActive = i === currentAyah && playing;
           const bookmarked = isBookmarked(surah.number, ayah.number);
@@ -380,14 +380,14 @@ export default function MushafReader({
               onMouseUp={handleLongPressEnd}
               onMouseLeave={handleLongPressEnd}
               onClick={() => handleAyahTap(i)}
-              className={`relative rounded-xl p-3 transition-all cursor-pointer select-none ${
+              className={`relative rounded-2xl p-5 transition-all cursor-pointer select-none backdrop-blur-sm ${
                 isActive
-                  ? "bg-primary/10 border border-primary/30"
-                  : "bg-card border border-transparent hover:border-border"
+                  ? "bg-primary/15 border-2 border-primary/40 shadow-lg shadow-primary/10"
+                  : "bg-card/80 border border-border/50 hover:border-primary/20 hover:bg-card/90"
               }`}
             >
               {bookmarked && (
-                <BookmarkCheck size={14} className="absolute top-2 right-2 text-primary" />
+                <BookmarkCheck size={14} className="absolute top-3 right-3 text-primary" />
               )}
 
               <AnimatePresence>
@@ -409,31 +409,45 @@ export default function MushafReader({
                 )}
               </AnimatePresence>
 
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-2 align-middle">
-                {ayah.number}
-              </span>
-              <TajwidAyahText
-                arabicText={ayah.arabic}
-                activeWordIndex={isActive ? activeWordIndex : -1}
-                onWordTap={(wi) => {
-                  globalAudio.jumpToAyah(i);
-                  setActiveWordIndex(wi);
-                }}
-                tajwidEnabled={tajwidEnabled}
-                className="arabic-text text-xl leading-[2.2] text-foreground"
-              />
+              {/* Ayah number badge */}
+              <div className="flex items-center justify-center mb-3">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/15 text-primary text-xs font-bold">
+                  {ayah.number}
+                </span>
+              </div>
 
+              {/* Arabic text — large, centered */}
+              <div className="text-center" dir="rtl">
+                <TajwidAyahText
+                  arabicText={ayah.arabic}
+                  activeWordIndex={isActive ? activeWordIndex : -1}
+                  onWordTap={(wi) => {
+                    globalAudio.jumpToAyah(i);
+                    setActiveWordIndex(wi);
+                  }}
+                  tajwidEnabled={tajwidEnabled}
+                  className="arabic-text text-2xl leading-[2.4] text-foreground"
+                />
+              </div>
+
+              {/* Translation */}
+              {!isArabicOnly && (translations[i] || ayah.translation) && (
+                <p className="text-sm text-muted-foreground mt-3 leading-relaxed text-center border-t border-border/30 pt-3">
+                  {translations[i] || ayah.translation}
+                </p>
+              )}
+
+              {/* Transliteration */}
               {ayah.transliteration && (
-                <p className="text-xs text-primary/70 italic mt-1 leading-relaxed">
+                <p className="text-xs text-primary/60 italic mt-2 leading-relaxed text-center">
                   {ayah.transliteration}
                 </p>
               )}
 
-              {!isArabicOnly && (
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  {translations[i] || ayah.translation}
-                </p>
-              )}
+              {/* Surah info footer */}
+              <p className="text-[10px] text-muted-foreground/50 text-center mt-2">
+                {surah.nameArabic} · Ayah {ayah.number}
+              </p>
             </div>
           );
         })}
