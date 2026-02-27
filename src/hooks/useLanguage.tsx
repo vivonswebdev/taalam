@@ -747,6 +747,12 @@ const translations = {
   "home.progressButton": { fr: "Voir ma progression", en: "View my progress", nl: "Bekijk mijn voortgang", ar: "عرض تقدمي", tr: "İlerlememimi gör", ur: "میری پیشرفت دیکھیں" },
   "home.progressButtonDesc": { fr: "Maîtrise & Hifz Map", en: "Mastery & Hifz Map", nl: "Beheersing & Hifz kaart", ar: "إتقان وخريطة الحفظ", tr: "Ustalık & Hıfız Haritası", ur: "مہارت اور حفظ نقشہ" },
   "home.classMode": { fr: "Classe Professeur", en: "Teacher Class", nl: "Lerarenklas", ar: "فصل المعلم", tr: "Öğretmen Sınıfı", ur: "استاد کلاس" },
+  "home.findAyahButton": { fr: "Trouver mon ayah", en: "Find my ayah", nl: "Vind mijn ayah", ar: "ابحث عن آيتي", tr: "Ayetimi bul", ur: "میری آیت تلاش کریں" },
+  "home.findAyahButtonDesc": { fr: "Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation", en: "Like Quran Shazam: find the surah from your recitation", nl: "Als Koran Shazam: vind de soera vanuit je recitatie", ar: "مثل شازام القرآن: اعثر على السورة من تلاوتك", tr: "Kur'an Shazam'ı gibi: tilavetinden sureyi bul", ur: "قرآن شازام کی طرح: اپنی تلاوت سے سورۃ تلاش کریں" },
+  "home.sectionSuivi": { fr: "Suivi", en: "Tracking", nl: "Opvolging", ar: "المتابعة", tr: "Takip", ur: "ٹریکنگ" },
+  "home.sectionClasses": { fr: "Classes", en: "Classes", nl: "Klassen", ar: "الفصول", tr: "Sınıflar", ur: "کلاسز" },
+  "home.familyClass": { fr: "Classe Famille", en: "Family Class", nl: "Familieklas", ar: "فصل العائلة", tr: "Aile Sınıfı", ur: "فیملی کلاس" },
+  "home.familyClassDesc": { fr: "Suivez vos enfants", en: "Track your children", nl: "Volg je kinderen", ar: "تابع أطفالك", tr: "Çocuklarınızı takip edin", ur: "اپنے بچوں کی نگرانی کریں" },
 
   // Daily Tarteel Challenge
   "daily.title": { fr: "🎯 Défi Tarteel du jour", en: "🎯 Daily Tarteel Challenge", nl: "🎯 Dagelijkse Tarteel Uitdaging", ar: "🎯 تحدي الترتيل اليومي", tr: "🎯 Günlük Tertil Meydan Okuması", ur: "🎯 روزانہ ترتیل چیلنج" },
