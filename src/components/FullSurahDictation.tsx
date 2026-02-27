@@ -598,7 +598,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 return (
                   <span key={globalIdx} className="inline">
                     {isCurrent ? (
-                      // Current ayah: live word feedback
+                      // Current ayah: live word feedback (hidden until revealed)
                       <span className="inline bg-primary/5 rounded-sm ring-1 ring-primary/20">
                         {ayahWords.map((word, wi) => {
                           const lw = ayahLiveWords[wi];
@@ -610,9 +610,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                               animate={{ scale: 1 }}
                               transition={{ type: "spring", stiffness: 400, damping: 20 }}
                               className={`inline-block px-0.5 rounded transition-colors duration-300 ${
-                                isPending ? "text-foreground/30" : getLiveWordColor(status)
+                                isPending ? "text-transparent select-none bg-muted/30" : getLiveWordColor(status)
                               }`}>
-                              {word}{" "}
+                              {isPending ? "████" : word}{" "}
                             </motion.span>
                           );
                         })}
@@ -623,9 +623,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                         {ayah.arabic}{" "}
                       </span>
                     ) : (
-                      // Future: dimmed
-                      <span className="inline text-muted-foreground/30">
-                        {ayah.arabic}{" "}
+                      // Future: hidden
+                      <span className="inline">
+                        {ayah.arabic.split(/\s+/).filter(Boolean).map((w, wi) => (
+                          <span key={wi} className="inline-block px-0.5 text-transparent select-none bg-muted/20 rounded mx-0.5">████</span>
+                        ))}{" "}
                       </span>
                     )}
                     {/* Ayah number marker */}
