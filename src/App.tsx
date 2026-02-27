@@ -81,6 +81,9 @@ const App = () => (
               <Route path="/family" element={<FamilyDashboard />} />
               <Route path="/perfect-leaderboard" element={<PerfectLeaderboard />} />
               <Route path="/listen-test" element={<ListenTestQuiz />} />
+              <Route path="/moods" element={<Moods />} />
+              <Route path="/moods/:id" element={<MoodDetail />} />
+              <Route path="/moods/:id/read" element={<MoodRead />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
