@@ -48,6 +48,9 @@ export default function MushafReader({
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [tajwidEnabled, setTajwidEnabled] = useState(true);
   const [activeWordIndex, setActiveWordIndex] = useState(-1);
+  const [readingStyle, setReadingStyle] = useState<"cards" | "immersive">(() => {
+    try { return (localStorage.getItem("reading-style") as "cards" | "immersive") || "cards"; } catch { return "cards"; }
+  });
 
   // Derive playing state from global audio
   const isGlobalPlaying = globalAudio.state.surahNumber === surah.number && globalAudio.state.isPlaying;
