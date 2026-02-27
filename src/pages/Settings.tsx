@@ -270,6 +270,18 @@ export default function Settings() {
       {showDedication && (
         <DedicationPopup forceShow onClose={() => setShowDedication(false)} />
       )}
+
+      {showDailyChallenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 bg-foreground/30 backdrop-blur-sm flex items-end justify-center">
+          <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="w-full max-w-lg">
+            <DailyTarteelChallenge
+              surah={dailyChallenge.surah}
+              onComplete={(score) => { dailyChallenge.complete(score); setShowDailyChallenge(false); }}
+              onDismiss={() => setShowDailyChallenge(false)}
+            />
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
