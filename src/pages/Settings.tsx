@@ -78,6 +78,26 @@ export default function Settings() {
           </button>
         </motion.div>
 
+        {/* Daily Challenge */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={() => setShowDailyChallenge(true)} className="w-full flex items-center gap-4 p-4 text-left">
+            <Flame size={20} className="text-orange-500" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">Défi du jour</p>
+              <p className="text-xs text-muted-foreground">
+                {dailyChallenge.surah
+                  ? dailyChallenge.isCompleted
+                    ? `✅ ${dailyChallenge.surah.nameArabic} – ${dailyChallenge.score ?? 0}%`
+                    : `📖 ${dailyChallenge.surah.nameArabic} – En attente`
+                  : "Aucun défi disponible"}
+              </p>
+            </div>
+            {!dailyChallenge.isCompleted && (
+              <span className="text-[10px] font-bold bg-orange-500 text-white px-2 py-1 rounded-full animate-pulse">GO</span>
+            )}
+          </button>
+        </motion.div>
+
         {/* Theme selector */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.07 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <div className="p-4">
