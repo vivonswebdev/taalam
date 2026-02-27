@@ -87,6 +87,7 @@ const App = () => (
               <Route path="/moods/:id" element={<MoodDetail />} />
               <Route path="/moods/:id/read" element={<MoodRead />} />
               <Route path="/live-quran" element={<LiveQuran />} />
+              <Route path="/habits" element={<Habits />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
