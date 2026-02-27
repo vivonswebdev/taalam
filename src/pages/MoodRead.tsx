@@ -5,6 +5,19 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslationPreference } from "@/hooks/useTranslationPreference";
+import moodSleep from "@/assets/mood-sleep.jpg";
+import moodEmotion from "@/assets/mood-emotion.jpg";
+import moodRuqya from "@/assets/mood-ruqya.jpg";
+import moodStudy from "@/assets/mood-study.jpg";
+import moodSuccess from "@/assets/mood-success.jpg";
+
+const MOOD_BG: Record<string, string> = {
+  sleep: moodSleep,
+  emotion: moodEmotion,
+  ruqya: moodRuqya,
+  study: moodStudy,
+  success: moodSuccess,
+};
 
 interface FlatAyah {
   surahNumber: number;
