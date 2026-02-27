@@ -5,6 +5,19 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslationPreference } from "@/hooks/useTranslationPreference";
+import moodSleep from "@/assets/mood-sleep.jpg";
+import moodEmotion from "@/assets/mood-emotion.jpg";
+import moodRuqya from "@/assets/mood-ruqya.jpg";
+import moodStudy from "@/assets/mood-study.jpg";
+import moodSuccess from "@/assets/mood-success.jpg";
+
+const MOOD_BG: Record<string, string> = {
+  sleep: moodSleep,
+  emotion: moodEmotion,
+  ruqya: moodRuqya,
+  study: moodStudy,
+  success: moodSuccess,
+};
 
 interface FlatAyah {
   surahNumber: number;
@@ -173,9 +186,15 @@ export default function MoodRead() {
 
   const currentAyah = ayahs[currentIndex];
 
+  const bgImage = MOOD_BG[mood.type] || moodEmotion;
+
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${mood.color} relative flex flex-col`}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+    <div className="min-h-screen relative flex flex-col">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      />
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Top bar */}
