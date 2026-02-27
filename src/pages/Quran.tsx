@@ -533,38 +533,35 @@ export default function Quran() {
       {/* ═══ SELECTION ═══ */}
       {!selectedSurah && (
         <div className="px-6 space-y-3">
-          {/* ─── Modes list (full width, compact) ─── */}
+          {/* ─── Modes grid 2×3 ─── */}
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="space-y-1.5">
+            className="grid grid-cols-2 gap-3">
             {[
-              { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc") },
-              { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc") },
-              { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc") },
-              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc") },
-              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc") },
-              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc") },
+              { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc"), gradient: "from-emerald-500 to-emerald-600" },
+              { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc"), gradient: "from-sky-500 to-sky-600" },
+              { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc"), gradient: "from-indigo-500 to-indigo-600" },
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500" },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500" },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.03 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   if (item.mode === "findAyah") { navigate("/find-ayah"); return; }
                   setRecitationMode(item.mode);
                   if (lastUsedSurah) { handleSelectSurah(lastUsedSurah); }
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  recitationMode === item.mode
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "bg-card border border-border text-foreground hover:bg-accent/50"
+                className={`card-shimmer relative overflow-hidden rounded-2xl p-3.5 flex flex-col gap-1 text-left shadow-sm bg-gradient-to-br ${item.gradient} ${
+                  recitationMode === item.mode ? "ring-2 ring-white/40 shadow-lg" : ""
                 }`}
               >
-                <span className="text-base">{item.emoji}</span>
-                <div className="flex-1 text-left">
-                  <span className="block">{item.label}</span>
-                  <span className={`block text-[10px] font-normal ${recitationMode === item.mode ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{item.desc}</span>
-                </div>
+                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">{item.emoji}</span>
+                <span className="text-sm font-bold text-white leading-tight mt-1">{item.label}</span>
+                <span className="text-[10px] text-white/70 leading-snug line-clamp-2">{item.desc}</span>
               </motion.button>
             ))}
           </motion.div>
