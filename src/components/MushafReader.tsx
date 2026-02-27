@@ -591,6 +591,7 @@ export default function MushafReader({
           );
         })}
       </div>
+      )}
 
       {/* Dismiss long press overlay */}
       {longPressAyah !== null && (
