@@ -687,7 +687,7 @@ export default function Quran() {
           {/* ─── Reprendre (Last Used) ─── */}
           {lastUsedSurah && browseMode === "local" && (
             <motion.button initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              onClick={() => handleSelectSurah(lastUsedSurah)}
+              onClick={() => { setRecitationMode("fullSurah"); handleSelectSurah(lastUsedSurah); }}
               className="w-full flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl px-3 py-2.5 text-left hover:bg-primary/10 transition-colors">
               <span className="w-8 h-8 rounded-lg bg-primary/15 text-primary text-xs font-bold flex items-center justify-center shrink-0">{lastUsedSurah.number}</span>
               <div className="flex-1 min-w-0">
