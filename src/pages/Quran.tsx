@@ -69,7 +69,7 @@ export default function Quran() {
   const [recitationMode, setRecitationMode] = useState<RecitationMode>(() => {
     try {
       const stored = localStorage.getItem(LAST_MODE_KEY) as RecitationMode | null;
-      if (stored && ["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(stored)) return stored;
+      if (stored && ["aya", "dictation", "fullSurah", "readOnly", "hifz", "tahaddi"].includes(stored)) return stored;
     } catch {}
     return "aya";
   });
