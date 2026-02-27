@@ -394,112 +394,107 @@ export default function MushafReader({
 
       {/* Ayahs scrollable area */}
       {readingStyle === "immersive" ? (
-        /* ═══ IMMERSIVE MODE ═══ */
-        <div ref={containerRef} className="flex-1 overflow-y-auto relative">
-          {/* Gradient background */}
-          <div className="fixed inset-0 pointer-events-none -z-10 bg-gradient-to-br from-primary/20 via-background to-accent/30" />
-          
-          <div className="min-h-full flex flex-col items-center justify-center px-4 py-8 space-y-6">
-            {surah.ayahs.map((ayah, i) => {
-              const isActive = i === currentAyah;
-              const bookmarked = isBookmarked(surah.number, ayah.number);
+        /* ═══ FULLSCREEN IMMERSIVE MODE ═══ */
+        <div className="fixed inset-0 z-50 flex flex-col">
+          {/* Dark immersive background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary)/0.15)] via-[hsl(0,0%,5%)] to-[hsl(var(--accent)/0.1)]" />
+          <div className="absolute inset-0 bg-black/60" />
 
+          {/* Top bar */}
+          <div className="relative z-10 flex items-center gap-3 px-4 pt-10 pb-3">
+            <button
+              onClick={() => { setReadingStyle("cards"); localStorage.setItem("reading-style", "cards"); }}
+              className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center"
+            >
+              <ArrowLeft size={18} className="text-white" />
+            </button>
+            <div className="flex-1 text-center">
+              <p className="font-arabic text-lg text-white/90">{surah.nameArabic}</p>
+              <p className="text-[10px] text-white/50">Ayah {surah.ayahs[currentAyah]?.number} / {surah.ayahs.length}</p>
+            </div>
+            <div className="w-9" />
+          </div>
+
+          {/* Center — single ayah */}
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
+            {(() => {
+              const ayah = surah.ayahs[currentAyah];
+              if (!ayah) return null;
               return (
                 <motion.div
-                  key={ayah.number}
-                  ref={(el) => setAyahRef(i, el)}
-                  onClick={() => handleAyahTap(i)}
-                  onTouchStart={() => handleLongPressStart(i)}
-                  onTouchEnd={handleLongPressEnd}
-                  onMouseDown={() => handleLongPressStart(i)}
-                  onMouseUp={handleLongPressEnd}
-                  onMouseLeave={handleLongPressEnd}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ 
-                    opacity: isActive ? 1 : 0.4,
-                    y: 0,
-                    scale: isActive ? 1 : 0.95,
-                  }}
-                  transition={{ duration: 0.4 }}
-                  className={`w-full max-w-lg mx-auto rounded-3xl p-6 cursor-pointer select-none transition-all ${
-                    isActive
-                      ? "bg-card/90 backdrop-blur-xl border-2 border-primary/40 shadow-2xl shadow-primary/20"
-                      : "bg-card/40 backdrop-blur-sm border border-border/20"
-                  }`}
+                  key={currentAyah}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                  className="w-full max-w-lg text-center"
                 >
-                  {bookmarked && (
-                    <BookmarkCheck size={14} className="absolute top-3 right-3 text-primary" />
-                  )}
-
-                  <AnimatePresence>
-                    {longPressAyah === i && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="absolute -top-10 left-1/2 -translate-x-1/2 z-50"
-                      >
-                        <button
-                          onClick={(e) => { e.stopPropagation(); toggleBookmark(i); }}
-                          className="flex items-center gap-1.5 bg-card border border-border shadow-lg rounded-full px-3 py-1.5 text-xs font-semibold"
-                        >
-                          {bookmarked ? <BookmarkCheck size={14} className="text-primary" /> : <Bookmark size={14} />}
-                          {bookmarked ? t("mushaf.removeBookmark") : t("mushaf.addBookmark")}
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
                   {/* Ayah number badge */}
-                  <div className="flex items-center justify-center mb-4">
-                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold ${
-                      isActive ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground"
-                    }`}>
+                  <div className="flex items-center justify-center mb-5">
+                    <span className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/25 text-primary text-sm font-bold shadow-lg shadow-primary/20">
                       {ayah.number}
                     </span>
                   </div>
 
-                  {/* Arabic text — extra large for immersive */}
-                  <div className="text-center" dir="rtl">
+                  {/* Arabic text — very large */}
+                  <div dir="rtl" className="mb-6">
                     <TajwidAyahText
                       arabicText={ayah.arabic}
-                      activeWordIndex={isActive ? activeWordIndex : -1}
+                      activeWordIndex={activeWordIndex}
                       onWordTap={(wi) => {
-                        globalAudio.jumpToAyah(i);
+                        globalAudio.jumpToAyah(currentAyah);
                         setActiveWordIndex(wi);
                       }}
                       tajwidEnabled={tajwidEnabled}
-                      className={`arabic-text leading-[2.6] ${isActive ? "text-3xl text-foreground" : "text-2xl text-foreground/60"}`}
+                      className="arabic-text text-3xl sm:text-4xl leading-[2.4] text-white drop-shadow-lg"
                     />
                   </div>
 
                   {/* Translation */}
-                  {!isArabicOnly && (translations[i] || ayah.translation) && (
-                    <p className={`text-center mt-4 leading-relaxed border-t pt-4 ${
-                      isActive 
-                        ? "text-sm text-muted-foreground border-border/40" 
-                        : "text-xs text-muted-foreground/50 border-border/20"
-                    }`}>
-                      {translations[i] || ayah.translation}
+                  {!isArabicOnly && (translations[currentAyah] || ayah.translation) && (
+                    <p className="text-sm text-white/70 leading-relaxed border-t border-white/10 pt-4 mb-3">
+                      {translations[currentAyah] || ayah.translation}
                     </p>
                   )}
 
                   {/* Transliteration */}
                   {ayah.transliteration && (
-                    <p className={`italic mt-2 leading-relaxed text-center ${
-                      isActive ? "text-xs text-primary/60" : "text-[10px] text-primary/30"
-                    }`}>
+                    <p className="text-xs text-primary/60 italic leading-relaxed">
                       {ayah.transliteration}
                     </p>
                   )}
-
-                  {/* Footer */}
-                  <p className={`text-center mt-3 ${isActive ? "text-[11px] text-muted-foreground/60" : "text-[9px] text-muted-foreground/30"}`}>
-                    {surah.nameArabic} · Ayah {ayah.number}
-                  </p>
                 </motion.div>
               );
-            })}
+            })()}
+          </div>
+
+          {/* Bottom nav — prev/next */}
+          <div className="relative z-10 px-6 pb-8 pt-4">
+            <div className="flex items-center gap-4">
+              <button
+                disabled={currentAyah <= 0}
+                onClick={() => globalAudio.prevAyah()}
+                className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+              >
+                ← Précédent
+              </button>
+              <button
+                onClick={() => {
+                  if (playing) globalAudio.pause();
+                  else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
+                  else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
+                }}
+                className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
+              >
+                {playing ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
+              </button>
+              <button
+                disabled={currentAyah >= surah.ayahs.length - 1}
+                onClick={() => globalAudio.nextAyah()}
+                className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+              >
+                Suivant →
+              </button>
+            </div>
           </div>
         </div>
       ) : (
