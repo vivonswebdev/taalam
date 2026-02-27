@@ -149,7 +149,7 @@ export default function Reading() {
 
   // ─── Surah List View ──────────────────────────────────────
   return (
-    <div className={`${immersiveEnabled ? "reading-epic-bg" : "min-h-screen"} pb-28`} style={immersiveEnabled ? { backgroundImage: `url(${readingBg})` } : undefined}>
+    <div className={`${epicBg ? epicBg.className : "min-h-screen"} pb-28`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">

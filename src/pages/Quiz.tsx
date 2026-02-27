@@ -300,7 +300,7 @@ export default function Quiz() {
 
   // ═══ QUIZ QUESTIONS ═══
   return (
-    <div className={`min-h-screen pb-8 ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
+    <div className={`min-h-screen pb-8 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
       <div className="px-6 pt-14 pb-6">
         <button onClick={handleBackToCategories} className="flex items-center gap-2 text-muted-foreground mb-6">
           <ArrowLeft size={20} />

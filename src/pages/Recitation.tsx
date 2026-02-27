@@ -331,7 +331,7 @@ export default function Recitation() {
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
 
   return (
-    <div className={`min-h-screen pb-24 ${immersiveEnabled ? "tarteel-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${tarteelBg})` } : undefined}>
+    <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
       <Confetti active={showConfetti} emoji={isChildMode} />
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
 
