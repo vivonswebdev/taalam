@@ -216,6 +216,59 @@
     opacity: 0.7;
   }
 
+  /* ── 4) Galaxy ── */
+  .galaxy-epic-bg {
+    composes: epic-bg-base;
+  }
+  .galaxy-epic-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5,0,20,0.4) 0%, rgba(15,5,40,0.6) 50%, rgba(5,0,15,0.8) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .galaxy-epic-bg::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 25% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.2px 1.2px at 65% 35%, rgba(200,180,255,0.4) 0%, transparent 100%),
+      radial-gradient(0.8px 0.8px at 45% 75%, rgba(255,215,0,0.2) 0%, transparent 100%);
+    background-size: 200px 200px, 180px 250px, 220px 220px;
+    animation: star-twinkle 5s ease-in-out infinite alternate;
+    opacity: 0.9;
+  }
+
+  /* ── 5) Garden ── */
+  .garden-epic-bg {
+    composes: epic-bg-base;
+  }
+  .garden-epic-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20,30,10,0.3) 0%, rgba(15,25,8,0.5) 50%, rgba(10,15,5,0.7) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── 6) Ocean ── */
+  .ocean-epic-bg {
+    composes: epic-bg-base;
+  }
+  .ocean-epic-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20,10,30,0.3) 0%, rgba(15,10,25,0.5) 50%, rgba(10,5,20,0.7) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
   /* ── Keyframes ── */
   @keyframes waterfall-drift {
     0%   { background-position: 0 0, 50px 0, 100px 0, 150px 0, 200px 0, 30px 0; }
