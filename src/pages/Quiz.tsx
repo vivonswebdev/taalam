@@ -1,4 +1,6 @@
 import { useState, useCallback, useRef } from "react";
+import { useImmersiveBg } from "@/hooks/useImmersiveBg";
+import quizBg from "@/assets/quiz-bg.jpg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain } from "lucide-react";
@@ -52,6 +54,7 @@ export { loadQuizStats, type QuizStats };
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const { immersiveEnabled } = useImmersiveBg();
   const { setLevel } = useProgress();
   const { t } = useLanguage();
   const [category, setCategory] = useState<QuizCategory | null>(null);
@@ -152,7 +155,7 @@ export default function Quiz() {
     ];
 
     return (
-      <div className="min-h-screen pb-24">
+      <div className={`min-h-screen pb-24 ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
         <div className="px-6 pt-14 pb-6">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-6">
             <ArrowLeft size={20} />
@@ -245,7 +248,7 @@ export default function Quiz() {
     const allPoolQuestions = getQuizByCategory(category);
 
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+      <div className={`min-h-screen flex flex-col items-center justify-center px-6 text-center ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }} className="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center mb-6">
           <Trophy size={36} className="text-secondary" />
         </motion.div>
@@ -296,7 +299,7 @@ export default function Quiz() {
 
   // ═══ QUIZ QUESTIONS ═══
   return (
-    <div className="min-h-screen pb-8">
+    <div className={`min-h-screen pb-8 ${immersiveEnabled ? "quiz-epic-bg" : ""}`} style={immersiveEnabled ? { backgroundImage: `url(${quizBg})` } : undefined}>
       <div className="px-6 pt-14 pb-6">
         <button onClick={handleBackToCategories} className="flex items-center gap-2 text-muted-foreground mb-6">
           <ArrowLeft size={20} />

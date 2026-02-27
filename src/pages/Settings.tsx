@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Image } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -8,6 +8,7 @@ import { useTranslationPreference, AVAILABLE_EDITIONS } from "@/hooks/useTransla
 import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
+import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
@@ -17,6 +18,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showDedication, setShowDedication] = useState(false);
+  const { immersiveEnabled, toggleImmersive } = useImmersiveBg();
 
   // Theme state: "light" | "dark" | "system"
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
@@ -98,7 +100,20 @@ export default function Settings() {
             </div>
           </div>
         </motion.div>
-        {/* Sticker Collection */}
+
+        {/* Immersive Backgrounds Toggle */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <button onClick={toggleImmersive} className="w-full flex items-center gap-4 p-4 text-left">
+            <Image size={20} className={immersiveEnabled ? "text-secondary" : "text-muted-foreground"} />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">Arrière-plans épiques</p>
+              <p className="text-xs text-muted-foreground">Montagne, désert, mosquée sur les écrans</p>
+            </div>
+            <div className={`w-12 h-7 rounded-full transition-colors relative ${immersiveEnabled ? "bg-success" : "bg-muted"}`}>
+              <motion.div animate={{ x: immersiveEnabled ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
+            </div>
+          </button>
+        </motion.div>
         {isChildMode && stickers.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-4">
             <p className="text-sm font-semibold text-card-foreground mb-3">{t("progress.stickers")}</p>

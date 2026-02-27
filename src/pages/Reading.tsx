@@ -13,6 +13,7 @@ import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import readingBg from "@/assets/reading-bg.jpg";
 
 export default function Reading() {
@@ -20,6 +21,7 @@ export default function Reading() {
   const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
   const { settings, setDarkModeReading, setArabicFont, setDefaultReciter, arabicFontFamily } = useReadingSettings();
   const { readingPosition } = useBookmarks();
+  const { immersiveEnabled } = useImmersiveBg();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -114,8 +116,8 @@ export default function Reading() {
   if (selectedSurah) {
     return (
       <div
-        className="reading-epic-bg"
-        style={{ backgroundImage: `url(${readingBg})`, "--arabic-font": arabicFontFamily } as React.CSSProperties}
+        className={immersiveEnabled ? "reading-epic-bg" : "min-h-screen"}
+        style={immersiveEnabled ? { backgroundImage: `url(${readingBg})`, "--arabic-font": arabicFontFamily } as React.CSSProperties : { "--arabic-font": arabicFontFamily } as React.CSSProperties}
       >
         <style>{`
           .arabic-text { font-family: ${arabicFontFamily} !important; }
@@ -146,7 +148,7 @@ export default function Reading() {
 
   // ─── Surah List View ──────────────────────────────────────
   return (
-    <div className="reading-epic-bg pb-28" style={{ backgroundImage: `url(${readingBg})` }}>
+    <div className={`${immersiveEnabled ? "reading-epic-bg" : "min-h-screen"} pb-28`} style={immersiveEnabled ? { backgroundImage: `url(${readingBg})` } : undefined}>
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
