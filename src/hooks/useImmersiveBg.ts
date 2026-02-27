@@ -26,6 +26,7 @@ export const BG_OPTIONS: { id: BgTheme; label: string; emoji: string }[] = [
   { id: "galaxy", label: "Galaxie", emoji: "🌌" },
   { id: "garden", label: "Jardin", emoji: "🌿" },
   { id: "ocean", label: "Océan", emoji: "🌊" },
+  { id: "starry", label: "Étoilé", emoji: "✨" },
   { id: "none", label: "Aucun", emoji: "⬜" },
 ];
 
