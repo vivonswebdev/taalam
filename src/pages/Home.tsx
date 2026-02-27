@@ -169,7 +169,7 @@ export default function Home() {
           <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
             🆕
           </span>
-          <span className="text-2xl mb-2">❤️</span>
+          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: 10 }} transition={{ type: "spring", stiffness: 400 }}>❤️</motion.span>
           <p className="text-sm font-bold text-white leading-tight">{t("home.moodsTitle")}</p>
           <p className="text-[11px] text-white/60 mt-1 line-clamp-2">{t("home.moodsSubtitle")}</p>
           <span className="mt-auto pt-3 text-[11px] font-semibold text-white/50">{t("home.moodsButton")} →</span>
