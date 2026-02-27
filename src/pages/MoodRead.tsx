@@ -58,32 +58,42 @@ export default function MoodRead() {
     const fetchTexts = async () => {
       setLoading(true);
       const surahCache: Record<number, any[]> = {};
+      const translationCache: Record<number, any[]> = {};
       const results: FlatAyah[] = [];
 
       for (const item of list) {
         if (!surahCache[item.surahNumber]) {
           try {
-            const res = await fetch(`https://api.alquran.cloud/v1/surah/${item.surahNumber}`);
-            const data = await res.json();
-            surahCache[item.surahNumber] = data.data?.ayahs || [];
+            const [arRes, trRes] = await Promise.all([
+              fetch(`https://api.alquran.cloud/v1/surah/${item.surahNumber}`),
+              isArabicOnly ? Promise.resolve(null) : fetch(`https://api.alquran.cloud/v1/surah/${item.surahNumber}/${resolvedEditionId}`),
+            ]);
+            const arData = await arRes.json();
+            surahCache[item.surahNumber] = arData.data?.ayahs || [];
+            if (trRes) {
+              const trData = await trRes.json();
+              translationCache[item.surahNumber] = trData.data?.ayahs || [];
+            }
           } catch {
             surahCache[item.surahNumber] = [];
           }
         }
         const ayah = surahCache[item.surahNumber].find((a: any) => a.numberInSurah === item.ayahNumber);
+        const trAyah = translationCache[item.surahNumber]?.find((a: any) => a.numberInSurah === item.ayahNumber);
         results.push({
           surahNumber: item.surahNumber,
           surahName: item.surahName,
           surahNameArabic: item.surahNameArabic,
           ayahNumber: item.ayahNumber,
           text: ayah?.text || "",
+          translation: trAyah?.text || "",
         });
       }
       setAyahs(results);
       setLoading(false);
     };
     fetchTexts();
-  }, [mood]);
+  }, [mood, resolvedEditionId, isArabicOnly]);
 
   const playCurrentAyah = useCallback(async (index: number) => {
     if (index >= ayahs.length) {
