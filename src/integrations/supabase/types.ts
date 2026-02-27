@@ -344,6 +344,98 @@ export type Database = {
           },
         ]
       }
+      hifz_plan_tasks: {
+        Row: {
+          ayah_from: number
+          ayah_to: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          plan_id: string
+          surah_number: number
+          task_date: string
+          task_type: string
+          user_id: string
+        }
+        Insert: {
+          ayah_from: number
+          ayah_to: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          plan_id: string
+          surah_number: number
+          task_date: string
+          task_type?: string
+          user_id: string
+        }
+        Update: {
+          ayah_from?: number
+          ayah_to?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          plan_id?: string
+          surah_number?: number
+          task_date?: string
+          task_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hifz_plan_tasks_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "hifz_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hifz_plans: {
+        Row: {
+          created_at: string
+          daily_ayat: number
+          duration_days: number
+          id: string
+          is_active: boolean
+          name: string
+          started_at: string
+          target_items: Json
+          target_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_ayat?: number
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          started_at?: string
+          target_items?: Json
+          target_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_ayat?: number
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          started_at?: string
+          target_items?: Json
+          target_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       listening_sessions: {
         Row: {
           created_at: string
