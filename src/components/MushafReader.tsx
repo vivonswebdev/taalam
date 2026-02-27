@@ -262,6 +262,31 @@ export default function MushafReader({
                 </div>
                 <Switch checked={darkOverride} onCheckedChange={setDarkOverride} />
               </div>
+              {/* Reading style toggle */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Palette size={14} className="text-muted-foreground" />
+                  <span className="text-sm font-medium">Style de lecture</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setReadingStyle("cards"); localStorage.setItem("reading-style", "cards"); }}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-colors ${
+                      readingStyle === "cards" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    🃏 Cartes
+                  </button>
+                  <button
+                    onClick={() => { setReadingStyle("immersive"); localStorage.setItem("reading-style", "immersive"); }}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-colors ${
+                      readingStyle === "immersive" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    🌌 Émotions
+                  </button>
+                </div>
+              </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Palette size={14} className="text-muted-foreground" />
