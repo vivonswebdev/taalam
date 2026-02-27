@@ -186,9 +186,15 @@ export default function MoodRead() {
 
   const currentAyah = ayahs[currentIndex];
 
+  const bgImage = MOOD_BG[mood.type] || moodEmotion;
+
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${mood.color} relative flex flex-col`}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+    <div className="min-h-screen relative flex flex-col">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      />
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Top bar */}
