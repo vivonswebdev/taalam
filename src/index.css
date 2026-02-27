@@ -325,6 +325,37 @@
     box-shadow: 0 0 24px rgba(255, 215, 0, 0.1);
   }
 
+  /* ── Card shimmer on hover ── */
+  @keyframes card-shimmer {
+    0%   { transform: translateX(-100%) rotate(25deg); }
+    100% { transform: translateX(100%) rotate(25deg); }
+  }
+  .card-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.15) 45%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.15) 55%,
+      transparent 60%
+    );
+    transform: translateX(-100%) rotate(25deg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card-shimmer:hover::after {
+    opacity: 1;
+    animation: card-shimmer 0.8s ease-out forwards;
+  }
+
   /* Legacy aliases */
   .reading-epic-bg .ayah-card-epic { background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,215,0,0.12); }
   .reading-epic-bg .ayah-card-epic.active { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.3); box-shadow: 0 0 24px rgba(255,215,0,0.1); }

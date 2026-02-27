@@ -163,7 +163,7 @@ export default function Home() {
           transition={{ delay: 0.25 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/moods")}
-          className="relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
+          className="card-shimmer relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
           style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
         >
           <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
@@ -182,7 +182,7 @@ export default function Home() {
           transition={{ delay: 0.3 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/recitation")}
-          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: -10 }} transition={{ type: "spring", stiffness: 400 }}>🎤</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.tarteelButton")}</p>
@@ -197,7 +197,7 @@ export default function Home() {
           transition={{ delay: 0.35 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/quiz")}
-          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, y: -4 }} transition={{ type: "spring", stiffness: 400 }}>🧠</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.quizButton")}</p>
@@ -212,7 +212,7 @@ export default function Home() {
           transition={{ delay: 0.4 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/find-ayah")}
-          className="rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
+          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
         >
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: 15 }} transition={{ type: "spring", stiffness: 400 }}>🔍</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.findAyahButton")}</p>
