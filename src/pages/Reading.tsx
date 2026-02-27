@@ -148,7 +148,7 @@ export default function Reading() {
 
   // ─── Surah List View ──────────────────────────────────────
   return (
-    <div className="reading-epic-bg pb-28" style={{ backgroundImage: `url(${readingBg})` }}>
+    <div className={`${immersiveEnabled ? "reading-epic-bg" : "min-h-screen"} pb-28`} style={immersiveEnabled ? { backgroundImage: `url(${readingBg})` } : undefined}>
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
