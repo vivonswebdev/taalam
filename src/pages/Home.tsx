@@ -231,7 +231,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/progress")}
+            onClick={() => navigate("/habits")}
             className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
           >
             <span className="text-2xl">📊</span>
