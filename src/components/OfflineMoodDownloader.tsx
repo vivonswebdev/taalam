@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, Check, Loader2, WifiOff } from "lucide-react";
 import { moodPresets } from "@/data/moodPresets";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const OFFLINE_PRESETS = ["sleep", "ruqya", "study", "success"] as const;
 const CACHE_NAME = "mood-audio-v1";
@@ -28,6 +29,7 @@ function expandVersesForAudio(verses: typeof moodPresets[0]["verses"]) {
 }
 
 export default function OfflineMoodDownloader() {
+  const { t } = useLanguage();
   const [selected, setSelected] = useState<Set<string>>(() => new Set(getStoredOffline()));
   const [downloading, setDownloading] = useState<string | null>(null);
   const [downloaded, setDownloaded] = useState<Set<string>>(() => new Set(getStoredOffline()));
@@ -52,19 +54,16 @@ export default function OfflineMoodDownloader() {
       const items = expandVersesForAudio(mood.verses);
       const cache = await caches.open(CACHE_NAME);
 
-      // Cache surah text JSONs
       const surahNumbers = [...new Set(items.map((i) => i.surah))];
       for (const sn of surahNumbers) {
         const textUrl = `https://api.alquran.cloud/v1/surah/${sn}`;
         try { await cache.add(textUrl); } catch {}
       }
 
-      // Cache audio files
       for (const item of items) {
         const audioApiUrl = `https://api.alquran.cloud/v1/ayah/${item.surah}:${item.ayah}/ar.alafasy`;
         try {
           await cache.add(audioApiUrl);
-          // Also fetch and cache the actual mp3
           const res = await fetch(audioApiUrl);
           const data = await res.json();
           if (data.data?.audio) {
@@ -94,30 +93,33 @@ export default function OfflineMoodDownloader() {
       <div className="p-4">
         <p className="text-sm font-medium text-card-foreground mb-1 flex items-center gap-2">
           <WifiOff size={18} className="text-primary" />
-          Télécharger pour hors-ligne
+          {t("offline.title")}
         </p>
-        <p className="text-xs text-muted-foreground mb-3">Audio des États du cœur disponible sans connexion</p>
+        <p className="text-xs text-muted-foreground mb-3">{t("offline.subtitle")}</p>
 
         <div className="space-y-2">
-          {presets.map((mood) => (
-            <button
-              key={mood.id}
-              onClick={() => toggle(mood.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 transition-colors text-left ${
-                selected.has(mood.id)
-                  ? "border-primary bg-primary/10"
-                  : "border-border hover:bg-accent/50"
-              }`}
-            >
-              <span className="text-lg">{mood.emoji}</span>
-              <span className="flex-1 text-xs font-medium text-card-foreground">{mood.title}</span>
-              {downloaded.has(mood.id) ? (
-                <Check size={16} className="text-emerald-500" />
-              ) : downloading === mood.id ? (
-                <Loader2 size={16} className="text-primary animate-spin" />
-              ) : null}
-            </button>
-          ))}
+          {presets.map((mood) => {
+            const titleKey = `mood.${mood.id}` as any;
+            return (
+              <button
+                key={mood.id}
+                onClick={() => toggle(mood.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 transition-colors text-left ${
+                  selected.has(mood.id)
+                    ? "border-primary bg-primary/10"
+                    : "border-border hover:bg-accent/50"
+                }`}
+              >
+                <span className="text-lg">{mood.emoji}</span>
+                <span className="flex-1 text-xs font-medium text-card-foreground">{t(titleKey) || mood.title}</span>
+                {downloaded.has(mood.id) ? (
+                  <Check size={16} className="text-emerald-500" />
+                ) : downloading === mood.id ? (
+                  <Loader2 size={16} className="text-primary animate-spin" />
+                ) : null}
+              </button>
+            );
+          })}
         </div>
 
         {hasNew && (
@@ -129,12 +131,12 @@ export default function OfflineMoodDownloader() {
             {downloading ? (
               <>
                 <Loader2 size={16} className="animate-spin" />
-                Téléchargement...
+                {t("offline.downloading")}
               </>
             ) : (
               <>
                 <Download size={16} />
-                Télécharger
+                {t("offline.download")}
               </>
             )}
           </button>
