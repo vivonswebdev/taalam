@@ -17,7 +17,7 @@ export default function BottomNav() {
     { path: "/quran", icon: Mic, label: t("nav.quran") },
     { path: "/habits", icon: BarChart3, label: "Habitudes" },
     { path: "/moods", icon: Heart, label: t("nav.moods") },
-    { path: "/settings", icon: Settings, label: t("nav.settings") },
+    { path: "/more", icon: MoreHorizontal, label: "Plus" },
   ];
 
   if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods")) return null;
