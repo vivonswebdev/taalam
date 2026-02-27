@@ -176,7 +176,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   // Auto-advance after feedback (1s delay)
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    if (ayahPhase === "feedback" && currentAyahIdx + 1 < totalAyahs) {
+    if (ayahPhase === "feedback") {
       autoAdvanceRef.current = setTimeout(() => {
         nextAyah();
       }, 1000);
@@ -184,7 +184,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     return () => {
       if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
     };
-  }, [ayahPhase, currentAyahIdx, totalAyahs, nextAyah]);
+  }, [ayahPhase, nextAyah]);
 
   // Cleanup audio on unmount
   useEffect(() => {
