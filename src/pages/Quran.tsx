@@ -820,7 +820,7 @@ export default function Quran() {
       {/* ═══ FULL SURAH MODE (Verset → Sourate complète) ═══ */}
       {selectedSurah && recitationMode === "fullSurah" && !surahFinished && (
         <div className="px-6">
-          <DictationMode
+          <FullSurahDictation
             surah={selectedSurah}
             onBack={handleNewSurah}
             isChildMode={isChildMode}
