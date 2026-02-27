@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Clock, BarChart3, Settings, BookOpenText } from "lucide-react";
+import { Home, BookOpen, Mic, Clock, Settings, BookOpenText, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
@@ -15,11 +15,12 @@ export default function BottomNav() {
     { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
     { path: "/reading", icon: BookOpenText, label: t("nav.reading") },
     { path: "/quran", icon: Mic, label: t("nav.quran") },
+    { path: "/moods", icon: Heart, label: "Cœur" },
     { path: "/prayers", icon: Clock, label: t("nav.prayers") },
     { path: "/settings", icon: Settings, label: t("nav.settings") },
   ];
 
-  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/")) return null;
+  if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods")) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-border safe-area-bottom">
