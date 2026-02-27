@@ -81,5 +81,6 @@ export const BG_CSS_CLASS: Record<BgTheme, string> = {
   galaxy: "galaxy-epic-bg",
   garden: "garden-epic-bg",
   ocean: "ocean-epic-bg",
+  starry: "starry-epic-bg",
   none: "",
 };
