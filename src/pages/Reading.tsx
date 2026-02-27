@@ -286,13 +286,13 @@ export default function Reading() {
       {/* Search */}
       <div className="px-6 mb-4">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 epic-text-muted" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t("reading.searchPlaceholder")}
-            className="w-full bg-card border border-border rounded-xl pl-9 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-black/40 backdrop-blur border border-white/10 rounded-xl pl-9 pr-4 py-3 text-sm epic-text-light placeholder:text-white/30 outline-none focus:ring-2 focus:ring-yellow-500/40"
           />
         </div>
       </div>
