@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
-import quizBg from "@/assets/quiz-bg.jpg";
+import { getEpicBg } from "@/lib/epicBg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain } from "lucide-react";

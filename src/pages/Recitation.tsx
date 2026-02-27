@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
-import tarteelBg from "@/assets/tarteel-bg.jpg";
+import { getEpicBg } from "@/lib/epicBg";
 import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Square, Mic, MicOff, RotateCcw, ChevronDown, Flame, Award, Volume2, Eye, EyeOff, CheckCircle2, XCircle, ChevronLeft, ChevronRight, Heart } from "lucide-react";

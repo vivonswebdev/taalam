@@ -21,7 +21,8 @@ export default function Reading() {
   const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
   const { settings, setDarkModeReading, setArabicFont, setDefaultReciter, arabicFontFamily } = useReadingSettings();
   const { readingPosition } = useBookmarks();
-  const { immersiveEnabled } = useImmersiveBg();
+  const { immersiveEnabled, choices } = useImmersiveBg();
+  const epicBg = immersiveEnabled ? getEpicBg(choices.reading) : null;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
