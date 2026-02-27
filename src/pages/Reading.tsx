@@ -314,24 +314,24 @@ export default function Reading() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: Math.min(i * 0.008, 0.4) }}
             onClick={() => handleSelectSurah(s.number)}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-card border border-border rounded-xl hover:bg-accent/30 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-3 ayah-card-epic rounded-xl hover:bg-white/5 transition-colors text-left"
           >
-            <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+            <span className="w-8 h-8 rounded-lg bg-yellow-500/15 epic-text-gold text-xs font-bold flex items-center justify-center shrink-0">
               {s.number}
             </span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-arabic text-lg text-foreground">{s.nameArabic}</span>
-                <span className="text-[10px] text-muted-foreground">{s.revelationType}</span>
+                <span className="font-arabic text-lg epic-text-light">{s.nameArabic}</span>
+                <span className="text-[10px] epic-text-muted">{s.revelationType}</span>
               </div>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs epic-text-muted truncate">
                 {s.name} · {s.englishName} · {s.versesCount} {t("detail.verses")}
               </p>
             </div>
           </motion.button>
         ))}
         {filteredSurahs.length === 0 && !loading && (
-          <p className="text-center text-sm text-muted-foreground py-6">{t("reading.noResults")}</p>
+          <p className="text-center text-sm epic-text-muted py-6">{t("reading.noResults")}</p>
         )}
       </div>
     </div>
