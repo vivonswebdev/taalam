@@ -3,7 +3,7 @@ import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { analyzeAyahTajwid, type TajwidWord } from "@/data/tajwidRules";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Mic, MicOff, RotateCcw, Volume2, ArrowLeft, ChevronRight, AlertCircle, BookOpen, Flame, Target,
+  Mic, MicOff, RotateCcw, Volume2, ArrowLeft, ChevronRight, AlertCircle, BookOpen, Eye,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
@@ -13,11 +13,11 @@ import { useXP } from "@/hooks/useXP";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 
 // ─── Constants ──────────────────────────────────────────────
-const BLOCK_SIZE = 10; // ayahs per block for large surahs
+const BLOCK_SIZE = 10;
 const SMALL_SURAH_THRESHOLD = 30;
 
 // ─── Types ──────────────────────────────────────────────────
-type Phase = "overview" | "listen" | "recording" | "feedback" | "blockSummary" | "finalSummary";
+type Phase = "overview" | "reading" | "recording" | "feedback" | "blockSummary" | "finalSummary";
 
 interface AyahFeedbackData {
   ayahIdx: number;
@@ -27,8 +27,8 @@ interface AyahFeedbackData {
 }
 
 interface BlockDef {
-  start: number; // 0-based index
-  end: number;   // 0-based inclusive
+  start: number;
+  end: number;
   label: string;
 }
 
@@ -74,13 +74,12 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
   const [currentBlockIdx, setCurrentBlockIdx] = useState(0);
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0); // relative to block start
-  const [phase, setPhase] = useState<Phase>(() => blocks.length === 1 ? "listen" : "overview");
+  const [phase, setPhase] = useState<Phase>(() => blocks.length === 1 ? "reading" : "overview");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [micError, setMicError] = useState<string | null>(null);
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [blockResults, setBlockResults] = useState<AyahFeedbackData[]>([]);
   const [allResults, setAllResults] = useState<AyahFeedbackData[]>([]);
-  const [hasListened, setHasListened] = useState(false);
 
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<string>>(new Set());
@@ -107,34 +106,25 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     };
   }, []);
 
-  // ─── Play current ayah audio ───
-  const playCurrentAyah = useCallback(() => {
-    if (!currentAyah) return;
-    if (preListenAudioRef.current) { preListenAudioRef.current.pause(); preListenAudioRef.current = null; }
-    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.data?.audio) {
-          const audio = new Audio(data.data.audio);
-          preListenAudioRef.current = audio;
-          audio.onended = () => { preListenAudioRef.current = null; setHasListened(true); };
-          audio.play().catch(() => setHasListened(true));
-        } else { setHasListened(true); }
-      })
-      .catch(() => setHasListened(true));
-  }, [surah.number, currentAyah, reciter]);
-
-  // ─── Start block ───
+  // ─── Start block (go to reading phase) ───
   const startBlock = useCallback((blockIdx: number) => {
     setCurrentBlockIdx(blockIdx);
     setCurrentAyahIdx(0);
     setBlockResults([]);
-    setHasListened(false);
     setLiveTranscript("");
-    setPhase("listen");
+    setPhase("reading");
   }, []);
 
-  // ─── Start recording ───
+  // ─── Start dictation (from reading → recording on first ayah) ───
+  const startDictation = useCallback(() => {
+    setCurrentAyahIdx(0);
+    setLiveTranscript("");
+    setMicError(null);
+    setPhase("recording");
+    voice.start();
+  }, [voice]);
+
+  // ─── Start recording current ayah ───
   const startRecording = useCallback(() => {
     setLiveTranscript("");
     setMicError(null);
@@ -153,7 +143,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       status: (wr.status === "correct" ? "correct" : wr.status === "missing" ? "missing" : wr.status === "extra" ? "extra" : "incorrect") as "correct" | "incorrect" | "missing" | "extra",
     }));
 
-    // Tajwid analysis for incorrect words
     const tajwidWords = analyzeAyahTajwid(currentAyah.arabic);
     const tajwidErrors: { word: string; ruleName: string }[] = [];
     wordResults.forEach((wr, i) => {
@@ -169,7 +158,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     const feedbackData: AyahFeedbackData = { ayahIdx: absoluteAyahIdx, score, wordResults, tajwidErrors };
     setBlockResults(prev => [...prev, feedbackData]);
 
-    // XP
     const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
     if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
       xpAwardedRef.current.add(xpKey);
@@ -182,28 +170,31 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   // ─── Next ayah in block ───
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
-      // Block finished
-      setAllResults(prev => [...prev, ...blockResults.filter(r => !prev.some(p => p.ayahIdx === r.ayahIdx)), blockResults[blockResults.length - 1]].filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i));
+      setAllResults(prev => {
+        const merged = [...prev, ...blockResults];
+        return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
+      });
       setPhase("blockSummary");
     } else {
       setCurrentAyahIdx(prev => prev + 1);
       setLiveTranscript("");
-      setHasListened(false);
-      setPhase("listen");
+      setMicError(null);
+      setPhase("recording");
+      voice.start();
     }
-  }, [currentAyahIdx, blockAyahCount, blockResults]);
+  }, [currentAyahIdx, blockAyahCount, blockResults, voice]);
 
   // ─── Retry ayah ───
   const retryAyah = useCallback(() => {
     setLiveTranscript("");
-    setHasListened(false);
-    setPhase("listen");
-  }, []);
+    setMicError(null);
+    setPhase("recording");
+    voice.start();
+  }, [voice]);
 
   // ─── Next block ───
   const goNextBlock = useCallback(() => {
     if (currentBlockIdx + 1 >= blocks.length) {
-      // All blocks done
       const merged = [...allResults, ...blockResults].filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
       setAllResults(merged);
       setPhase("finalSummary");
@@ -212,31 +203,22 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     }
   }, [currentBlockIdx, blocks.length, allResults, blockResults, startBlock]);
 
-  // ─── Computed summary data ───
+  // ─── Summary computation ───
   const computeSummary = (results: AyahFeedbackData[]) => {
     if (results.length === 0) return { avgScore: 0, tajwidScore: 0, worstAyahs: [], topTajwidErrors: [], tips: [] };
     const avgScore = Math.round(results.reduce((a, r) => a + r.score, 0) / results.length);
-
-    // Tajwid score: % of words without tajwid errors
     const totalWords = results.reduce((a, r) => a + r.wordResults.length, 0);
     const tajwidErrorCount = results.reduce((a, r) => a + r.tajwidErrors.length, 0);
     const tajwidScore = Math.round(((totalWords - tajwidErrorCount) / Math.max(1, totalWords)) * 100);
-
-    // Worst ayahs
     const worstAyahs = [...results].sort((a, b) => a.score - b.score).slice(0, 3).filter(a => a.score < 90);
-
-    // Top tajwid errors by rule
     const ruleCount: Record<string, number> = {};
     results.forEach(r => r.tajwidErrors.forEach(te => { ruleCount[te.ruleName] = (ruleCount[te.ruleName] || 0) + 1; }));
     const topTajwidErrors = Object.entries(ruleCount).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([rule, count]) => ({ rule, count }));
-
-    // Tips
     const tips: string[] = [];
     if (topTajwidErrors.length > 0) tips.push(`Revoir la règle « ${topTajwidErrors[0].rule} » – ${topTajwidErrors[0].count} erreur(s) détectée(s).`);
     if (worstAyahs.length > 0) tips.push(`Réécouter l'audio modèle pour l'Ayah ${worstAyahs[0].ayahIdx + 1} avant de refaire la dictée.`);
     if (avgScore < 70) tips.push("Essaie de réciter plus lentement en te concentrant sur chaque mot.");
     if (avgScore >= 70 && avgScore < 90) tips.push("Très bien ! Continue à pratiquer pour atteindre 90% et plus.");
-
     return { avgScore, tajwidScore, worstAyahs, topTajwidErrors, tips };
   };
 
@@ -264,7 +246,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   // RENDER
   // ═══════════════════════════════════════════════════════════
 
-  // ─── OVERVIEW: choose block ───
+  // ─── OVERVIEW: choose block (large surahs only) ───
   if (phase === "overview") {
     return (
       <div className="space-y-5">
@@ -273,11 +255,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <p className="text-sm text-muted-foreground mt-1">📚 Sourate complète · {surah.ayahs.length} versets</p>
         </div>
 
-        {blocks.length > 1 && (
-          <div className="bg-accent/30 rounded-xl p-3 text-center">
-            <p className="text-xs text-muted-foreground">Cette sourate est découpée en <span className="font-bold text-foreground">{blocks.length} blocs</span> de dictée</p>
-          </div>
-        )}
+        <div className="bg-accent/30 rounded-xl p-3 text-center">
+          <p className="text-xs text-muted-foreground">Cette sourate est découpée en <span className="font-bold text-foreground">{blocks.length} blocs</span> de dictée</p>
+        </div>
 
         <ReciterPicker selected={reciter} onChange={setReciter} compact />
 
@@ -321,27 +301,107 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             ← Retour
           </button>
           <button onClick={() => startBlock(0)} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            Commencer la dictée
+            Commencer
           </button>
         </div>
       </div>
     );
   }
 
-  // ─── LISTEN PHASE ───
-  if (phase === "listen" && currentAyah) {
-    const tajwidWords = analyzeAyahTajwid(currentAyah.arabic);
-    const waqf = hasWaqfMarker(currentAyah.arabic);
+  // ─── READING PHASE: show full block, then start dictation ───
+  if (phase === "reading") {
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
     return (
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+        {/* Header */}
+        <div className="flex items-center gap-2">
+          <button onClick={() => blocks.length === 1 ? onBack() : setPhase("overview")} className="p-1.5 rounded-full bg-muted hover:bg-accent transition-colors">
+            <ArrowLeft size={16} className="text-foreground" />
+          </button>
+          <div className="flex-1 text-center">
+            <p className="font-arabic text-xl text-primary">{surah.nameArabic}</p>
+            {blocks.length > 1 && (
+              <p className="text-[11px] text-muted-foreground">Bloc {currentBlockIdx + 1} / {blocks.length} · {currentBlock.label}</p>
+            )}
+          </div>
+          <div className="w-8" /> {/* spacer */}
+        </div>
+
+        {/* Instruction */}
+        <div className="bg-accent/30 rounded-xl p-3 text-center">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Eye size={15} className="text-primary" />
+            <span className="text-sm font-semibold text-foreground">Lis et mémorise ce bloc</span>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Prends le temps de lire {blockAyahs.length === 1 ? "ce verset" : `ces ${blockAyahs.length} versets`}. 
+            Quand tu es prêt, lance la dictée de mémoire.
+          </p>
+        </div>
+
+        {/* Reciter picker */}
+        <ReciterPicker selected={reciter} onChange={setReciter} compact />
+
+        {/* Full block text */}
+        <div className="bg-card border border-border rounded-2xl p-4 space-y-0" dir="rtl">
+          {blockAyahs.map((ayah, idx) => {
+            const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+            const waqf = hasWaqfMarker(ayah.arabic);
+            const globalIdx = currentBlock.start + idx;
+            return (
+              <div key={globalIdx} className="py-3 border-b border-border/20 last:border-b-0">
+                <div className="arabic-text text-xl leading-[2.8] text-center">
+                  {tajwidWords.map((tw, wi) => (
+                    <span key={wi} className="inline-block px-0.5"
+                      style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}>
+                      {tw.text}{" "}
+                    </span>
+                  ))}
+                  {/* Ayah number inline */}
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold mx-1 align-middle" dir="ltr">
+                    {globalIdx + 1}
+                  </span>
+                  {waqf && <span className="text-muted-foreground text-sm mx-0.5">{waqf}</span>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Big start button - mobile friendly */}
+        <div className="pt-2 pb-4">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={startDictation}
+            className={`w-full flex items-center justify-center gap-3 ${
+              isChildMode ? "py-6 text-xl" : "py-5 text-lg"
+            } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
+          >
+            <Mic size={24} />
+            Commencer la dictée
+          </motion.button>
+          <p className="text-[11px] text-muted-foreground text-center mt-2">
+            Le texte sera masqué et tu réciteras de mémoire
+          </p>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // ─── RECORDING PHASE (text hidden, ayah by ayah) ───
+  if (phase === "recording" && currentAyah) {
+    const words = currentAyah.arabic.split(/\s+/).filter(Boolean);
+    const ayahLiveWords = liveWords[0] || [];
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Block progress */}
         <div className="flex items-center gap-2">
-          <button onClick={() => setPhase("overview")} className="p-1.5 rounded-full bg-muted hover:bg-accent transition-colors">
+          <button onClick={() => { voice.stop(); setPhase("reading"); }} className="p-1.5 rounded-full bg-muted hover:bg-accent transition-colors">
             <ArrowLeft size={16} className="text-foreground" />
           </button>
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>Bloc {currentBlockIdx + 1}/{blocks.length} · Ayah {currentAyahIdx + 1}/{blockAyahCount}</span>
+              <span>{blocks.length > 1 ? `Bloc ${currentBlockIdx + 1}/${blocks.length} · ` : ""}Ayah {currentAyahIdx + 1}/{blockAyahCount}</span>
               <span>{Math.round(((currentAyahIdx) / blockAyahCount) * 100)}%</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -350,80 +410,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </div>
         </div>
 
-        {/* Step 1: Listen */}
-        <div className="flex items-center gap-2">
-          <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">1</span>
-          <span className="text-sm font-bold text-foreground">Écoute le verset</span>
-        </div>
-
-        {/* Ayah card with tajwid + ayah number + waqf */}
-        <div className="bg-card border border-border rounded-2xl p-5 relative" dir="rtl">
-          {/* Ayah number badge */}
-          <div className="absolute top-2 left-2 flex items-center gap-1" dir="ltr">
-            <span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center">
-              {absoluteAyahIdx + 1}
-            </span>
-            {waqf && <span className="text-xs text-muted-foreground font-arabic">{waqf}</span>}
-          </div>
-
-          <div className="arabic-text text-xl leading-[3] text-center pt-4">
-            {tajwidWords.map((tw, wi) => (
-              <span key={wi} className="inline-block px-0.5"
-                style={tw.primaryColor ? { color: `hsl(${tw.primaryColor})` } : undefined}>
-                {tw.text}{" "}
-              </span>
-            ))}
-          </div>
-
-          <p className="text-[10px] text-muted-foreground text-center mt-3 border-t border-border/30 pt-2" dir="ltr">
-            {surah.nameArabic} · Ayah {absoluteAyahIdx + 1}
-          </p>
-        </div>
-
-        {/* Listen + Skip */}
-        <div className="flex gap-3">
-          <motion.button whileTap={{ scale: 0.95 }} onClick={playCurrentAyah}
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            <Volume2 size={18} /> Écouter
-          </motion.button>
-          <button onClick={() => { setHasListened(true); }}
-            className="px-5 py-3.5 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            Passer
-          </button>
-        </div>
-
-        {/* Step 2: Record */}
-        {hasListened && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 pt-2">
-            <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
-              <span className="text-sm font-bold text-foreground">Récite ce verset</span>
-            </div>
-
-            {micError === "not-allowed" && (
-              <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-1">
-                <AlertCircle size={18} className="inline" />
-                <p className="text-sm font-semibold">Microphone refusé</p>
-                <p className="text-xs opacity-80">Autorise l'accès micro dans les réglages du navigateur.</p>
-              </div>
-            )}
-
-            <motion.button whileTap={{ scale: 0.95 }} onClick={startRecording}
-              className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/20`}>
-              <Mic size={24} /> Commencer
-            </motion.button>
-          </motion.div>
-        )}
-      </motion.div>
-    );
-  }
-
-  // ─── RECORDING PHASE ───
-  if (phase === "recording" && currentAyah) {
-    const words = currentAyah.arabic.split(/\s+/).filter(Boolean);
-    const ayahLiveWords = liveWords[0] || [];
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Recording indicator */}
         <div className="flex items-center justify-center gap-2 py-2">
           <div className="flex gap-1">
@@ -433,10 +419,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 className="w-1.5 h-4 bg-primary rounded-full" />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">Récite maintenant...</span>
+          <span className="text-xs text-muted-foreground">Récite le verset {currentAyahIdx + 1}...</span>
         </div>
 
-        {/* Live feedback card */}
+        {/* Hidden text with live reveal */}
         <div className="bg-card border border-border rounded-2xl p-5 relative" dir="rtl">
           <div className="absolute top-2 left-2" dir="ltr">
             <span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center">
@@ -477,6 +463,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-destructive text-destructive-foreground font-bold animate-pulse`}>
           <MicOff size={24} /> Arrêter
         </motion.button>
+
+        {micError === "not-allowed" && (
+          <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-1">
+            <AlertCircle size={18} className="inline" />
+            <p className="text-sm font-semibold">Microphone refusé</p>
+            <p className="text-xs opacity-80">Autorise l'accès micro dans les réglages du navigateur.</p>
+          </div>
+        )}
       </motion.div>
     );
   }
@@ -496,6 +490,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <p className="text-sm font-semibold text-foreground mt-1">
             {lastResult.score >= 90 ? "Excellent ! Macha Allah !" : lastResult.score >= 70 ? `Très bien, ${lastResult.score}% correct !` : `${lastResult.score}% – Continue !`}
           </p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Ayah {absoluteAyahIdx + 1} · {currentAyahIdx + 1}/{blockAyahCount}</p>
         </div>
 
         {/* Color-coded ayah */}
@@ -563,7 +558,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5">
         <div className="text-center py-4">
           <span className="text-4xl">{summary.avgScore >= 80 ? "🎉" : summary.avgScore >= 60 ? "💪" : "📖"}</span>
-          <h2 className="text-xl font-bold text-foreground mt-2">Bloc {currentBlockIdx + 1} terminé !</h2>
+          <h2 className="text-xl font-bold text-foreground mt-2">
+            {blocks.length === 1 ? "Dictée terminée !" : `Bloc ${currentBlockIdx + 1} terminé !`}
+          </h2>
           <p className="text-xs text-muted-foreground mt-1">{currentBlock.label} · {surah.nameArabic}</p>
         </div>
 
@@ -615,21 +612,32 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {/* Actions */}
         <div className="flex gap-3">
           <button onClick={() => startBlock(currentBlockIdx)} className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            <RotateCcw size={14} className="inline mr-1" /> Refaire ce bloc
+            <RotateCcw size={14} className="inline mr-1" /> Refaire
           </button>
-          <button onClick={goNextBlock} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            {isLastBlock ? "Résumé final 🎉" : `Bloc ${currentBlockIdx + 2} →`}
-          </button>
+          {blocks.length === 1 ? (
+            onRequestNextSurah && (
+              <button onClick={onRequestNextSurah} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
+                Sourate suivante →
+              </button>
+            )
+          ) : (
+            <button onClick={goNextBlock} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
+              {isLastBlock ? "Résumé final 🎉" : `Bloc ${currentBlockIdx + 2} →`}
+            </button>
+          )}
         </div>
 
-        <button onClick={() => setPhase("overview")} className="w-full py-2.5 text-sm text-muted-foreground underline">
-          Voir tous les blocs
-        </button>
+        {blocks.length > 1 && (
+          <button onClick={() => setPhase("overview")} className="w-full py-2.5 text-sm text-muted-foreground underline">
+            Voir tous les blocs
+          </button>
+        )}
+        <button onClick={onBack} className="w-full py-2 text-sm text-muted-foreground underline">← Retour</button>
       </motion.div>
     );
   }
 
-  // ─── FINAL SUMMARY ───
+  // ─── FINAL SUMMARY (multi-block only) ───
   if (phase === "finalSummary") {
     const summary = computeSummary(allResults);
     return (
@@ -638,10 +646,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <span className="text-5xl">🏆</span>
           <h2 className="text-xl font-bold text-foreground mt-3">Sourate terminée !</h2>
           <p className="font-arabic text-2xl text-primary mt-1">{surah.nameArabic}</p>
-          <p className="text-xs text-muted-foreground mt-1">{surah.ayahs.length} versets · {blocks.length > 1 ? `${blocks.length} blocs` : "1 dictée"}</p>
+          <p className="text-xs text-muted-foreground mt-1">{surah.ayahs.length} versets · {blocks.length} blocs</p>
         </div>
 
-        {/* Final scores */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <p className="text-3xl font-bold text-foreground">{summary.avgScore}%</p>
@@ -653,7 +660,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </div>
         </div>
 
-        {/* Worst ayahs */}
         {summary.worstAyahs.length > 0 && (
           <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-3 space-y-1">
             <p className="text-xs font-semibold text-foreground">⚠️ Ayat les plus difficiles</p>
@@ -663,7 +669,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </div>
         )}
 
-        {/* Tajwid errors */}
         {summary.topTajwidErrors.length > 0 && (
           <div className="bg-accent/30 rounded-xl p-3 space-y-1">
             <p className="text-xs font-semibold text-foreground">📚 Règles Tajwid à revoir</p>
@@ -673,7 +678,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </div>
         )}
 
-        {/* Tips */}
         {summary.tips.length > 0 && (
           <div className="bg-primary/5 border border-primary/15 rounded-xl p-3 space-y-1">
             <div className="flex items-center gap-1.5 mb-1">
@@ -686,7 +690,6 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex gap-3">
           <button onClick={() => { setAllResults([]); setBlockResults([]); setPhase("overview"); }}
             className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
@@ -700,9 +703,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           )}
         </div>
 
-        <button onClick={onBack} className="w-full py-2.5 text-sm text-muted-foreground underline">
-          ← Retour
-        </button>
+        <button onClick={onBack} className="w-full py-2.5 text-sm text-muted-foreground underline">← Retour</button>
       </motion.div>
     );
   }
