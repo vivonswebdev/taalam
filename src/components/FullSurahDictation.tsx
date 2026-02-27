@@ -548,10 +548,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     );
   }
 
-  // ─── RECORDING PHASE (text hidden, ayah by ayah) ───
+  // ─── RECORDING PHASE (full block visible, current ayah highlighted) ───
   if (phase === "recording" && currentAyah) {
     const words = currentAyah.arabic.split(/\s+/).filter(Boolean);
     const ayahLiveWords = liveWords[0] || [];
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Block progress */}
@@ -571,7 +572,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         </div>
 
         {/* Recording indicator */}
-        <div className="flex items-center justify-center gap-2 py-2">
+        <div className="flex items-center justify-center gap-2 py-1">
           <div className="flex gap-1">
             {[0, 1, 2, 3].map((b) => (
               <motion.div key={b} animate={{ scaleY: [1, 2.5, 1] }}
@@ -579,37 +580,76 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 className="w-1.5 h-4 bg-primary rounded-full" />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">Récite le verset {currentAyahIdx + 1}...</span>
+          <span className="text-xs text-muted-foreground">Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}</span>
         </div>
 
-        {/* Hidden text with live reveal */}
-        <div className="bg-card border border-border rounded-2xl p-5 relative" dir="rtl">
-          <div className="absolute top-2 left-2" dir="ltr">
-            <span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center">
-              {absoluteAyahIdx + 1}
-            </span>
+        {/* ─── Full block mushaf view with current ayah live feedback ─── */}
+        <div className="bg-card border-2 border-primary/10 rounded-2xl overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
+          <div className="p-4" dir="rtl">
+            <div className="font-arabic text-[1.25rem] sm:text-xl leading-[2.6] sm:leading-[2.8] text-justify">
+              {blockAyahs.map((ayah, idx) => {
+                const globalIdx = currentBlock.start + idx;
+                const isCurrent = idx === currentAyahIdx;
+                const isDone = idx < currentAyahIdx;
+                const isFuture = idx > currentAyahIdx;
+                const ayahWords = ayah.arabic.split(/\s+/).filter(Boolean);
+
+                return (
+                  <span key={globalIdx} className="inline">
+                    {isCurrent ? (
+                      // Current ayah: live word feedback
+                      <span className="inline bg-primary/5 rounded-sm ring-1 ring-primary/20">
+                        {ayahWords.map((word, wi) => {
+                          const lw = ayahLiveWords[wi];
+                          const status = lw?.status || "pending";
+                          const isPending = status === "pending";
+                          return (
+                            <motion.span key={wi}
+                              initial={!isPending ? { scale: 1.08 } : false}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                              className={`inline-block px-0.5 rounded transition-colors duration-300 ${
+                                isPending ? "text-foreground/30" : getLiveWordColor(status)
+                              }`}>
+                              {word}{" "}
+                            </motion.span>
+                          );
+                        })}
+                      </span>
+                    ) : isDone ? (
+                      // Already recited: success style
+                      <span className="inline text-success/60">
+                        {ayah.arabic}{" "}
+                      </span>
+                    ) : (
+                      // Future: dimmed
+                      <span className="inline text-muted-foreground/30">
+                        {ayah.arabic}{" "}
+                      </span>
+                    )}
+                    {/* Ayah number marker */}
+                    <span
+                      className={`inline-flex items-center justify-center w-6 h-6 mx-0.5 rounded-full text-[9px] font-bold align-middle select-none ${
+                        isCurrent
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : isDone
+                          ? "bg-success/15 text-success"
+                          : "bg-muted/40 text-muted-foreground/40"
+                      }`}
+                      dir="ltr"
+                    >
+                      {globalIdx + 1}
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
           </div>
-          <div className="arabic-text text-xl leading-[3] text-center pt-4">
-            {words.map((word, wi) => {
-              const lw = ayahLiveWords[wi];
-              const status = lw?.status || "pending";
-              const isPending = status === "pending";
-              return (
-                <motion.span key={wi}
-                  initial={!isPending ? { scale: 1.1 } : false}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                  className={`inline-block px-1 py-0.5 mx-0.5 rounded-md transition-colors duration-300 ${
-                    isPending ? "text-transparent select-none bg-muted/30" : getLiveWordColor(status)
-                  }`}>
-                  {isPending ? "████" : word}
-                </motion.span>
-              );
-            })}
-          </div>
+          <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
         </div>
 
-        {/* Progress */}
+        {/* Word progress for current ayah */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
             <motion.div className="h-full bg-primary rounded-full"
