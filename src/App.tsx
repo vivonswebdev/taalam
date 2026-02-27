@@ -38,6 +38,7 @@ import MoodDetail from "./pages/MoodDetail";
 import MoodRead from "./pages/MoodRead";
 import LiveQuran from "./pages/LiveQuran";
 import Habits from "./pages/Habits";
+import More from "./pages/More";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
