@@ -283,7 +283,7 @@ export default function MushafReader({
                       readingStyle === "immersive" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    🌌 Émotions
+                    🌌 Plein écran
                   </button>
                 </div>
               </div>
