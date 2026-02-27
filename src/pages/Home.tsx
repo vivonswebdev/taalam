@@ -163,7 +163,7 @@ export default function Home() {
           transition={{ delay: 0.25 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/moods")}
-          className="relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
+          className="card-shimmer relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
           style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
         >
           <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
