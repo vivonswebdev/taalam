@@ -146,7 +146,7 @@ export default function Quran() {
 
   // Persist recitation mode
   useEffect(() => {
-    if (["aya", "dictation", "readOnly", "hifz", "tahaddi"].includes(recitationMode)) {
+    if (["aya", "dictation", "fullSurah", "readOnly", "hifz", "tahaddi"].includes(recitationMode)) {
       try { localStorage.setItem(LAST_MODE_KEY, recitationMode); } catch {}
     }
   }, [recitationMode]);
