@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Clock, LogOut, Trophy, Zap } from "lucide-react";
+import { GraduationCap, LogOut, Trophy } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
@@ -33,15 +33,12 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
 
-  // Fetch member counts + unread messages per classroom
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (classrooms.length === 0) return;
     const ids = classrooms.map((c) => c.id);
-
-    // Member counts
     supabase
       .from("classroom_members")
       .select("classroom_id")
@@ -53,8 +50,6 @@ export default function Home() {
         });
         setMemberCounts(counts);
       });
-
-    // Unread message counts (based on last visit stored in localStorage)
     const unread: Record<string, number> = {};
     Promise.all(
       ids.map(async (id) => {
@@ -108,13 +103,14 @@ export default function Home() {
           </motion.div>
         );
       })}
-      {/* Header */}
+
+      {/* ═══ SECTION A – Header compact ═══ */}
       <div className="relative overflow-visible">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
-        <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 opacity-10 pointer-events-none" />
-        <div className="relative px-6 pt-14 pb-6 text-center">
+        <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 opacity-10 pointer-events-none" />
+        <div className="relative px-6 pt-12 pb-4 text-center">
           {/* Top bar */}
-          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
             {user && (
               <button onClick={signOut} className="text-muted-foreground hover:text-foreground" title={t("auth.logout")}>
                 <LogOut size={18} />
@@ -123,51 +119,46 @@ export default function Home() {
             <LanguageSwitcher />
           </div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-arabic text-xl text-primary mb-1">
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-arabic text-lg text-primary mb-0.5">
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-2xl font-bold text-foreground tracking-tight">
+          <motion.h1 initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-xl font-bold text-foreground tracking-tight">
             Taaloum – <span className="text-primary">{t("home.hifzTitle")}</span>
           </motion.h1>
 
-          {/* Stats */}
+          {/* Stats row */}
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-3 flex items-center justify-center gap-4"
+            transition={{ delay: 0.15 }}
+            className="mt-2 flex items-center justify-center gap-3"
           >
-            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
-              <span className="text-base">🔥</span>
-              <span className="text-sm font-semibold text-foreground">{xp.streakDays} {t("home.days")}</span>
+            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+              <span className="text-sm">🔥</span>
+              <span className="text-xs font-semibold text-foreground">{xp.streakDays} {t("home.days")}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
-              <span className="text-base">⭐</span>
-              <span className="text-sm font-semibold text-foreground">{xp.xpToday} XP {t("home.today")}</span>
+            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+              <span className="text-sm">⭐</span>
+              <span className="text-xs font-semibold text-foreground">{xp.xpToday} XP {t("home.today")}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-full px-3 py-1.5">
-              <span className="text-base">🏅</span>
-              <span className="text-sm font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
+            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+              <span className="text-sm">🏅</span>
+              <span className="text-xs font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
             </div>
           </motion.div>
 
-          {/* Logo + Name */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-3 flex items-center justify-center gap-2"
-          >
-            <img src={taaloumLogo} alt="Taaloum" className="w-7 h-7 rounded-full" />
-            <span className="text-xs font-semibold" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          {/* Logo */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-2 flex items-center justify-center gap-1.5">
+            <img src={taaloumLogo} alt="Taaloum" className="w-6 h-6 rounded-full" />
+            <span className="text-[11px] font-semibold" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Taaloum
             </span>
           </motion.div>
         </div>
       </div>
 
-      {/* États du cœur CTA */}
-      <div className="px-6 mt-4">
+      {/* ═══ SECTION B – États du cœur ═══ */}
+      <div className="px-5 mt-5">
         <motion.button
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -178,7 +169,7 @@ export default function Home() {
           style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
         >
           <span className="absolute top-2 right-3 text-[10px] font-bold bg-emerald-400 text-emerald-950 px-2 py-0.5 rounded-full">
-            {t("home.moodsNew")}
+            🆕 Taaloum
           </span>
           <div className="flex items-start gap-4">
             <span className="text-4xl mt-0.5">❤️</span>
@@ -194,8 +185,8 @@ export default function Home() {
         </motion.button>
       </div>
 
-      {/* Action Buttons – Tarteel first */}
-      <div className="px-6 mt-4 space-y-3">
+      {/* ═══ SECTION C – 3 actions principales ═══ */}
+      <div className="px-5 mt-5 space-y-3">
         <RoundActionButton
           icon="🎤"
           title={t("home.tarteelButton")}
@@ -208,78 +199,88 @@ export default function Home() {
           title={t("home.quizButton")}
           subtitle={t("home.quizButtonDesc")}
           onClick={() => navigate("/quiz")}
-          delay={0.38}
+          delay={0.35}
         />
-        <div className="grid grid-cols-2 gap-3 mt-3">
+        <RoundActionButton
+          icon="🔍"
+          title={t("home.findAyahButton")}
+          subtitle={t("home.findAyahButtonDesc")}
+          onClick={() => navigate("/find-ayah")}
+          delay={0.4}
+        />
+      </div>
+
+      {/* ═══ SECTION D – Suivi & Classes ═══ */}
+      <div className="px-5 mt-6 space-y-3">
+        {/* Suivi */}
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.sectionSuivi")}</p>
+        <div className="grid grid-cols-2 gap-3">
           <motion.button
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/leaderboard")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/20 text-left"
+            onClick={() => navigate("/progress")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
           >
-            <span className="text-3xl">🏆</span>
-            <p className="text-xs font-bold text-foreground text-center">{t("home.leaderboardButton")}</p>
-            <p className="text-[10px] text-muted-foreground text-center">{t("home.leaderboardButtonDesc")}</p>
+            <span className="text-2xl">📊</span>
+            <p className="text-xs font-bold text-foreground">{t("home.progressButton")}</p>
+            <p className="text-[10px] text-muted-foreground">{t("home.progressButtonDesc")}</p>
           </motion.button>
           <motion.button
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/progress")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-accent/15 to-accent/5 border border-accent/20 text-left"
+            onClick={() => navigate("/leaderboard")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
           >
-            <span className="text-3xl">📊</span>
-            <p className="text-xs font-bold text-foreground text-center">{t("home.progressButton")}</p>
-            <p className="text-[10px] text-muted-foreground text-center">{t("home.progressButtonDesc")}</p>
+            <span className="text-2xl">🏆</span>
+            <p className="text-xs font-bold text-foreground">{t("home.leaderboardButton")}</p>
+            <p className="text-[10px] text-muted-foreground">{t("home.leaderboardButtonDesc")}</p>
+          </motion.button>
+        </div>
+
+        {/* Classes */}
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mt-4">{t("home.sectionClasses")}</p>
+        <div className="grid grid-cols-2 gap-3">
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/family")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
+          >
+            <span className="text-2xl">👨‍👩‍👧‍👦</span>
+            <p className="text-xs font-bold text-foreground">{t("home.familyClass")}</p>
+            <p className="text-[10px] text-muted-foreground">{t("home.familyClassDesc")}</p>
+          </motion.button>
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/classrooms")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
+          >
+            <GraduationCap size={24} className="text-primary" />
+            <p className="text-xs font-bold text-foreground">{t("home.classMode")}</p>
+            <p className="text-[10px] text-muted-foreground">
+              {classrooms.length > 0
+                ? `${classrooms.length} ${classrooms.length > 1 ? t("home.classesActive") : t("home.classActive")}`
+                : t("home.createOrJoin")}
+            </p>
           </motion.button>
         </div>
       </div>
 
-      {/* Classe Pro + Famille – side by side */}
-      <div className="px-6 mt-4 grid grid-cols-2 gap-3">
-        {/* Classe Professeur */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/classrooms")}
-          className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/20"
-        >
-          <GraduationCap size={28} className="text-primary" />
-          <p className="text-xs font-bold text-foreground text-center">{t("home.classMode")}</p>
-          <p className="text-[10px] text-muted-foreground text-center">
-            {classrooms.length > 0
-              ? `${classrooms.length} ${classrooms.length > 1 ? t("home.classesActive") : t("home.classActive")}`
-              : t("home.createOrJoin")}
-          </p>
-        </motion.button>
-
-        {/* Classe Famille */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/family")}
-          className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/20"
-        >
-          <span className="text-2xl">👨‍👩‍👧‍👦</span>
-          <p className="text-xs font-bold text-foreground text-center">Classe Famille</p>
-          <p className="text-[10px] text-muted-foreground text-center">Suivez vos enfants</p>
-        </motion.button>
-      </div>
-
-      {/* Weak Surahs Section */}
+      {/* Weak Surahs */}
       <WeakSurahsSection />
-
 
       {/* Join community CTA */}
       {!user && (
-        <div className="px-6 mt-4">
+        <div className="px-5 mt-4">
           <motion.button
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
