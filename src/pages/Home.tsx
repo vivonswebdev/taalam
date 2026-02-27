@@ -166,6 +166,34 @@ export default function Home() {
         </div>
       </div>
 
+      {/* États du cœur CTA */}
+      <div className="px-6 mt-4">
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/moods")}
+          className="w-full relative overflow-hidden rounded-2xl p-5 text-left border border-white/10"
+          style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
+        >
+          <span className="absolute top-2 right-3 text-[10px] font-bold bg-emerald-400 text-emerald-950 px-2 py-0.5 rounded-full">
+            {t("home.moodsNew")}
+          </span>
+          <div className="flex items-start gap-4">
+            <span className="text-4xl mt-0.5">❤️</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-base font-bold text-white">{t("home.moodsTitle")}</p>
+              <p className="text-sm text-white/70 mt-0.5">{t("home.moodsSubtitle")}</p>
+              <p className="text-[11px] text-white/40 mt-1">{t("home.moodsDesc")}</p>
+              <span className="inline-block mt-3 px-4 py-1.5 text-xs font-semibold bg-white/15 text-white rounded-full border border-white/20">
+                {t("home.moodsButton")} →
+              </span>
+            </div>
+          </div>
+        </motion.button>
+      </div>
+
       {/* Action Buttons – Tarteel first */}
       <div className="px-6 mt-4 space-y-3">
         <RoundActionButton
