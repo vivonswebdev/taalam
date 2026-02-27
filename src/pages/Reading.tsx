@@ -13,6 +13,7 @@ import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import readingBg from "@/assets/reading-bg.jpg";
 
 export default function Reading() {
