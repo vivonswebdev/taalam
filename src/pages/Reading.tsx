@@ -113,7 +113,10 @@ export default function Reading() {
   // ─── Reader View ──────────────────────────────────────────
   if (selectedSurah) {
     return (
-      <div style={{ "--arabic-font": arabicFontFamily } as React.CSSProperties}>
+      <div
+        className="reading-epic-bg"
+        style={{ backgroundImage: `url(${readingBg})`, "--arabic-font": arabicFontFamily } as React.CSSProperties}
+      >
         <style>{`
           .arabic-text { font-family: ${arabicFontFamily} !important; }
         `}</style>
