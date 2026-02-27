@@ -120,7 +120,25 @@ export default function Quran() {
 
   // Handle deep-link from bookmarks
   useEffect(() => {
-    if (urlSurahParam && urlModeParam === "mushaf") {
+    if (urlModeParam && ["aya", "dictation", "fullSurah", "readOnly", "hifz", "tahaddi"].includes(urlModeParam)) {
+      setRecitationMode(urlModeParam as RecitationMode);
+      if (urlSurahParam) {
+        const num = Number(urlSurahParam);
+        const local = surahs.find(s => s.number === num);
+        if (local) {
+          handleSelectSurah(local);
+          if (urlModeParam === "mushaf") setMushafStartAyah(urlAyahParam ? Number(urlAyahParam) : 0);
+        } else {
+          fetchFullSurah(num).then((full) => {
+            handleSelectSurah(full);
+            if (urlModeParam === "mushaf") setMushafStartAyah(urlAyahParam ? Number(urlAyahParam) : 0);
+          }).catch(console.error);
+        }
+      } else if (lastUsedSurahNumber) {
+        const local = surahs.find(s => s.number === lastUsedSurahNumber);
+        if (local) handleSelectSurah(local);
+      }
+    } else if (urlSurahParam && urlModeParam === "mushaf") {
       const num = Number(urlSurahParam);
       const local = surahs.find(s => s.number === num);
       if (local) {
