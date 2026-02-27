@@ -505,6 +505,39 @@ export type Database = {
         }
         Relationships: []
       }
+      quran_daily_activity: {
+        Row: {
+          activity_date: string
+          ayat_recited: number
+          created_at: string
+          id: string
+          minutes_quran: number
+          sessions_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activity_date?: string
+          ayat_recited?: number
+          created_at?: string
+          id?: string
+          minutes_quran?: number
+          sessions_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activity_date?: string
+          ayat_recited?: number
+          created_at?: string
+          id?: string
+          minutes_quran?: number
+          sessions_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           created_at: string
