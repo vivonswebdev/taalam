@@ -15,7 +15,7 @@ export default function BottomNav() {
     { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
     { path: "/reading", icon: BookOpenText, label: t("nav.reading") },
     { path: "/quran", icon: Mic, label: t("nav.quran") },
-    { path: "/moods", icon: Heart, label: "Cœur" },
+    { path: "/moods", icon: Heart, label: t("nav.moods") },
     { path: "/prayers", icon: Clock, label: t("nav.prayers") },
     { path: "/settings", icon: Settings, label: t("nav.settings") },
   ];

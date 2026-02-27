@@ -803,6 +803,59 @@ const translations = {
 
   // Leaderboard
   "lb.you": { fr: "← toi", en: "← you", nl: "← jij", ar: "← أنت", tr: "← sen", ur: "← آپ" },
+
+  // Moods (États du cœur)
+  "nav.moods": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
+  "moods.title": { fr: "États du cœur", en: "States of the Heart", nl: "Staten van het hart", ar: "أحوال القلب", tr: "Kalp Halleri", ur: "دل کے احوال" },
+  "moods.subtitle": { fr: "Trouve le verset qui parle à ton état", en: "Find the verse that speaks to your state", nl: "Vind het vers dat past bij je gevoel", ar: "اعثر على الآية التي تخاطب حالتك", tr: "Haline uygun ayeti bul", ur: "اپنی حالت سے بات کرنے والی آیت تلاش کریں" },
+  "moods.loop": { fr: "Boucle", en: "Loop", nl: "Herhalen", ar: "تكرار", tr: "Döngü", ur: "لوپ" },
+  "moods.passages": { fr: "passages", en: "passages", nl: "passages", ar: "مقاطع", tr: "pasaj", ur: "حصے" },
+  "moods.verses": { fr: "versets", en: "verses", nl: "verzen", ar: "آيات", tr: "ayet", ur: "آیات" },
+  "moods.listen": { fr: "Écouter", en: "Listen", nl: "Luisteren", ar: "استمع", tr: "Dinle", ur: "سنیں" },
+  "moods.listenLoop": { fr: "Écouter en boucle", en: "Listen on loop", nl: "Op herhaling luisteren", ar: "استمع بالتكرار", tr: "Döngüde dinle", ur: "لوپ میں سنیں" },
+  "moods.viewVerses": { fr: "Voir les versets", en: "View verses", nl: "Verzen bekijken", ar: "عرض الآيات", tr: "Ayetleri gör", ur: "آیات دیکھیں" },
+  "moods.loading": { fr: "Chargement des versets...", en: "Loading verses...", nl: "Verzen laden...", ar: "جاري تحميل الآيات...", tr: "Ayetler yükleniyor...", ur: "آیات لوڈ ہو رہی ہیں..." },
+  "moods.endOfVerses": { fr: "Fin des versets", en: "End of verses", nl: "Einde van verzen", ar: "نهاية الآيات", tr: "Ayetlerin sonu", ur: "آیات کا اختتام" },
+  "moods.verse": { fr: "Verset", en: "Verse", nl: "Vers", ar: "آية", tr: "Ayet", ur: "آیت" },
+  "moods.notFound": { fr: "Introuvable", en: "Not found", nl: "Niet gevonden", ar: "غير موجود", tr: "Bulunamadı", ur: "نہیں ملا" },
+  "moods.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
+  "moods.ayah": { fr: "Ayah", en: "Ayah", nl: "Ayah", ar: "آية", tr: "Ayet", ur: "آیت" },
+
+  // Mood presets titles
+  "mood.sleep": { fr: "Pour dormir", en: "For sleeping", nl: "Om te slapen", ar: "للنوم", tr: "Uyumak için", ur: "سونے کے لیے" },
+  "mood.sleep.sub": { fr: "Calme et protection avant le sommeil", en: "Calm and protection before sleep", nl: "Rust en bescherming voor het slapen", ar: "هدوء وحماية قبل النوم", tr: "Uyku öncesi huzur ve koruma", ur: "سونے سے پہلے سکون اور تحفظ" },
+  "mood.sadness": { fr: "Tristesse", en: "Sadness", nl: "Verdriet", ar: "الحزن", tr: "Üzüntü", ur: "غم" },
+  "mood.sadness.sub": { fr: "Réconfort dans la peine", en: "Comfort in grief", nl: "Troost in verdriet", ar: "عزاء في الحزن", tr: "Kederde teselli", ur: "غم میں تسلی" },
+  "mood.anxiety": { fr: "Stress / Anxiété", en: "Stress / Anxiety", nl: "Stress / Angst", ar: "القلق", tr: "Stres / Kaygı", ur: "تناؤ / پریشانی" },
+  "mood.anxiety.sub": { fr: "Apaisement et confiance en Allah", en: "Peace and trust in Allah", nl: "Rust en vertrouwen in Allah", ar: "سكينة وثقة بالله", tr: "Allah'a güven ve huzur", ur: "اللہ پر بھروسا اور سکون" },
+  "mood.anger": { fr: "Colère", en: "Anger", nl: "Woede", ar: "الغضب", tr: "Öfke", ur: "غصہ" },
+  "mood.anger.sub": { fr: "Maîtriser sa colère par le Coran", en: "Control anger through Quran", nl: "Woede beheersen met de Koran", ar: "السيطرة على الغضب بالقرآن", tr: "Kur'an ile öfkeyi kontrol et", ur: "قرآن سے غصہ قابو کریں" },
+  "mood.loneliness": { fr: "Solitude", en: "Loneliness", nl: "Eenzaamheid", ar: "الوحدة", tr: "Yalnızlık", ur: "تنہائی" },
+  "mood.loneliness.sub": { fr: "Allah est toujours avec toi", en: "Allah is always with you", nl: "Allah is altijd bij je", ar: "الله دائمًا معك", tr: "Allah her zaman seninle", ur: "اللہ ہمیشہ آپ کے ساتھ ہے" },
+  "mood.forgiveness": { fr: "Besoin de pardon", en: "Need for forgiveness", nl: "Behoefte aan vergeving", ar: "طلب المغفرة", tr: "Bağışlanma ihtiyacı", ur: "معافی کی ضرورت" },
+  "mood.forgiveness.sub": { fr: "Implorer le pardon d'Allah", en: "Seek Allah's forgiveness", nl: "Smeek om Allah's vergeving", ar: "التماس مغفرة الله", tr: "Allah'ın bağışlamasını dile", ur: "اللہ سے معافی مانگیں" },
+  "mood.gratitude": { fr: "Gratitude", en: "Gratitude", nl: "Dankbaarheid", ar: "الشكر", tr: "Şükür", ur: "شکرگزاری" },
+  "mood.gratitude.sub": { fr: "Reconnaissance envers Allah", en: "Thankfulness to Allah", nl: "Dankbaarheid jegens Allah", ar: "شكر الله", tr: "Allah'a şükran", ur: "اللہ کا شکر" },
+  "mood.hope": { fr: "Espoir / Motivation", en: "Hope / Motivation", nl: "Hoop / Motivatie", ar: "الأمل", tr: "Umut / Motivasyon", ur: "امید / حوصلہ" },
+  "mood.hope.sub": { fr: "Retrouver force et espérance", en: "Find strength and hope", nl: "Vind kracht en hoop", ar: "استعادة القوة والأمل", tr: "Güç ve umut bul", ur: "طاقت اور امید پائیں" },
+  "mood.doubts": { fr: "Doutes / Waswas", en: "Doubts / Waswas", nl: "Twijfels / Waswas", ar: "الوسوسة", tr: "Şüpheler / Vesvese", ur: "وسوسے / شکوک" },
+  "mood.doubts.sub": { fr: "Chasser les doutes avec le Coran", en: "Drive away doubts with Quran", nl: "Verdrijf twijfels met de Koran", ar: "طرد الوساوس بالقرآن", tr: "Kur'an ile şüpheleri kov", ur: "قرآن سے شکوک دور کریں" },
+  "mood.love": { fr: "Amour d'Allah", en: "Love of Allah", nl: "Liefde voor Allah", ar: "حب الله", tr: "Allah sevgisi", ur: "اللہ سے محبت" },
+  "mood.love.sub": { fr: "Proximité et amour divin", en: "Divine closeness and love", nl: "Goddelijke nabijheid en liefde", ar: "القرب والحب الإلهي", tr: "İlahi yakınlık ve sevgi", ur: "الٰہی قربت اور محبت" },
+  "mood.hardship": { fr: "Épreuves", en: "Hardship", nl: "Beproevingen", ar: "الابتلاء", tr: "Sınavlar", ur: "آزمائشیں" },
+  "mood.hardship.sub": { fr: "Patience face aux difficultés", en: "Patience in difficulty", nl: "Geduld bij moeilijkheden", ar: "الصبر عند الشدائد", tr: "Zorluklarda sabır", ur: "مشکلات میں صبر" },
+  "mood.ruqya": { fr: "Rouqya / Protection", en: "Ruqya / Protection", nl: "Ruqya / Bescherming", ar: "الرقية الشرعية", tr: "Rukye / Koruma", ur: "رقیہ / تحفظ" },
+  "mood.ruqya.sub": { fr: "Protection et sérénité spirituelle", en: "Spiritual protection and serenity", nl: "Spirituele bescherming en rust", ar: "حماية وسكينة روحية", tr: "Ruhani koruma ve huzur", ur: "روحانی تحفظ اور سکون" },
+  "mood.success": { fr: "Succès / Rizq", en: "Success / Rizq", nl: "Succes / Rizq", ar: "الرزق والنجاح", tr: "Başarı / Rızık", ur: "کامیابی / رزق" },
+  "mood.success.sub": { fr: "Rizq, baraka et succès licite", en: "Rizq, baraka and lawful success", nl: "Rizq, baraka en wettig succes", ar: "الرزق والبركة والنجاح الحلال", tr: "Rızık, bereket ve helal başarı", ur: "رزق، برکت اور حلال کامیابی" },
+  "mood.study": { fr: "Étude / Concentration", en: "Study / Focus", nl: "Studie / Concentratie", ar: "الدراسة والتركيز", tr: "Çalışma / Odaklanma", ur: "مطالعہ / توجہ" },
+  "mood.study.sub": { fr: "Versets pour se concentrer et mémoriser", en: "Verses for focus and memorization", nl: "Verzen voor concentratie en memorisatie", ar: "آيات للتركيز والحفظ", tr: "Odaklanma ve ezberleme için ayetler", ur: "توجہ اور حفظ کے لیے آیات" },
+
+  // Offline downloader
+  "offline.title": { fr: "Télécharger pour hors-ligne", en: "Download for offline", nl: "Download voor offline", ar: "تحميل للاستخدام بدون اتصال", tr: "Çevrimdışı için indir", ur: "آف لائن کے لیے ڈاؤن لوڈ" },
+  "offline.subtitle": { fr: "Audio des États du cœur disponible sans connexion", en: "Heart states audio available offline", nl: "Hart-audio beschikbaar offline", ar: "صوتيات أحوال القلب متاحة بدون اتصال", tr: "Kalp halleri sesi çevrimdışı kullanılabilir", ur: "دل کے احوال کی آڈیو آف لائن دستیاب" },
+  "offline.download": { fr: "Télécharger", en: "Download", nl: "Downloaden", ar: "تحميل", tr: "İndir", ur: "ڈاؤن لوڈ" },
+  "offline.downloading": { fr: "Téléchargement...", en: "Downloading...", nl: "Downloaden...", ar: "جاري التحميل...", tr: "İndiriliyor...", ur: "ڈاؤن لوڈ ہو رہا ہے..." },
 } as const;
 
 type TranslationKey = keyof typeof translations;
