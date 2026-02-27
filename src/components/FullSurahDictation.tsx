@@ -117,19 +117,8 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     };
   }, []);
 
-  // Auto-stop recording when all words are matched
-  useEffect(() => {
-    if (phase !== "recording" || !currentAyah) return;
-    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
-    if (totalMatched >= totalWords && totalWords > 0) {
-      autoStopRef.current = setTimeout(() => {
-        stopRecording();
-      }, 600);
-    }
-    return () => {
-      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
-    };
-  }, [phase, totalMatched, currentAyah, stopRecording]);
+  // Auto-stop flag: set by effect, checked in a later effect after stopRecording is defined
+  const shouldAutoStopRef = useRef(false);
 
   // ─── Audio playback helpers for reading phase ───
   const playAyahAudio = useCallback((globalIdx: number) => {
