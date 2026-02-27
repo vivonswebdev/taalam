@@ -22,6 +22,7 @@ const BG_THUMBS: Record<BgTheme, string | null> = {
 };
 
 const MODE_LABELS: { key: keyof BgChoices; label: string; icon: string }[] = [
+  { key: "home", label: "Accueil", icon: "🏠" },
   { key: "reading", label: "Coran", icon: "📖" },
   { key: "tarteel", label: "Tarteel", icon: "🎙️" },
   { key: "quiz", label: "Quiz", icon: "❓" },
