@@ -18,6 +18,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showDedication, setShowDedication] = useState(false);
+  const { immersiveEnabled, toggleImmersive } = useImmersiveBg();
 
   // Theme state: "light" | "dark" | "system"
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
