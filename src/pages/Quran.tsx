@@ -556,12 +556,13 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-2 gap-3">
             {[
-              { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc"), gradient: "from-emerald-500 to-emerald-600" },
-              { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc"), gradient: "from-sky-500 to-sky-600" },
-              { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc"), gradient: "from-indigo-500 to-indigo-600" },
-              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500" },
-              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500" },
-              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900" },
+              { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc"), gradient: "from-emerald-500 to-emerald-600", nav: null },
+              { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc"), gradient: "from-sky-500 to-sky-600", nav: null },
+              { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc"), gradient: "from-indigo-500 to-indigo-600", nav: null },
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500", nav: null },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500", nav: null },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900", nav: "/find-ayah" },
+              { mode: "liveQuran" as any, emoji: "📻", label: "Live Coran", desc: "Radio Coran 24/7", gradient: "from-indigo-700 to-blue-950", nav: "/live-quran" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
@@ -570,7 +571,7 @@ export default function Quran() {
                 transition={{ delay: i * 0.04 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
-                  if (item.mode === "findAyah") { navigate("/find-ayah"); return; }
+                  if (item.nav) { navigate(item.nav); return; }
                   setRecitationMode(item.mode);
                   if (lastUsedSurah) { handleSelectSurah(lastUsedSurah); }
                 }}
