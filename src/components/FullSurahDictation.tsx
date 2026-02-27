@@ -189,7 +189,18 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     }
   }, [currentAyahIdx, blockAyahCount, blockResults, voice]);
 
-  // ─── Retry ayah ───
+  // Auto-advance after feedback (1s delay), only if not last ayah in block
+  useEffect(() => {
+    if (phase === "feedback" && currentAyahIdx + 1 < blockAyahCount) {
+      autoAdvanceRef.current = setTimeout(() => {
+        nextAyah();
+      }, 1000);
+    }
+    return () => {
+      if (autoAdvanceRef.current) { clearTimeout(autoAdvanceRef.current); autoAdvanceRef.current = null; }
+    };
+  }, [phase, currentAyahIdx, blockAyahCount, nextAyah]);
+
   const retryAyah = useCallback(() => {
     setLiveTranscript("");
     setMicError(null);
