@@ -240,7 +240,20 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setPhase("feedback");
   }, [voice, currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx]);
 
-  // ─── Next ayah in block ───
+  // Auto-stop recording when all words are matched
+  useEffect(() => {
+    if (phase !== "recording" || !currentAyah) return;
+    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+    if (totalMatched >= totalWords && totalWords > 0) {
+      autoStopRef.current = setTimeout(() => {
+        stopRecording();
+      }, 600);
+    }
+    return () => {
+      if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
+    };
+  }, [phase, totalMatched, currentAyah, stopRecording]);
+
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
       setAllResults(prev => {
