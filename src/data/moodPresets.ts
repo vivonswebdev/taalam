@@ -204,6 +204,37 @@ export const moodPresets: MoodPreset[] = [
       { surahNumber: 114, surahName: "An-Nas", surahNameArabic: "الناس", start: 1, end: 6 },
     ],
   },
+  {
+    id: "success",
+    title: "Succès / Rizq",
+    titleAr: "الرزق والنجاح",
+    emoji: "💰",
+    subtitle: "Rizq, baraka et succès licite",
+    loop: true,
+    type: "success",
+    color: "from-yellow-900 to-amber-950",
+    verses: [
+      { surahNumber: 56, surahName: "Al-Waqi'a", surahNameArabic: "الواقعة", start: 1, end: 96 },
+      { surahNumber: 51, surahName: "Adh-Dhariyat", surahNameArabic: "الذاريات", ayahs: [22] },
+      { surahNumber: 65, surahName: "At-Talaq", surahNameArabic: "الطلاق", ayahs: [2, 3] },
+    ],
+  },
+  {
+    id: "study",
+    title: "Étude / Concentration",
+    titleAr: "الدراسة والتركيز",
+    emoji: "📖",
+    subtitle: "Versets pour se concentrer et mémoriser",
+    loop: true,
+    type: "study",
+    color: "from-sky-950 to-indigo-950",
+    verses: [
+      { surahNumber: 1, surahName: "Al-Fatiha", surahNameArabic: "الفاتحة", start: 1, end: 7 },
+      { surahNumber: 2, surahName: "Al-Baqarah", surahNameArabic: "البقرة", ayahs: [255] },
+      { surahNumber: 76, surahName: "Al-Insan", surahNameArabic: "الإنسان", start: 1, end: 19 },
+      { surahNumber: 55, surahName: "Ar-Rahman", surahNameArabic: "الرحمن", start: 1, end: 78 },
+    ],
+  },
 ];
 
 export function getMoodById(id: string): MoodPreset | undefined {
