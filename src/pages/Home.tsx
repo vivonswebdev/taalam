@@ -17,6 +17,8 @@ import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
+import { useImmersiveBg } from "@/hooks/useImmersiveBg";
+import { getEpicBg } from "@/lib/epicBg";
 
 export default function Home() {
   const navigate = useNavigate();
