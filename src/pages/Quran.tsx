@@ -562,7 +562,6 @@ export default function Quran() {
               { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500", nav: null },
               { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500", nav: null },
               { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900", nav: "/find-ayah" },
-              { mode: "liveQuran" as any, emoji: "📻", label: "Live Coran", desc: "Radio Coran 24/7", gradient: "from-indigo-700 to-blue-950", nav: "/live-quran" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
@@ -717,21 +716,28 @@ export default function Quran() {
             </motion.button>
           )}
 
-          {/* ─── Lecture seule (full width, bottom) ─── */}
-          <motion.button
-            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            onClick={() => { setRecitationMode("readOnly"); if (lastUsedSurah) handleSelectSurah(lastUsedSurah); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-              recitationMode === "readOnly"
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "bg-card border border-border text-foreground hover:bg-accent/50"
-            }`}>
-            <span className="text-base">🔊</span>
-            <div className="flex-1 text-left">
-              <span className="block">{t("mode.readOnly")}</span>
-              <span className={`block text-[10px] font-normal ${recitationMode === "readOnly" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t("mode.readOnlyDesc")}</span>
-            </div>
-          </motion.button>
+          {/* ─── Lecture seule + Live Coran (2×2) ─── */}
+          <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => { setRecitationMode("readOnly"); if (lastUsedSurah) handleSelectSurah(lastUsedSurah); }}
+              className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl text-left transition-all ${
+                recitationMode === "readOnly"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-card border border-border text-foreground hover:bg-accent/50"
+              }`}>
+              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">🔊</span>
+              <span className="text-sm font-bold leading-tight mt-1">{t("mode.readOnly")}</span>
+              <span className={`text-[10px] leading-snug line-clamp-2 ${recitationMode === "readOnly" ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t("mode.readOnlyDesc")}</span>
+            </button>
+            <button
+              onClick={() => navigate("/live-quran")}
+              className="card-shimmer flex flex-col items-start gap-1 p-3.5 rounded-2xl text-left bg-gradient-to-br from-indigo-700 to-blue-950 shadow-sm">
+              <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">📻</span>
+              <span className="text-sm font-bold text-white leading-tight mt-1">Live Coran</span>
+              <span className="text-[10px] text-white/70 leading-snug line-clamp-2">Radio Coran 24/7</span>
+            </button>
+          </motion.div>
 
         </div>
       )}
