@@ -14,9 +14,9 @@ export default function BottomNav() {
   const tabs = [
     { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
     { path: "/reading", icon: BookOpenText, label: t("nav.reading") },
+    { path: "/moods", icon: Heart, label: t("nav.moods") },
     { path: "/quran", icon: Mic, label: t("nav.quran") },
     { path: "/habits", icon: BarChart3, label: "Habitudes" },
-    { path: "/moods", icon: Heart, label: t("nav.moods") },
     { path: "/more", icon: MoreHorizontal, label: "Plus" },
   ];
 
