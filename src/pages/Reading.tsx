@@ -13,8 +13,27 @@ import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useImmersiveBg } from "@/hooks/useImmersiveBg";
+import { useImmersiveBg, BG_OPTIONS, type BgTheme } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
+
+import readingBg from "@/assets/reading-bg.jpg";
+import tarteelBg from "@/assets/tarteel-bg.jpg";
+import quizBg from "@/assets/quiz-bg.jpg";
+import galaxyBg from "@/assets/bg-galaxy.jpg";
+import gardenBg from "@/assets/bg-garden.jpg";
+import oceanBg from "@/assets/bg-ocean.jpg";
+import starryBg from "@/assets/bg-starry-calligraphy.jpg";
+
+const BG_THUMBS: Record<BgTheme, string | null> = {
+  mountain: readingBg,
+  desert: tarteelBg,
+  mosque: quizBg,
+  galaxy: galaxyBg,
+  garden: gardenBg,
+  ocean: oceanBg,
+  starry: starryBg,
+  none: null,
+};
 
 export default function Reading() {
   const { t } = useLanguage();
