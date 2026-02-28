@@ -27,6 +27,11 @@ const STICKER_LABELS: Record<StickerType, string> = {
   mosque: "Mosquée",
 };
 
+function getRandomSticker(): StickerType {
+  const types: StickerType[] = ["star", "moon", "book", "trophy", "heart", "mosque"];
+  return types[Math.floor(Math.random() * types.length)];
+}
+
 const STICKERS_KEY = "quranEasyStickers";
 
 export function useChildMode() {
