@@ -23,9 +23,10 @@ const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: strin
   { type: "ayat", target: 50, label: "50 ayat", icon: "📖" },
 ];
 
-function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ayat_recited: number }[] }) {
+function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }> }) {
   const getIntensity = (d: typeof days[0]) => {
-    const score = d.minutes_quran + d.ayat_recited;
+    const listenMin = listeningByDay[d.date]?.minutes || 0;
+    const score = d.minutes_quran + d.ayat_recited + listenMin;
     if (score === 0) return "bg-muted";
     if (score < 5) return "bg-primary/20";
     if (score < 15) return "bg-primary/40";
@@ -41,11 +42,14 @@ function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ay
         ))}
       </div>
       <div className="grid grid-cols-7 gap-1">
-        {days.map((d, i) => (
-          <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
-            className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
-            title={`${d.date}: ${d.minutes_quran}min, ${d.ayat_recited} ayat`} />
-        ))}
+        {days.map((d, i) => {
+          const listenMin = listeningByDay[d.date]?.minutes || 0;
+          return (
+            <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
+              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
+              title={`${d.date}: ${d.minutes_quran}min lecture, ${listenMin}min écoute, ${d.ayat_recited} ayat`} />
+          );
+        })}
       </div>
       <div className="flex items-center justify-end gap-1 text-[9px] text-muted-foreground">
         <span>Moins</span>
