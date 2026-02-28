@@ -43,6 +43,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const chunkQueueRef = useRef<Blob[]>([]);
   const isProcessingRef = useRef(false);
   const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const nativeNoEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
   const nativeRetryCountRef = useRef(0);
 
