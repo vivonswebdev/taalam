@@ -51,6 +51,8 @@ import KidsMosqueMapPage from "./pages/KidsMosqueMapPage";
 import KidsHomePage from "./pages/KidsHomePage";
 import KidsChecklist from "./pages/KidsChecklist";
 import KidsDuasPage from "./pages/KidsDuasPage";
+import KidsProphetStoriesPage from "./pages/KidsProphetStoriesPage";
+import KidsProphetStoryDetail from "./pages/KidsProphetStoryDetail";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
@@ -134,6 +136,8 @@ const App = () => (
               <Route path="/kids" element={<KidsHomePage />} />
               <Route path="/kids-checklist" element={<KidsChecklist />} />
               <Route path="/kids-duas" element={<KidsDuasPage />} />
+              <Route path="/kids-stories" element={<KidsProphetStoriesPage />} />
+              <Route path="/kids-stories/:storyId" element={<KidsProphetStoryDetail />} />
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
