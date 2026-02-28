@@ -51,6 +51,7 @@ export default function More() {
   ];
 
   const quranSection: MenuItem[] = [
+    { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
     { icon: <Clock size={20} className="text-primary" />, label: t("more.prayerTimes"), desc: t("more.prayerTimesDesc"), path: "/prayers" },
     { icon: <Radio size={20} className="text-green-500" />, label: t("more.liveQuran"), desc: t("more.liveQuranDesc"), path: "/live-quran" },
     { icon: <Search size={20} className="text-indigo-500" />, label: t("more.findAyah"), desc: t("more.findAyahDesc"), path: "/find-ayah" },
