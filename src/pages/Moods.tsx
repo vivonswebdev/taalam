@@ -1,18 +1,24 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moodPresets } from "@/data/moodPresets";
+import { maladiesPresets } from "@/data/maladiesPresets";
+import { athkarGroups, ATHKAR_FILTERS, type AthkarCategory } from "@/data/athkarData";
 import { ArrowLeft } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 
+type Tab = "moods" | "maladies" | "athkar";
+
+const TABS: { id: Tab; label: string; emoji: string }[] = [
+  { id: "moods", label: "États du cœur", emoji: "💓" },
+  { id: "maladies", label: "Maladies", emoji: "🩺" },
+  { id: "athkar", label: "Athkâr", emoji: "📿" },
+];
+
 function MoodCard({ icon, title, desc, loop, onClick }: {
-  icon: string;
-  title: string;
-  desc: string;
-  loop?: boolean;
-  onClick?: () => void;
+  icon: string; title: string; desc: string; loop?: boolean; onClick?: () => void;
 }) {
   const { t } = useLanguage();
-
   return (
     <button
       onClick={onClick}
@@ -27,12 +33,8 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
         )}
       </div>
       <div className="text-left">
-        <p className="text-sm font-semibold text-foreground leading-tight">
-          {title}
-        </p>
-        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
-          {desc}
-        </p>
+        <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">{desc}</p>
       </div>
     </button>
   );
@@ -41,6 +43,12 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
 export default function Moods() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState<Tab>("moods");
+  const [athkarFilter, setAthkarFilter] = useState<AthkarCategory | "all">("all");
+
+  const filteredAthkar = athkarFilter === "all"
+    ? athkarGroups
+    : athkarGroups.filter((g) => g.category === athkarFilter);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
@@ -55,38 +63,135 @@ export default function Moods() {
         </div>
       </div>
 
-      {/* Grid 2x2 */}
-      <motion.div
-        className="grid grid-cols-2 gap-3 p-4"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.06 } },
-        }}
-      >
-        {moodPresets.map((mood) => {
-          const titleKey = `mood.${mood.id}` as any;
-          const subKey = `mood.${mood.id}.sub` as any;
-          return (
-            <motion.div
-              key={mood.id}
-              variants={{
-                hidden: { opacity: 0, y: 24, scale: 0.92 },
-                visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } },
-              }}
+      {/* Tabs */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="flex bg-muted/60 rounded-2xl p-1 gap-1">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+                activeTab === tab.id
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <MoodCard
-                icon={mood.emoji}
-                title={t(titleKey) || mood.title}
-                desc={t(subKey) || mood.subtitle}
-                loop={mood.loop}
-                onClick={() => navigate(`/moods/${mood.id}`)}
-              />
-            </motion.div>
-          );
-        })}
-      </motion.div>
+              {tab.emoji} {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {/* ═══ ÉTATS DU CŒUR ═══ */}
+        {activeTab === "moods" && (
+          <motion.div
+            key="moods"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-2 gap-3 p-4"
+          >
+            {moodPresets.map((mood, i) => {
+              const titleKey = `mood.${mood.id}` as any;
+              const subKey = `mood.${mood.id}.sub` as any;
+              return (
+                <motion.div
+                  key={mood.id}
+                  initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+                >
+                  <MoodCard
+                    icon={mood.emoji}
+                    title={t(titleKey) || mood.title}
+                    desc={t(subKey) || mood.subtitle}
+                    loop={mood.loop}
+                    onClick={() => navigate(`/moods/${mood.id}`)}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
+
+        {/* ═══ MALADIES ═══ */}
+        {activeTab === "maladies" && (
+          <motion.div
+            key="maladies"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-2 gap-3 p-4"
+          >
+            {maladiesPresets.map((m, i) => (
+              <motion.div
+                key={m.id}
+                initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+              >
+                <MoodCard
+                  icon={m.emoji}
+                  title={m.title}
+                  desc={m.subtitle}
+                  loop={m.loop}
+                  onClick={() => navigate(`/maladies/${m.id}`)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* ═══ ATHKÂR ═══ */}
+        {activeTab === "athkar" && (
+          <motion.div
+            key="athkar"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Filters */}
+            <div className="px-4 pt-3 pb-1 flex gap-1.5 overflow-x-auto no-scrollbar">
+              {ATHKAR_FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setAthkarFilter(f.id)}
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    athkarFilter === f.id
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card/70 text-muted-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  {f.emoji} {f.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Cards */}
+            <div className="grid grid-cols-2 gap-3 p-4">
+              {filteredAthkar.map((g, i) => (
+                <motion.div
+                  key={g.id}
+                  initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+                >
+                  <MoodCard
+                    icon={g.emoji}
+                    title={g.title}
+                    desc={g.subtitle}
+                    onClick={() => navigate(`/athkar/${g.id}`)}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
