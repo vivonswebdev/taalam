@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useTeacherDashboard } from "@/hooks/useTeacherDashboard";
+import { useAssignmentCompletion } from "@/hooks/useAssignmentCompletion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
