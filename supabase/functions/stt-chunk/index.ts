@@ -29,28 +29,33 @@ serve(async (req) => {
   }
 
   try {
-    // Auth check – require authentication
+    // Optional auth: use user-based limits when available, otherwise fallback to IP-based limits.
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return new Response(JSON.stringify({ text: '', error: 'Unauthorized' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+    const clientIp = forwardedFor || req.headers.get('x-real-ip') || 'unknown';
+
+    let requesterKey = `anon:${clientIp}`;
+    let maxRequests = 20;
+
+    if (authHeader?.startsWith('Bearer ')) {
+      try {
+        const supabase = createClient(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+          { global: { headers: { Authorization: authHeader } } }
+        );
+        const token = authHeader.replace('Bearer ', '');
+        const { data: claimsData } = await supabase.auth.getUser(token);
+        if (claimsData?.user?.id) {
+          requesterKey = `user:${claimsData.user.id}`;
+          maxRequests = 60;
+        }
+      } catch {
+        // Keep anonymous key on auth parse failures
+      }
     }
 
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
-    const token = authHeader.replace('Bearer ', '');
-    const { data: claimsData, error: claimsError } = await supabase.auth.getUser(token);
-    if (claimsError || !claimsData?.user) {
-      return new Response(JSON.stringify({ text: '', error: 'Invalid token' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    if (!checkRateLimit(claimsData.user.id)) {
+    if (!checkRateLimit(requesterKey, maxRequests)) {
       return new Response(JSON.stringify({ text: '', error: 'Rate limit exceeded' }), {
         status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });

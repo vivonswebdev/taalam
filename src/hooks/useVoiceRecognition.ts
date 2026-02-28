@@ -43,6 +43,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const chunkQueueRef = useRef<Blob[]>([]);
   const isProcessingRef = useRef(false);
   const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const nativeNoEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
   const nativeRetryCountRef = useRef(0);
 
@@ -66,6 +67,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     return () => {
       isListeningRef.current = false;
       if (nativeSilenceTimerRef.current) clearTimeout(nativeSilenceTimerRef.current);
+      if (nativeNoEndTimerRef.current) clearTimeout(nativeNoEndTimerRef.current);
       try { recognitionRef.current?.abort(); } catch {}
       cleanupServer();
     };
@@ -103,13 +105,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     isProcessingRef.current = true;
 
     const authToken = await getAuthToken();
-    if (!authToken) {
-      // Protected backend STT requires logged-in user token
-      chunkQueueRef.current = [];
-      isProcessingRef.current = false;
-      onErrorRef.current?.("auth-required");
-      return;
-    }
 
     while (chunkQueueRef.current.length > 0) {
       const blob = chunkQueueRef.current.shift()!;
@@ -119,14 +114,26 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         const base64 = btoa(new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), ""));
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "apikey": supabaseKey,
+        };
+        if (authToken) {
+          headers.Authorization = `Bearer ${authToken}`;
+        }
+
         const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}`, "apikey": supabaseKey },
+          headers,
           body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
         });
 
         if (res.status === 401 || res.status === 403) {
           onErrorRef.current?.("auth-required");
+          isListeningRef.current = false;
+          cleanupServer();
+          setIsListening(false);
+          onEndRef.current?.();
           break;
         }
 
@@ -146,7 +153,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     }
 
     isProcessingRef.current = false;
-  }, [lang, getAuthToken]);
+  }, [lang, getAuthToken, cleanupServer]);
 
   const startServer = useCallback(async () => {
     console.info("[VoiceRecognition] Starting server STT");
@@ -220,6 +227,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+    if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
     hasReceivedResultRef.current = false;
 
     const recognition: SpeechRecognition = new SR();
@@ -232,8 +240,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       hasReceivedResultRef.current = true;
-      // Clear silence timer since we got results
+      // Clear timers since we got results
       if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+      if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
 
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -249,32 +258,61 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       onResultRef.current?.(full);
     };
 
-    recognition.onend = () => {
-      if (isListeningRef.current && recognitionRef.current === recognition) {
-        // If we never got results, count as a failed retry
-        if (!hasReceivedResultRef.current) {
-          nativeRetryCountRef.current++;
-          console.warn(`[VoiceRecognition] Native SR ended without results (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
-          if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
-            console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
-            forceServerRef.current = true;
-            recognitionRef.current = null;
-            setMode("server");
-            startServer();
-            return;
-          }
+    const armNativeSilenceTimer = () => {
+      if (nativeSilenceTimerRef.current) {
+        clearTimeout(nativeSilenceTimerRef.current);
+      }
+      nativeSilenceTimerRef.current = setTimeout(() => {
+        if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
+          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
+          try { recognition.stop(); } catch {}
         }
-        // Mobile browsers may stop on silence; try one more native restart
+      }, NATIVE_SILENCE_TIMEOUT_MS);
+    };
+
+    const handleNativeNoResultFailure = (source: "onend" | "onerror") => {
+      nativeRetryCountRef.current++;
+      console.warn(`[VoiceRecognition] Native SR ended without results via ${source} (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
+
+      if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+        console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
+        forceServerRef.current = true;
+        recognitionRef.current = null;
+        setMode("server");
+        startServer();
+        return;
+      }
+
+      try {
+        hasReceivedResultRef.current = false;
+        recognition.start();
+        armNativeSilenceTimer();
+      } catch (e) {
+        console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
+        forceServerRef.current = true;
+        recognitionRef.current = null;
+        setMode("server");
+        startServer();
+      }
+    };
+
+    recognition.onend = () => {
+      if (nativeNoEndTimerRef.current) {
+        clearTimeout(nativeNoEndTimerRef.current);
+        nativeNoEndTimerRef.current = null;
+      }
+
+      if (isListeningRef.current && recognitionRef.current === recognition) {
+        if (!hasReceivedResultRef.current) {
+          handleNativeNoResultFailure("onend");
+          return;
+        }
+
+        // Mobile browsers may stop on silence; restart native SR
         try {
           hasReceivedResultRef.current = false;
           recognition.start();
-          // Set a new silence timer for this retry
-          nativeSilenceTimerRef.current = setTimeout(() => {
-            if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-              console.warn("[VoiceRecognition] No results after timeout (retry), stopping native SR");
-              try { recognition.stop(); } catch {}
-            }
-          }, NATIVE_SILENCE_TIMEOUT_MS);
+          armNativeSilenceTimer();
           return;
         } catch (e) {
           console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
@@ -285,6 +323,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
           return;
         }
       }
+
       if (recognitionRef.current === recognition) {
         setIsListening(false);
         onEndRef.current?.();
@@ -294,6 +333,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     recognition.onerror = (event: any) => {
       const error = event?.error || "unknown";
       console.warn("[VoiceRecognition] Error:", error);
+
       if (error === "not-allowed" || error === "service-not-allowed") {
         // Try server fallback instead of just giving up
         console.warn("[VoiceRecognition] Permission denied for native, forcing server fallback...");
@@ -304,7 +344,23 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         startServer();
         return;
       }
-      if (error === "no-speech" || error === "aborted") return;
+
+      if (error === "no-speech" || error === "aborted") {
+        if (!isListeningRef.current || recognitionRef.current !== recognition || hasReceivedResultRef.current) return;
+
+        if (nativeNoEndTimerRef.current) {
+          clearTimeout(nativeNoEndTimerRef.current);
+        }
+
+        // Some mobile browsers emit aborted/no-speech without a follow-up onend.
+        nativeNoEndTimerRef.current = setTimeout(() => {
+          if (!isListeningRef.current || recognitionRef.current !== recognition || hasReceivedResultRef.current) return;
+          console.warn("[VoiceRecognition] Native SR aborted/no-speech without onend, forcing recovery");
+          handleNativeNoResultFailure("onerror");
+        }, 450);
+        return;
+      }
+
       if (recognitionRef.current === recognition) {
         forceServerRef.current = true;
         isListeningRef.current = false;
@@ -320,13 +376,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
-      // If no results after timeout, stop native (triggers onend which handles retry count)
-      nativeSilenceTimerRef.current = setTimeout(() => {
-        if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
-          try { recognition.stop(); } catch {}
-        }
-      }, NATIVE_SILENCE_TIMEOUT_MS);
+      hasReceivedResultRef.current = false;
+      armNativeSilenceTimer();
     } catch (e) {
       console.error("[VoiceRecognition] Start failed:", e);
       isListeningRef.current = false;
@@ -341,6 +392,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const stopNative = useCallback(() => {
     isListeningRef.current = false;
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+    if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
     if (recognitionRef.current) {
       const rec = recognitionRef.current;
       rec.onresult = null;
