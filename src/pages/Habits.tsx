@@ -163,7 +163,7 @@ export default function Habits() {
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-            📊 {t("habits.title" as any)}
+            📈 {t("habits.title" as any)}
           </motion.h1>
           <motion.button
             initial={{ opacity: 0 }}
