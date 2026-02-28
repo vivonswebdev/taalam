@@ -141,6 +141,8 @@ const App = () => (
               <Route path="/notification-settings" element={<NotificationSettings />} />
               <Route path="/install-app" element={<InstallAppPage />} />
               <Route path="/mushaf" element={<MushafPage />} />
+              <Route path="/community" element={<CommunityPage />} />
+              <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
