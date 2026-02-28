@@ -29,6 +29,7 @@ export default function KidsProphetStoryDetail() {
   const [step, setStep] = useState<Step>("story");
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { isNarrating, toggle: toggleNarration, stop: stopNarration } = useStoryNarration();
 
   const story = prophetStories.find((s) => s.id === storyId);
   if (!story) return <div className="p-8 text-center text-muted-foreground">Story not found</div>;
