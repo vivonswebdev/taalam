@@ -6,6 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { PRAYER_STEPS, WUDU_STEPS, getRandomPrayerQuiz, getRandomWuduQuiz } from "@/data/kidsPrayer";
 import type { PrayerStep, WuduStep, PrayerQuizQuestion } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
+import { trackEvent } from "@/lib/trackEvent";
 
 type Section = "menu" | "steps" | "wudu" | "wudu-quiz" | "quiz";
 
@@ -192,7 +193,10 @@ function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey, onRestart }:
     setTimeout(() => {
       setSelected(null);
       setStep((s) => s + 1);
-      if (step + 1 >= questions.length) setShowConfetti(true);
+      if (step + 1 >= questions.length) {
+        setShowConfetti(true);
+        trackEvent("kids_prayer_quiz_completed", "kids_prayer", { score: score + (correct ? 1 : 0), total: questions.length });
+      }
     }, 800);
   };
 

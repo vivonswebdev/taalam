@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -12,6 +12,8 @@ import BackgroundPicker from "@/components/BackgroundPicker";
 import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
@@ -247,6 +249,9 @@ export default function Settings() {
             </div>
           </div>
         </motion.div>
+
+        {/* Admin link - only visible if admin */}
+        <AdminLink />
       </div>
 
       {/* Reset confirmation */}
@@ -279,5 +284,36 @@ export default function Settings() {
         />
       )}
     </div>
+  );
+}
+
+function AdminLink() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
+
+  if (!isAdmin) return null;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+      <button onClick={() => navigate("/admin-dashboard")} className="w-full flex items-center gap-4 p-4 text-left">
+        <Shield size={20} className="text-primary" />
+        <div className="flex-1">
+          <p className="text-sm font-medium text-card-foreground">Super Admin Dashboard</p>
+          <p className="text-xs text-muted-foreground">Stats produit & analytics</p>
+        </div>
+      </button>
+    </motion.div>
   );
 }

@@ -20,6 +20,7 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { trackEvent } from "@/lib/trackEvent";
 
 // Reusable home card
 function HomeCard({
@@ -234,7 +235,7 @@ export default function Home() {
           title={t("home.tarteelButton")}
           desc={t("home.tarteelButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/quran?mode=dictation")}
+          onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
           gradient="bg-gradient-to-br from-emerald-800/60 to-teal-700/30"
           delay={0.25}
         />
@@ -243,7 +244,7 @@ export default function Home() {
           title={t("home.moodsTitle")}
           desc={t("home.moodsSubtitle")}
           cta={t("home.moodsButton")}
-          onClick={() => navigate("/moods")}
+          onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
           gradient="bg-gradient-to-br from-teal-800/60 to-emerald-700/30"
           delay={0.3}
           badge="🆕"
@@ -257,7 +258,7 @@ export default function Home() {
           title={t("home.findAyahButton")}
           desc={t("home.findAyahButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/find-ayah")}
+          onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
           gradient="bg-gradient-to-br from-violet-800/60 to-blue-700/30"
           delay={0.35}
         />
@@ -266,7 +267,7 @@ export default function Home() {
           title={t("home.kidsSpace" as any)}
           desc={t("home.kidsSpaceDesc" as any)}
           cta={t("home.open")}
-          onClick={() => navigate("/kids")}
+          onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
           gradient="bg-gradient-to-br from-blue-800/60 to-violet-700/30"
           delay={0.4}
         />
@@ -279,7 +280,7 @@ export default function Home() {
           title={t("home.hifzPlan")}
           desc={plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
           cta={plan ? t("home.open") : t("home.hifzCreate")}
-          onClick={() => navigate("/hifz-plan")}
+          onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
           gradient="bg-gradient-to-br from-indigo-800/60 to-cyan-700/30"
           delay={0.45}
         >
@@ -299,7 +300,7 @@ export default function Home() {
           title={t("home.quizButton")}
           desc={t("home.quizButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/quiz")}
+          onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
           gradient="bg-gradient-to-br from-cyan-800/60 to-indigo-700/30"
           delay={0.5}
         />
@@ -314,7 +315,7 @@ export default function Home() {
             title={t("home.progressButton")}
             desc={t("home.progressButtonDesc")}
             cta={t("home.open")}
-            onClick={() => navigate("/habits")}
+            onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
             gradient="bg-gradient-to-br from-slate-800/60 to-gray-700/30"
             delay={0.55}
           />
@@ -323,7 +324,7 @@ export default function Home() {
             title={t("home.leaderboardButton")}
             desc={t("home.leaderboardButtonDesc")}
             cta={t("home.open")}
-            onClick={() => navigate("/leaderboard")}
+            onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
             gradient="bg-gradient-to-br from-amber-800/60 to-yellow-700/30"
             delay={0.6}
           />

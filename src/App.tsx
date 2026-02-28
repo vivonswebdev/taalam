@@ -51,6 +51,7 @@ import KidsHomePage from "./pages/KidsHomePage";
 import KidsChecklist from "./pages/KidsChecklist";
 import KidsDuasPage from "./pages/KidsDuasPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -114,6 +115,7 @@ const App = () => (
               <Route path="/kids-checklist" element={<KidsChecklist />} />
               <Route path="/kids-duas" element={<KidsDuasPage />} />
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
+              <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

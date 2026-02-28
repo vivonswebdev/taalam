@@ -1487,6 +1487,28 @@ const translations = {
   "teacher.other": { fr: "Autre", en: "Other", nl: "Overig", ar: "أخرى", tr: "Diğer", ur: "دیگر" },
   "teacher.dashboard": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
   "teacher.dashboardDesc": { fr: "Stats & devoirs de vos classes", en: "Stats & assignments for your classes", nl: "Stats & huiswerk van je klassen", ar: "إحصائيات وواجبات فصولك", tr: "Sınıflarınızın istatistikleri ve ödevleri", ur: "آپ کی کلاسوں کے اعداد و شمار اور اسائنمنٹس" },
+
+  // Admin Dashboard
+  "admin.title": { fr: "Dashboard Admin", en: "Admin Dashboard", nl: "Admin Dashboard", ar: "لوحة الإدارة", tr: "Yönetici Paneli", ur: "ایڈمن ڈیش بورڈ" },
+  "admin.subtitle": { fr: "Statistiques produit Ta'alam", en: "Ta'alam product stats", nl: "Ta'alam productstatistieken", ar: "إحصائيات منتج تعلّم", tr: "Ta'alam ürün istatistikleri", ur: "تعلّم پروڈکٹ اعداد و شمار" },
+  "admin.loginRequired": { fr: "Connectez-vous pour accéder", en: "Log in to access", nl: "Log in voor toegang", ar: "سجّل الدخول للوصول", tr: "Erişmek için giriş yapın", ur: "رسائی کے لیے لاگ ان کریں" },
+  "admin.forbidden": { fr: "Accès réservé au Super Admin", en: "Access reserved for Super Admin", nl: "Toegang voorbehouden aan Super Admin", ar: "الوصول مخصص للمسؤول الأعلى", tr: "Süper Yöneticiye özel erişim", ur: "سپر ایڈمن کے لیے مخصوص" },
+  "admin.forbiddenDesc": { fr: "Cette page est réservée aux administrateurs de Ta'alam.", en: "This page is reserved for Ta'alam administrators.", nl: "Deze pagina is voorbehouden aan Ta'alam beheerders.", ar: "هذه الصفحة مخصصة لمديري تعلّم.", tr: "Bu sayfa Ta'alam yöneticilerine özeldir.", ur: "یہ صفحہ تعلّم ایڈمنز کے لیے مخصوص ہے۔" },
+  "admin.overview": { fr: "Vue d'ensemble", en: "Overview", nl: "Overzicht", ar: "نظرة عامة", tr: "Genel Bakış", ur: "جائزہ" },
+  "admin.mau": { fr: "Utilisateurs actifs (30j)", en: "Active users (30d)", nl: "Actieve gebruikers (30d)", ar: "المستخدمون النشطون (30ي)", tr: "Aktif kullanıcılar (30g)", ur: "فعال صارفین (30د)" },
+  "admin.hifzPlans": { fr: "Plans Hifz", en: "Hifz Plans", nl: "Hifz plannen", ar: "خطط الحفظ", tr: "Hifz planları", ur: "حفظ پلان" },
+  "admin.kidsProfiles": { fr: "Profils enfants", en: "Kids profiles", nl: "Kinderprofielen", ar: "ملفات الأطفال", tr: "Çocuk profilleri", ur: "بچوں کے پروفائل" },
+  "admin.dau": { fr: "Utilisateurs actifs / jour (7j)", en: "Daily active users (7d)", nl: "Dagelijks actieve gebruikers (7d)", ar: "المستخدمون النشطون يومياً (7أ)", tr: "Günlük aktif kullanıcılar (7g)", ur: "روزانہ فعال صارفین (7د)" },
+  "admin.moduleUsage": { fr: "Modules les plus utilisés", en: "Most used modules", nl: "Meest gebruikte modules", ar: "الوحدات الأكثر استخداماً", tr: "En çok kullanılan modüller", ur: "سب سے زیادہ استعمال ہونے والے ماڈیولز" },
+  "admin.noData": { fr: "Aucune donnée", en: "No data", nl: "Geen gegevens", ar: "لا توجد بيانات", tr: "Veri yok", ur: "کوئی ڈیٹا نہیں" },
+  "admin.kidsVsAdults": { fr: "Enfants vs Adultes", en: "Kids vs Adults", nl: "Kinderen vs Volwassenen", ar: "الأطفال مقابل البالغين", tr: "Çocuklar vs Yetişkinler", ur: "بچے بمقابلہ بڑے" },
+  "admin.kidsSpaceOpens": { fr: "Ouvertures Espace enfants", en: "Kids space opens", nl: "Kinderruimte geopend", ar: "فتح مساحة الأطفال", tr: "Çocuk alanı açılışları", ur: "بچوں کی جگہ کھلی" },
+  "admin.kidsModules": { fr: "Modules enfants", en: "Kids modules", nl: "Kindermodules", ar: "وحدات الأطفال", tr: "Çocuk modülleri", ur: "بچوں کے ماڈیولز" },
+  "admin.hifzFunnel": { fr: "Entonnoir Hifz", en: "Hifz Funnel", nl: "Hifz trechter", ar: "قمع الحفظ", tr: "Hifz hunisi", ur: "حفظ فنل" },
+  "admin.plansCreated": { fr: "Plans créés", en: "Plans created", nl: "Plannen aangemaakt", ar: "خطط أُنشئت", tr: "Oluşturulan planlar", ur: "بنائے گئے پلان" },
+  "admin.tasksCompleted": { fr: "Tâches complétées", en: "Tasks completed", nl: "Taken voltooid", ar: "مهام مكتملة", tr: "Tamamlanan görevler", ur: "مکمل شدہ کام" },
+  "admin.engagementRatio": { fr: "Ratio d'engagement", en: "Engagement ratio", nl: "Betrokkenheidsratio", ar: "نسبة المشاركة", tr: "Katılım oranı", ur: "مشغولیت کا تناسب" },
+  "admin.totalEvents": { fr: "Total événements", en: "Total events", nl: "Totaal events", ar: "إجمالي الأحداث", tr: "Toplam olaylar", ur: "کل واقعات" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

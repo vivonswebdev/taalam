@@ -9,6 +9,7 @@ import { useNooraniAudio } from "@/hooks/useNooraniAudio";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { getChildSuccessMessage } from "@/lib/childMessages";
 import Confetti from "@/components/Confetti";
+import { trackEvent } from "@/lib/trackEvent";
 import StickerReward from "@/components/StickerReward";
 import type { EarnedSticker } from "@/hooks/useChildMode";
 
@@ -307,6 +308,7 @@ export default function NooraniLesson() {
         setQuizScore(finalScore);
         if (finalScore >= 2 && lessonId) {
           saveProgress(lessonId);
+          trackEvent("noorani_lesson_completed", "noorani", { lessonId });
           setShowConfetti(true);
           if (isChildMode) {
             const s = earnSticker(0);

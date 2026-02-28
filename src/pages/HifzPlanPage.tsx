@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles } from "lucide-react";
+import { trackEvent } from "@/lib/trackEvent";
 import { useHifzPlan, type HifzPlan } from "@/hooks/useHifzPlan";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +52,7 @@ function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t:
   const canProceed = step === 1 ? true : step === 2 ? targetItems.length > 0 : true;
 
   const handleCreate = () => {
+    trackEvent("plan_hifz_created", "hifz", { daily_ayat: dailyAyat, target_type: targetType });
     onCreate({
       name: t("hifz.planTitle"),
       target_type: targetType,
@@ -262,7 +264,7 @@ export default function HifzPlanPage() {
                       <motion.div key={task.id} layout
                         className={`bg-card border rounded-2xl p-4 transition-colors ${task.is_completed ? "border-success/30 bg-success/5" : "border-border"}`}>
                         <div className="flex items-center gap-3">
-                          <button onClick={() => !task.is_completed && completeTask(task.id)}
+                          <button onClick={() => { if (!task.is_completed) { completeTask(task.id); trackEvent("hifz_task_completed", "hifz", { surah_number: task.surah_number, ayat_count: task.ayah_to - task.ayah_from + 1 }); } }}
                             className="shrink-0">
                             {task.is_completed
                               ? <CheckCircle2 size={22} className="text-success" />
