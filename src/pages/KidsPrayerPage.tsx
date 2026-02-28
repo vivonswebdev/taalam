@@ -6,6 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { PRAYER_STEPS, WUDU_STEPS, getRandomPrayerQuiz, getRandomWuduQuiz } from "@/data/kidsPrayer";
 import type { PrayerStep, WuduStep, PrayerQuizQuestion } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
+import { trackEvent } from "@/lib/trackEvent";
 
 type Section = "menu" | "steps" | "wudu" | "wudu-quiz" | "quiz";
 
