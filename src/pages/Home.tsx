@@ -148,7 +148,7 @@ export default function Home() {
               onClick={() => navigate(`/recitation?surah=${ch.surah_number}&from=${ch.ayah_from}&to=${ch.ayah_to}&challengeId=${ch.id}&classId=${ch.class_id}`)}
               className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg"
             >
-              Go !
+              {t("home.go" as any)}
             </button>
           </motion.div>
         );
