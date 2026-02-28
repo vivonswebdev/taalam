@@ -39,40 +39,40 @@ export default function More() {
   const { t } = useLanguage();
 
   const quranSection: MenuItem[] = [
-    { icon: <Clock size={20} className="text-primary" />, label: "Horaires de prière", desc: "Adhan, Qibla et rappels", path: "/prayers" },
-    { icon: <Radio size={20} className="text-green-500" />, label: "Live Coran", desc: "Écoute en direct 24/7", path: "/live-quran" },
-    { icon: <Search size={20} className="text-indigo-500" />, label: "Trouver une Ayah", desc: "Recherche dans le Coran", path: "/find-ayah" },
-    { icon: <Trophy size={20} className="text-amber-500" />, label: "Classement", desc: "Leaderboard & XP", path: "/leaderboard" },
-    { icon: <BookOpen size={20} className="text-teal-500" />, label: "Juz / Hizb", desc: "Navigation par Juz", path: "/juz" },
+    { icon: <Clock size={20} className="text-primary" />, label: t("more.prayerTimes"), desc: t("more.prayerTimesDesc"), path: "/prayers" },
+    { icon: <Radio size={20} className="text-green-500" />, label: t("more.liveQuran"), desc: t("more.liveQuranDesc"), path: "/live-quran" },
+    { icon: <Search size={20} className="text-indigo-500" />, label: t("more.findAyah"), desc: t("more.findAyahDesc"), path: "/find-ayah" },
+    { icon: <Trophy size={20} className="text-amber-500" />, label: t("more.ranking"), desc: t("more.rankingDesc"), path: "/leaderboard" },
+    { icon: <BookOpen size={20} className="text-teal-500" />, label: t("more.juzHizb"), desc: t("more.juzHizbDesc"), path: "/juz" },
   ];
 
   const accountSection: MenuItem[] = [
-    { icon: <Settings size={20} className="text-muted-foreground" />, label: t("nav.settings"), desc: "Langue, thème, traduction", path: "/settings" },
-    { icon: <BarChart3 size={20} className="text-primary" />, label: "Habitudes & progression", desc: "Stats, objectifs et avancement", path: "/habits" },
-    { icon: <User size={20} className="text-blue-500" />, label: "Connexion / Profil", path: "/auth" },
+    { icon: <Settings size={20} className="text-muted-foreground" />, label: t("nav.settings"), desc: t("more.settingsDesc"), path: "/settings" },
+    { icon: <BarChart3 size={20} className="text-primary" />, label: t("more.habitsProgress"), desc: t("more.habitsDesc"), path: "/habits" },
+    { icon: <User size={20} className="text-blue-500" />, label: t("more.loginProfile"), path: "/auth" },
   ];
 
   const modulesSection: MenuItem[] = [
-    { icon: <Brain size={20} className="text-purple-500" />, label: "Plan Hifz", desc: "Planning de mémorisation & révisions", path: "/hifz-plan" },
-    { icon: <BookOpen size={20} className="text-emerald-500" />, label: "Mode Étude", desc: "Multi-traductions, tafsîr, notes", path: "/study?surah=1" },
-    { icon: <Star size={20} className="text-yellow-500" />, label: "Favoris & Signets", desc: "Ayat sauvegardées", path: "/bookmarks" },
-    { icon: <Users size={20} className="text-pink-500" />, label: "Classe Famille", desc: "Suivez vos enfants", path: "/family" },
-    { icon: <Users size={20} className="text-indigo-500" />, label: "Classe Professeur", desc: "Gérez vos classes", path: "/classrooms" },
+    { icon: <Brain size={20} className="text-purple-500" />, label: t("more.hifzPlan"), desc: t("more.hifzPlanDesc"), path: "/hifz-plan" },
+    { icon: <BookOpen size={20} className="text-emerald-500" />, label: t("more.studyMode"), desc: t("more.studyModeDesc"), path: "/study?surah=1" },
+    { icon: <Star size={20} className="text-yellow-500" />, label: t("more.bookmarks"), desc: t("more.bookmarksDesc"), path: "/bookmarks" },
+    { icon: <Users size={20} className="text-pink-500" />, label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
+    { icon: <Users size={20} className="text-indigo-500" />, label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
   ];
 
   return (
     <div className="min-h-screen pb-24">
       <div className="px-6 pt-14 pb-2">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          Plus
+          {t("more.title")}
         </motion.h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Fonctionnalités supplémentaires</p>
+        <p className="text-sm text-muted-foreground mt-0.5">{t("more.subtitle")}</p>
       </div>
 
       <div className="px-5 pt-4 space-y-5">
-        <MenuSection title="Qur'an & pratique" items={quranSection} />
-        <MenuSection title="Compte & réglages" items={accountSection} />
-        <MenuSection title="Modules" items={modulesSection} />
+        <MenuSection title={t("more.sectionQuran")} items={quranSection} />
+        <MenuSection title={t("more.sectionAccount")} items={accountSection} />
+        <MenuSection title={t("more.sectionModules")} items={modulesSection} />
       </div>
     </div>
   );

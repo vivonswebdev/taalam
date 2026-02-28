@@ -31,7 +31,7 @@ function WizardStep({ step, children }: { step: number; children: React.ReactNod
   );
 }
 
-function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
+function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t: (key: string) => string }) {
   const [step, setStep] = useState(1);
   const [targetType, setTargetType] = useState<"surahs" | "juz">("surahs");
   const [selectedSurahs, setSelectedSurahs] = useState<number[]>([]);
@@ -52,7 +52,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
 
   const handleCreate = () => {
     onCreate({
-      name: "Mon plan Hifz",
+      name: t("hifz.planTitle"),
       target_type: targetType,
       target_items: targetItems,
       duration_days: durationDays,
@@ -71,11 +71,11 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
       <AnimatePresence mode="wait">
         {step === 1 && (
           <WizardStep step={1}>
-            <h3 className="text-sm font-semibold text-foreground">Que veux-tu mémoriser ?</h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("hifz.whatToMemorize")}</h3>
             <div className="grid grid-cols-2 gap-3">
               {([
-                { type: "surahs" as const, label: "Des sourates", icon: "📖", desc: "Choisis les sourates" },
-                { type: "juz" as const, label: "Un ou plusieurs Juz", icon: "📚", desc: "Par section complète" },
+                { type: "surahs" as const, label: t("hifz.surahs"), icon: "📖", desc: t("hifz.surahsDesc") },
+                { type: "juz" as const, label: t("hifz.juzLabel"), icon: "📚", desc: t("hifz.juzDesc") },
               ]).map((opt) => (
                 <button key={opt.type} onClick={() => setTargetType(opt.type)}
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-colors ${targetType === opt.type ? "border-primary bg-primary/10" : "border-border"}`}>
@@ -86,7 +86,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
               ))}
             </div>
             <button onClick={() => setStep(2)} className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold">
-              Suivant →
+              {t("hifz.next")}
             </button>
           </WizardStep>
         )}
@@ -94,7 +94,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
         {step === 2 && (
           <WizardStep step={2}>
             <h3 className="text-sm font-semibold text-foreground">
-              {targetType === "surahs" ? "Choisis tes sourates" : "Choisis tes Juz"}
+              {targetType === "surahs" ? t("hifz.chooseSurahs") : t("hifz.chooseJuz")}
             </h3>
 
             {targetType === "surahs" ? (
@@ -125,10 +125,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             )}
 
             <div className="flex gap-2">
-              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">← Retour</button>
+              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">{t("hifz.back")}</button>
               <button onClick={() => canProceed && setStep(3)} disabled={!canProceed}
                 className={`flex-1 py-3 rounded-xl text-sm font-semibold ${canProceed ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                Suivant →
+                {t("hifz.next")}
               </button>
             </div>
           </WizardStep>
@@ -136,10 +136,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
 
         {step === 3 && (
           <WizardStep step={3}>
-            <h3 className="text-sm font-semibold text-foreground">Rythme de mémorisation</h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("hifz.memorizationPace")}</h3>
 
             <div>
-              <p className="text-xs text-muted-foreground mb-2">Ayat par jour :</p>
+              <p className="text-xs text-muted-foreground mb-2">{t("hifz.ayatPerDay")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {[3, 5, 7, 10].map((n) => (
                   <button key={n} onClick={() => setDailyAyat(n)}
@@ -151,9 +151,9 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             </div>
 
             <div>
-              <p className="text-xs text-muted-foreground mb-2">Durée du plan :</p>
+              <p className="text-xs text-muted-foreground mb-2">{t("hifz.planDuration")}</p>
               <div className="grid grid-cols-3 gap-2">
-                {[{ d: 30, l: "1 mois" }, { d: 90, l: "3 mois" }, { d: 180, l: "6 mois" }].map((opt) => (
+                {[{ d: 30, l: t("hifz.1month") }, { d: 90, l: t("hifz.3months") }, { d: 180, l: t("hifz.6months") }].map((opt) => (
                   <button key={opt.d} onClick={() => setDurationDays(opt.d)}
                     className={`py-2.5 rounded-xl border-2 text-xs font-bold transition-colors ${durationDays === opt.d ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground"}`}>
                     {opt.l}
@@ -163,10 +163,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             </div>
 
             <div className="flex gap-2">
-              <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">← Retour</button>
+              <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">{t("hifz.back")}</button>
               <button onClick={handleCreate}
                 className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2">
-                <Sparkles size={16} /> Créer mon plan
+                <Sparkles size={16} /> {t("hifz.createPlan")}
               </button>
             </div>
           </WizardStep>
@@ -197,9 +197,9 @@ export default function HifzPlanPage() {
     <div className="min-h-screen pb-24">
       <div className="px-6 pt-14 pb-4">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          🧠 Plan Hifz
+          🧠 {t("hifz.planTitle")}
         </motion.h1>
-        <p className="text-sm text-muted-foreground mt-1">Planifie ta mémorisation et tes révisions</p>
+        <p className="text-sm text-muted-foreground mt-1">{t("hifz.planSubtitle")}</p>
       </div>
 
       <div className="px-6 space-y-4">
@@ -208,10 +208,10 @@ export default function HifzPlanPage() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-5">
             <div className="text-center mb-5">
               <span className="text-4xl">📖</span>
-              <h2 className="text-base font-bold text-foreground mt-2">Crée ton plan de mémorisation</h2>
-              <p className="text-xs text-muted-foreground mt-1">Choisis tes sourates, ton rythme, et on génère ton planning</p>
+              <h2 className="text-base font-bold text-foreground mt-2">{t("hifz.createTitle")}</h2>
+              <p className="text-xs text-muted-foreground mt-1">{t("hifz.createSubtitle")}</p>
             </div>
-            <CreatePlanWizard onCreate={createPlan} />
+            <CreatePlanWizard onCreate={createPlan} t={t} />
           </motion.div>
         ) : (
           <>
@@ -234,7 +234,7 @@ export default function HifzPlanPage() {
                 <span className="text-sm font-bold text-foreground">{overallProgress}%</span>
               </div>
               <p className="text-[10px] text-muted-foreground">
-                {completedCount}/{totalCount} tâches · {plan.daily_ayat} ayat/jour · Démarré le {new Date(plan.started_at).toLocaleDateString("fr")}
+                {completedCount}/{totalCount} {t("hifz.tasks")} · {plan.daily_ayat} {t("hifz.ayatDay")} · {t("hifz.startedOn")} {new Date(plan.started_at).toLocaleDateString()}
               </p>
             </motion.div>
 
@@ -242,17 +242,17 @@ export default function HifzPlanPage() {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <div className="flex items-center gap-2 mb-3">
                 <Calendar size={16} className="text-primary" />
-                <span className="text-sm font-semibold text-foreground">Révisions du jour</span>
+                <span className="text-sm font-semibold text-foreground">{t("hifz.todayReviews")}</span>
                 <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">
-                  {todayTasks.filter((t) => !t.is_completed).length} restante(s)
+                  {todayTasks.filter((tk) => !tk.is_completed).length} {t("hifz.remaining")}
                 </span>
               </div>
 
               {todayTasks.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-6 text-center">
                   <span className="text-3xl">🎉</span>
-                  <p className="text-sm font-medium text-foreground mt-2">Rien pour aujourd'hui !</p>
-                  <p className="text-xs text-muted-foreground">Reviens demain pour ta prochaine tâche</p>
+                   <p className="text-sm font-medium text-foreground mt-2">{t("hifz.nothingToday")}</p>
+                   <p className="text-xs text-muted-foreground">{t("hifz.comeBackTomorrow")}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -271,7 +271,7 @@ export default function HifzPlanPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${task.task_type === "new" ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary"}`}>
-                                {task.task_type === "new" ? "Nouveau" : "Révision"}
+                                {task.task_type === "new" ? t("hifz.new") : t("hifz.review")}
                               </span>
                               <span className="font-arabic text-sm text-primary">{surah?.nameArabic}</span>
                             </div>
@@ -298,7 +298,7 @@ export default function HifzPlanPage() {
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <div className="flex items-center gap-2 mb-3">
                   <Target size={16} className="text-secondary" />
-                  <span className="text-sm font-semibold text-foreground">À venir</span>
+                  <span className="text-sm font-semibold text-foreground">{t("hifz.upcoming")}</span>
                 </div>
                 <div className="bg-card border border-border rounded-2xl divide-y divide-border overflow-hidden">
                   {upcomingTasks.map((task) => {
@@ -310,7 +310,7 @@ export default function HifzPlanPage() {
                         </span>
                         <span className="font-arabic text-xs text-primary">{surah?.nameArabic}</span>
                         <span className="text-[10px] text-muted-foreground flex-1">v.{task.ayah_from}–{task.ayah_to}</span>
-                        <span className="text-[10px] text-muted-foreground">{new Date(task.task_date).toLocaleDateString("fr", { day: "numeric", month: "short" })}</span>
+                        <span className="text-[10px] text-muted-foreground">{new Date(task.task_date).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
                       </div>
                     );
                   })}
@@ -322,8 +322,8 @@ export default function HifzPlanPage() {
             {!isAuthenticated && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                 className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
-                <p className="text-xs text-muted-foreground">📱 Connecte-toi pour sauvegarder ton plan entre appareils</p>
-                <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">Se connecter →</button>
+                 <p className="text-xs text-muted-foreground">📱 {t("hifz.syncHint")}</p>
+                 <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">{t("hifz.signIn")}</button>
               </motion.div>
             )}
           </>
@@ -334,12 +334,12 @@ export default function HifzPlanPage() {
       {showDeleteConfirm && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8">
           <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm">
-            <h3 className="text-lg font-bold text-card-foreground mb-2">Supprimer le plan ?</h3>
-            <p className="text-sm text-muted-foreground mb-6">Toutes les tâches et ta progression seront perdues.</p>
+            <h3 className="text-lg font-bold text-card-foreground mb-2">{t("hifz.deletePlan")}</h3>
+            <p className="text-sm text-muted-foreground mb-6">{t("hifz.deleteWarning")}</p>
             <div className="flex gap-3">
-              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground">Annuler</button>
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground">{t("hifz.cancel")}</button>
               <button onClick={() => { deletePlan(); setShowDeleteConfirm(false); }}
-                className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium">Supprimer</button>
+                className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium">{t("hifz.confirmDelete")}</button>
             </div>
           </motion.div>
         </motion.div>

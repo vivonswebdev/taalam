@@ -89,9 +89,9 @@ export default function StudySheet({
   }, [open, tab, surahNumber, ayahNumber]);
 
   const tabs = [
-    { key: "translations" as const, label: "Traductions" },
-    { key: "tafsir" as const, label: "Tafsîr" },
-    { key: "notes" as const, label: "Notes" },
+    { key: "translations" as const, label: t("study.translations") },
+    { key: "tafsir" as const, label: t("study.tafsir") },
+    { key: "notes" as const, label: t("study.notes") },
   ];
 
   return (
@@ -101,7 +101,7 @@ export default function StudySheet({
           <div className="flex items-center justify-between">
             <DrawerTitle className="flex items-center gap-2 text-base">
               <BookOpen size={16} className="text-primary" />
-              Étude — Ayah {ayahNumber}
+              {t("study.ayah")} {ayahNumber}
             </DrawerTitle>
             <div className="flex items-center gap-2">
               <button
@@ -213,18 +213,18 @@ export default function StudySheet({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <PenLine size={14} className="text-primary" />
-                  <span className="text-xs font-bold text-foreground">Ma note</span>
+                  <span className="text-xs font-bold text-foreground">{t("study.myNote")}</span>
                 </div>
                 <textarea
                   value={noteText}
                   onChange={(e) => setNoteText(e.target.value)}
-                  placeholder="Écris ta réflexion sur ce verset..."
+                  placeholder={t("study.notePlaceholder")}
                   className="w-full min-h-[80px] rounded-xl bg-muted/50 border border-border p-3 text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
                     <Share2 size={12} />
-                    <span>Partager</span>
+                    <span>{t("study.share")}</span>
                     <input
                       type="checkbox"
                       checked={isShared}
@@ -238,7 +238,7 @@ export default function StudySheet({
                         onClick={() => { deleteNote(surahNumber, ayahNumber); setNoteText(""); }}
                         className="text-xs text-destructive flex items-center gap-1"
                       >
-                        <Trash2 size={12} /> Supprimer
+                        <Trash2 size={12} /> {t("study.delete")}
                       </button>
                     )}
                     <button
@@ -246,7 +246,7 @@ export default function StudySheet({
                       disabled={!noteText.trim()}
                       className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1.5 rounded-lg disabled:opacity-40"
                     >
-                      Sauvegarder
+                      {t("study.save")}
                     </button>
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export default function StudySheet({
               {/* Shared notes from others */}
               {sharedNotes.length > 0 && (
                 <div className="space-y-2 pt-2 border-t border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Notes partagées</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{t("study.sharedNotes")}</p>
                   {sharedNotes.map((n) => (
                     <div key={n.id} className="rounded-xl bg-muted/30 border border-border p-3">
                       <p className="text-sm text-foreground leading-relaxed">{n.content}</p>
