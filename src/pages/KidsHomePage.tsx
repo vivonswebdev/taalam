@@ -47,6 +47,14 @@ const KIDS_CARDS = [
     gradient: "from-pink-600/30 to-rose-600/15",
     border: "border-pink-500/25",
   },
+  {
+    emoji: "🌙",
+    titleKey: "kidsHome.checklist",
+    descKey: "kidsHome.checklistDesc",
+    path: "/kids-checklist",
+    gradient: "from-indigo-600/30 to-violet-600/15",
+    border: "border-indigo-500/25",
+  },
 ];
 
 export default function KidsHomePage() {

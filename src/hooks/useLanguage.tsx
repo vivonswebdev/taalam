@@ -1391,6 +1391,21 @@ const translations = {
   "kidsHome.discoveryTitle": { fr: "Mode découverte", en: "Discovery mode", nl: "Ontdekkingsmodus", ar: "وضع الاستكشاف", tr: "Keşif modu", ur: "دریافت موڈ" },
   "kidsHome.discoveryDesc": { fr: "Pour suivre les progrès de votre enfant, créez son profil.", en: "To track your child's progress, create their profile.", nl: "Om de voortgang van je kind te volgen, maak een profiel aan.", ar: "لمتابعة تقدم طفلك، أنشئ ملفه الشخصي.", tr: "Çocuğunuzun ilerlemesini takip etmek için profilini oluşturun.", ur: "اپنے بچے کی ترقی دیکھنے کے لیے پروفائل بنائیں۔" },
   "kidsHome.addChild": { fr: "Ajouter →", en: "Add →", nl: "Toevoegen →", ar: "إضافة →", tr: "Ekle →", ur: "شامل کریں →" },
+  "kidsHome.checklist": { fr: "Bonnes actions", en: "Good Deeds", nl: "Goede daden", ar: "أعمال صالحة", tr: "İyi ameller", ur: "نیک اعمال" },
+  "kidsHome.checklistDesc": { fr: "Coche tes bonnes actions du jour !", en: "Check off your daily good deeds!", nl: "Vink je dagelijkse goede daden af!", ar: "✓ أعمالك الصالحة اليومية!", tr: "Günlük iyi amellerini işaretle!", ur: "اپنے روزانہ نیک اعمال ✓ کریں!" },
+  "kidsChecklist.title": { fr: "Bonnes actions", en: "Good Deeds", nl: "Goede daden", ar: "أعمال صالحة", tr: "İyi ameller", ur: "نیک اعمال" },
+  "kidsChecklist.subtitle": { fr: "Coche tes bonnes actions chaque jour 🌙", en: "Check your daily good deeds 🌙", nl: "Vink je dagelijkse goede daden af 🌙", ar: "✓ أعمالك الصالحة كل يوم 🌙", tr: "Her gün iyi amellerini işaretle 🌙", ur: "ہر روز اپنے نیک اعمال ✓ کریں 🌙" },
+  "kidsChecklist.today": { fr: "Aujourd'hui", en: "Today", nl: "Vandaag", ar: "اليوم", tr: "Bugün", ur: "آج" },
+  "kidsChecklist.dayStreak": { fr: "jours d'affilée", en: "day streak", nl: "dagen op rij", ar: "أيام متتالية", tr: "gün serisi", ur: "دن کا سلسلہ" },
+  "kidsChecklist.completed": { fr: "complétés", en: "completed", nl: "voltooid", ar: "مكتمل", tr: "tamamlandı", ur: "مکمل" },
+  "kidsChecklist.allDone": { fr: "Bravo ! Tout est fait !", en: "Well done! All done!", nl: "Goed gedaan! Alles klaar!", ar: "أحسنت! أتممت الكل!", tr: "Aferin! Hepsini yaptın!", ur: "شاباش! سب مکمل!" },
+  "kidsChecklist.allDoneDesc": { fr: "Tu as accompli toutes tes bonnes actions du jour. Qu'Allah te récompense.", en: "You completed all your good deeds today. May Allah reward you.", nl: "Je hebt al je goede daden van vandaag gedaan. Moge Allah je belonen.", ar: "أتممت جميع أعمالك الصالحة اليوم. جزاك الله خيرًا.", tr: "Bugünkü tüm iyi amellerini tamamladın. Allah seni mükafatlandırsın.", ur: "آج کے تمام نیک اعمال مکمل۔ اللہ آپ کو جزا دے۔" },
+  "kidsChecklist.readQuran": { fr: "Lire des ayat du Coran", en: "Read ayat from the Quran", nl: "Lees ayat uit de Koran", ar: "اقرأ آيات من القرآن", tr: "Kuran'dan ayet oku", ur: "قرآن سے آیات پڑھیں" },
+  "kidsChecklist.prayOnTime": { fr: "Prier à l'heure", en: "Pray on time", nl: "Bid op tijd", ar: "صلِّ في وقتها", tr: "Namazını vaktinde kıl", ur: "وقت پر نماز پڑھیں" },
+  "kidsChecklist.duaBeforeSleep": { fr: "Dire la dou'a avant de dormir", en: "Say du'a before sleeping", nl: "Zeg een smeekbede voor het slapen", ar: "قل دعاء قبل النوم", tr: "Uyumadan önce dua et", ur: "سونے سے پہلے دعا کریں" },
+  "kidsChecklist.goodDeed": { fr: "Faire une bonne action", en: "Do a good deed", nl: "Doe een goede daad", ar: "افعل عملًا صالحًا", tr: "İyi bir iş yap", ur: "ایک نیک کام کریں" },
+  "kidsChecklist.helpParents": { fr: "Aider papa/maman", en: "Help mom/dad", nl: "Help mama/papa", ar: "ساعد ماما/بابا", tr: "Anne/babana yardım et", ur: "ماں/باپ کی مدد کریں" },
+  "kidsChecklist.dhikr": { fr: "Faire du dhikr", en: "Do dhikr", nl: "Doe dhikr", ar: "اذكر الله", tr: "Zikir yap", ur: "ذکر کریں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

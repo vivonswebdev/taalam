@@ -109,6 +109,7 @@ const App = () => (
               <Route path="/kids-hajj" element={<KidsHajjUmraPage />} />
               <Route path="/kids-mosque-map" element={<KidsMosqueMapPage />} />
               <Route path="/kids" element={<KidsHomePage />} />
+              <Route path="/kids-checklist" element={<KidsChecklist />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
