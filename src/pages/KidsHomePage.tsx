@@ -83,6 +83,8 @@ export default function KidsHomePage() {
       return `${quizScore.correct}/${quizScore.total}`;
     if (path === "/kids-prayer" && prayerDone) return "✅";
     if (path === "/kids-hajj" && hajjDone) return "✅";
+    if (path === "/kids-checklist" && checklist.completedCount > 0)
+      return `${checklist.completedCount}/${checklist.totalCount}`;
     return null;
   };
 

@@ -162,6 +162,8 @@ export function useChildDashboard(childId: string | undefined): ChildDashboardSt
       nooraniTotal,
       kidsPrayerDone,
       kidsHajjDone,
+      checklistToday,
+      checklistTotal,
       dayTimeline,
       recentActivities: recentActivities.slice(0, 12),
     };
