@@ -227,6 +227,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+    if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
     hasReceivedResultRef.current = false;
 
     const recognition: SpeechRecognition = new SR();
