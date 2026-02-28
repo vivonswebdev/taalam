@@ -982,6 +982,28 @@ export default function Recitation() {
             })}
           </div>
 
+          {/* Noorani suggestion for child mode with low score */}
+          {isChildMode && totalScore < 60 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-primary/10 border border-primary/20 rounded-2xl p-4 flex items-center gap-3"
+            >
+              <span className="text-2xl shrink-0">📚</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-foreground">Tu veux revoir les lettres ?</p>
+                <p className="text-[11px] text-muted-foreground">Essaie Noorani Qaida pour t'entraîner à lire.</p>
+              </div>
+              <button
+                onClick={() => navigate("/noorani")}
+                className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg"
+              >
+                Ouvrir
+              </button>
+            </motion.div>
+          )}
+
           {/* Action buttons */}
           <div className="flex gap-3 pt-2 pb-6">
             <button
