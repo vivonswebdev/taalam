@@ -67,6 +67,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     return () => {
       isListeningRef.current = false;
       if (nativeSilenceTimerRef.current) clearTimeout(nativeSilenceTimerRef.current);
+      if (nativeNoEndTimerRef.current) clearTimeout(nativeNoEndTimerRef.current);
       try { recognitionRef.current?.abort(); } catch {}
       cleanupServer();
     };
