@@ -43,6 +43,8 @@ export default function More() {
   const childSection: MenuItem[] = [
     { icon: <Baby size={20} className="text-primary" />, label: t("settings.childMode"), desc: t("settings.childModeDesc"), path: "/settings" },
     { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
+    { icon: "🕌", label: t("more.kidsPrayer" as any), desc: t("more.kidsPrayerDesc" as any), path: "/kids-prayer" },
+    { icon: "🕋", label: t("home.kidsHajj" as any), desc: t("home.kidsHajjDesc" as any), path: "/kids-hajj" },
   ];
 
   const quranSection: MenuItem[] = [

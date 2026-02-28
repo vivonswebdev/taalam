@@ -167,14 +167,13 @@ function StepViewer({ steps, t }: { steps: (PrayerStep | WuduStep)[]; t: any }) 
   );
 }
 
-/* ═══ Quiz ═══ */
-function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
+/* ═══ Generic Quiz ═══ */
+function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const questions = KIDS_PRAYER_QUIZ;
   const current = questions[step];
   const isDone = step >= questions.length;
 
@@ -196,7 +195,7 @@ function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
         {showConfetti && <Confetti active={true} />}
         <span className="text-6xl inline-block mb-4">{score >= 3 ? "🏆" : "💪"}</span>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {score >= 3 ? t("kidsPrayer.quizBravo" as any) : t("kidsPrayer.quizTryAgain" as any)}
+          {score >= 3 ? t(bravoKey as any) : t(tryAgainKey as any)}
         </h2>
         <p className="text-lg text-muted-foreground mb-6">
           {score}/{questions.length} {t("noorani.quizCorrect" as any)}
