@@ -224,7 +224,7 @@ export default function StudySheet({
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
                     <Share2 size={12} />
-                    <span>Partager</span>
+                    <span>{t("study.share")}</span>
                     <input
                       type="checkbox"
                       checked={isShared}
