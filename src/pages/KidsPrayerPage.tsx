@@ -1,12 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { PRAYER_STEPS, KIDS_PRAYER_QUIZ } from "@/data/kidsPrayer";
+import { PRAYER_STEPS, KIDS_PRAYER_QUIZ, WUDU_STEPS } from "@/data/kidsPrayer";
+import type { PrayerStep, WuduStep } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
 
-type Section = "menu" | "steps" | "quiz";
+type Section = "menu" | "steps" | "wudu" | "quiz";
 
 export default function KidsPrayerPage() {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ export default function KidsPrayerPage() {
 
   return (
     <div className="min-h-screen pb-28">
-      {/* Header */}
       <div className="px-5 pt-6">
         <button onClick={() => section === "menu" ? navigate(-1) : setSection("menu")} className="flex items-center gap-2 text-muted-foreground mb-4">
           <ArrowLeft size={20} />
@@ -30,7 +30,8 @@ export default function KidsPrayerPage() {
 
       <AnimatePresence mode="wait">
         {section === "menu" && <MenuSection key="menu" onSelect={setSection} t={t} />}
-        {section === "steps" && <PrayerStepViewer key="steps" t={t} />}
+        {section === "steps" && <StepViewer key="steps" steps={PRAYER_STEPS} t={t} />}
+        {section === "wudu" && <StepViewer key="wudu" steps={WUDU_STEPS} t={t} />}
         {section === "quiz" && <PrayerQuiz key="quiz" t={t} onBack={() => setSection("menu")} />}
       </AnimatePresence>
     </div>
@@ -41,7 +42,7 @@ export default function KidsPrayerPage() {
 function MenuSection({ onSelect, t }: { onSelect: (s: Section) => void; t: any }) {
   const cards = [
     { id: "steps" as Section, emoji: "🧎", titleKey: "kidsPrayer.menuSteps", descKey: "kidsPrayer.menuStepsDesc", gradient: "from-emerald-600 to-teal-700" },
-    { id: "wudu" as Section, emoji: "💧", titleKey: "kidsPrayer.menuWudu", descKey: "kidsPrayer.menuWuduDesc", gradient: "from-sky-600 to-blue-700", disabled: true },
+    { id: "wudu" as Section, emoji: "💧", titleKey: "kidsPrayer.menuWudu", descKey: "kidsPrayer.menuWuduDesc", gradient: "from-sky-600 to-blue-700" },
     { id: "quiz" as Section, emoji: "🧠", titleKey: "kidsPrayer.menuQuiz", descKey: "kidsPrayer.menuQuizDesc", gradient: "from-amber-500 to-orange-600" },
   ];
 
@@ -53,35 +54,33 @@ function MenuSection({ onSelect, t }: { onSelect: (s: Section) => void; t: any }
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
-          whileTap={c.disabled ? undefined : { scale: 0.97 }}
-          onClick={() => !c.disabled && onSelect(c.id)}
-          disabled={!!c.disabled}
-          className={`w-full flex items-center gap-4 rounded-2xl p-5 text-left bg-gradient-to-r ${c.gradient} ${c.disabled ? "opacity-50" : "shadow-lg"}`}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => onSelect(c.id)}
+          className={`w-full flex items-center gap-4 rounded-2xl p-5 text-left bg-gradient-to-r ${c.gradient} shadow-lg`}
         >
           <span className="text-3xl">{c.emoji}</span>
           <div className="flex-1">
             <p className="text-base font-bold text-white">{t(c.titleKey as any)}</p>
             <p className="text-xs text-white/70 mt-0.5">{t(c.descKey as any)}</p>
-            {c.disabled && <span className="text-[10px] text-white/50 mt-1 block">{t("kidsPrayer.comingSoon" as any)}</span>}
           </div>
-          {!c.disabled && <ChevronRight size={20} className="text-white/60" />}
+          <ChevronRight size={20} className="text-white/60" />
         </motion.button>
       ))}
     </motion.div>
   );
 }
 
-/* ═══ Step Viewer ═══ */
-function PrayerStepViewer({ t }: { t: any }) {
+/* ═══ Generic Step Viewer (Prayer + Wudu) ═══ */
+function StepViewer({ steps, t }: { steps: (PrayerStep | WuduStep)[]; t: any }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const current = PRAYER_STEPS[currentIndex];
-  const total = PRAYER_STEPS.length;
+  const current = steps[currentIndex];
+  const total = steps.length;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-5">
       {/* Timeline */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        {PRAYER_STEPS.map((_, i) => (
+      <div className="flex items-center justify-center gap-1.5 mb-4 flex-wrap">
+        {steps.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrentIndex(i)}
@@ -111,9 +110,7 @@ function PrayerStepViewer({ t }: { t: any }) {
           transition={{ duration: 0.3 }}
           className="rounded-3xl overflow-hidden bg-card border border-border shadow-lg"
         >
-          <motion.div
-            className="relative h-56 bg-gradient-to-b from-primary/10 to-transparent flex items-center justify-center overflow-hidden"
-          >
+          <motion.div className="relative h-56 bg-gradient-to-b from-primary/10 to-transparent flex items-center justify-center overflow-hidden">
             <motion.img
               src={current.image}
               alt={current.id}
@@ -187,8 +184,7 @@ function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
     setTimeout(() => {
       setSelected(null);
       setStep((s) => s + 1);
-      if (step + 1 >= questions.length && correct) setShowConfetti(true);
-      else if (step + 1 >= questions.length) setShowConfetti(true);
+      if (step + 1 >= questions.length) setShowConfetti(true);
     }, 800);
   };
 
