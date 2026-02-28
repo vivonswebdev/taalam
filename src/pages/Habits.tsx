@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones } from "lucide-react";
+import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones, FileDown } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +8,13 @@ import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useXP } from "@/hooks/useXP";
 import { useListeningStats } from "@/hooks/useListeningStats";
+import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { StickerCollection } from "@/components/StickerReward";
+import HifzHabitCard from "@/components/HifzHabitCard";
+import { generateProgressReport } from "@/lib/generateReport";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 
 const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: string }[] = [
