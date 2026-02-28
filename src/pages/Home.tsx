@@ -276,7 +276,7 @@ export default function Home() {
             className="mt-2 text-[10px] text-muted-foreground/70 text-center leading-relaxed max-w-[260px] mx-auto"
           >
             Toutes les fonctionnalités de Ta'alam sont gratuites et resteront gratuites, in shâ Allah.{" "}
-            <span className="text-primary/60 font-medium">taalam.eu</span>
+            <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-primary/60 font-medium underline underline-offset-2">taalam.eu</a>
           </motion.p>
         </div>
       </div>
