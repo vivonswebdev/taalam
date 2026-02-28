@@ -97,10 +97,10 @@ export default function TeacherStatsSection({ students, assignments }: Props) {
       {/* At-risk students */}
       {atRiskStudents.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="bg-card border border-amber-500/30 rounded-xl p-4"
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle size={16} className="text-amber-500" />
+        className="bg-card border border-amber-500/30 rounded-xl p-4"
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle size={16} className="text-amber-500" />
             <span className="text-sm font-semibold">{t("teacher.stats.atRisk" as any)}</span>
           </div>
           <div className="space-y-2">
