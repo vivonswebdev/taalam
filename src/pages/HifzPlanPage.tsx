@@ -322,8 +322,8 @@ export default function HifzPlanPage() {
             {!isAuthenticated && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                 className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
-                <p className="text-xs text-muted-foreground">📱 Connecte-toi pour sauvegarder ton plan entre appareils</p>
-                <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">Se connecter →</button>
+                 <p className="text-xs text-muted-foreground">📱 {t("hifz.syncHint")}</p>
+                 <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">{t("hifz.signIn")}</button>
               </motion.div>
             )}
           </>
