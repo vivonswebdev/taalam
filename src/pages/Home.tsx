@@ -37,6 +37,7 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
+  const nooraniProgress = useNooraniProgress();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
