@@ -30,7 +30,7 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
         </div>
       </div>
       {loop && (
-        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-400/40 whitespace-nowrap shrink-0">
+        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap shrink-0">
           {t("moods.loopBadge" as any)}
         </span>
       )}
