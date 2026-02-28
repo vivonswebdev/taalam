@@ -135,7 +135,45 @@ export default function NotificationSettings() {
           </div>
         </div>
 
-        {/* Firebase info */}
+        {/* Push notification permission */}
+        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Smartphone size={18} className="text-primary" />
+            <div>
+              <p className="text-sm font-semibold">{t("notif.pushPermission" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">{t("notif.pushPermissionDesc" as any)}</p>
+            </div>
+          </div>
+          {pushState === "granted" ? (
+            <div className="flex items-center gap-2 bg-primary/10 rounded-lg px-3 py-2">
+              <BellRing size={14} className="text-primary" />
+              <p className="text-xs font-semibold text-primary">{t("notif.pushEnabled" as any)}</p>
+            </div>
+          ) : pushState === "denied" ? (
+            <div className="bg-destructive/10 rounded-lg px-3 py-2">
+              <p className="text-xs text-destructive">{t("notif.pushDenied" as any)}</p>
+            </div>
+          ) : pushState === "unsupported" ? (
+            <div className="bg-muted rounded-lg px-3 py-2">
+              <p className="text-xs text-muted-foreground">{t("notif.pushUnsupported" as any)}</p>
+            </div>
+          ) : (
+            <Button
+              onClick={async () => {
+                const ok = await requestPermission();
+                if (ok) toast({ title: "✅ " + t("notif.pushEnabled" as any) });
+              }}
+              disabled={pushLoading}
+              size="sm"
+              className="w-full"
+            >
+              <Bell size={14} className="mr-1" />
+              {pushLoading ? "..." : t("notif.enablePush" as any)}
+            </Button>
+          )}
+        </div>
+
+        {/* Info */}
         <div className="bg-muted/50 border border-border rounded-xl p-4">
           <p className="text-[11px] text-muted-foreground leading-relaxed">
             {t("notif.pushInfo" as any)}
