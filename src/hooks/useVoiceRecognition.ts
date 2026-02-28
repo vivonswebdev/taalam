@@ -85,20 +85,30 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     mediaStreamRef.current = null;
   }, []);
 
-  // Helper to get the best auth token (user JWT if logged in, else anon key)
-  const getAuthToken = useCallback(async (): Promise<string> => {
+  // Helper to get user auth token for protected backend STT
+  const getAuthToken = useCallback(async (): Promise<string | null> => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) return session.access_token;
-    } catch {}
-    return import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      return session?.access_token ?? null;
+    } catch {
+      return null;
+    }
   }, []);
 
   const processQueue = useCallback(async () => {
     if (isProcessingRef.current) return;
     isProcessingRef.current = true;
+
     const authToken = await getAuthToken();
+    if (!authToken) {
+      // Protected backend STT requires logged-in user token
+      chunkQueueRef.current = [];
+      isProcessingRef.current = false;
+      onErrorRef.current?.("auth-required");
+      return;
+    }
+
     while (chunkQueueRef.current.length > 0) {
       const blob = chunkQueueRef.current.shift()!;
       if (blob.size < MIN_CHUNK_SIZE) continue;
@@ -112,6 +122,16 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}`, "apikey": supabaseKey },
           body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
         });
+
+        if (res.status === 401 || res.status === 403) {
+          onErrorRef.current?.("auth-required");
+          break;
+        }
+
+        if (!res.ok) {
+          throw new Error(`stt-chunk failed with ${res.status}`);
+        }
+
         const data = await res.json();
         if (data.text) {
           transcriptRef.current = (transcriptRef.current + " " + data.text).trim();
@@ -122,6 +142,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         console.warn("[VoiceRecognition] chunk STT error:", e);
       }
     }
+
     isProcessingRef.current = false;
   }, [lang, getAuthToken]);
 
@@ -228,15 +249,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onend = () => {
       if (isListeningRef.current && recognitionRef.current === recognition) {
-        // If we never got results and it ended, fallback to server
-        if (!hasReceivedResultRef.current) {
-          console.warn("[VoiceRecognition] Native ended with no results, forcing server STT");
-          forceServerRef.current = true;
-          recognitionRef.current = null;
-          setMode("server");
-          startServer();
-          return;
-        }
+        // Mobile browsers may stop on silence; keep native engine alive while user is still listening.
         try {
           recognition.start();
           return;
@@ -284,15 +297,11 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
-      // Set a silence timeout: if no result in 4s, fallback to server
+      // Native may need more time on mobile; do a soft native restart instead of immediate server fallback.
       nativeSilenceTimerRef.current = setTimeout(() => {
         if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, forcing server STT");
-          forceServerRef.current = true;
-          try { recognition.abort(); } catch {}
-          recognitionRef.current = null;
-          setMode("server");
-          startServer();
+          console.warn("[VoiceRecognition] No results after timeout, restarting native SR");
+          try { recognition.stop(); } catch {}
         }
       }, NATIVE_SILENCE_TIMEOUT_MS);
     } catch (e) {
