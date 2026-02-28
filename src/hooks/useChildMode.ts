@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-
-const CHILD_MODE_KEY = "quranEasyChildMode";
-const STICKERS_KEY = "quranEasyStickers";
+import { useUserMode } from "@/hooks/useUserMode";
 
 export type StickerType = "star" | "moon" | "book" | "trophy" | "heart" | "mosque";
 
