@@ -8,6 +8,7 @@ export interface WordResult {
 interface UseVoiceRecognitionOptions {
   lang?: string;
   continuous?: boolean;
+  forceServer?: boolean;
   onResult?: (transcript: string) => void;
   onEnd?: () => void;
   onError?: (error: string) => void;
