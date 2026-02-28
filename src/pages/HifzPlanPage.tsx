@@ -52,6 +52,7 @@ function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t:
   const canProceed = step === 1 ? true : step === 2 ? targetItems.length > 0 : true;
 
   const handleCreate = () => {
+    trackEvent("plan_hifz_created", "hifz", { daily_ayat: dailyAyat, target_type: targetType });
     onCreate({
       name: t("hifz.planTitle"),
       target_type: targetType,
