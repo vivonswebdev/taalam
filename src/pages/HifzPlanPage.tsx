@@ -334,12 +334,12 @@ export default function HifzPlanPage() {
       {showDeleteConfirm && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8">
           <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm">
-            <h3 className="text-lg font-bold text-card-foreground mb-2">Supprimer le plan ?</h3>
-            <p className="text-sm text-muted-foreground mb-6">Toutes les tâches et ta progression seront perdues.</p>
+            <h3 className="text-lg font-bold text-card-foreground mb-2">{t("hifz.deletePlan")}</h3>
+            <p className="text-sm text-muted-foreground mb-6">{t("hifz.deleteWarning")}</p>
             <div className="flex gap-3">
-              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground">Annuler</button>
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground">{t("hifz.cancel")}</button>
               <button onClick={() => { deletePlan(); setShowDeleteConfirm(false); }}
-                className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium">Supprimer</button>
+                className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium">{t("hifz.confirmDelete")}</button>
             </div>
           </motion.div>
         </motion.div>
