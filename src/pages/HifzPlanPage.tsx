@@ -197,9 +197,9 @@ export default function HifzPlanPage() {
     <div className="min-h-screen pb-24">
       <div className="px-6 pt-14 pb-4">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          🧠 Plan Hifz
+          🧠 {t("hifz.planTitle")}
         </motion.h1>
-        <p className="text-sm text-muted-foreground mt-1">Planifie ta mémorisation et tes révisions</p>
+        <p className="text-sm text-muted-foreground mt-1">{t("hifz.planSubtitle")}</p>
       </div>
 
       <div className="px-6 space-y-4">
