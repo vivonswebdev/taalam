@@ -51,6 +51,7 @@ import KidsHomePage from "./pages/KidsHomePage";
 import KidsChecklist from "./pages/KidsChecklist";
 import KidsDuasPage from "./pages/KidsDuasPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
