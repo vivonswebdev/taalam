@@ -31,7 +31,7 @@ function WizardStep({ step, children }: { step: number; children: React.ReactNod
   );
 }
 
-function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
+function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t: (key: string) => string }) {
   const [step, setStep] = useState(1);
   const [targetType, setTargetType] = useState<"surahs" | "juz">("surahs");
   const [selectedSurahs, setSelectedSurahs] = useState<number[]>([]);
@@ -52,7 +52,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
 
   const handleCreate = () => {
     onCreate({
-      name: "Mon plan Hifz",
+      name: t("hifz.planTitle"),
       target_type: targetType,
       target_items: targetItems,
       duration_days: durationDays,
@@ -71,11 +71,11 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
       <AnimatePresence mode="wait">
         {step === 1 && (
           <WizardStep step={1}>
-            <h3 className="text-sm font-semibold text-foreground">Que veux-tu mémoriser ?</h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("hifz.whatToMemorize")}</h3>
             <div className="grid grid-cols-2 gap-3">
               {([
-                { type: "surahs" as const, label: "Des sourates", icon: "📖", desc: "Choisis les sourates" },
-                { type: "juz" as const, label: "Un ou plusieurs Juz", icon: "📚", desc: "Par section complète" },
+                { type: "surahs" as const, label: t("hifz.surahs"), icon: "📖", desc: t("hifz.surahsDesc") },
+                { type: "juz" as const, label: t("hifz.juzLabel"), icon: "📚", desc: t("hifz.juzDesc") },
               ]).map((opt) => (
                 <button key={opt.type} onClick={() => setTargetType(opt.type)}
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-colors ${targetType === opt.type ? "border-primary bg-primary/10" : "border-border"}`}>
@@ -86,7 +86,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
               ))}
             </div>
             <button onClick={() => setStep(2)} className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold">
-              Suivant →
+              {t("hifz.next")}
             </button>
           </WizardStep>
         )}
@@ -94,7 +94,7 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
         {step === 2 && (
           <WizardStep step={2}>
             <h3 className="text-sm font-semibold text-foreground">
-              {targetType === "surahs" ? "Choisis tes sourates" : "Choisis tes Juz"}
+              {targetType === "surahs" ? t("hifz.chooseSurahs") : t("hifz.chooseJuz")}
             </h3>
 
             {targetType === "surahs" ? (
@@ -125,10 +125,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             )}
 
             <div className="flex gap-2">
-              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">← Retour</button>
+              <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">{t("hifz.back")}</button>
               <button onClick={() => canProceed && setStep(3)} disabled={!canProceed}
                 className={`flex-1 py-3 rounded-xl text-sm font-semibold ${canProceed ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                Suivant →
+                {t("hifz.next")}
               </button>
             </div>
           </WizardStep>
@@ -136,10 +136,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
 
         {step === 3 && (
           <WizardStep step={3}>
-            <h3 className="text-sm font-semibold text-foreground">Rythme de mémorisation</h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("hifz.memorizationPace")}</h3>
 
             <div>
-              <p className="text-xs text-muted-foreground mb-2">Ayat par jour :</p>
+              <p className="text-xs text-muted-foreground mb-2">{t("hifz.ayatPerDay")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {[3, 5, 7, 10].map((n) => (
                   <button key={n} onClick={() => setDailyAyat(n)}
@@ -151,9 +151,9 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             </div>
 
             <div>
-              <p className="text-xs text-muted-foreground mb-2">Durée du plan :</p>
+              <p className="text-xs text-muted-foreground mb-2">{t("hifz.planDuration")}</p>
               <div className="grid grid-cols-3 gap-2">
-                {[{ d: 30, l: "1 mois" }, { d: 90, l: "3 mois" }, { d: 180, l: "6 mois" }].map((opt) => (
+                {[{ d: 30, l: t("hifz.1month") }, { d: 90, l: t("hifz.3months") }, { d: 180, l: t("hifz.6months") }].map((opt) => (
                   <button key={opt.d} onClick={() => setDurationDays(opt.d)}
                     className={`py-2.5 rounded-xl border-2 text-xs font-bold transition-colors ${durationDays === opt.d ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground"}`}>
                     {opt.l}
@@ -163,10 +163,10 @@ function CreatePlanWizard({ onCreate }: { onCreate: (params: any) => void }) {
             </div>
 
             <div className="flex gap-2">
-              <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">← Retour</button>
+              <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">{t("hifz.back")}</button>
               <button onClick={handleCreate}
                 className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2">
-                <Sparkles size={16} /> Créer mon plan
+                <Sparkles size={16} /> {t("hifz.createPlan")}
               </button>
             </div>
           </WizardStep>
