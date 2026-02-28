@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, LogOut, Trophy } from "lucide-react";
+import { LogOut, Trophy } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
+import { useHifzPlan } from "@/hooks/useHifzPlan";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Home() {
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
+  const { plan, todayTasks, overallProgress } = useHifzPlan();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -252,38 +254,30 @@ export default function Home() {
           </motion.button>
         </div>
 
-        {/* Classes */}
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mt-4">{t("home.sectionClasses")}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/family")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
-          >
-            <span className="text-2xl">👨‍👩‍👧‍👦</span>
-            <p className="text-xs font-bold text-foreground">{t("home.familyClass")}</p>
-            <p className="text-[10px] text-muted-foreground">{t("home.familyClassDesc")}</p>
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/classrooms")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
-          >
-            <GraduationCap size={24} className="text-primary" />
-            <p className="text-xs font-bold text-foreground">{t("home.classMode")}</p>
-            <p className="text-[10px] text-muted-foreground">
-              {classrooms.length > 0
-                ? `${classrooms.length} ${classrooms.length > 1 ? t("home.classesActive") : t("home.classActive")}`
-                : t("home.createOrJoin")}
-            </p>
-          </motion.button>
-        </div>
+        {/* Plan Hifz widget */}
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/hifz-plan")}
+          className="w-full flex items-center gap-3 rounded-2xl p-4 bg-muted/50 border border-border text-left"
+        >
+          <span className="text-2xl shrink-0">📖</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground">Plan Hifz</p>
+            {plan ? (
+              <p className="text-[10px] text-muted-foreground line-clamp-2">
+                {plan.name} · {overallProgress}% · {todayTasks.length} tâche{todayTasks.length !== 1 ? "s" : ""} aujourd'hui
+              </p>
+            ) : (
+              <p className="text-[10px] text-muted-foreground">Crée ton planning de mémorisation</p>
+            )}
+          </div>
+          <span className="text-[10px] font-semibold text-primary shrink-0">
+            {plan ? "Ouvrir mon plan →" : "Créer mon plan →"}
+          </span>
+        </motion.button>
       </div>
 
       {/* Weak Surahs */}
