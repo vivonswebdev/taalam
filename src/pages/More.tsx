@@ -50,6 +50,10 @@ export default function More() {
     { icon: "🕌", label: t("home.kidsMosque" as any), desc: t("home.kidsMosqueDesc" as any), path: "/kids-mosque-map" },
   ];
 
+  const communitySection: MenuItem[] = [
+    { icon: "🌍", label: t("community.title" as any), desc: t("community.menuDesc" as any), path: "/community" },
+  ];
+
   const quranSection: MenuItem[] = [
     { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
     { icon: "📿", label: t("more.athkar" as any), desc: t("more.athkarDesc" as any), path: "/moods" },
