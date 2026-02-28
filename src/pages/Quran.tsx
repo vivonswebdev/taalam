@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -29,6 +29,7 @@ import MushafReader from "@/components/MushafReader";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
@@ -89,6 +90,8 @@ export default function Quran() {
     : null;
 
   const easySurahsList = surahs.filter(s => EASY_SURAH_NUMBERS.includes(s.number));
+  const surahSelectorRef = useRef<HTMLDivElement>(null);
+  const [highlightSelector, setHighlightSelector] = useState(false);
 
   // Full Quran list (114 surahs)
   const [allSurahsMeta, setAllSurahsMeta] = useState<SurahMeta[]>([]);
@@ -572,7 +575,19 @@ export default function Quran() {
                 onClick={() => {
                   if (item.nav) { navigate(item.nav); return; }
                   setRecitationMode(item.mode);
-                  if (lastUsedSurah) { handleSelectSurah(lastUsedSurah); }
+                  if (lastUsedSurah) {
+                    handleSelectSurah(lastUsedSurah);
+                  } else {
+                    setShowDropdown(true);
+                    setHighlightSelector(true);
+                    setTimeout(() => setHighlightSelector(false), 3000);
+                    setTimeout(() => {
+                      surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }, 100);
+                    toast.info(t("mode.noSurahTitle" as any), {
+                      description: t("mode.noSurahDesc" as any),
+                    });
+                  }
                 }}
                 className={`card-shimmer relative overflow-hidden rounded-2xl p-3.5 flex flex-col gap-1 text-left shadow-sm bg-gradient-to-br ${item.gradient} ${
                   recitationMode === item.mode ? "ring-2 ring-white/40 shadow-lg" : ""
@@ -586,8 +601,8 @@ export default function Quran() {
           </motion.div>
 
           {/* ─── Sourate + Difficulty on same row ─── */}
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-xl p-3">
+          <motion.div ref={surahSelectorRef} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className={`bg-card border rounded-xl p-3 transition-all duration-500 ${highlightSelector ? "border-primary ring-2 ring-primary/30 shadow-lg shadow-primary/10" : "border-border"}`}>
             <div className="flex items-center gap-2 mb-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex-shrink-0">{t("mode.surah")}</p>
               <div className="flex gap-1 flex-1">
@@ -720,7 +735,22 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => { setRecitationMode("readOnly"); if (lastUsedSurah) handleSelectSurah(lastUsedSurah); }}
+              onClick={() => {
+                setRecitationMode("readOnly");
+                if (lastUsedSurah) {
+                  handleSelectSurah(lastUsedSurah);
+                } else {
+                  setShowDropdown(true);
+                  setHighlightSelector(true);
+                  setTimeout(() => setHighlightSelector(false), 3000);
+                  setTimeout(() => {
+                    surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }, 100);
+                  toast.info(t("mode.noSurahTitle" as any), {
+                    description: t("mode.noSurahDesc" as any),
+                  });
+                }
+              }}
               className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl text-left transition-all ${
                 recitationMode === "readOnly"
                   ? "bg-primary text-primary-foreground shadow-sm"
