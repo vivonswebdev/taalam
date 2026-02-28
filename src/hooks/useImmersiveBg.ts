@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 const STORAGE_KEY = "taaloum_immersive_bg";
 const BG_CHOICES_KEY = "taaloum_bg_choices";
 
-export type BgTheme = "mountain" | "desert" | "mosque" | "galaxy" | "garden" | "ocean" | "starry" | "none";
+export type BgTheme = "mountain" | "desert" | "mosque" | "galaxy" | "garden" | "ocean" | "starry" | "forest" | "aurora" | "sunset" | "none";
 
 export interface BgChoices {
   home: BgTheme;
