@@ -139,7 +139,15 @@ export default function NooraniLesson() {
               <p className="text-sm text-muted-foreground font-medium mb-3">{item.label}</p>
             )}
             <button
-              onClick={() => play(item.audioUrl)}
+              onClick={async () => {
+                if (!item.audioUrl) return;
+                try {
+                  const audio = new Audio(item.audioUrl);
+                  await audio.play();
+                } catch (e) {
+                  console.error("Audio playback failed:", e);
+                }
+              }}
               disabled={!item.audioUrl}
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors min-h-[44px] ${
                 item.audioUrl
