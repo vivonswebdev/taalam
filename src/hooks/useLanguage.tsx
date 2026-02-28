@@ -1036,6 +1036,7 @@ const translations = {
   "noorani.iKnow": { fr: "Je connais 👍", en: "I know 👍", nl: "Ik weet het 👍", ar: "أعرفها 👍", tr: "Biliyorum 👍", ur: "مجھے آتا ہے 👍" },
   "noorani.needReview": { fr: "À revoir 👀", en: "Need review 👀", nl: "Herhalen 👀", ar: "أحتاج مراجعة 👀", tr: "Tekrar et 👀", ur: "دوبارہ دیکھیں 👀" },
   "noorani.lessonNotFound": { fr: "Leçon introuvable", en: "Lesson not found", nl: "Les niet gevonden", ar: "الدرس غير موجود", tr: "Ders bulunamadı", ur: "سبق نہیں ملا" },
+  "noorani.listen": { fr: "🔊 Écouter", en: "🔊 Listen", nl: "🔊 Luister", ar: "🔊 استمع", tr: "🔊 Dinle", ur: "🔊 سنیں" },
   "noorani.cardTitle": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
   "noorani.cardDesc": { fr: "Apprends l'alphabet en jouant", en: "Learn the alphabet by playing", nl: "Leer het alfabet spelend", ar: "تعلّم الأبجدية باللعب", tr: "Oynayarak alfabe öğren", ur: "کھیل کر حروف سیکھیں" },
   "noorani.tryNoorani": { fr: "Apprendre les lettres ? Essaie Noorani Qaida →", en: "Learn letters? Try Noorani Qaida →", nl: "Letters leren? Probeer Noorani Qaida →", ar: "تعلّم الحروف؟ جرّب القاعدة النورانية →", tr: "Harf öğrenmek ister misin? Noorani Qaida →", ur: "حروف سیکھنا ہے؟ نورانی قاعدہ آزمائیں →" },

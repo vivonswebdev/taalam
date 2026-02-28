@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ThumbsUp, Eye } from "lucide-react";
+import { ArrowLeft, ThumbsUp, Eye, Volume2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
 import { useChildMode } from "@/hooks/useChildMode";
+import { useNooraniAudio } from "@/hooks/useNooraniAudio";
 import { getChildSuccessMessage } from "@/lib/childMessages";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
@@ -28,6 +29,7 @@ export default function NooraniLesson() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { isChildMode, earnSticker } = useChildMode();
+  const { play } = useNooraniAudio();
 
   const lesson = NOORANI_LESSONS.find((l) => l.id === lessonId);
   const [current, setCurrent] = useState(0);
@@ -134,8 +136,20 @@ export default function NooraniLesson() {
           >
             <p className="font-arabic text-7xl leading-tight text-foreground mb-4">{item.arabic}</p>
             {item.label && (
-              <p className="text-sm text-muted-foreground font-medium">{item.label}</p>
+              <p className="text-sm text-muted-foreground font-medium mb-3">{item.label}</p>
             )}
+            <button
+              onClick={() => play(item.audioUrl)}
+              disabled={!item.audioUrl}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors min-h-[44px] ${
+                item.audioUrl
+                  ? "bg-primary/10 text-primary active:scale-[0.96]"
+                  : "bg-muted/30 text-muted-foreground cursor-not-allowed"
+              }`}
+            >
+              <Volume2 size={18} />
+              {t("noorani.listen" as any)}
+            </button>
           </motion.div>
         </AnimatePresence>
       </div>
