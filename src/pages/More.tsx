@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones } from "lucide-react";
+import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones, Baby } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useChildMode } from "@/hooks/useChildMode";
 
 interface MenuItem {
   icon: React.ReactNode;
@@ -37,6 +38,12 @@ function MenuSection({ title, items }: { title: string; items: MenuItem[] }) {
 
 export default function More() {
   const { t } = useLanguage();
+  const { isChildMode } = useChildMode();
+
+  const childSection: MenuItem[] = [
+    { icon: <Baby size={20} className="text-primary" />, label: t("settings.childMode"), desc: t("settings.childModeDesc"), path: "/settings" },
+    { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
+  ];
 
   const quranSection: MenuItem[] = [
     { icon: <Clock size={20} className="text-primary" />, label: t("more.prayerTimes"), desc: t("more.prayerTimesDesc"), path: "/prayers" },
@@ -72,6 +79,7 @@ export default function More() {
       </div>
 
       <div className="px-5 pt-4 space-y-5">
+        <MenuSection title={t("more.sectionChild" as any)} items={childSection} />
         <MenuSection title={t("more.sectionQuran")} items={quranSection} />
         <MenuSection title={t("more.sectionAccount")} items={accountSection} />
         <MenuSection title={t("more.sectionModules")} items={modulesSection} />
