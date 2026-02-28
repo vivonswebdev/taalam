@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, UserPlus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
+import { useChildProfiles } from "@/hooks/useChildProfiles";
 
 const KIDS_CARDS = [
   {
@@ -51,6 +52,8 @@ export default function KidsHomePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const noorani = useNooraniProgress();
+  const { profiles } = useChildProfiles();
+  const hasChildren = profiles.length > 0;
 
   return (
     <div className="min-h-screen pb-24">
@@ -68,6 +71,34 @@ export default function KidsHomePage() {
           </div>
         </div>
       </div>
+
+      {/* Discovery banner when no child profile */}
+      {!hasChildren && (
+        <div className="px-5 mb-3">
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-primary/10 border border-primary/20 rounded-2xl p-3.5 flex items-center gap-3"
+          >
+            <span className="text-2xl shrink-0">👀</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-foreground">
+                {t("kidsHome.discoveryTitle" as any)}
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">
+                {t("kidsHome.discoveryDesc" as any)}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/parent")}
+              className="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-bold active:scale-95 transition-transform"
+            >
+              <UserPlus size={12} />
+              {t("kidsHome.addChild" as any)}
+            </button>
+          </motion.div>
+        </div>
+      )}
 
       {/* Cards grid */}
       <div className="px-5 grid grid-cols-2 gap-3">
