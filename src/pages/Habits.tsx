@@ -113,7 +113,7 @@ export default function Habits() {
       : 0;
 
     generateProgressReport({
-      displayName: "Ta'alam User",
+      displayName: profile?.display_name || "Ta'alam User",
       streak: xp.streakDays,
       level: xp.level,
       xpTotal: xp.xpTotal,
