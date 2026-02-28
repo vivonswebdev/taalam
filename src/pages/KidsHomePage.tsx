@@ -9,6 +9,14 @@ import { Badge } from "@/components/ui/badge";
 
 const KIDS_CARDS = [
   {
+    emoji: "🐦",
+    titleKey: "kidsHome.prophetStories",
+    descKey: "kidsHome.prophetStoriesDesc",
+    path: "/kids-stories",
+    gradient: "from-orange-600/30 to-amber-600/15",
+    border: "border-orange-500/25",
+  },
+  {
     emoji: "🔤",
     titleKey: "kidsHome.noorani",
     descKey: "kidsHome.nooraniDesc",

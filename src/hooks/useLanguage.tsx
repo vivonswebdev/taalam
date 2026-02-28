@@ -1925,6 +1925,24 @@ const translations = {
   "community.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
   "community.back": { fr: "Retour", en: "Back", nl: "Terug", ar: "رجوع", tr: "Geri", ur: "واپس" },
   "community.loginRequired": { fr: "Connecte-toi pour accéder à la communauté", en: "Log in to access the community", nl: "Log in om de community te bereiken", ar: "سجّل الدخول للوصول إلى المجتمع", tr: "Topluluğa erişmek için giriş yapın", ur: "کمیونٹی تک رسائی کے لیے لاگ ان کریں" },
+
+  // Kids Prophet Stories
+  "kidsStories.title": { fr: "Histoires des Prophètes", en: "Prophet Stories", ar: "قصص الأنبياء", nl: "Profeetverhalen", tr: "Peygamber Hikayeleri", ur: "انبیاء کی کہانیاں" },
+  "kidsStories.subtitle": { fr: "Découvre 10 histoires incroyables du Coran !", en: "Discover 10 incredible stories from the Quran!", ar: "اكتشف 10 قصص رائعة من القرآن!", nl: "Ontdek 10 ongelooflijke verhalen uit de Koran!", tr: "Kur'an'dan 10 inanılmaz hikaye keşfet!", ur: "قرآن سے 10 حیرت انگیز کہانیاں دریافت کریں!" },
+  "kidsStories.known": { fr: "Prophètes connus", en: "Prophets known", ar: "أنبياء معروفون", nl: "Profeten gekend", tr: "Bilinen peygamberler", ur: "معلوم انبیاء" },
+  "kidsStories.surah": { fr: "Sourate", en: "Surah", ar: "سورة", nl: "Soera", tr: "Sure", ur: "سورۃ" },
+  "kidsStories.narrator": { fr: "Hudhud le conteur", en: "Hoopoe the storyteller", ar: "الهدهد الحكّاء", nl: "Hop de verteller", tr: "Hüdhüd hikayeci", ur: "ہدہد قصہ گو" },
+  "kidsStories.narratorDesc": { fr: "Écoute cette histoire incroyable !", en: "Listen to this incredible story!", ar: "استمع لهذه القصة الرائعة!", nl: "Luister naar dit ongelooflijke verhaal!", tr: "Bu inanılmaz hikayeyi dinle!", ur: "یہ حیرت انگیز کہانی سنیں!" },
+  "kidsStories.goQuiz": { fr: "Quiz maintenant !", en: "Quiz time!", ar: "وقت الاختبار!", nl: "Quiz tijd!", tr: "Şimdi test!", ur: "اب کوئز!" },
+  "kidsStories.quizTime": { fr: "Question !", en: "Question!", ar: "سؤال!", nl: "Vraag!", tr: "Soru!", ur: "سوال!" },
+  "kidsStories.tryAgain": { fr: "Oups ! Essaie encore 😊", en: "Oops! Try again 😊", ar: "أوبس! حاول مرة أخرى 😊", nl: "Oeps! Probeer opnieuw 😊", tr: "Eyvah! Tekrar dene 😊", ur: "اُوپس! دوبارہ کوشش کریں 😊" },
+  "kidsStories.retry": { fr: "Réessayer", en: "Try again", ar: "إعادة المحاولة", nl: "Opnieuw proberen", tr: "Tekrar dene", ur: "دوبارہ کوشش" },
+  "kidsStories.stickerUnlocked": { fr: "Tu as débloqué un nouveau sticker !", en: "You unlocked a new sticker!", ar: "فتحت ملصقاً جديداً!", nl: "Je hebt een nieuwe sticker ontgrendeld!", tr: "Yeni bir çıkartma açtın!", ur: "آپ نے نیا اسٹیکر کھول لیا!" },
+  "kidsStories.findInQuran": { fr: "Trouve dans le Coran !", en: "Find in the Quran!", ar: "ابحث في القرآن!", nl: "Zoek in de Koran!", tr: "Kur'an'da bul!", ur: "قرآن میں تلاش کریں!" },
+  "kidsStories.backToStories": { fr: "Toutes les histoires", en: "All stories", ar: "كل القصص", nl: "Alle verhalen", tr: "Tüm hikayeler", ur: "تمام کہانیاں" },
+  "kidsStories.collection": { fr: "Ma collection de stickers", en: "My sticker collection", ar: "مجموعة ملصقاتي", nl: "Mijn stickercollectie", tr: "Çıkartma koleksiyonum", ur: "میرا اسٹیکر مجموعہ" },
+  "kidsHome.prophetStories": { fr: "Histoires Prophètes", en: "Prophet Stories", ar: "قصص الأنبياء", nl: "Profeetverhalen", tr: "Peygamber Hikayeleri", ur: "انبیاء کی کہانیاں" },
+  "kidsHome.prophetStoriesDesc": { fr: "10 histoires du Coran avec quiz et stickers !", en: "10 Quran stories with quiz and stickers!", ar: "10 قصص من القرآن مع اختبار وملصقات!", nl: "10 Koranverhalen met quiz en stickers!", tr: "10 Kur'an hikayesi, test ve çıkartmalarla!", ur: "10 قرآنی کہانیاں کوئز اور اسٹیکرز کے ساتھ!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

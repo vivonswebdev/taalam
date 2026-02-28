@@ -51,6 +51,8 @@ import KidsMosqueMapPage from "./pages/KidsMosqueMapPage";
 import KidsHomePage from "./pages/KidsHomePage";
 import KidsChecklist from "./pages/KidsChecklist";
 import KidsDuasPage from "./pages/KidsDuasPage";
+import KidsProphetStoriesPage from "./pages/KidsProphetStoriesPage";
+import KidsProphetStoryDetail from "./pages/KidsProphetStoryDetail";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
