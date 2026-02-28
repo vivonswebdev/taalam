@@ -747,8 +747,8 @@ const translations = {
   // Home extras
   "home.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
   "home.announcements": { fr: "Annonces", en: "Announcements", nl: "Aankondigingen", ar: "الإعلانات", tr: "Duyurular", ur: "اعلانات" },
-  "home.joinCommunity": { fr: "Rejoindre la communauté", en: "Join community", nl: "Word lid", ar: "انضم للمجتمع", tr: "Topluluğa katıl", ur: "برادری میں شامل ہوں" },
-  "home.joinCommunityDesc": { fr: "Crée ton compte et apparais dans le classement", en: "Create your account & appear in leaderboard", nl: "Maak een account & verschijn in de ranglijst", ar: "أنشئ حسابك وظهر في لوحة المتصدرين", tr: "Hesap oluştur ve sıralamada görün", ur: "اکاؤنٹ بنائیں اور لیڈر بورڈ میں نظر آئیں" },
+  "home.joinCommunity": { fr: "Rejoindre la communauté Ta'alam", en: "Join the Ta'alam community", nl: "Word lid van de Ta'alam-community", ar: "انضم إلى مجتمع تعلّم", tr: "Ta'alam topluluğuna katıl", ur: "تعلّم کمیونٹی میں شامل ہوں" },
+  "home.joinCommunityDesc": { fr: "Crée un compte pour sauvegarder ta progression, rejoindre ta classe et synchroniser tes défis.", en: "Create an account to save your progress, join your class and sync your challenges.", nl: "Maak een account om je voortgang op te slaan, je klas te joinen en uitdagingen te synchroniseren.", ar: "أنشئ حسابًا لحفظ تقدمك، والانضمام إلى صفك ومزامنة التحديات.", tr: "İlerlemeni kaydetmek, sınıfına katılmak ve meydan okumaları senkronize etmek için bir hesap oluştur.", ur: "اپنی پیش رفت محفوظ کرنے، اپنی کلاس میں شامل ہونے اور چیلنجز کو سنک کرنے کے لیے اکاؤنٹ بنائیں." },
   "home.hifzTitle": { fr: "Votre Hifz", en: "Your Hifz", nl: "Uw Hifz", ar: "حفظك", tr: "Hıfzınız", ur: "آپ کا حفظ" },
   "home.moodsNew": { fr: "Nouveau", en: "New", nl: "Nieuw", ar: "جديد", tr: "Yeni", ur: "نیا" },
   "home.moodsTitle": { fr: "États du cœur", en: "States of the Heart", nl: "Staten van het hart", ar: "أحوال القلب", tr: "Kalp Halleri", ur: "دل کے احوال" },
