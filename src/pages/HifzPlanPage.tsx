@@ -298,7 +298,7 @@ export default function HifzPlanPage() {
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <div className="flex items-center gap-2 mb-3">
                   <Target size={16} className="text-secondary" />
-                  <span className="text-sm font-semibold text-foreground">À venir</span>
+                  <span className="text-sm font-semibold text-foreground">{t("hifz.upcoming")}</span>
                 </div>
                 <div className="bg-card border border-border rounded-2xl divide-y divide-border overflow-hidden">
                   {upcomingTasks.map((task) => {
