@@ -258,7 +258,7 @@ export default function Home() {
           title={t("home.findAyahButton")}
           desc={t("home.findAyahButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/find-ayah")}
+          onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
           gradient="bg-gradient-to-br from-violet-800/60 to-blue-700/30"
           delay={0.35}
         />
