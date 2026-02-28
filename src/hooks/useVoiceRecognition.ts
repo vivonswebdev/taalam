@@ -443,8 +443,13 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    // Reset server-force flag and retry counter each new recording session
-    forceServerRef.current = false;
+    // If native SR already failed in a previous verse, stay on server
+    if (forceServerRef.current) {
+      console.info("[VoiceRecognition] Reusing server STT (native previously failed)");
+      setMode("server");
+      startServer();
+      return;
+    }
     nativeRetryCountRef.current = 0;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
