@@ -45,6 +45,7 @@ export default function More() {
     { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
     { icon: "🕌", label: t("more.kidsPrayer" as any), desc: t("more.kidsPrayerDesc" as any), path: "/kids-prayer" },
     { icon: "🕋", label: t("home.kidsHajj" as any), desc: t("home.kidsHajjDesc" as any), path: "/kids-hajj" },
+    { icon: "🕌", label: t("home.kidsMosque" as any), desc: t("home.kidsMosqueDesc" as any), path: "/kids-mosque-map" },
   ];
 
   const quranSection: MenuItem[] = [
