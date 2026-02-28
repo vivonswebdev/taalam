@@ -1011,6 +1011,40 @@ const translations = {
   // More - listening
   "more.advancedListening": { fr: "Mode écoute avancé", en: "Advanced Listening", nl: "Geavanceerd luisteren", ar: "وضع الاستماع المتقدم", tr: "Gelişmiş Dinleme", ur: "ایڈوانسڈ سننا" },
   "more.advancedListeningDesc": { fr: "Écoute + quiz & suivi", en: "Listening + quiz & tracking", nl: "Luisteren + quiz & tracking", ar: "استماع + اختبار وتتبع", tr: "Dinleme + quiz ve takip", ur: "سننا + کوئز اور ٹریکنگ" },
+
+  // Noorani Qaida
+  "noorani.title": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
+  "noorani.subtitle": { fr: "Apprends à lire l'arabe étape par étape", en: "Learn to read Arabic step by step", nl: "Leer Arabisch lezen stap voor stap", ar: "تعلّم قراءة العربية خطوة بخطوة", tr: "Arapça okumayı adım adım öğren", ur: "عربی پڑھنا قدم بہ قدم سیکھیں" },
+  "noorani.beginner": { fr: "Débutant", en: "Beginner", nl: "Beginner", ar: "مبتدئ", tr: "Başlangıç", ur: "ابتدائی" },
+  "noorani.intermediate": { fr: "Intermédiaire", en: "Intermediate", nl: "Gevorderd", ar: "متوسط", tr: "Orta", ur: "درمیانہ" },
+  "noorani.lesson1Title": { fr: "Les lettres (1/2)", en: "Letters (1/2)", nl: "Letters (1/2)", ar: "الحروف (1/2)", tr: "Harfler (1/2)", ur: "حروف (1/2)" },
+  "noorani.lesson1Desc": { fr: "Découvre les premières lettres arabes", en: "Discover the first Arabic letters", nl: "Ontdek de eerste Arabische letters", ar: "اكتشف الحروف العربية الأولى", tr: "İlk Arapça harfleri keşfet", ur: "پہلے عربی حروف دریافت کریں" },
+  "noorani.lesson2Title": { fr: "Les lettres (2/2)", en: "Letters (2/2)", nl: "Letters (2/2)", ar: "الحروف (2/2)", tr: "Harfler (2/2)", ur: "حروف (2/2)" },
+  "noorani.lesson2Desc": { fr: "Les dernières lettres de l'alphabet", en: "The remaining alphabet letters", nl: "De overige letters van het alfabet", ar: "بقية حروف الأبجدية", tr: "Kalan alfabe harfleri", ur: "بقیہ حروف تہجی" },
+  "noorani.lesson3Title": { fr: "Voyelles courtes", en: "Short vowels", nl: "Korte klinkers", ar: "الحركات القصيرة", tr: "Kısa sesli harfler", ur: "مختصر حرکات" },
+  "noorani.lesson3Desc": { fr: "Fatha, Damma, Kasra", en: "Fatha, Damma, Kasra", nl: "Fatha, Damma, Kasra", ar: "فتحة، ضمة، كسرة", tr: "Fetha, Zamme, Kesre", ur: "فتحہ، ضمہ، کسرہ" },
+  "noorani.lesson4Title": { fr: "Tanwîn", en: "Tanween", nl: "Tanween", ar: "التنوين", tr: "Tenvin", ur: "تنوین" },
+  "noorani.lesson4Desc": { fr: "Les doubles voyelles", en: "Double vowels", nl: "Dubbele klinkers", ar: "التنوين بالفتح والضم والكسر", tr: "Çift sesli harfler", ur: "دوہری حرکات" },
+  "noorani.lesson5Title": { fr: "Shadda & Sukûn", en: "Shadda & Sukoon", nl: "Shadda & Sukoon", ar: "الشدة والسكون", tr: "Şedde & Sükun", ur: "شدّہ اور سکون" },
+  "noorani.lesson5Desc": { fr: "Renforcement et pause", en: "Emphasis and pause", nl: "Nadruk en pauze", ar: "التشديد والوقف", tr: "Vurgu ve durak", ur: "تشدید اور وقف" },
+  "noorani.lessonDone": { fr: "Leçon terminée !", en: "Lesson complete!", nl: "Les voltooid!", ar: "انتهى الدرس!", tr: "Ders tamamlandı!", ur: "سبق مکمل!" },
+  "noorani.knownItems": { fr: "éléments maîtrisés", en: "items mastered", nl: "items beheerst", ar: "عناصر متقنة", tr: "öğe öğrenildi", ur: "آئٹمز سیکھے" },
+  "noorani.backToLessons": { fr: "← Leçons", en: "← Lessons", nl: "← Lessen", ar: "← الدروس", tr: "← Dersler", ur: "← اسباق" },
+  "noorani.retry": { fr: "Recommencer", en: "Retry", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar", ur: "دوبارہ" },
+  "noorani.iKnow": { fr: "Je connais 👍", en: "I know 👍", nl: "Ik weet het 👍", ar: "أعرفها 👍", tr: "Biliyorum 👍", ur: "مجھے آتا ہے 👍" },
+  "noorani.needReview": { fr: "À revoir 👀", en: "Need review 👀", nl: "Herhalen 👀", ar: "أحتاج مراجعة 👀", tr: "Tekrar et 👀", ur: "دوبارہ دیکھیں 👀" },
+  "noorani.lessonNotFound": { fr: "Leçon introuvable", en: "Lesson not found", nl: "Les niet gevonden", ar: "الدرس غير موجود", tr: "Ders bulunamadı", ur: "سبق نہیں ملا" },
+  "noorani.cardTitle": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
+  "noorani.cardDesc": { fr: "Apprends l'alphabet en jouant", en: "Learn the alphabet by playing", nl: "Leer het alfabet spelend", ar: "تعلّم الأبجدية باللعب", tr: "Oynayarak alfabe öğren", ur: "کھیل کر حروف سیکھیں" },
+  "noorani.tryNoorani": { fr: "Apprendre les lettres ? Essaie Noorani Qaida →", en: "Learn letters? Try Noorani Qaida →", nl: "Letters leren? Probeer Noorani Qaida →", ar: "تعلّم الحروف؟ جرّب القاعدة النورانية →", tr: "Harf öğrenmek ister misin? Noorani Qaida →", ur: "حروف سیکھنا ہے؟ نورانی قاعدہ آزمائیں →" },
+
+  // Child mode enhancements
+  "child.modeBanner": { fr: "Mode enfant ON 🧒", en: "Kids mode ON 🧒", nl: "Kindermodus AAN 🧒", ar: "وضع الأطفال مفعّل 🧒", tr: "Çocuk modu AÇIK 🧒", ur: "بچوں کا موڈ آن 🧒" },
+  "child.modeBannerDesc": { fr: "Interface adaptée aux enfants", en: "Child-friendly interface", nl: "Kindvriendelijke interface", ar: "واجهة ملائمة للأطفال", tr: "Çocuk dostu arayüz", ur: "بچوں کے لیے موزوں" },
+
+  // More - Noorani
+  "more.noorani": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
+  "more.nooraniDesc": { fr: "Apprends à lire l'arabe", en: "Learn to read Arabic", nl: "Leer Arabisch lezen", ar: "تعلّم قراءة العربية", tr: "Arapça okumayı öğren", ur: "عربی پڑھنا سیکھیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

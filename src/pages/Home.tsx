@@ -9,6 +9,7 @@ import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useXP } from "@/hooks/useXP";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
+import { useChildMode } from "@/hooks/useChildMode";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
@@ -29,6 +30,7 @@ export default function Home() {
   const epicBg = immersiveEnabled ? getEpicBg(choices.home) : null;
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
+  const { isChildMode } = useChildMode();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
@@ -105,6 +107,21 @@ export default function Home() {
           </motion.div>
         );
       })}
+
+      {/* Child Mode Banner */}
+      {isChildMode && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-5 mt-2 flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-xl px-3 py-2"
+        >
+          <span className="text-lg">🧒</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground">{t("child.modeBanner" as any)}</p>
+            <p className="text-[10px] text-muted-foreground">{t("child.modeBannerDesc" as any)}</p>
+          </div>
+        </motion.div>
+      )}
 
       {/* ═══ SECTION A – Header compact ═══ */}
       <div className="relative overflow-visible">
@@ -222,6 +239,27 @@ export default function Home() {
           <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">{t("home.open")} </span>
         </motion.button>
       </div>
+
+      {/* Noorani Qaida card (child mode only) */}
+      {isChildMode && (
+        <div className="px-5 mt-3">
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/noorani")}
+            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-primary/15 to-primary/5 border border-primary/20"
+          >
+            <span className="text-3xl">📚</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-foreground">{t("noorani.cardTitle" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">{t("noorani.cardDesc" as any)}</p>
+            </div>
+            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
+          </motion.button>
+        </div>
+      )}
 
       {/* ═══ SECTION D – Suivi & Classes ═══ */}
       <div className="px-5 mt-6 space-y-3">
