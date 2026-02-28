@@ -118,8 +118,11 @@ export default function Home() {
 
   return (
     <div className="home-bg min-h-screen pb-24">
-      {/* Daily Tarteel Challenge */}
-      {!dailyChallenge.isCompleted && dailyChallenge.surah && (
+      {/* Dedication Popup – hidden if admin toggled off */}
+      {!adminSettings.hide_announcement && <DedicationPopup />}
+
+      {/* Daily Tarteel Challenge – hidden if admin toggled off */}
+      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
         <DailyTarteelChallenge
           surah={dailyChallenge.surah}
           onComplete={(score) => dailyChallenge.complete(score)}
