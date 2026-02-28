@@ -831,9 +831,9 @@ const translations = {
   "home.viewAllClasses": { fr: "Voir les classes", en: "View all classes", nl: "Alle klassen bekijken", ar: "عرض كل الفصول", tr: "Tüm sınıfları gör", ur: "تمام کلاسیں دیکھیں" },
   "home.createClass": { fr: "Créer une classe", en: "Create a class", nl: "Klas aanmaken", ar: "إنشاء فصل", tr: "Sınıf oluştur", ur: "کلاس بنائیں" },
   "home.joinClass": { fr: "Rejoindre", en: "Join", nl: "Deelnemen", ar: "انضمام", tr: "Katıl", ur: "شامل ہوں" },
-  "home.hifzChallenge": { fr: "Défi Hifz", en: "Hifz Challenge", nl: "Hifz Uitdaging", ar: "تحدي الحفظ", tr: "Hıfz Meydan Okuması", ur: "حفظ چیلنج" },
-  "home.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
-  "home.level.label": { fr: "Niv.", en: "Lv.", nl: "Niv.", ar: "مست.", tr: "Sv.", ur: "سطح" },
+  "home.hifzChallenge": { fr: "Défi Hifz de classe", en: "Class Hifz challenge", nl: "Hifz-klasuitdaging", ar: "تحدي الحفظ للفصل", tr: "Sınıf Hıfz meydan okuması", ur: "کلاس حفظ چیلنج" },
+  "home.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورہ" },
+  "home.level.label": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى", tr: "Seviye", ur: "درجہ" },
 
   // Leaderboard
   "lb.you": { fr: "← toi", en: "← you", nl: "← jij", ar: "← أنت", tr: "← sen", ur: "← آپ" },
