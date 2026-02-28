@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 const STORAGE_KEY = "taaloum_immersive_bg";
 const BG_CHOICES_KEY = "taaloum_bg_choices";
 
-export type BgTheme = "mountain" | "desert" | "mosque" | "galaxy" | "garden" | "ocean" | "starry" | "none";
+export type BgTheme = "mountain" | "desert" | "mosque" | "galaxy" | "garden" | "ocean" | "starry" | "forest" | "aurora" | "sunset" | "none";
 
 export interface BgChoices {
   home: BgTheme;
@@ -27,6 +27,9 @@ export const BG_OPTIONS: { id: BgTheme; label: string; emoji: string }[] = [
   { id: "garden", label: "Jardin", emoji: "🌿" },
   { id: "ocean", label: "Océan", emoji: "🌊" },
   { id: "starry", label: "Étoilé", emoji: "✨" },
+  { id: "forest", label: "Forêt", emoji: "🌲" },
+  { id: "aurora", label: "Aurore", emoji: "🌈" },
+  { id: "sunset", label: "Coucher", emoji: "🌅" },
   { id: "none", label: "Aucun", emoji: "⬜" },
 ];
 
@@ -82,5 +85,8 @@ export const BG_CSS_CLASS: Record<BgTheme, string> = {
   garden: "garden-epic-bg",
   ocean: "ocean-epic-bg",
   starry: "starry-epic-bg",
+  forest: "forest-epic-bg",
+  aurora: "aurora-epic-bg",
+  sunset: "sunset-epic-bg",
   none: "",
 };

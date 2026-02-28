@@ -23,6 +23,9 @@ import galaxyBg from "@/assets/bg-galaxy.jpg";
 import gardenBg from "@/assets/bg-garden.jpg";
 import oceanBg from "@/assets/bg-ocean.jpg";
 import starryBg from "@/assets/bg-starry-calligraphy.jpg";
+import forestBg from "@/assets/bg-forest.jpg";
+import auroraBg from "@/assets/bg-aurora.jpg";
+import sunsetBg from "@/assets/bg-sunset.jpg";
 
 const BG_THUMBS: Record<BgTheme, string | null> = {
   mountain: readingBg,
@@ -32,6 +35,9 @@ const BG_THUMBS: Record<BgTheme, string | null> = {
   garden: gardenBg,
   ocean: oceanBg,
   starry: starryBg,
+  forest: forestBg,
+  aurora: auroraBg,
+  sunset: sunsetBg,
   none: null,
 };
 
