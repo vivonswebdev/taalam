@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useTeacherDashboard } from "@/hooks/useTeacherDashboard";
+import { useAssignmentCompletion } from "@/hooks/useAssignmentCompletion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ export default function TeacherDashboardPage() {
   const [classes, setClasses] = useState<TeacherClass[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const { students, assignments, loading, summary, createAssignment, toggleAssignment, deleteAssignment } = useTeacherDashboard(selectedClassId);
+  const { assignmentsWithStats } = useAssignmentCompletion(assignments, selectedClassId);
 
   // Assignment form
   const [showForm, setShowForm] = useState(false);
@@ -74,7 +76,7 @@ export default function TeacherDashboardPage() {
     );
   }
 
-  const activeAssignments = assignments.filter((a) => a.is_active && a.due_date >= new Date().toISOString().split("T")[0]);
+  const activeAssignments = assignmentsWithStats.filter((a) => a.is_active && a.due_date >= new Date().toISOString().split("T")[0]);
 
   const handleCreateAssignment = async () => {
     if (!formTitle.trim() || !formDueDate) return;
@@ -221,9 +223,14 @@ export default function TeacherDashboardPage() {
                   <div key={a.id} className="bg-card border border-border rounded-xl p-3 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate">{a.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <Badge variant="secondary" className="text-[10px]">{a.type}</Badge>
                         <span className="text-[10px] text-muted-foreground">📅 {a.due_date}</span>
+                        {typeof a.completed === "number" && typeof a.totalStudents === "number" && (
+                          <span className="text-[10px] font-semibold text-primary">
+                            ✅ {a.completed}/{a.totalStudents}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <button onClick={() => toggleAssignment(a.id, a.is_active)} className="text-muted-foreground">

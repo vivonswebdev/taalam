@@ -1487,6 +1487,9 @@ const translations = {
   "teacher.other": { fr: "Autre", en: "Other", nl: "Overig", ar: "أخرى", tr: "Diğer", ur: "دیگر" },
   "teacher.dashboard": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
   "teacher.dashboardDesc": { fr: "Stats & devoirs de vos classes", en: "Stats & assignments for your classes", nl: "Stats & huiswerk van je klassen", ar: "إحصائيات وواجبات فصولك", tr: "Sınıflarınızın istatistikleri ve ödevleri", ur: "آپ کی کلاسوں کے اعداد و شمار اور اسائنمنٹس" },
+  "teacher.completed": { fr: "complété", en: "completed", nl: "voltooid", ar: "مكتمل", tr: "tamamlandı", ur: "مکمل" },
+  "teacher.studentAssignments": { fr: "Devoirs à faire", en: "Assignments to do", nl: "Te maken huiswerk", ar: "واجبات للإنجاز", tr: "Yapılacak ödevler", ur: "کرنے کے لیے اسائنمنٹس" },
+  "teacher.newBadge": { fr: "NOUVEAU", en: "NEW", nl: "NIEUW", ar: "جديد", tr: "YENİ", ur: "نیا" },
 
   // Admin Dashboard
   "admin.title": { fr: "Dashboard Admin", en: "Admin Dashboard", nl: "Admin Dashboard", ar: "لوحة الإدارة", tr: "Yönetici Paneli", ur: "ایڈمن ڈیش بورڈ" },
