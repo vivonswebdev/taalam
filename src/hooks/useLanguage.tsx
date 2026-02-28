@@ -810,6 +810,8 @@ const translations = {
   "mode.search": { fr: "Rechercher...", en: "Search...", nl: "Zoeken...", ar: "بحث...", tr: "Ara...", ur: "تلاش..." },
   "mode.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جارٍ التحميل...", tr: "Yükleniyor...", ur: "لوڈ ہو رہا ہے..." },
   "mode.noResult": { fr: "Aucun résultat", en: "No results", nl: "Geen resultaten", ar: "لا نتائج", tr: "Sonuç yok", ur: "کوئی نتیجہ نہیں" },
+  "mode.noSurahTitle": { fr: "Choisis une sourate pour commencer", en: "Choose a surah to start", nl: "Kies een soera om te beginnen", ar: "اختر سورة للبدء", tr: "Başlamak için bir sure seç", ur: "شروع کرنے کے لیے سورۃ منتخب کریں" },
+  "mode.noSurahDesc": { fr: "Aucune sourate n'est sélectionnée. Choisis une sourate ci-dessous pour lancer ta récitation.", en: "No surah is selected. Choose a surah below to start your recitation.", nl: "Geen soera geselecteerd. Kies hieronder een soera.", ar: "لم يتم اختيار سورة. اختر سورة أدناه لبدء التلاوة.", tr: "Hiçbir sure seçilmedi. Tilavetine başlamak için aşağıdan bir sure seç.", ur: "کوئی سورۃ منتخب نہیں ہے۔ تلاوت شروع کرنے کے لیے نیچے سورۃ منتخب کریں۔" },
 
   // Settings - Appearance
   "settings.appearance": { fr: "Apparence", en: "Appearance", nl: "Weergave", ar: "المظهر", tr: "Görünüm", ur: "ظاہری شکل" },
