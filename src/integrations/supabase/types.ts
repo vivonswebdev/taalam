@@ -517,32 +517,47 @@ export type Database = {
       listening_sessions: {
         Row: {
           created_at: string
+          duration_seconds: number | null
           end_at: string | null
+          from_ayah: number | null
+          has_quiz: boolean | null
           id: string
           listened_full: boolean
+          quiz_score: number | null
           source: string
           start_at: string
           surah_number: number
+          to_ayah: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          duration_seconds?: number | null
           end_at?: string | null
+          from_ayah?: number | null
+          has_quiz?: boolean | null
           id?: string
           listened_full?: boolean
+          quiz_score?: number | null
           source?: string
           start_at?: string
           surah_number: number
+          to_ayah?: number | null
           user_id: string
         }
         Update: {
           created_at?: string
+          duration_seconds?: number | null
           end_at?: string | null
+          from_ayah?: number | null
+          has_quiz?: boolean | null
           id?: string
           listened_full?: boolean
+          quiz_score?: number | null
           source?: string
           start_at?: string
           surah_number?: number
+          to_ayah?: number | null
           user_id?: string
         }
         Relationships: []
