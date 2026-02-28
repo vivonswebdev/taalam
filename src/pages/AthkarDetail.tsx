@@ -3,9 +3,11 @@ import { getAthkarGroupById, type Dhikr } from "@/data/athkarData";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function DhikrCard({ dhikr }: { dhikr: Dhikr }) {
   const [count, setCount] = useState(0);
+  const { t } = useLanguage();
   const done = count >= dhikr.repeat;
 
   return (
@@ -39,7 +41,7 @@ function DhikrCard({ dhikr }: { dhikr: Dhikr }) {
               : "bg-primary/15 text-primary hover:bg-primary/25"
           }`}
         >
-          {done ? "✅ Terminé" : `${count} / ${dhikr.repeat}`}
+          {done ? `✅ ${t("athkar.done" as any)}` : `${count} / ${dhikr.repeat}`}
         </button>
       </div>
     </motion.div>
@@ -49,15 +51,18 @@ function DhikrCard({ dhikr }: { dhikr: Dhikr }) {
 export default function AthkarDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const group = getAthkarGroupById(id || "");
 
   if (!group) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Adhkar non trouvés</p>
+        <p className="text-muted-foreground">{t("athkar.notFound" as any)}</p>
       </div>
     );
   }
+
+  const title = t(`athkar.${group.id}` as any) || group.title;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
@@ -67,8 +72,8 @@ export default function AthkarDetail() {
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-lg font-semibold">{group.emoji} {group.title}</h1>
-          <p className="text-[11px] text-muted-foreground">{group.titleAr} · {group.adhkar.length} adhkar</p>
+          <h1 className="text-lg font-semibold">{group.emoji} {title}</h1>
+          <p className="text-[11px] text-muted-foreground">{group.titleAr} · {group.adhkar.length} {t("athkar.adhkarCount" as any)}</p>
         </div>
       </div>
 
