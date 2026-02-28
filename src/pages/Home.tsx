@@ -285,18 +285,18 @@ export default function Home() {
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🎤"
-          title="Commencer votre Tarteel"
-          desc="Récitation + Correction IA"
-          cta="Ouvrir"
+          title={t("home.tarteelButton" as any)}
+          desc={t("home.tarteelDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
           gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.25}
         />
         <HomeCard
           emoji="❤️"
-          title="États du cœur"
-          desc="Prends soin de toi avec le Coran"
-          cta="Découvrir"
+          title={t("home.moodsTitle" as any)}
+          desc={t("home.moodsSubtitle" as any)}
+          cta={t("home.moodsButton" as any)}
           onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
           gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.3}
