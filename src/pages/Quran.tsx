@@ -29,6 +29,7 @@ import MushafReader from "@/components/MushafReader";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 // ─── Types ──────────────────────────────────────────────────
 type AyaPhase = "idle" | "playing" | "reciting" | "result";
