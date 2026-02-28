@@ -25,6 +25,7 @@ export default function TeacherDashboardPage() {
   const [classes, setClasses] = useState<TeacherClass[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const { students, assignments, loading, summary, createAssignment, toggleAssignment, deleteAssignment } = useTeacherDashboard(selectedClassId);
+  const { assignmentsWithStats } = useAssignmentCompletion(assignments, selectedClassId);
 
   // Assignment form
   const [showForm, setShowForm] = useState(false);
