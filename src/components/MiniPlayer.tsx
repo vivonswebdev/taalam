@@ -29,59 +29,82 @@ export default function MiniPlayer() {
         initial={{ y: 60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 60, opacity: 0 }}
-        className={`fixed ${isOnReadingPage ? "bottom-0" : "bottom-16"} left-0 right-0 z-40 safe-area-bottom`}
+        className="fixed left-0 right-0 z-[1001] flex justify-center"
+        style={{
+          bottom: isOnReadingPage ? "max(15vh, calc(env(safe-area-inset-bottom, 0px) + 60px))" : "5rem",
+          paddingBottom: isOnReadingPage ? undefined : "env(safe-area-inset-bottom, 0px)",
+        }}
       >
-        <div className="max-w-lg mx-auto px-3 pb-1">
+        <div
+          className="flex flex-col items-center"
+          style={{
+            background: isOnReadingPage ? "rgba(0,0,0,0.8)" : undefined,
+            borderRadius: "50px",
+            padding: isOnReadingPage ? "10px 20px" : "4px 12px",
+          }}
+        >
           {/* Listen-test banner */}
           {state.listenTestMode && state.isPlaying && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center gap-1.5 bg-primary/10 rounded-t-lg px-2 py-1 text-[10px] font-semibold text-primary"
+              className="flex items-center justify-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold text-primary"
             >
               <Headphones size={10} /> Un petit quiz t'attend à la fin 🎧
             </motion.div>
           )}
-          <div className="flex items-center justify-center gap-1 py-1.5">
+          <div className="flex items-center justify-center gap-5">
             {/* Listen-test toggle */}
             <button
               onClick={() => setListenTestMode(!state.listenTestMode)}
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
                 state.listenTestMode
                   ? "bg-primary text-primary-foreground"
-                  : "bg-card/80 backdrop-blur border border-border text-muted-foreground"
+                  : isOnReadingPage
+                    ? "bg-white/15 text-white/70"
+                    : "bg-card/80 backdrop-blur border border-border text-muted-foreground"
               }`}
               title="Écoute + Test"
             >
-              <Headphones size={13} />
+              <Headphones size={15} />
             </button>
             {/* Prev surah */}
             <button
               onClick={prevSurah}
-              className="w-8 h-8 rounded-full bg-card/80 backdrop-blur border border-border text-muted-foreground flex items-center justify-center"
+              className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                isOnReadingPage
+                  ? "bg-white/15 text-white/70"
+                  : "bg-card/80 backdrop-blur border border-border text-muted-foreground"
+              }`}
             >
-              <ChevronsLeft size={14} />
+              <ChevronsLeft size={16} />
             </button>
             {/* Play/Pause */}
             <button
               onClick={() => (state.isPlaying ? pause() : resume())}
-              className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md"
+              className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
             >
-              {state.isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+              {state.isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
             </button>
             {/* Next surah */}
             <button
               onClick={nextSurah}
-              className="w-8 h-8 rounded-full bg-card/80 backdrop-blur border border-border text-muted-foreground flex items-center justify-center"
+              className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                isOnReadingPage
+                  ? "bg-white/15 text-white/70"
+                  : "bg-card/80 backdrop-blur border border-border text-muted-foreground"
+              }`}
             >
-              <ChevronsRight size={14} />
+              <ChevronsRight size={16} />
             </button>
             {/* Close */}
             <button
               onClick={stop}
-              className="w-7 h-7 rounded-full bg-muted/60 text-muted-foreground flex items-center justify-center ml-1"
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                isOnReadingPage ? "bg-white/10 text-white/50" : "bg-muted/60 text-muted-foreground"
+              }`}
             >
-              <X size={11} />
+              <X size={13} />
             </button>
           </div>
         </div>
