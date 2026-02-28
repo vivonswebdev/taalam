@@ -1047,6 +1047,7 @@ const translations = {
   // More - Noorani
   "more.noorani": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
   "more.nooraniDesc": { fr: "Apprends à lire l'arabe", en: "Learn to read Arabic", nl: "Leer Arabisch lezen", ar: "تعلّم قراءة العربية", tr: "Arapça okumayı öğren", ur: "عربی پڑھنا سیکھیں" },
+  "more.sectionChild": { fr: "Mode Enfant", en: "Kids Mode", nl: "Kindermodus", ar: "وضع الأطفال", tr: "Çocuk Modu", ur: "بچوں کا موڈ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
