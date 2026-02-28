@@ -6,6 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { UMRA_STEPS, HAJJ_STEPS, getRandomHajjQuiz } from "@/data/kidsHajjUmra";
 import type { RitualStep, HajjQuizQuestion } from "@/data/kidsHajjUmra";
 import Confetti from "@/components/Confetti";
+import { trackEvent } from "@/lib/trackEvent";
 
 type Section = "menu" | "umra" | "hajj" | "quiz";
 
