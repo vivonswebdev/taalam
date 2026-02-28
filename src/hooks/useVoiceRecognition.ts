@@ -257,6 +257,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       return;
     }
 
+    activeEngineRef.current = "native";
+
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
