@@ -50,6 +50,10 @@ export default function More() {
     { icon: "🕌", label: t("home.kidsMosque" as any), desc: t("home.kidsMosqueDesc" as any), path: "/kids-mosque-map" },
   ];
 
+  const communitySection: MenuItem[] = [
+    { icon: "🌍", label: t("community.title" as any), desc: t("community.menuDesc" as any), path: "/community" },
+  ];
+
   const quranSection: MenuItem[] = [
     { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
     { icon: "📿", label: t("more.athkar" as any), desc: t("more.athkarDesc" as any), path: "/moods" },
@@ -91,6 +95,7 @@ export default function More() {
 
       <div className="px-5 pt-4 space-y-5">
         <ModeSelector />
+        <MenuSection title="🌍 Communauté" items={communitySection} />
         {(mode === "child" || mode === "solo") && <MenuSection title={t("more.sectionChild" as any)} items={childSection} />}
         <MenuSection title={t("more.sectionQuran")} items={quranSection} />
         <MenuSection title={t("more.sectionAccount")} items={accountSection} />

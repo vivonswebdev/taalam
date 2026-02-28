@@ -60,6 +60,8 @@ import InstallAppPage from "./pages/InstallAppPage";
 import MushafPage from "./pages/MushafPage";
 import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
+import CommunityPage from "./pages/CommunityPage";
+import CommunityDetail from "./pages/CommunityDetail";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -139,6 +141,8 @@ const App = () => (
               <Route path="/notification-settings" element={<NotificationSettings />} />
               <Route path="/install-app" element={<InstallAppPage />} />
               <Route path="/mushaf" element={<MushafPage />} />
+              <Route path="/community" element={<CommunityPage />} />
+              <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
