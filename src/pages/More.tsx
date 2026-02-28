@@ -63,6 +63,7 @@ export default function More() {
     { icon: <BarChart3 size={20} className="text-primary" />, label: t("more.habitsProgress"), desc: t("more.habitsDesc"), path: "/habits" },
     { icon: <User size={20} className="text-blue-500" />, label: t("more.loginProfile"), path: "/auth" },
     { icon: <HelpCircle size={20} className="text-muted-foreground" />, label: t("more.helpFaq" as any), desc: t("more.helpFaqDesc" as any), path: "/faq" },
+    { icon: <Bell size={20} className="text-primary" />, label: t("more.notifications" as any), desc: t("more.notificationsDesc" as any), path: "/notification-settings" },
   ];
 
   const modulesSection: MenuItem[] = [
