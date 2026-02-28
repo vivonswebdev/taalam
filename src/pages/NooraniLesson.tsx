@@ -1,27 +1,39 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ThumbsUp, Eye, Volume2 } from "lucide-react";
+import { ArrowLeft, ThumbsUp, Eye, Volume2, CheckCircle2, XCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useNooraniAudio } from "@/hooks/useNooraniAudio";
+import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { getChildSuccessMessage } from "@/lib/childMessages";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import type { EarnedSticker } from "@/hooks/useChildMode";
 
-const PROGRESS_KEY = "noorani_progress";
+type Phase = "items" | "quiz" | "done";
 
-function saveProgress(lessonId: string) {
-  try {
-    const arr: string[] = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]");
-    if (!arr.includes(lessonId)) {
-      arr.push(lessonId);
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(arr));
-      window.dispatchEvent(new Event("noorani-progress"));
-    }
-  } catch {}
+type NooraniQuestion = {
+  target: { arabic: string; label?: string };
+  options: { arabic: string; label?: string }[];
+  correctIndex: number;
+};
+
+function generateQuiz(items: { arabic: string; label?: string }[]): NooraniQuestion[] {
+  const count = Math.min(3, items.length);
+  const shuffled = [...items].sort(() => Math.random() - 0.5);
+  const targets = shuffled.slice(0, count);
+
+  return targets.map((target) => {
+    const others = items.filter((it) => it.arabic !== target.arabic).sort(() => Math.random() - 0.5).slice(0, 2);
+    const options = [target, ...others].sort(() => Math.random() - 0.5);
+    return {
+      target,
+      options,
+      correctIndex: options.findIndex((o) => o.arabic === target.arabic),
+    };
+  });
 }
 
 export default function NooraniLesson() {
@@ -30,34 +42,80 @@ export default function NooraniLesson() {
   const { t } = useLanguage();
   const { isChildMode, earnSticker } = useChildMode();
   const { speak } = useNooraniAudio();
+  const { saveProgress } = useNooraniProgress();
 
   const lesson = NOORANI_LESSONS.find((l) => l.id === lessonId);
+  const [phase, setPhase] = useState<Phase>("items");
   const [current, setCurrent] = useState(0);
   const [known, setKnown] = useState(0);
-  const [finished, setFinished] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [earnedSticker, setEarnedSticker] = useState<EarnedSticker | null>(null);
 
+  // Quiz state
+  const [questions, setQuestions] = useState<NooraniQuestion[]>([]);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizFeedback, setQuizFeedback] = useState<"correct" | "wrong" | null>(null);
+
   const items = lesson?.items || [];
   const total = items.length;
-  const progress = total > 0 ? Math.round(((current) / total) * 100) : 0;
+  const progress = phase === "items"
+    ? (total > 0 ? Math.round((current / total) * 100) : 0)
+    : 100;
 
   const handleChoice = (isKnown: boolean) => {
     if (isKnown) setKnown((k) => k + 1);
     if (current + 1 >= total) {
-      setFinished(true);
-      setShowConfetti(true);
-      if (lessonId) saveProgress(lessonId);
-      if (isChildMode) {
-        const s = earnSticker(0);
-        setEarnedSticker(s);
-      }
+      // Move to quiz phase
+      const q = generateQuiz(items);
+      setQuestions(q);
+      setQuizIndex(0);
+      setQuizScore(0);
+      setQuizFeedback(null);
+      setPhase("quiz");
     } else {
       setCurrent((c) => c + 1);
     }
   };
 
-  const score = total > 0 ? Math.round((known / total) * 100) : 0;
+  const handleQuizAnswer = (optionIndex: number) => {
+    if (quizFeedback) return; // Prevent double tap
+    const q = questions[quizIndex];
+    const isCorrect = optionIndex === q.correctIndex;
+    if (isCorrect) setQuizScore((s) => s + 1);
+    setQuizFeedback(isCorrect ? "correct" : "wrong");
+
+    setTimeout(() => {
+      setQuizFeedback(null);
+      if (quizIndex + 1 >= questions.length) {
+        const finalScore = isCorrect ? quizScore + 1 : quizScore;
+        // Done
+        setQuizScore(finalScore);
+        if (finalScore >= 2 && lessonId) {
+          saveProgress(lessonId);
+          setShowConfetti(true);
+          if (isChildMode) {
+            const s = earnSticker(0);
+            setEarnedSticker(s);
+          }
+        }
+        setPhase("done");
+      } else {
+        setQuizIndex((i) => i + 1);
+      }
+    }, 1200);
+  };
+
+  const resetLesson = () => {
+    setPhase("items");
+    setCurrent(0);
+    setKnown(0);
+    setQuizIndex(0);
+    setQuizScore(0);
+    setQuizFeedback(null);
+    setShowConfetti(false);
+    setEarnedSticker(null);
+  };
 
   if (!lesson) {
     return (
@@ -67,19 +125,28 @@ export default function NooraniLesson() {
     );
   }
 
-  if (finished) {
+  // ═══ DONE PHASE ═══
+  if (phase === "done") {
+    const passed = quizScore >= 2;
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <Confetti active={showConfetti} emoji />
         <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-4">
-          <span className="text-6xl block">🎉</span>
-          <h2 className="text-2xl font-bold text-foreground">{t("noorani.lessonDone" as any)}</h2>
+          <span className="text-6xl block">{passed ? "🎉" : "📖"}</span>
+          <h2 className="text-2xl font-bold text-foreground">
+            {passed ? (t("noorani.lessonDone" as any)) : (t("noorani.tryAgainLater" as any) || "On refait plus tard, inshaAllah")}
+          </h2>
           <p className="text-muted-foreground">
-            {known} / {total} {t("noorani.knownItems" as any)}
+            {quizScore} / {questions.length} {t("noorani.quizCorrect" as any) || "bonnes réponses"}
           </p>
-          {isChildMode && score >= 70 && (
+          {isChildMode && passed && (
             <p className="text-lg font-bold text-primary">{getChildSuccessMessage()}</p>
+          )}
+          {!passed && (
+            <p className="text-sm text-muted-foreground">
+              {t("noorani.reviewLetters" as any) || "Tu peux revoir les lettres."}
+            </p>
           )}
           <div className="flex gap-3 pt-4">
             <button
@@ -89,7 +156,7 @@ export default function NooraniLesson() {
               {t("noorani.backToLessons" as any)}
             </button>
             <button
-              onClick={() => { setCurrent(0); setKnown(0); setFinished(false); setShowConfetti(false); }}
+              onClick={resetLesson}
               className="px-5 py-3 rounded-2xl border border-border text-foreground font-bold"
             >
               {t("noorani.retry" as any)}
@@ -100,6 +167,91 @@ export default function NooraniLesson() {
     );
   }
 
+  // ═══ QUIZ PHASE ═══
+  if (phase === "quiz") {
+    const q = questions[quizIndex];
+    return (
+      <div className="min-h-screen flex flex-col pb-20">
+        <div className="px-5 pt-10 pb-2">
+          <button onClick={() => navigate("/noorani")} className="flex items-center gap-1 text-muted-foreground mb-2">
+            <ArrowLeft size={18} />
+            <span className="text-sm">{t("noorani.backToLessons" as any)}</span>
+          </button>
+          <p className="text-sm font-bold text-foreground">
+            🧠 {t("noorani.quizTitle" as any) || "Quiz"} – {quizIndex + 1}/{questions.length}
+          </p>
+          <div className="mt-1.5 h-2 rounded-full bg-muted/40 overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-primary"
+              animate={{ width: `${((quizIndex + 1) / questions.length) * 100}%` }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
+          <motion.div
+            key={quizIndex}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center space-y-3"
+          >
+            <p className="text-lg font-semibold text-foreground">
+              {t("noorani.quizQuestion" as any) || "Où est la lettre"} :
+            </p>
+            <p className="font-arabic text-6xl text-primary">{q.target.arabic}</p>
+            {q.target.label && (
+              <p className="text-sm text-muted-foreground">({q.target.label})</p>
+            )}
+          </motion.div>
+
+          <div className="flex gap-3 w-full max-w-sm">
+            {q.options.map((opt, i) => {
+              let bgClass = "bg-card border-border";
+              if (quizFeedback) {
+                if (i === q.correctIndex) bgClass = "bg-green-500/15 border-green-500";
+                else if (quizFeedback === "wrong") bgClass = "bg-card border-border opacity-50";
+              }
+              return (
+                <motion.button
+                  key={i}
+                  whileTap={!quizFeedback ? { scale: 0.95 } : undefined}
+                  onClick={() => handleQuizAnswer(i)}
+                  disabled={!!quizFeedback}
+                  className={`flex-1 h-20 rounded-2xl border-2 text-3xl font-arabic flex items-center justify-center transition-colors ${bgClass}`}
+                >
+                  {opt.arabic}
+                </motion.button>
+              );
+            })}
+          </div>
+
+          <AnimatePresence>
+            {quizFeedback && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
+                  quizFeedback === "correct"
+                    ? "bg-green-500/15 text-green-600"
+                    : "bg-red-500/15 text-red-500"
+                }`}
+              >
+                {quizFeedback === "correct" ? (
+                  <><CheckCircle2 size={18} /> {t("noorani.quizCorrectFeedback" as any) || "Bravo ! 🎉"}</>
+                ) : (
+                  <><XCircle size={18} /> {t("noorani.quizWrongFeedback" as any) || "Essaie encore 😊"}</>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }
+
+  // ═══ ITEMS PHASE ═══
   const item = items[current];
 
   return (
