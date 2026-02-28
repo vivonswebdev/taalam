@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { PRAYER_STEPS, KIDS_PRAYER_QUIZ, WUDU_STEPS, KIDS_WUDU_QUIZ } from "@/data/kidsPrayer";
+import { PRAYER_STEPS, WUDU_STEPS, getRandomPrayerQuiz, getRandomWuduQuiz } from "@/data/kidsPrayer";
 import type { PrayerStep, WuduStep, PrayerQuizQuestion } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
 
@@ -32,8 +32,8 @@ export default function KidsPrayerPage() {
         {section === "menu" && <MenuSection key="menu" onSelect={setSection} t={t} />}
         {section === "steps" && <StepViewer key="steps" steps={PRAYER_STEPS} t={t} />}
         {section === "wudu" && <StepViewer key="wudu" steps={WUDU_STEPS} t={t} />}
-        {section === "wudu-quiz" && <GenericQuiz key="wudu-quiz" questions={KIDS_WUDU_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="wudu.quizBravo" tryAgainKey="wudu.quizTryAgain" />}
-        {section === "quiz" && <GenericQuiz key="quiz" questions={KIDS_PRAYER_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="kidsPrayer.quizBravo" tryAgainKey="kidsPrayer.quizTryAgain" />}
+        {section === "wudu-quiz" && <RandomQuiz key="wudu-quiz" getQuestions={getRandomWuduQuiz} t={t} onBack={() => setSection("menu")} bravoKey="wudu.quizBravo" tryAgainKey="wudu.quizTryAgain" />}
+        {section === "quiz" && <RandomQuiz key="quiz" getQuestions={getRandomPrayerQuiz} t={t} onBack={() => setSection("menu")} bravoKey="kidsPrayer.quizBravo" tryAgainKey="kidsPrayer.quizTryAgain" />}
       </AnimatePresence>
     </div>
   );
@@ -167,8 +167,15 @@ function StepViewer({ steps, t }: { steps: (PrayerStep | WuduStep)[]; t: any }) 
   );
 }
 
+/* ═══ Random Quiz Wrapper ═══ */
+function RandomQuiz({ getQuestions, t, onBack, bravoKey, tryAgainKey }: { getQuestions: (n?: number) => PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
+  const [key, setKey] = useState(0);
+  const questions = useMemo(() => getQuestions(5), [key, getQuestions]);
+  return <GenericQuiz key={key} questions={questions} t={t} onBack={onBack} bravoKey={bravoKey} tryAgainKey={tryAgainKey} onRestart={() => setKey(k => k + 1)} />;
+}
+
 /* ═══ Generic Quiz ═══ */
-function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
+function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey, onRestart }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string; onRestart?: () => void }) {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -202,7 +209,7 @@ function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey }: { question
         </p>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStep(0); setScore(0); setShowConfetti(false); }}
+            onClick={() => { if (onRestart) onRestart(); else { setStep(0); setScore(0); setShowConfetti(false); } }}
             className="flex-1 py-3 rounded-2xl bg-muted text-sm font-semibold flex items-center justify-center gap-1"
           >
             <RotateCcw size={14} /> {t("kidsPrayer.restart" as any)}
