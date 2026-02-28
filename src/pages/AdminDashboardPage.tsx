@@ -15,6 +15,7 @@ export default function AdminDashboardPage() {
   const { t } = useLanguage();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading, stats, refresh } = useAdminStats();
+  const { settings: adminSettings, update: updateSettings } = useAdminSettings();
 
   if (authLoading || loading) {
     return <div className="flex items-center justify-center min-h-screen"><span className="animate-spin text-2xl">⏳</span></div>;
