@@ -267,7 +267,7 @@ export default function Home() {
           title={t("home.kidsSpace" as any)}
           desc={t("home.kidsSpaceDesc" as any)}
           cta={t("home.open")}
-          onClick={() => navigate("/kids")}
+          onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
           gradient="bg-gradient-to-br from-blue-800/60 to-violet-700/30"
           delay={0.4}
         />
