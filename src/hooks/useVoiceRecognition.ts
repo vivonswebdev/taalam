@@ -346,8 +346,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    // Reset server-force flag each new recording session so native is re-attempted
+    // Reset server-force flag and retry counter each new recording session
     forceServerRef.current = false;
+    nativeRetryCountRef.current = 0;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
       setMode("native");
