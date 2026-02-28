@@ -1632,6 +1632,19 @@ const translations = {
   "report.totalAyat": { fr: "Ayat totales récitées", en: "Total ayat recited", nl: "Totaal gereciteerde ayat", ar: "إجمالي الآيات المتلوة", tr: "Toplam okunan ayet", ur: "کل پڑھی گئی آیات" },
   "report.quizAvg": { fr: "Score quiz moyen", en: "Average quiz score", nl: "Gemiddelde quizscore", ar: "متوسط نتيجة الاختبار", tr: "Ortalama test puanı", ur: "اوسط کوئز اسکور" },
   "report.topSurahs": { fr: "Top sourates", en: "Top Surahs", nl: "Top soera's", ar: "أفضل السور", tr: "En iyi sureler", ur: "اعلیٰ سورتیں" },
+
+  // Mode Selector
+  "more.chooseModeTitle": { fr: "Choisissez votre mode", en: "Choose your mode", nl: "Kies je modus", ar: "اختر وضعك", tr: "Modunuzu seçin", ur: "اپنا موڈ منتخب کریں" },
+  "more.chooseModeSubtitle": { fr: "Taaloum s'adapte à votre rôle.", en: "Taaloum adapts to your role.", nl: "Taaloum past zich aan je rol aan.", ar: "تعلّم يتكيّف مع دورك.", tr: "Taaloum rolünüze uyum sağlar.", ur: "تعلّم آپ کے کردار کے مطابق ڈھلتا ہے۔" },
+  "more.modeChild.title": { fr: "Mode enfant", en: "Kids mode", nl: "Kindermodus", ar: "وضع الأطفال", tr: "Çocuk modu", ur: "بچوں کا موڈ" },
+  "more.modeChild.desc": { fr: "Interface simplifiée, contenus adaptés.", en: "Simplified interface, adapted content.", nl: "Vereenvoudigd, aangepaste inhoud.", ar: "واجهة مبسطة، محتوى ملائم.", tr: "Basitleştirilmiş arayüz, uyarlanmış içerik.", ur: "آسان انٹرفیس، موزوں مواد۔" },
+  "more.modeTeacher.title": { fr: "Mode professeur", en: "Teacher mode", nl: "Lerarenmodus", ar: "وضع المعلم", tr: "Öğretmen modu", ur: "استاد موڈ" },
+  "more.modeTeacher.desc": { fr: "Tableau de bord classe, devoirs et suivi.", en: "Class dashboard, assignments & tracking.", nl: "Klassendashboard, opdrachten en tracking.", ar: "لوحة الفصل، الواجبات والمتابعة.", tr: "Sınıf panosu, ödevler ve takip.", ur: "کلاس ڈیش بورڈ، اسائنمنٹس اور ٹریکنگ۔" },
+  "more.modeParent.title": { fr: "Mode parent", en: "Parent mode", nl: "Oudermodus", ar: "وضع الوالدين", tr: "Ebeveyn modu", ur: "والدین کا موڈ" },
+  "more.modeParent.desc": { fr: "Suivi des enfants, notifications.", en: "Track children, notifications.", nl: "Volg kinderen, meldingen.", ar: "متابعة الأطفال، الإشعارات.", tr: "Çocukları takip edin, bildirimler.", ur: "بچوں کی نگرانی، اطلاعات۔" },
+  "more.modeActive": { fr: "Actif", en: "Active", nl: "Actief", ar: "نشط", tr: "Aktif", ur: "فعال" },
+  "more.modeSolo.title": { fr: "Mode solo", en: "Solo mode", nl: "Solomodus", ar: "الوضع الفردي", tr: "Bireysel mod", ur: "سولو موڈ" },
+  "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
