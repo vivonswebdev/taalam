@@ -1610,7 +1610,7 @@ const translations = {
   "admin.totalEvents": { fr: "Total événements", en: "Total events", nl: "Totaal events", ar: "إجمالي الأحداث", tr: "Toplam olaylar", ur: "کل واقعات" },
 
   // Habits page
-  "habits.title": { fr: "Habitudes & progression", en: "Habits & Progress", nl: "Gewoontes & Voortgang", ar: "العادات والتقدم", tr: "Alışkanlıklar & İlerleme", ur: "عادات اور پیشرفت" },
+  "habits.title": { fr: "Tableau de bord Qur'an", en: "Qur'an Dashboard", nl: "Koran Dashboard", ar: "لوحة القرآن", tr: "Kur'an Panosu", ur: "قرآن ڈیش بورڈ" },
   "habits.subtitle": { fr: "Suis ta progression quotidienne et ton avancement dans le Qur'an", en: "Track your daily progress and Qur'an advancement", nl: "Volg je dagelijkse voortgang en Koran-vooruitgang", ar: "تابع تقدمك اليومي وتطورك في القرآن", tr: "Günlük ilerlemenizi ve Kur'an gelişiminizi takip edin", ur: "اپنی روزانہ پیشرفت اور قرآن میں ترقی کو ٹریک کریں" },
 
   // Hifz habit card
