@@ -1036,6 +1036,15 @@ export type Database = {
           teacher_id: string
         }[]
       }
+      lookup_family_by_code: {
+        Args: { _invite_code: string }
+        Returns: {
+          created_by: string
+          id: string
+          invite_code: string
+          name: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

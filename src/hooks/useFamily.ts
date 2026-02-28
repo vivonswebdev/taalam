@@ -167,11 +167,9 @@ export function useFamily() {
 
   const joinFamily = useCallback(async (inviteCode: string) => {
     if (!user) return false;
-    const { data: family } = await supabase
-      .from("families")
-      .select("id")
-      .eq("invite_code", inviteCode.toUpperCase().trim())
-      .single();
+    const { data: families } = await supabase
+      .rpc("lookup_family_by_code", { _invite_code: inviteCode.toUpperCase().trim() });
+    const family = families?.[0] ?? null;
 
     if (!family) return false;
 
