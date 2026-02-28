@@ -10,6 +10,7 @@ import { useXP } from "@/hooks/useXP";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
 import { useChildMode } from "@/hooks/useChildMode";
+import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
@@ -81,6 +82,7 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
+  const { settings: adminSettings, loading: adminSettingsLoading } = useAdminSettings();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -115,8 +117,9 @@ export default function Home() {
 
   return (
     <div className="home-bg min-h-screen pb-24">
-      {/* Daily Tarteel Challenge */}
-      {!dailyChallenge.isCompleted && dailyChallenge.surah && (
+
+      {/* Daily Tarteel Challenge – hidden if admin toggled off */}
+      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
         <DailyTarteelChallenge
           surah={dailyChallenge.surah}
           onComplete={(score) => dailyChallenge.complete(score)}

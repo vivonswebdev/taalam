@@ -63,6 +63,13 @@ import AthkarDetail from "./pages/AthkarDetail";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
+import { useAdminSettings } from "./hooks/useAdminSettings";
+
+function ConditionalDedicationPopup() {
+  const { settings } = useAdminSettings();
+  if (settings.hide_announcement) return null;
+  return <DedicationPopup />;
+}
 
 const queryClient = new QueryClient();
 
@@ -76,7 +83,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <GlobalAudioProvider>
-          <DedicationPopup />
+          <ConditionalDedicationPopup />
           <div className="min-h-screen bg-background max-w-lg mx-auto relative">
             <Routes>
               <Route path="/" element={<Home />} />

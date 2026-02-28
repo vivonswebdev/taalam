@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Shield, Users, BookOpen, Baby, Brain, RefreshCw, BarChart3 } from "lucide-react";
+import { ArrowLeft, Shield, Users, BookOpen, Baby, Brain, RefreshCw, BarChart3, EyeOff, Eye } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminStats } from "@/hooks/useAdminStats";
+import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Switch } from "@/components/ui/switch";
 
 const KIDS_MODULES = ["noorani", "kids_prayer", "kids_hajj", "kids_mosque_map", "kids_space"];
 
@@ -13,6 +15,7 @@ export default function AdminDashboardPage() {
   const { t } = useLanguage();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading, stats, refresh } = useAdminStats();
+  const { settings: adminSettings, update: updateSettings } = useAdminSettings();
 
   if (authLoading || loading) {
     return <div className="flex items-center justify-center min-h-screen"><span className="animate-spin text-2xl">⏳</span></div>;
@@ -169,6 +172,53 @@ export default function AdminDashboardPage() {
                 <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.min(stats.hifzRatio, 100)}%` }} />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Section 5: Visibility Controls */}
+        <div>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎛️ Contrôle d'affichage</p>
+          <div className="bg-card border border-border rounded-xl p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {adminSettings.hide_announcement ? <EyeOff size={18} className="text-muted-foreground" /> : <Eye size={18} className="text-primary" />}
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Cacher Annonce Dédicace</p>
+                  <p className="text-[10px] text-muted-foreground">Masque le popup de dédicace pour tous les utilisateurs</p>
+                </div>
+              </div>
+              <Switch
+                checked={adminSettings.hide_announcement}
+                onCheckedChange={(checked) => updateSettings({ hide_announcement: checked })}
+              />
+            </div>
+            <div className="h-px bg-border" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {adminSettings.hide_daily_challenge ? <EyeOff size={18} className="text-muted-foreground" /> : <Eye size={18} className="text-primary" />}
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Cacher Défi du Jour</p>
+                  <p className="text-[10px] text-muted-foreground">Masque le défi quotidien Tarteel pour tous les utilisateurs</p>
+                </div>
+              </div>
+              <Switch
+                checked={adminSettings.hide_daily_challenge}
+                onCheckedChange={(checked) => updateSettings({ hide_daily_challenge: checked })}
+              />
+            </div>
+
+            {/* Preview */}
+            {(adminSettings.hide_announcement || adminSettings.hide_daily_challenge) && (
+              <div className="bg-muted/50 rounded-lg p-3 mt-2">
+                <p className="text-[10px] text-muted-foreground font-semibold mb-1">👁️ Aperçu :</p>
+                <p className="text-[10px] text-muted-foreground">
+                  {adminSettings.hide_announcement && "✅ Popup de dédicace masqué"}
+                  {adminSettings.hide_announcement && adminSettings.hide_daily_challenge && " · "}
+                  {adminSettings.hide_daily_challenge && "✅ Défi du jour masqué"}
+                  {" — "} Page d'accueil épurée pour les visiteurs.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
