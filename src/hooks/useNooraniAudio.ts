@@ -1,26 +1,39 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 
 export function useNooraniAudio() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const play = (url?: string) => {
-    if (!url) return;
+  const speak = useCallback((text: string) => {
+    if (!text) return;
     try {
-      if (audioRef.current) {
-        audioRef.current.pause();
+      // Stop any current speech
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ar-SA";
+      utterance.rate = 0.7; // Slower for learning
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      // Try to find an Arabic voice
+      const voices = window.speechSynthesis.getVoices();
+      const arabicVoice = voices.find(
+        (v) => v.lang.startsWith("ar")
+      );
+      if (arabicVoice) {
+        utterance.voice = arabicVoice;
       }
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      audio.play().catch(() => {});
-    } catch {}
-  };
 
-  const stop = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+      utteranceRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.error("Speech synthesis failed:", e);
     }
-  };
+  }, []);
 
-  return { play, stop };
+  const stop = useCallback(() => {
+    window.speechSynthesis.cancel();
+  }, []);
+
+  return { speak, stop };
 }
