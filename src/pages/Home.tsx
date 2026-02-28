@@ -148,7 +148,7 @@ export default function Home() {
               onClick={() => navigate(`/recitation?surah=${ch.surah_number}&from=${ch.ayah_from}&to=${ch.ayah_to}&challengeId=${ch.id}&classId=${ch.class_id}`)}
               className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg"
             >
-              Go !
+              {t("home.go" as any)}
             </button>
           </motion.div>
         );
@@ -275,7 +275,7 @@ export default function Home() {
             transition={{ delay: 1.2, duration: 0.8 }}
             className="mt-2 text-[10px] text-muted-foreground/70 text-center leading-relaxed max-w-[260px] mx-auto"
           >
-            Toutes les fonctionnalités de Ta'alam sont gratuites et resteront gratuites, in shâ Allah.{" "}
+            {t("home.freeMessage" as any)}{" "}
             <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-primary/60 font-medium underline underline-offset-2">taalam.eu</a>
           </motion.p>
         </div>
@@ -285,18 +285,18 @@ export default function Home() {
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🎤"
-          title="Commencer votre Tarteel"
-          desc="Récitation + Correction IA"
-          cta="Ouvrir"
+          title={t("home.tarteelButton" as any)}
+          desc={t("home.tarteelDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
           gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.25}
         />
         <HomeCard
           emoji="❤️"
-          title="États du cœur"
-          desc="Prends soin de toi avec le Coran"
-          cta="Découvrir"
+          title={t("home.moodsTitle" as any)}
+          desc={t("home.moodsSubtitle" as any)}
+          cta={t("home.moodsButton" as any)}
           onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
           gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.3}
@@ -307,18 +307,18 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🔍"
-          title="Trouver mon ayah"
-          desc="Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation"
-          cta="Ouvrir"
+          title={t("home.findAyahTitle" as any)}
+          desc={t("home.findAyahDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
           gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.35}
         />
         <HomeCard
           emoji="🧩"
-          title="Espace enfants"
-          desc="Noorani, prière, 'Umra & Hajj, mosquées, quiz…"
-          cta="Ouvrir"
+          title={t("home.kidsTitle" as any)}
+          desc={t("home.kidsDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
           gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.4}
@@ -329,9 +329,9 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="📖"
-          title="Plan Hifz"
-          desc="Crée ton planning de mémorisation"
-          cta={plan ? "Ouvrir" : "Créer mon plan"}
+          title={t("home.hifzPlanTitle" as any)}
+          desc={t("home.hifzPlanDesc" as any)}
+          cta={plan ? t("home.open" as any) : t("home.hifzCreatePlan" as any)}
           onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
           gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.45}
@@ -349,9 +349,9 @@ export default function Home() {
         </HomeCard>
         <HomeCard
           emoji="🧠"
-          title="Commencer le Quiz Niveau"
-          desc="Testez votre niveau Hifz"
-          cta="Ouvrir"
+          title={t("home.startQuiz" as any)}
+          desc={t("home.quizDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
           gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.5}
@@ -360,22 +360,22 @@ export default function Home() {
 
       {/* ═══ BLOC 4 – Suivi ═══ */}
       <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">Suivi</p>
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.trackingSection" as any)}</p>
         <div className="grid grid-cols-2 gap-3">
           <HomeCard
             emoji="📊"
-            title="Voir ma progression"
-            desc="Maîtrise & Hifz Map"
-            cta="Ouvrir"
+            title={t("home.progressTitle" as any)}
+            desc={t("home.progressDesc" as any)}
+            cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.55}
           />
           <HomeCard
             emoji="🏆"
-            title="Voir votre classement"
-            desc="Top mondial / pays"
-            cta="Ouvrir"
+            title={t("home.leaderboardTitle" as any)}
+            desc={t("home.leaderboardDesc" as any)}
+            cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.6}

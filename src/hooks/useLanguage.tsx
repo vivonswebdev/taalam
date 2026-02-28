@@ -1724,6 +1724,24 @@ const translations = {
   "mushaf.styleMushaf": { fr: "Mushaf (livre)", en: "Mushaf (book)", nl: "Mushaf (boek)", ar: "المصحف (كتاب)", tr: "Mushaf (kitap)", ur: "مصحف (کتاب)" },
   "mushaf.tipTap": { fr: "Touchez pour afficher les contrôles", en: "Tap to show controls", nl: "Tik om bedieningselementen te tonen", ar: "اضغط لإظهار أدوات التحكم", tr: "Kontrolleri göstermek için dokunun", ur: "کنٹرولز دکھانے کے لیے ٹیپ کریں" },
   "mushaf.readingStyle": { fr: "Mode de lecture", en: "Reading mode", nl: "Leesmodus", ar: "وضع القراءة", tr: "Okuma modu", ur: "پڑھنے کا موڈ" },
+
+  // Home cards (v3)
+  "home.findAyahTitle": { fr: "Trouver mon ayah", en: "Find my ayah", nl: "Vind mijn ayah", ar: "ابحث عن آيتي", tr: "Ayetimi bul", ur: "میری آیت تلاش کریں" },
+  "home.findAyahDesc": { fr: "Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation", en: "Like a Quran Shazam: find the surah from your recitation", nl: "Als een Koran Shazam: vind de soera vanuit je recitatie", ar: "مثل شازام القرآن: ابحث عن السورة من تلاوتك", tr: "Kur'an Shazam'ı gibi: tilavetinden sureyi bul", ur: "قرآن شازام کی طرح: اپنی تلاوت سے سورۃ تلاش کریں" },
+  "home.kidsTitle": { fr: "Espace enfants", en: "Kids Space", nl: "Kinderhoek", ar: "ركن الأطفال", tr: "Çocuk Alanı", ur: "بچوں کا حصہ" },
+  "home.kidsDesc": { fr: "Noorani, prière, 'Umra & Hajj, mosquées, quiz…", en: "Noorani, prayer, Umra & Hajj, mosques, quiz…", nl: "Noorani, gebed, Umra & Hadj, moskeeën, quiz…", ar: "نوراني، صلاة، عمرة وحج، مساجد، اختبارات…", tr: "Noorani, namaz, Umre & Hac, camiler, quiz…", ur: "نورانی، نماز، عمرہ و حج، مساجد، کوئز…" },
+  "home.hifzPlanTitle": { fr: "Plan Hifz", en: "Hifz Plan", nl: "Hifz Plan", ar: "خطة الحفظ", tr: "Hıfz Planı", ur: "حفظ پلان" },
+  "home.hifzPlanDesc": { fr: "Crée ton planning de mémorisation", en: "Create your memorization schedule", nl: "Maak je memorisatieplanning", ar: "أنشئ جدول حفظك", tr: "Ezberleme planını oluştur", ur: "اپنا حفظ شیڈول بنائیں" },
+  "home.hifzCreatePlan": { fr: "Créer mon plan", en: "Create my plan", nl: "Maak mijn plan", ar: "إنشاء خطتي", tr: "Planımı oluştur", ur: "میرا پلان بنائیں" },
+  "home.quizDesc": { fr: "Testez votre niveau Hifz", en: "Test your Hifz level", nl: "Test je Hifz-niveau", ar: "اختبر مستوى حفظك", tr: "Hıfz seviyeni test et", ur: "اپنا حفظ لیول ٹیسٹ کریں" },
+  "home.trackingSection": { fr: "Suivi", en: "Tracking", nl: "Voortgang", ar: "المتابعة", tr: "Takip", ur: "ٹریکنگ" },
+  "home.progressTitle": { fr: "Voir ma progression", en: "View my progress", nl: "Bekijk mijn voortgang", ar: "عرض تقدّمي", tr: "İlerlemeimi gör", ur: "میری پیشرفت دیکھیں" },
+  "home.progressDesc": { fr: "Maîtrise & Hifz Map", en: "Mastery & Hifz Map", nl: "Beheersing & Hifz Kaart", ar: "خريطة الإتقان والحفظ", tr: "Ustalık & Hıfz Haritası", ur: "مہارت اور حفظ نقشہ" },
+  "home.leaderboardTitle": { fr: "Voir votre classement", en: "View your ranking", nl: "Bekijk je ranglijst", ar: "عرض ترتيبك", tr: "Sıralamana bak", ur: "اپنی درجہ بندی دیکھیں" },
+  "home.leaderboardDesc": { fr: "Top mondial / pays", en: "World / country top", nl: "Wereld / land top", ar: "الأفضل عالميًا / بلدك", tr: "Dünya / ülke sıralaması", ur: "عالمی / ملکی ٹاپ" },
+  "home.freeMessage": { fr: "Toutes les fonctionnalités de Ta'alam sont gratuites et resteront gratuites, in shâ Allah.", en: "All Ta'alam features are free and will remain free, in shâ Allah.", nl: "Alle functies van Ta'alam zijn gratis en blijven gratis, in shâ Allah.", ar: "جميع ميزات تعلّم مجانية وستبقى مجانية، إن شاء الله.", tr: "Ta'alam'ın tüm özellikleri ücretsizdir ve ücretsiz kalacaktır, inşallah.", ur: "تعلّم کی تمام خصوصیات مفت ہیں اور مفت رہیں گی، ان شاء اللہ۔" },
+  "home.go": { fr: "Go !", en: "Go!", nl: "Ga!", ar: "انطلق!", tr: "Başla!", ur: "!چلیں" },
+  "home.tarteelDesc": { fr: "Récitation + Correction IA", en: "Recitation + AI Correction", nl: "Recitatie + AI-correctie", ar: "تلاوة + تصحيح بالذكاء الاصطناعي", tr: "Tilavet + YZ Düzeltme", ur: "تلاوت + مصنوعی ذہانت تصحیح" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
