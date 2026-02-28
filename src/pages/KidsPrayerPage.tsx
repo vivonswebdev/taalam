@@ -45,6 +45,7 @@ function MenuSection({ onSelect, t }: { onSelect: (s: Section) => void; t: any }
     { id: "steps" as Section, emoji: "🧎", titleKey: "kidsPrayer.menuSteps", descKey: "kidsPrayer.menuStepsDesc", gradient: "from-emerald-600 to-teal-700" },
     { id: "wudu" as Section, emoji: "💧", titleKey: "kidsPrayer.menuWudu", descKey: "kidsPrayer.menuWuduDesc", gradient: "from-sky-600 to-blue-700" },
     { id: "quiz" as Section, emoji: "🧠", titleKey: "kidsPrayer.menuQuiz", descKey: "kidsPrayer.menuQuizDesc", gradient: "from-amber-500 to-orange-600" },
+    { id: "wudu-quiz" as Section, emoji: "💧🧠", titleKey: "wudu.menuQuiz", descKey: "wudu.menuQuizDesc", gradient: "from-cyan-500 to-blue-600" },
   ];
 
   return (
