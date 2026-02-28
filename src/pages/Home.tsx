@@ -118,8 +118,6 @@ export default function Home() {
 
   return (
     <div className="home-bg min-h-screen pb-24">
-      {/* Dedication Popup – hidden if admin toggled off */}
-      {!adminSettings.hide_announcement && <DedicationPopup />}
 
       {/* Daily Tarteel Challenge – hidden if admin toggled off */}
       {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
