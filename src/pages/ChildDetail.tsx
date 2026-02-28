@@ -2,14 +2,15 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, BookOpen, Clock, ChevronRight, FileText, Layers,
-  CheckCircle2, AlertTriangle, XCircle,
+  ArrowLeft, BookOpen, Clock, FileText, CheckCircle2, AlertTriangle,
+  XCircle, Calendar, Activity, Flame, Star,
 } from "lucide-react";
 import { useChildProfiles, type ChildSession } from "@/hooks/useChildProfiles";
+import { useChildDashboard } from "@/hooks/useChildDashboard";
 import { useLanguage } from "@/hooks/useLanguage";
 import { surahs } from "@/data/surahs";
 
-// ─── Color helpers (same as HifzMap) ────────────────────────
+// ─── Color helpers ──────────────────────────────────────────
 function getColor(m: number): "green" | "orange" | "red" {
   if (m >= 70) return "green";
   if (m >= 40) return "orange";
@@ -29,6 +30,8 @@ const MODE_LABELS: Record<string, string> = {
   reading: "Lecture",
 };
 
+const DAY_NAMES = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+
 function relativeDate(d: string): string {
   const days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
   if (days === 0) return "Auj.";
@@ -42,8 +45,9 @@ export default function ChildDetail() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { profiles, getSessionsForChild, getChildMastery, getChildSurahBestScores } = useChildProfiles();
+  const dashboard = useChildDashboard(childId);
 
-  const [tab, setTab] = useState<"hifz" | "history">("hifz");
+  const [tab, setTab] = useState<"overview" | "hifz" | "history">("overview");
 
   const child = profiles.find(p => p.id === childId);
   if (!child) {
@@ -59,7 +63,6 @@ export default function ChildDetail() {
   const bestScores = getChildSurahBestScores(child.id);
   const color = getColor(mastery);
 
-  // Build surah list from sessions
   const reviewedSurahs = Array.from(bestScores.entries())
     .map(([surahNum, score]) => {
       const surah = surahs.find(s => s.number === surahNum);
@@ -113,7 +116,7 @@ export default function ChildDetail() {
       {/* Tabs */}
       <div className="px-6 mb-4">
         <div className="flex bg-muted rounded-xl p-1">
-          {(["hifz", "history"] as const).map(t2 => (
+          {(["overview", "hifz", "history"] as const).map(t2 => (
             <button
               key={t2}
               onClick={() => setTab(t2)}
@@ -121,13 +124,142 @@ export default function ChildDetail() {
                 tab === t2 ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               }`}
             >
-              {t2 === "hifz" ? t("parent.tabHifz") : t("parent.tabHistory")}
+              {t2 === "overview" ? "📊 Vue 7j" : t2 === "hifz" ? t("parent.tabHifz") : t("parent.tabHistory")}
             </button>
           ))}
         </div>
       </div>
 
       <div className="px-6">
+        {/* ═══ OVERVIEW TAB ═══ */}
+        {tab === "overview" && dashboard && (
+          <div className="space-y-4">
+            {/* 7-day stats grid */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-2 gap-2.5">
+              <div className="bg-card border border-border rounded-2xl p-3.5 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <Clock size={14} className="text-primary" />
+                </div>
+                <p className="text-xl font-bold text-foreground">{dashboard.minutesQuran7d}</p>
+                <p className="text-[10px] text-muted-foreground">min Qur'an (7j)</p>
+              </div>
+              <div className="bg-card border border-border rounded-2xl p-3.5 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <BookOpen size={14} className="text-secondary" />
+                </div>
+                <p className="text-xl font-bold text-foreground">{dashboard.versetsWorked7d}</p>
+                <p className="text-[10px] text-muted-foreground">passages travaillés</p>
+              </div>
+              <div className="bg-card border border-border rounded-2xl p-3.5 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <span className="text-sm">🔤</span>
+                </div>
+                <p className="text-xl font-bold text-foreground">{dashboard.nooraniCompleted}/{dashboard.nooraniTotal}</p>
+                <p className="text-[10px] text-muted-foreground">leçons Noorani</p>
+              </div>
+              <div className="bg-card border border-border rounded-2xl p-3.5 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <Activity size={14} className="text-orange-400" />
+                </div>
+                <p className="text-xl font-bold text-foreground">{dashboard.sessionsCount7d}</p>
+                <p className="text-[10px] text-muted-foreground">sessions (7j)</p>
+              </div>
+            </motion.div>
+
+            {/* Kids modules status */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+              className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Modules enfants</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">🕋</span>
+                  <span className="flex-1 text-sm text-foreground">Umra & Hajj</span>
+                  {dashboard.kidsHajjDone ? (
+                    <span className="px-2 py-0.5 rounded-full bg-green-500/15 text-green-600 text-[10px] font-semibold">Complété</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-[10px]">Non commencé</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">🤲</span>
+                  <span className="flex-1 text-sm text-foreground">Apprendre à prier</span>
+                  {dashboard.kidsPrayerDone ? (
+                    <span className="px-2 py-0.5 rounded-full bg-green-500/15 text-green-600 text-[10px] font-semibold">Complété</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-[10px]">Non commencé</span>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Day timeline (7 days) */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                <Calendar size={12} className="inline mr-1" />
+                Activité journalière
+              </p>
+              <div className="flex justify-between items-end gap-1">
+                {dashboard.dayTimeline.map((day, i) => {
+                  const dayOfWeek = new Date(day.date).getDay();
+                  const maxMinutes = Math.max(1, ...dashboard.dayTimeline.map(d => d.totalMinutes));
+                  const height = day.active ? Math.max(12, (day.totalMinutes / maxMinutes) * 48) : 4;
+                  return (
+                    <div key={day.date} className="flex flex-col items-center gap-1 flex-1">
+                      <div className="relative w-full flex justify-center">
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height }}
+                          transition={{ delay: i * 0.05, type: "spring", damping: 15 }}
+                          className={`w-5 rounded-full ${
+                            day.active ? "bg-primary" : "bg-muted"
+                          }`}
+                        />
+                      </div>
+                      <span className="text-[9px] text-muted-foreground">{DAY_NAMES[dayOfWeek]}</span>
+                      {day.active && (
+                        <span className="text-[8px] text-primary font-semibold">{day.sessionsCount}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            {/* Recent activities */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+              className="bg-card border border-border rounded-2xl p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                Dernières activités
+              </p>
+              {dashboard.recentActivities.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Aucune activité encore</p>
+              ) : (
+                <div className="space-y-2">
+                  {dashboard.recentActivities.map((act, i) => (
+                    <motion.div
+                      key={act.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.03 }}
+                      className="flex items-center gap-3"
+                    >
+                      <span className="text-lg shrink-0">{act.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-foreground truncate">{act.label}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {relativeDate(act.date)}{act.detail ? ` · ${act.detail}` : ""}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+
         {/* ═══ HIFZ TAB ═══ */}
         {tab === "hifz" && (
           <div className="space-y-2">
