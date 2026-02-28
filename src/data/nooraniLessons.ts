@@ -1,10 +1,15 @@
+export type NooraniExerciseType = "recognition" | "audio-choice";
+
+export type NooraniItem = { arabic: string; label?: string; audioUrl?: string };
+
 export type NooraniLesson = {
   id: string;
   titleKey: string;
   descKey: string;
   level: "beginner" | "intermediate";
   emoji: string;
-  items: { arabic: string; label?: string; audioUrl?: string }[];
+  items: NooraniItem[];
+  exerciseType?: NooraniExerciseType;
 };
 
 export const NOORANI_LESSONS: NooraniLesson[] = [
