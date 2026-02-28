@@ -4,6 +4,7 @@ import { ArrowLeft, UserPlus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
+import { Badge } from "@/components/ui/badge";
 
 const KIDS_CARDS = [
   {
