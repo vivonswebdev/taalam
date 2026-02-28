@@ -99,7 +99,16 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const processQueue = useCallback(async () => {
     if (isProcessingRef.current) return;
     isProcessingRef.current = true;
+
     const authToken = await getAuthToken();
+    if (!authToken) {
+      // Protected backend STT requires logged-in user token
+      chunkQueueRef.current = [];
+      isProcessingRef.current = false;
+      onErrorRef.current?.("auth-required");
+      return;
+    }
+
     while (chunkQueueRef.current.length > 0) {
       const blob = chunkQueueRef.current.shift()!;
       if (blob.size < MIN_CHUNK_SIZE) continue;
@@ -113,6 +122,16 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}`, "apikey": supabaseKey },
           body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
         });
+
+        if (res.status === 401 || res.status === 403) {
+          onErrorRef.current?.("auth-required");
+          break;
+        }
+
+        if (!res.ok) {
+          throw new Error(`stt-chunk failed with ${res.status}`);
+        }
+
         const data = await res.json();
         if (data.text) {
           transcriptRef.current = (transcriptRef.current + " " + data.text).trim();
@@ -123,6 +142,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         console.warn("[VoiceRecognition] chunk STT error:", e);
       }
     }
+
     isProcessingRef.current = false;
   }, [lang, getAuthToken]);
 
