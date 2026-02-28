@@ -82,6 +82,10 @@ export default function Auth() {
         password: password.trim(),
       });
       if (error) throw error;
+      localStorage.setItem("taalam_remember_me", rememberMe ? "true" : "false");
+      if (!rememberMe) {
+        sessionStorage.setItem("taalam_session_active", "true");
+      }
       toast.success("Connecté !");
       navigate(redirectTo);
     } catch (err: any) {
