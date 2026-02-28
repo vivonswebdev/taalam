@@ -91,28 +91,61 @@ export default function Moods() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-2 gap-3 p-4"
           >
-            {moodPresets.map((mood, i) => {
-              const titleKey = `mood.${mood.id}` as any;
-              const subKey = `mood.${mood.id}.sub` as any;
-              return (
-                <motion.div
-                  key={mood.id}
-                  initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-                >
-                  <MoodCard
-                    icon={mood.emoji}
-                    title={t(titleKey) || mood.title}
-                    desc={t(subKey) || mood.subtitle}
-                    loop={mood.loop}
-                    onClick={() => navigate(`/moods/${mood.id}`)}
-                  />
-                </motion.div>
-              );
-            })}
+            {/* ── Boucles section ── */}
+            <div className="px-4 pt-3 pb-1">
+              <h2 className="text-sm font-bold text-foreground">🔁 Boucles Coran</h2>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Écoute en continu pour t'apaiser</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 px-4 pb-2">
+              {moodPresets.filter(m => m.loop).map((mood, i) => {
+                const titleKey = `mood.${mood.id}` as any;
+                const subKey = `mood.${mood.id}.sub` as any;
+                return (
+                  <motion.div
+                    key={mood.id}
+                    initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: Math.min(i * 0.04, 0.3), type: "spring", stiffness: 260, damping: 20 }}
+                  >
+                    <MoodCard
+                      icon={mood.emoji}
+                      title={t(titleKey) || mood.title}
+                      desc={t(subKey) || mood.subtitle}
+                      loop={mood.loop}
+                      onClick={() => navigate(`/moods/${mood.id}`)}
+                    />
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* ── États du cœur section ── */}
+            <div className="px-4 pt-3 pb-1">
+              <h2 className="text-sm font-bold text-foreground">💓 États du cœur</h2>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Trouve le verset qui parle à ton état</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+              {moodPresets.filter(m => !m.loop).map((mood, i) => {
+                const titleKey = `mood.${mood.id}` as any;
+                const subKey = `mood.${mood.id}.sub` as any;
+                return (
+                  <motion.div
+                    key={mood.id}
+                    initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+                  >
+                    <MoodCard
+                      icon={mood.emoji}
+                      title={t(titleKey) || mood.title}
+                      desc={t(subKey) || mood.subtitle}
+                      onClick={() => navigate(`/moods/${mood.id}`)}
+                    />
+                  </motion.div>
+                );
+              })}
+            </div>
           </motion.div>
         )}
 
