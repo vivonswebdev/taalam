@@ -735,7 +735,22 @@ export default function Quran() {
           <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => { setRecitationMode("readOnly"); if (lastUsedSurah) handleSelectSurah(lastUsedSurah); }}
+              onClick={() => {
+                setRecitationMode("readOnly");
+                if (lastUsedSurah) {
+                  handleSelectSurah(lastUsedSurah);
+                } else {
+                  setShowDropdown(true);
+                  setHighlightSelector(true);
+                  setTimeout(() => setHighlightSelector(false), 3000);
+                  setTimeout(() => {
+                    surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }, 100);
+                  toast.info(t("mode.noSurahTitle" as any), {
+                    description: t("mode.noSurahDesc" as any),
+                  });
+                }
+              }}
               className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl text-left transition-all ${
                 recitationMode === "readOnly"
                   ? "bg-primary text-primary-foreground shadow-sm"
