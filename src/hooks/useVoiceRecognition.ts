@@ -391,6 +391,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const stopNative = useCallback(() => {
     isListeningRef.current = false;
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+    if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
     if (recognitionRef.current) {
       const rec = recognitionRef.current;
       rec.onresult = null;
