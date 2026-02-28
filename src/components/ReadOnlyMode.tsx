@@ -42,7 +42,7 @@ export default function ReadOnlyMode({
 
     navigator.mediaSession.metadata = new MediaMetadata({
       title: `${surah.nameArabic} - ${surah.name}`,
-      artist: "QuranEasy",
+      artist: "Ta'alam",
       album: "Quran",
     });
 
