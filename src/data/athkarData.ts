@@ -28,6 +28,7 @@ export const ATHKAR_FILTERS: { id: AthkarCategory | "all"; label: string; emoji:
   { id: "protection", label: "Protection", emoji: "🛡️" },
   { id: "forgiveness", label: "Pardon", emoji: "🕊️" },
   { id: "praise", label: "Louanges", emoji: "🤲" },
+  { id: "divers", label: "Divers", emoji: "📋" },
 ];
 
 export const athkarGroups: AthkarGroup[] = [
