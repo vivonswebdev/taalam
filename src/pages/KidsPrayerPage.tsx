@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { PRAYER_STEPS, KIDS_PRAYER_QUIZ, WUDU_STEPS, KIDS_WUDU_QUIZ } from "@/data/kidsPrayer";
+import { PRAYER_STEPS, WUDU_STEPS, getRandomPrayerQuiz, getRandomWuduQuiz } from "@/data/kidsPrayer";
 import type { PrayerStep, WuduStep, PrayerQuizQuestion } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
 
