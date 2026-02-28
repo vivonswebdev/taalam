@@ -49,6 +49,7 @@ import KidsHajjUmraPage from "./pages/KidsHajjUmraPage";
 import KidsMosqueMapPage from "./pages/KidsMosqueMapPage";
 import KidsHomePage from "./pages/KidsHomePage";
 import KidsChecklist from "./pages/KidsChecklist";
+import KidsDuasPage from "./pages/KidsDuasPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -110,6 +111,7 @@ const App = () => (
               <Route path="/kids-mosque-map" element={<KidsMosqueMapPage />} />
               <Route path="/kids" element={<KidsHomePage />} />
               <Route path="/kids-checklist" element={<KidsChecklist />} />
+              <Route path="/kids-duas" element={<KidsDuasPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
