@@ -86,7 +86,7 @@ export const moodPresets: MoodPreset[] = [
     id: "loneliness",
     title: "Solitude",
     titleAr: "الوحدة",
-    emoji: "😶",
+    emoji: "🌌",
     subtitle: "Allah est toujours avec toi",
     loop: false,
     type: "emotion",
