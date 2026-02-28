@@ -119,6 +119,7 @@ const App = () => (
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
+              <Route path="/faq" element={<FaqAndTermsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
