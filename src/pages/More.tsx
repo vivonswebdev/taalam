@@ -54,6 +54,7 @@ export default function More() {
 
   const modulesSection: MenuItem[] = [
     { icon: <Brain size={20} className="text-purple-500" />, label: "Plan Hifz", desc: "Planning de mémorisation & révisions", path: "/hifz-plan" },
+    { icon: <BookOpen size={20} className="text-emerald-500" />, label: "Mode Étude", desc: "Multi-traductions, tafsîr, notes", path: "/study?surah=1" },
     { icon: <Star size={20} className="text-yellow-500" />, label: "Favoris & Signets", desc: "Ayat sauvegardées", path: "/bookmarks" },
     { icon: <Users size={20} className="text-pink-500" />, label: "Classe Famille", desc: "Suivez vos enfants", path: "/family" },
     { icon: <Users size={20} className="text-indigo-500" />, label: "Classe Professeur", desc: "Gérez vos classes", path: "/classrooms" },

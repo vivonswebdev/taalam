@@ -73,6 +73,84 @@ export type Database = {
         }
         Relationships: []
       }
+      ayah_favorites: {
+        Row: {
+          ayah_number: number
+          created_at: string
+          id: string
+          surah_number: number
+          user_id: string
+        }
+        Insert: {
+          ayah_number: number
+          created_at?: string
+          id?: string
+          surah_number: number
+          user_id: string
+        }
+        Update: {
+          ayah_number?: number
+          created_at?: string
+          id?: string
+          surah_number?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ayah_notes: {
+        Row: {
+          ayah_number: number
+          content: string
+          created_at: string
+          id: string
+          is_shared: boolean
+          shared_to_class_id: string | null
+          shared_to_family_id: string | null
+          surah_number: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ayah_number: number
+          content?: string
+          created_at?: string
+          id?: string
+          is_shared?: boolean
+          shared_to_class_id?: string | null
+          shared_to_family_id?: string | null
+          surah_number: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ayah_number?: number
+          content?: string
+          created_at?: string
+          id?: string
+          is_shared?: boolean
+          shared_to_class_id?: string | null
+          shared_to_family_id?: string | null
+          surah_number?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ayah_notes_shared_to_class_id_fkey"
+            columns: ["shared_to_class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ayah_notes_shared_to_family_id_fkey"
+            columns: ["shared_to_family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_challenge_results: {
         Row: {
           challenge_id: string

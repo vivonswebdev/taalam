@@ -11,7 +11,7 @@ import TajwidBar from "@/components/TajwidBar";
 import TajwidAyahText from "@/components/TajwidAyahText";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { useBookmarks } from "@/hooks/useBookmarks";
-import TafsirSheet from "@/components/TafsirSheet";
+import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
@@ -593,9 +593,9 @@ export default function MushafReader({
         <div className="fixed inset-0 z-40" onClick={() => setLongPressAyah(null)} />
       )}
 
-      {/* Tafsir bottom sheet */}
+      {/* Study bottom sheet (replaces old TafsirSheet) */}
       {tafsirAyahIndex !== null && surah.ayahs[tafsirAyahIndex] && (
-        <TafsirSheet
+        <StudySheet
           open={tafsirAyahIndex !== null}
           onOpenChange={(open) => { if (!open) setTafsirAyahIndex(null); }}
           surahNumber={surah.number}
