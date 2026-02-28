@@ -15,18 +15,18 @@ interface QuranStation {
 }
 
 const STATIONS: QuranStation[] = [
-  { id: "makkah", name: "Quran Radio Makkah", nameAr: "إذاعة القرآن الكريم من مكة", reciter: "Imam Al-Haram", url: "https://stream.radiojar.com/8s5u5tpdp0duv", country: "🇸🇦" },
-  { id: "madinah", name: "Quran Radio Madinah", nameAr: "إذاعة القرآن الكريم من المدينة", reciter: "Imam Al-Masjid An-Nabawi", url: "https://qurango.net/radio/madinah", country: "🇸🇦" },
-  { id: "mishary", name: "Mishary Rashid Al-Afasy", nameAr: "مشاري راشد العفاسي", reciter: "Mishary Al-Afasy", url: "https://qurango.net/radio/mishary", country: "🇰🇼" },
-  { id: "sudais", name: "Abdul Rahman Al-Sudais", nameAr: "عبد الرحمن السديس", reciter: "Al-Sudais", url: "https://qurango.net/radio/sudais", country: "🇸🇦" },
-  { id: "shuraim", name: "Saud Al-Shuraim", nameAr: "سعود الشريم", reciter: "Al-Shuraim", url: "https://qurango.net/radio/shuraim", country: "🇸🇦" },
-  { id: "ajamy", name: "Ahmad Al-Ajamy", nameAr: "أحمد بن علي العجمي", reciter: "Al-Ajamy", url: "https://qurango.net/radio/ajamy", country: "🇸🇦" },
-  { id: "hudhaify", name: "Ali Al-Hudhaify", nameAr: "علي الحذيفي", reciter: "Al-Hudhaify", url: "https://qurango.net/radio/hudhaify", country: "🇸🇦" },
-  { id: "basfar", name: "Abdullah Basfar", nameAr: "عبد الله بصفر", reciter: "Basfar", url: "https://qurango.net/radio/basfar", country: "🇸🇦" },
-  { id: "minshawi_mujawwad", name: "Al-Minshawi (Mujawwad)", nameAr: "المنشاوي - مجوّد", reciter: "Al-Minshawi", url: "https://qurango.net/radio/minshawi_mujawwad", country: "🇪🇬" },
-  { id: "husary", name: "Mahmoud Khalil Al-Husary", nameAr: "محمود خليل الحصري", reciter: "Al-Husary", url: "https://qurango.net/radio/husary", country: "🇪🇬" },
-  { id: "french", name: "French Translation", nameAr: "ترجمة فرنسية", reciter: "Traduction FR", url: "https://qurango.net/radio/french", country: "🇫🇷" },
-  { id: "english", name: "English Translation", nameAr: "ترجمة إنجليزية", reciter: "Translation EN", url: "https://qurango.net/radio/english", country: "🇬🇧" },
+  { id: "makkah", name: "Quran Radio Makkah", nameAr: "إذاعة القرآن الكريم من مكة", reciter: "Imam Al-Haram", url: "https://Qurango.net/radio/tarateel", country: "🇸🇦" },
+  { id: "madinah", name: "Quran Radio Madinah", nameAr: "إذاعة القرآن الكريم من المدينة", reciter: "Imam Al-Masjid An-Nabawi", url: "https://backup.qurango.net/radio/madinah", country: "🇸🇦" },
+  { id: "mishary", name: "Mishary Rashid Al-Afasy", nameAr: "مشاري راشد العفاسي", reciter: "Mishary Al-Afasy", url: "https://backup.qurango.net/radio/mishary", country: "🇰🇼" },
+  { id: "sudais", name: "Abdul Rahman Al-Sudais", nameAr: "عبد الرحمن السديس", reciter: "Al-Sudais", url: "https://backup.qurango.net/radio/sudais", country: "🇸🇦" },
+  { id: "shuraim", name: "Saud Al-Shuraim", nameAr: "سعود الشريم", reciter: "Al-Shuraim", url: "https://backup.qurango.net/radio/shuraim", country: "🇸🇦" },
+  { id: "ajamy", name: "Ahmad Al-Ajamy", nameAr: "أحمد بن علي العجمي", reciter: "Al-Ajamy", url: "https://backup.qurango.net/radio/ajamy", country: "🇸🇦" },
+  { id: "hudhaify", name: "Ali Al-Hudhaify", nameAr: "علي الحذيفي", reciter: "Al-Hudhaify", url: "https://backup.qurango.net/radio/hudhaify", country: "🇸🇦" },
+  { id: "basfar", name: "Abdullah Basfar", nameAr: "عبد الله بصفر", reciter: "Basfar", url: "https://backup.qurango.net/radio/basfar", country: "🇸🇦" },
+  { id: "minshawi_mujawwad", name: "Al-Minshawi (Mujawwad)", nameAr: "المنشاوي - مجوّد", reciter: "Al-Minshawi", url: "https://backup.qurango.net/radio/minshawi_mujawwad", country: "🇪🇬" },
+  { id: "husary", name: "Mahmoud Khalil Al-Husary", nameAr: "محمود خليل الحصري", reciter: "Al-Husary", url: "https://backup.qurango.net/radio/husary", country: "🇪🇬" },
+  { id: "french", name: "French Translation", nameAr: "ترجمة فرنسية", reciter: "Traduction FR", url: "https://backup.qurango.net/radio/french", country: "🇫🇷" },
+  { id: "english", name: "English Translation", nameAr: "ترجمة إنجليزية", reciter: "Translation EN", url: "https://backup.qurango.net/radio/english", country: "🇬🇧" },
 ];
 
 export default function LiveQuran() {
