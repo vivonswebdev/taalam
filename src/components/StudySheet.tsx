@@ -238,7 +238,7 @@ export default function StudySheet({
                         onClick={() => { deleteNote(surahNumber, ayahNumber); setNoteText(""); }}
                         className="text-xs text-destructive flex items-center gap-1"
                       >
-                        <Trash2 size={12} /> Supprimer
+                        <Trash2 size={12} /> {t("study.delete")}
                       </button>
                     )}
                     <button
