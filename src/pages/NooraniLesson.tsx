@@ -139,21 +139,8 @@ export default function NooraniLesson() {
               <p className="text-sm text-muted-foreground font-medium mb-3">{item.label}</p>
             )}
             <button
-              onClick={async () => {
-                if (!item.audioUrl) return;
-                try {
-                  const audio = new Audio(item.audioUrl);
-                  await audio.play();
-                } catch (e) {
-                  console.error("Audio playback failed:", e);
-                }
-              }}
-              disabled={!item.audioUrl}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors min-h-[44px] ${
-                item.audioUrl
-                  ? "bg-primary/10 text-primary active:scale-[0.96]"
-                  : "bg-muted/30 text-muted-foreground cursor-not-allowed"
-              }`}
+              onClick={() => speak(item.arabic)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors min-h-[44px] bg-primary/10 text-primary active:scale-[0.96]"
             >
               <Volume2 size={18} />
               {t("noorani.listen" as any)}
