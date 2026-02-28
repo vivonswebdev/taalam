@@ -177,6 +177,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     } else {
       setCurrentAyahIdx(prev => prev + 1);
       setLiveTranscript("");
+      setPendingStop(false);
       setFeedbackWords([]);
       setFeedbackScore(0);
       setSimpleExplanation("");
