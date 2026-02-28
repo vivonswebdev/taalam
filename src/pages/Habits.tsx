@@ -238,6 +238,37 @@ export default function Habits() {
           )}
         </motion.div>
 
+        {/* ───── SECTION: Graphique semaine (lecture + écoute) ───── */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.34 }} className="bg-card border border-border rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp size={18} className="text-secondary" />
+            <span className="text-sm font-semibold text-foreground">Activité de la semaine</span>
+          </div>
+          {(() => {
+            const last7 = last30Days.slice(-7);
+            const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+            const weekData = last7.map((d) => {
+              const dt = new Date(d.date + "T12:00:00");
+              const listenMin = listeningStats.dailyListening[d.date]?.minutes || 0;
+              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, écoute: listenMin };
+            });
+            return (
+              <ResponsiveContainer width="100%" height={120}>
+                <BarChart data={weekData} barGap={1}>
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+                  <YAxis hide />
+                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="écoute" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            );
+          })()}
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">Lecture</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">Écoute</span></div>
+          </div>
+        </motion.div>
+
         {/* Cloud sync hint */}
         {!isAuthenticated && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
