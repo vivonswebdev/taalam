@@ -593,9 +593,9 @@ export default function MushafReader({
         <div className="fixed inset-0 z-40" onClick={() => setLongPressAyah(null)} />
       )}
 
-      {/* Tafsir bottom sheet */}
+      {/* Study bottom sheet (replaces old TafsirSheet) */}
       {tafsirAyahIndex !== null && surah.ayahs[tafsirAyahIndex] && (
-        <TafsirSheet
+        <StudySheet
           open={tafsirAyahIndex !== null}
           onOpenChange={(open) => { if (!open) setTafsirAyahIndex(null); }}
           surahNumber={surah.number}
