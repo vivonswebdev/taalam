@@ -660,6 +660,36 @@ export type Database = {
         }
         Relationships: []
       }
+      mushaf_bookmarks: {
+        Row: {
+          ayah_key: string | null
+          created_at: string | null
+          id: string
+          note: string | null
+          page_number: number
+          surah_number: number | null
+          user_id: string
+        }
+        Insert: {
+          ayah_key?: string | null
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          page_number: number
+          surah_number?: number | null
+          user_id: string
+        }
+        Update: {
+          ayah_key?: string | null
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          page_number?: number
+          surah_number?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_log: {
         Row: {
           body: string

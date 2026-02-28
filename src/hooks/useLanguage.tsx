@@ -1702,6 +1702,23 @@ const translations = {
   "dashboard.subtitleTeacher": { fr: "Visualise l'activité Qur'an de ta classe, les devoirs rendus et la progression Hifz de tes élèves.", en: "View your class's Qur'an activity, submitted assignments and students' Hifz progress.", nl: "Bekijk de Koran-activiteit van je klas, ingeleverde opdrachten en Hifz-voortgang van leerlingen.", ar: "اطلع على نشاط القرآن لفصلك والواجبات المقدمة وتقدم الحفظ لطلابك.", tr: "Sınıfınızın Kur'an aktivitesini, teslim edilen ödevleri ve öğrencilerin Hıfz ilerlemesini görüntüleyin.", ur: "اپنی کلاس کی قرآن سرگرمی، جمع شدہ اسائنمنٹس اور طلباء کی حفظ پیشرفت دیکھیں۔" },
   "dashboard.subtitleParent": { fr: "Suis la régularité Qur'an, les habitudes et la progression Hifz de tes enfants.", en: "Track your children's Qur'an consistency, habits and Hifz progress.", nl: "Volg de Koran-regelmaat, gewoontes en Hifz-voortgang van je kinderen.", ar: "تابع انتظام أطفالك في القرآن وعاداتهم وتقدمهم في الحفظ.", tr: "Çocuklarınızın Kur'an düzenliliğini, alışkanlıklarını ve Hıfz ilerlemelerini takip edin.", ur: "اپنے بچوں کی قرآن باقاعدگی، عادات اور حفظ پیشرفت دیکھیں۔" },
   "dashboard.downloadReport": { fr: "Télécharger mon rapport", en: "Download my report", nl: "Mijn rapport downloaden", ar: "تحميل تقريري", tr: "Raporumu indir", ur: "میری رپورٹ ڈاؤن لوڈ کریں" },
+
+  // Mushaf
+  "more.mushaf": { fr: "Mushaf complet", en: "Full Mushaf", nl: "Volledige Mushaf", ar: "المصحف الكامل", tr: "Tam Mushaf", ur: "مکمل مصحف" },
+  "more.mushafDesc": { fr: "Lire le Coran page par page comme dans le Mushaf.", en: "Read the Quran page by page like in the Mushaf.", nl: "Lees de Koran pagina voor pagina zoals in de Mushaf.", ar: "اقرأ القرآن صفحة بصفحة كما في المصحف.", tr: "Kur'an'ı Mushaf'taki gibi sayfa sayfa oku.", ur: "مصحف کی طرح قرآن صفحہ بہ صفحہ پڑھیں۔" },
+  "mushaf.fullTitle": { fr: "Mushaf complet", en: "Full Mushaf", nl: "Volledige Mushaf", ar: "المصحف الكامل", tr: "Tam Mushaf", ur: "مکمل مصحف" },
+  "mushaf.fullSubtitle": { fr: "Lis le Coran page par page, comme dans le Mushaf.", en: "Read the Quran page by page, like in the Mushaf.", nl: "Lees de Koran pagina voor pagina, zoals in de Mushaf.", ar: "اقرأ القرآن صفحة بصفحة كما في المصحف.", tr: "Kur'an'ı sayfa sayfa oku, Mushaf'taki gibi.", ur: "مصحف کی طرح قرآن صفحہ بہ صفحہ پڑھیں۔" },
+  "mushaf.page": { fr: "Page", en: "Page", nl: "Pagina", ar: "صفحة", tr: "Sayfa", ur: "صفحہ" },
+  "mushaf.juz": { fr: "Juz", en: "Juz", nl: "Juz", ar: "جزء", tr: "Cüz", ur: "جز" },
+  "mushaf.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
+  "mushaf.goTo": { fr: "Aller à…", en: "Go to…", nl: "Ga naar…", ar: "…اذهب إلى", tr: "Git…", ur: "…پر جائیں" },
+  "mushaf.enterPage": { fr: "Entrez un numéro de page et appuyez Entrée", en: "Enter a page number and press Enter", nl: "Voer een paginanummer in en druk op Enter", ar: "أدخل رقم الصفحة واضغط Enter", tr: "Sayfa numarası gir ve Enter'a bas", ur: "صفحہ نمبر درج کریں اور Enter دبائیں" },
+  "mushaf.bookmarks": { fr: "Favoris", en: "Bookmarks", nl: "Favorieten", ar: "المفضلة", tr: "Yer imleri", ur: "بُک مارکس" },
+  "mushaf.noBookmarks": { fr: "Aucun favori pour le moment.", en: "No bookmarks yet.", nl: "Nog geen favorieten.", ar: "لا توجد مفضلة حتى الآن.", tr: "Henüz yer imi yok.", ur: "ابھی کوئی بُک مارک نہیں۔" },
+  "mushaf.readSettings": { fr: "Paramètres de lecture", en: "Reading settings", nl: "Leesinstellingen", ar: "إعدادات القراءة", tr: "Okuma ayarları", ur: "پڑھنے کی ترتیبات" },
+  "mushaf.textSize": { fr: "Taille du texte", en: "Text size", nl: "Tekstgrootte", ar: "حجم الخط", tr: "Yazı boyutu", ur: "متن کا سائز" },
+  "mushaf.loginRequired": { fr: "Connectez-vous pour sauvegarder vos favoris", en: "Log in to save your bookmarks", nl: "Log in om je favorieten op te slaan", ar: "سجّل الدخول لحفظ المفضلة", tr: "Yer imlerini kaydetmek için giriş yap", ur: "بُک مارکس محفوظ کرنے کے لیے لاگ ان کریں" },
+  "mushaf.resumeLast": { fr: "Reprendre à la dernière page lue", en: "Resume at last read page", nl: "Hervat bij laatst gelezen pagina", ar: "استئناف من آخر صفحة قرأتها", tr: "Son okunan sayfadan devam et", ur: "آخری پڑھے ہوئے صفحے سے جاری رکھیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
