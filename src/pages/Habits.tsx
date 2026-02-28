@@ -9,6 +9,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useXP } from "@/hooks/useXP";
 import { useListeningStats } from "@/hooks/useListeningStats";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
