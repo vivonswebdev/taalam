@@ -191,12 +191,6 @@ export default function KidsHomePage() {
         ))}
       </div>
 
-      {/* Safety message */}
-      <div className="px-5 mt-4">
-        <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300 text-center">
-          ⚠️ {t("kidsMosque.safetyMsg" as any) || "Va toujours avec un adulte (Papa, Maman ou un proche). Ne pars jamais seul."}
-        </div>
-      </div>
     </div>
   );
 }
