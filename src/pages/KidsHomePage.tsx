@@ -83,6 +83,7 @@ export default function KidsHomePage() {
   })();
   const prayerDone = (() => { try { return localStorage.getItem("kids_prayer_completed") === "true"; } catch { return false; } })();
   const hajjDone = (() => { try { return localStorage.getItem("kids_hajj_completed") === "true"; } catch { return false; } })();
+  const duasLearned = (() => { try { return JSON.parse(localStorage.getItem("kids_duas_learned") || "[]").length; } catch { return 0; } })();
 
   const badgeForCard = (path: string) => {
     if (path === "/noorani" && noorani.completedLessonsCount > 0)
@@ -93,6 +94,8 @@ export default function KidsHomePage() {
     if (path === "/kids-hajj" && hajjDone) return "✅";
     if (path === "/kids-checklist" && checklist.completedCount > 0)
       return `${checklist.completedCount}/${checklist.totalCount}`;
+    if (path === "/kids-duas" && duasLearned > 0)
+      return `${duasLearned}`;
     return null;
   };
 
