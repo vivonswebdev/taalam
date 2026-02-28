@@ -151,6 +151,50 @@ export type Database = {
           },
         ]
       }
+      class_assignments: {
+        Row: {
+          class_id: string
+          created_at: string
+          created_by: string
+          due_date: string
+          id: string
+          is_active: boolean
+          target: Json
+          title: string
+          type: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          created_by: string
+          due_date: string
+          id?: string
+          is_active?: boolean
+          target?: Json
+          title: string
+          type?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          created_by?: string
+          due_date?: string
+          id?: string
+          is_active?: boolean
+          target?: Json
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_assignments_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_challenge_results: {
         Row: {
           challenge_id: string
