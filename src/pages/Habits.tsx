@@ -177,7 +177,7 @@ export default function Habits() {
             <TrendingUp size={18} className="text-primary" />
             <span className="text-sm font-semibold text-foreground">30 derniers jours</span>
           </div>
-          <HeatmapGrid days={last30Days} />
+          <HeatmapGrid days={last30Days} listeningByDay={listeningStats.dailyListening} />
         </motion.div>
 
         {/* ───── SECTION: Résumé semaine ───── */}
