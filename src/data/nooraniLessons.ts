@@ -1,10 +1,15 @@
+export type NooraniExerciseType = "recognition" | "audio-choice";
+
+export type NooraniItem = { arabic: string; label?: string; audioUrl?: string };
+
 export type NooraniLesson = {
   id: string;
   titleKey: string;
   descKey: string;
   level: "beginner" | "intermediate";
   emoji: string;
-  items: { arabic: string; label?: string; audioUrl?: string }[];
+  items: NooraniItem[];
+  exerciseType?: NooraniExerciseType;
 };
 
 export const NOORANI_LESSONS: NooraniLesson[] = [
@@ -14,16 +19,10 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     descKey: "noorani.lesson1Desc",
     level: "beginner",
     emoji: "🔤",
+    exerciseType: "recognition",
     items: [
-      { arabic: "ا" },
-      { arabic: "ب" },
-      { arabic: "ت" },
-      { arabic: "ث" },
-      { arabic: "ج" },
-      { arabic: "ح" },
-      { arabic: "خ" },
-      { arabic: "د" },
-      { arabic: "ذ" },
+      { arabic: "ا" }, { arabic: "ب" }, { arabic: "ت" }, { arabic: "ث" },
+      { arabic: "ج" }, { arabic: "ح" }, { arabic: "خ" }, { arabic: "د" }, { arabic: "ذ" },
     ],
   },
   {
@@ -32,15 +31,10 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     descKey: "noorani.lesson2Desc",
     level: "beginner",
     emoji: "🔡",
+    exerciseType: "recognition",
     items: [
-      { arabic: "ر" },
-      { arabic: "ز" },
-      { arabic: "س" },
-      { arabic: "ش" },
-      { arabic: "ص" },
-      { arabic: "ض" },
-      { arabic: "ط" },
-      { arabic: "ظ" },
+      { arabic: "ر" }, { arabic: "ز" }, { arabic: "س" }, { arabic: "ش" },
+      { arabic: "ص" }, { arabic: "ض" }, { arabic: "ط" }, { arabic: "ظ" },
     ],
   },
   {
@@ -49,18 +43,11 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     descKey: "noorani.lesson3Desc",
     level: "beginner",
     emoji: "🧩",
+    exerciseType: "recognition",
     items: [
-      { arabic: "ع" },
-      { arabic: "غ" },
-      { arabic: "ف" },
-      { arabic: "ق" },
-      { arabic: "ك" },
-      { arabic: "ل" },
-      { arabic: "م" },
-      { arabic: "ن" },
-      { arabic: "ه" },
-      { arabic: "و" },
-      { arabic: "ي" },
+      { arabic: "ع" }, { arabic: "غ" }, { arabic: "ف" }, { arabic: "ق" },
+      { arabic: "ك" }, { arabic: "ل" }, { arabic: "م" }, { arabic: "ن" },
+      { arabic: "ه" }, { arabic: "و" }, { arabic: "ي" },
     ],
   },
   {
@@ -69,19 +56,12 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     descKey: "noorani.lesson4Desc",
     level: "beginner",
     emoji: "📝",
+    exerciseType: "audio-choice",
     items: [
-      { arabic: "بَ" },
-      { arabic: "بُ" },
-      { arabic: "بِ" },
-      { arabic: "تَ" },
-      { arabic: "تُ" },
-      { arabic: "تِ" },
-      { arabic: "مَ" },
-      { arabic: "مُ" },
-      { arabic: "مِ" },
-      { arabic: "نَ" },
-      { arabic: "نُ" },
-      { arabic: "نِ" },
+      { arabic: "بَ" }, { arabic: "بُ" }, { arabic: "بِ" },
+      { arabic: "تَ" }, { arabic: "تُ" }, { arabic: "تِ" },
+      { arabic: "مَ" }, { arabic: "مُ" }, { arabic: "مِ" },
+      { arabic: "نَ" }, { arabic: "نُ" }, { arabic: "نِ" },
     ],
   },
   {
@@ -91,15 +71,9 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     level: "beginner",
     emoji: "🕌",
     items: [
-      { arabic: "بً" },
-      { arabic: "بٌ" },
-      { arabic: "بٍ" },
-      { arabic: "مً" },
-      { arabic: "مٌ" },
-      { arabic: "مٍ" },
-      { arabic: "نً" },
-      { arabic: "نٌ" },
-      { arabic: "نٍ" },
+      { arabic: "بً" }, { arabic: "بٌ" }, { arabic: "بٍ" },
+      { arabic: "مً" }, { arabic: "مٌ" }, { arabic: "مٍ" },
+      { arabic: "نً" }, { arabic: "نٌ" }, { arabic: "نٍ" },
     ],
   },
   {
@@ -109,12 +83,8 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     level: "intermediate",
     emoji: "📖",
     items: [
-      { arabic: "كِتابًا" },
-      { arabic: "قَلَمٌ" },
-      { arabic: "بَيْتٍ" },
-      { arabic: "طِفْلٌ" },
-      { arabic: "رَجُلًا" },
-      { arabic: "يَوْمٍ" },
+      { arabic: "كِتابًا" }, { arabic: "قَلَمٌ" }, { arabic: "بَيْتٍ" },
+      { arabic: "طِفْلٌ" }, { arabic: "رَجُلًا" }, { arabic: "يَوْمٍ" },
     ],
   },
   {
@@ -124,12 +94,8 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     level: "intermediate",
     emoji: "⏸️",
     items: [
-      { arabic: "أَبْ" },
-      { arabic: "أَتْ" },
-      { arabic: "أَحْ" },
-      { arabic: "مَبْ" },
-      { arabic: "مَنْ" },
-      { arabic: "يَلْ" },
+      { arabic: "أَبْ" }, { arabic: "أَتْ" }, { arabic: "أَحْ" },
+      { arabic: "مَبْ" }, { arabic: "مَنْ" }, { arabic: "يَلْ" },
     ],
   },
   {
@@ -139,12 +105,8 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     level: "intermediate",
     emoji: "✍️",
     items: [
-      { arabic: "يَكْتُبْ" },
-      { arabic: "يَلْعَبْ" },
-      { arabic: "نَعْبُدْ" },
-      { arabic: "نَرْجِعْ" },
-      { arabic: "يَسْمَعْ" },
-      { arabic: "اُدْخُلْ" },
+      { arabic: "يَكْتُبْ" }, { arabic: "يَلْعَبْ" }, { arabic: "نَعْبُدْ" },
+      { arabic: "نَرْجِعْ" }, { arabic: "يَسْمَعْ" }, { arabic: "اُدْخُلْ" },
     ],
   },
 ];
