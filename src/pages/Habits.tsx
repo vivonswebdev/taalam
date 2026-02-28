@@ -13,7 +13,6 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useUserMode } from "@/hooks/useUserMode";
 import PersonalStatsDashboard from "@/components/PersonalStatsDashboard";
 import ParentStatsPlaceholder from "@/components/ParentStatsPlaceholder";
-import { useUserProfile } from "@/hooks/useUserProfile";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
