@@ -179,6 +179,20 @@ export default function Habits() {
       </div>
 
       <div className="px-6 space-y-4">
+        {/* ───── SECTION: Stats avancées (mode-aware) ───── */}
+        {mode === "parent" ? (
+          <ParentStatsPlaceholder />
+        ) : (
+          <>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("stats.sectionTitle" as any)}</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+            <PersonalStatsDashboard />
+          </>
+        )}
+
         {/* ───── SECTION: Plan Hifz ───── */}
         <HifzHabitCard />
         {/* ───── SECTION: Aujourd'hui ───── */}
