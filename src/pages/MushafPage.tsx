@@ -114,21 +114,21 @@ function MushafImageView({
             >
               <button
                 onClick={onBack}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center"
               >
-                <ArrowLeft size={18} className="text-white" />
+                <ArrowLeft size={18} className="text-amber-900" />
               </button>
               <div className="flex-1 text-center">
-                <p className="font-['Amiri','serif'] text-white text-base">{surahMeta?.nameArabic || ""}</p>
-                <p className="text-[10px] text-white/70">
+                <p className="font-['Amiri','serif'] text-amber-900 text-base">{surahMeta?.nameArabic || ""}</p>
+                <p className="text-[10px] text-amber-800/70">
                   {t("mushaf.page" as any)} {currentPage} / {TOTAL_MUSHAF_PAGES} — {t("mushaf.juz" as any)} {juz}
                 </p>
               </div>
               <button
                 onClick={onToggleBookmark}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center"
               >
-                <Star size={16} className={isBookmarked ? "text-yellow-400 fill-yellow-400" : "text-white/70"} />
+                <Star size={16} className={isBookmarked ? "text-yellow-600 fill-yellow-500" : "text-amber-800/70"} />
               </button>
             </motion.div>
 
