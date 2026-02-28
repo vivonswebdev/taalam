@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map } from "lucide-react";
+import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useXP } from "@/hooks/useXP";
+import { useListeningStats } from "@/hooks/useListeningStats";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
@@ -64,7 +65,7 @@ export default function Habits() {
   const { t } = useLanguage();
   const { today, streak, last30Days, goal, setGoal, goalProgress, isAuthenticated } = useQuranHabits();
   const [showGoalPicker, setShowGoalPicker] = useState(false);
-
+  const listeningStats = useListeningStats();
   // Progress data
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
@@ -194,6 +195,41 @@ export default function Habits() {
               </div>
             );
           })()}
+        </motion.div>
+
+        {/* ───── SECTION: Écoute avancée ───── */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="bg-card border border-border rounded-2xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Headphones size={18} className="text-cyan-500" />
+              <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
+            </div>
+            <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
+              Ouvrir →
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
+              <p className="text-[10px] text-muted-foreground">min aujourd'hui</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.sessionsCount}</p>
+              <p className="text-[10px] text-muted-foreground">sessions</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.averageQuizScore != null ? `${listeningStats.averageQuizScore}%` : "–"}</p>
+              <p className="text-[10px] text-muted-foreground">score quiz moy.</p>
+            </div>
+          </div>
+          {listeningStats.totalListeningMinutes > 0 && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+              <span>Total : {listeningStats.totalListeningMinutes} min d'écoute</span>
+              {listeningStats.lastSession && (
+                <span>Sourate {listeningStats.lastSession.surah_number}</span>
+              )}
+            </div>
+          )}
         </motion.div>
 
         {/* Cloud sync hint */}
