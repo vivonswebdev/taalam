@@ -189,7 +189,7 @@ export default function Home() {
           <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: -10 }} transition={{ type: "spring", stiffness: 400 }}>🎤</motion.span>
           <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.tarteelButton")}</p>
           <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.tarteelButtonDesc")}</p>
-          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">Ouvrir →</span>
+          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">{t("home.open")} </span>
         </motion.button>
 
         {/* 🧠 Quiz */}
