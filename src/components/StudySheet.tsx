@@ -101,7 +101,7 @@ export default function StudySheet({
           <div className="flex items-center justify-between">
             <DrawerTitle className="flex items-center gap-2 text-base">
               <BookOpen size={16} className="text-primary" />
-              Étude — Ayah {ayahNumber}
+              {t("study.ayah")} {ayahNumber}
             </DrawerTitle>
             <div className="flex items-center gap-2">
               <button
