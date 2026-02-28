@@ -18,8 +18,7 @@ const READING_STYLE_KEY = "mushaf_reading_style";
 type ReadingStyle = "cards" | "immersive" | "mushaf";
 
 function getMushafImageUrl(page: number) {
-  const padded = String(page).padStart(3, "0");
-  return `https://surah.my/images/quran-images/page${padded}.png`;
+  return `https://cdn.qurancdn.com/images/pages/page${page}.png`;
 }
 
 // ─── Mushaf Image View (fullscreen book mode) ───
