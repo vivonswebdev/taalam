@@ -23,9 +23,10 @@ const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: strin
   { type: "ayat", target: 50, label: "50 ayat", icon: "📖" },
 ];
 
-function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ayat_recited: number }[] }) {
+function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }> }) {
   const getIntensity = (d: typeof days[0]) => {
-    const score = d.minutes_quran + d.ayat_recited;
+    const listenMin = listeningByDay[d.date]?.minutes || 0;
+    const score = d.minutes_quran + d.ayat_recited + listenMin;
     if (score === 0) return "bg-muted";
     if (score < 5) return "bg-primary/20";
     if (score < 15) return "bg-primary/40";
@@ -41,11 +42,14 @@ function HeatmapGrid({ days }: { days: { date: string; minutes_quran: number; ay
         ))}
       </div>
       <div className="grid grid-cols-7 gap-1">
-        {days.map((d, i) => (
-          <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
-            className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
-            title={`${d.date}: ${d.minutes_quran}min, ${d.ayat_recited} ayat`} />
-        ))}
+        {days.map((d, i) => {
+          const listenMin = listeningByDay[d.date]?.minutes || 0;
+          return (
+            <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
+              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
+              title={`${d.date}: ${d.minutes_quran}min lecture, ${listenMin}min écoute, ${d.ayat_recited} ayat`} />
+          );
+        })}
       </div>
       <div className="flex items-center justify-end gap-1 text-[9px] text-muted-foreground">
         <span>Moins</span>
@@ -100,21 +104,26 @@ export default function Habits() {
 
       <div className="px-6 space-y-4">
         {/* ───── SECTION: Aujourd'hui ───── */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-3 gap-3">
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <Clock size={20} className="mx-auto text-primary mb-1" />
-            <p className="text-2xl font-bold text-foreground">{today.minutes_quran}</p>
-            <p className="text-[10px] text-muted-foreground">minutes</p>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-4 gap-2">
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Clock size={18} className="mx-auto text-primary mb-1" />
+            <p className="text-xl font-bold text-foreground">{today.minutes_quran}</p>
+            <p className="text-[9px] text-muted-foreground">min lecture</p>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <BookOpen size={20} className="mx-auto text-secondary mb-1" />
-            <p className="text-2xl font-bold text-foreground">{today.ayat_recited}</p>
-            <p className="text-[10px] text-muted-foreground">ayat</p>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Headphones size={18} className="mx-auto text-secondary mb-1" />
+            <p className="text-xl font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
+            <p className="text-[9px] text-muted-foreground">min écoute</p>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <Flame size={20} className="mx-auto text-destructive mb-1" />
-            <p className="text-2xl font-bold text-foreground">{streak}</p>
-            <p className="text-[10px] text-muted-foreground">jours</p>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <BookOpen size={18} className="mx-auto text-primary mb-1" />
+            <p className="text-xl font-bold text-foreground">{today.ayat_recited}</p>
+            <p className="text-[9px] text-muted-foreground">ayat</p>
+          </div>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Flame size={18} className="mx-auto text-destructive mb-1" />
+            <p className="text-xl font-bold text-foreground">{streak}</p>
+            <p className="text-[9px] text-muted-foreground">jours</p>
           </div>
         </motion.div>
 
@@ -173,7 +182,7 @@ export default function Habits() {
             <TrendingUp size={18} className="text-primary" />
             <span className="text-sm font-semibold text-foreground">30 derniers jours</span>
           </div>
-          <HeatmapGrid days={last30Days} />
+          <HeatmapGrid days={last30Days} listeningByDay={listeningStats.dailyListening} />
         </motion.div>
 
         {/* ───── SECTION: Résumé semaine ───── */}
@@ -186,10 +195,12 @@ export default function Habits() {
             const last7 = last30Days.slice(-7);
             const totalMin = last7.reduce((s, d) => s + d.minutes_quran, 0);
             const totalAyat = last7.reduce((s, d) => s + d.ayat_recited, 0);
-            const activeDays = last7.filter((d) => d.minutes_quran > 0 || d.ayat_recited > 0).length;
+            const totalListenMin = last7.reduce((s, d) => s + (listeningStats.dailyListening[d.date]?.minutes || 0), 0);
+            const activeDays = last7.filter((d) => d.minutes_quran > 0 || d.ayat_recited > 0 || (listeningStats.dailyListening[d.date]?.minutes || 0) > 0).length;
             return (
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">minutes</p></div>
+              <div className="grid grid-cols-4 gap-2 text-center">
+                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">min lecture</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalListenMin}</p><p className="text-[10px] text-muted-foreground">min écoute</p></div>
                 <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">ayat</p></div>
                 <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">jours actifs</p></div>
               </div>
@@ -201,7 +212,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Headphones size={18} className="text-cyan-500" />
+              <Headphones size={18} className="text-primary" />
               <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
             </div>
             <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
@@ -230,6 +241,37 @@ export default function Habits() {
               )}
             </div>
           )}
+        </motion.div>
+
+        {/* ───── SECTION: Graphique semaine (lecture + écoute) ───── */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.34 }} className="bg-card border border-border rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp size={18} className="text-secondary" />
+            <span className="text-sm font-semibold text-foreground">Activité de la semaine</span>
+          </div>
+          {(() => {
+            const last7 = last30Days.slice(-7);
+            const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+            const weekData = last7.map((d) => {
+              const dt = new Date(d.date + "T12:00:00");
+              const listenMin = listeningStats.dailyListening[d.date]?.minutes || 0;
+              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, écoute: listenMin };
+            });
+            return (
+              <ResponsiveContainer width="100%" height={120}>
+                <BarChart data={weekData} barGap={1}>
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+                  <YAxis hide />
+                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="écoute" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            );
+          })()}
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">Lecture</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">Écoute</span></div>
+          </div>
         </motion.div>
 
         {/* Cloud sync hint */}

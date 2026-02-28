@@ -13,12 +13,19 @@ export interface ListeningSession {
   created_at: string;
 }
 
+export interface DailyListening {
+  date: string;
+  minutes: number;
+  sessions: number;
+}
+
 export interface ListeningStats {
   todayListeningMinutes: number;
   totalListeningMinutes: number;
   lastSession: ListeningSession | null;
   averageQuizScore: number | null;
   sessionsCount: number;
+  dailyListening: Record<string, DailyListening>;
 }
 
 export function useListeningStats() {
@@ -29,6 +36,7 @@ export function useListeningStats() {
     lastSession: null,
     averageQuizScore: null,
     sessionsCount: 0,
+    dailyListening: {},
   });
   const [loading, setLoading] = useState(true);
 
@@ -44,7 +52,7 @@ export function useListeningStats() {
         .limit(500);
 
       if (!sessions || sessions.length === 0) {
-        setStats({ todayListeningMinutes: 0, totalListeningMinutes: 0, lastSession: null, averageQuizScore: null, sessionsCount: 0 });
+        setStats({ todayListeningMinutes: 0, totalListeningMinutes: 0, lastSession: null, averageQuizScore: null, sessionsCount: 0, dailyListening: {} });
         setLoading(false);
         return;
       }
@@ -53,15 +61,20 @@ export function useListeningStats() {
       let todaySeconds = 0;
       let quizTotal = 0;
       let quizCount = 0;
+      const daily: Record<string, DailyListening> = {};
 
       for (const s of sessions) {
         const dur = (s as any).duration_seconds || 0;
         totalSeconds += dur;
-        if (s.created_at?.startsWith(today)) todaySeconds += dur;
+        const dateKey = s.created_at?.slice(0, 10) || today;
+        if (dateKey === today) todaySeconds += dur;
         if ((s as any).has_quiz && (s as any).quiz_score != null) {
           quizTotal += (s as any).quiz_score;
           quizCount++;
         }
+        if (!daily[dateKey]) daily[dateKey] = { date: dateKey, minutes: 0, sessions: 0 };
+        daily[dateKey].minutes += Math.round(dur / 60);
+        daily[dateKey].sessions += 1;
       }
 
       setStats({
@@ -70,6 +83,7 @@ export function useListeningStats() {
         lastSession: sessions[0] as any,
         averageQuizScore: quizCount > 0 ? Math.round(quizTotal / quizCount) : null,
         sessionsCount: sessions.length,
+        dailyListening: daily,
       });
     } catch {
       // silent
