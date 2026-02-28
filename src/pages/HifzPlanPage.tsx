@@ -234,7 +234,7 @@ export default function HifzPlanPage() {
                 <span className="text-sm font-bold text-foreground">{overallProgress}%</span>
               </div>
               <p className="text-[10px] text-muted-foreground">
-                {completedCount}/{totalCount} tâches · {plan.daily_ayat} ayat/jour · Démarré le {new Date(plan.started_at).toLocaleDateString("fr")}
+                {completedCount}/{totalCount} {t("hifz.tasks")} · {plan.daily_ayat} {t("hifz.ayatDay")} · {t("hifz.startedOn")} {new Date(plan.started_at).toLocaleDateString()}
               </p>
             </motion.div>
 
