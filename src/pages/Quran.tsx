@@ -27,6 +27,7 @@ import FindAyah from "@/components/FindAyah";
 import AyahRenderer from "@/components/AyahRenderer";
 import MushafReader from "@/components/MushafReader";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
+import MicPermissionModal from "@/components/MicPermissionModal";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
