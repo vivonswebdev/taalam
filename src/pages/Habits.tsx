@@ -65,7 +65,7 @@ export default function Habits() {
   const { t } = useLanguage();
   const { today, streak, last30Days, goal, setGoal, goalProgress, isAuthenticated } = useQuranHabits();
   const [showGoalPicker, setShowGoalPicker] = useState(false);
-
+  const listeningStats = useListeningStats();
   // Progress data
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
