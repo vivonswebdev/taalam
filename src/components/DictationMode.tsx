@@ -335,11 +335,15 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
             </div>
           </div>
 
-          {micError === "not-allowed" && (
+          {micError && (
             <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-2">
               <AlertCircle size={20} className="inline" />
-              <p className="text-sm font-semibold">{t("aya.micDenied")}</p>
-              <p className="text-xs opacity-80">{t("aya.micDeniedHint")}</p>
+              <p className="text-sm font-semibold">
+                {micError === "not-allowed" ? t("aya.micDenied") : "Micro indisponible pour la dictée"}
+              </p>
+              <p className="text-xs opacity-80">
+                {micError === "not-allowed" ? t("aya.micDeniedHint") : "Réessaie en autorisant le micro puis recommence le verset."}
+              </p>
             </div>
           )}
 
