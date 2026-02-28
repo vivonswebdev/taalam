@@ -198,6 +198,7 @@ export default function ChildDetail() {
                   </span>
                 </div>
               </div>
+            </motion.div>
 
             {/* Day timeline (7 days) */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
