@@ -14,7 +14,6 @@ import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
-import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
