@@ -85,9 +85,20 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     mediaStreamRef.current = null;
   }, []);
 
+  // Helper to get the best auth token (user JWT if logged in, else anon key)
+  const getAuthToken = useCallback(async (): Promise<string> => {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) return session.access_token;
+    } catch {}
+    return import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  }, []);
+
   const processQueue = useCallback(async () => {
     if (isProcessingRef.current) return;
     isProcessingRef.current = true;
+    const authToken = await getAuthToken();
     while (chunkQueueRef.current.length > 0) {
       const blob = chunkQueueRef.current.shift()!;
       if (blob.size < MIN_CHUNK_SIZE) continue;
@@ -98,7 +109,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
         const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${supabaseKey}`, "apikey": supabaseKey },
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}`, "apikey": supabaseKey },
           body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
         });
         const data = await res.json();
@@ -112,7 +123,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       }
     }
     isProcessingRef.current = false;
-  }, [lang]);
+  }, [lang, getAuthToken]);
 
   const startServer = useCallback(async () => {
     console.info("[VoiceRecognition] Starting server STT");
@@ -311,7 +322,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    const shouldUseNative = hasNativeSR.current && !forceServerRef.current;
+    // Reset server-force flag each new recording session so native is re-attempted
+    forceServerRef.current = false;
+    const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
       setMode("native");
       startNative();

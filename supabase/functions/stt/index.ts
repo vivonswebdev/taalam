@@ -26,27 +26,23 @@ serve(async (req) => {
   }
 
   try {
-    // Auth check
+    // Auth check – graceful: if user JWT present, rate limit by user; else allow with fallback key
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return new Response(JSON.stringify({ transcript: '', error: 'Unauthorized' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
-    const token = authHeader.replace('Bearer ', '');
-    const { data: claimsData, error: claimsError } = await supabase.auth.getUser(token);
-    if (claimsError || !claimsData?.user) {
-      return new Response(JSON.stringify({ transcript: '', error: 'Invalid token' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    let rateLimitKey = 'anon';
+    if (authHeader?.startsWith('Bearer ')) {
+      const supabase = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      const token = authHeader.replace('Bearer ', '');
+      const { data: claimsData } = await supabase.auth.getUser(token);
+      if (claimsData?.user) {
+        rateLimitKey = claimsData.user.id;
+      }
     }
 
-    if (!checkRateLimit(claimsData.user.id)) {
+    if (!checkRateLimit(rateLimitKey)) {
       return new Response(JSON.stringify({ transcript: '', error: 'Rate limit exceeded' }), {
         status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
