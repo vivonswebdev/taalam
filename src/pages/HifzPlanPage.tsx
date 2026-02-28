@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles } from "lucide-react";
+import { trackEvent } from "@/lib/trackEvent";
 import { useHifzPlan, type HifzPlan } from "@/hooks/useHifzPlan";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
