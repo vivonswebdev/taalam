@@ -595,6 +595,7 @@ const translations = {
   "reading.darkMode": { fr: "Mode sombre (lecture)", en: "Dark mode (reading)", nl: "Donkere modus (lezen)", ar: "الوضع الداكن (قراءة)", tr: "Karanlık mod (okuma)", ur: "ڈارک موڈ (پڑھنا)" },
   "reading.arabicFont": { fr: "Police arabe", en: "Arabic font", nl: "Arabisch lettertype", ar: "الخط العربي", tr: "Arapça yazı tipi", ur: "عربی فونٹ" },
   "reading.defaultReciter": { fr: "Réciteur par défaut", en: "Default reciter", nl: "Standaard reciteerder", ar: "القارئ الافتراضي", tr: "Varsayılan okuyucu", ur: "ڈیفالٹ قاری" },
+  "reading.bgTheme": { fr: "Arrière-plan", en: "Background theme", nl: "Achtergrondthema", ar: "خلفية", tr: "Arka plan teması", ur: "پس منظر تھیم" },
   "reading.resume": { fr: "Reprendre la lecture", en: "Resume reading", nl: "Verder lezen", ar: "استئناف القراءة", tr: "Okumaya devam", ur: "پڑھنا جاری رکھیں" },
   "reading.resumeSurah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "سورة", tr: "Sure", ur: "سورۃ" },
   "reading.searchPlaceholder": { fr: "Rechercher une sourate...", en: "Search a surah...", nl: "Zoek een soera...", ar: "ابحث عن سورة...", tr: "Sure ara...", ur: "سورۃ تلاش کریں..." },

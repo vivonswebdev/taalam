@@ -13,15 +13,34 @@ import { surahs, type Surah } from "@/data/surahs";
 import MushafReader from "@/components/MushafReader";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useImmersiveBg } from "@/hooks/useImmersiveBg";
+import { useImmersiveBg, BG_OPTIONS, type BgTheme } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
+
+import readingBg from "@/assets/reading-bg.jpg";
+import tarteelBg from "@/assets/tarteel-bg.jpg";
+import quizBg from "@/assets/quiz-bg.jpg";
+import galaxyBg from "@/assets/bg-galaxy.jpg";
+import gardenBg from "@/assets/bg-garden.jpg";
+import oceanBg from "@/assets/bg-ocean.jpg";
+import starryBg from "@/assets/bg-starry-calligraphy.jpg";
+
+const BG_THUMBS: Record<BgTheme, string | null> = {
+  mountain: readingBg,
+  desert: tarteelBg,
+  mosque: quizBg,
+  galaxy: galaxyBg,
+  garden: gardenBg,
+  ocean: oceanBg,
+  starry: starryBg,
+  none: null,
+};
 
 export default function Reading() {
   const { t } = useLanguage();
   const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
   const { settings, setDarkModeReading, setArabicFont, setDefaultReciter, arabicFontFamily } = useReadingSettings();
   const { readingPosition } = useBookmarks();
-  const { immersiveEnabled, choices } = useImmersiveBg();
+  const { immersiveEnabled, toggleImmersive, choices, setModeTheme } = useImmersiveBg();
   const epicBg = immersiveEnabled ? getEpicBg(choices.reading) : null;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -253,6 +272,59 @@ export default function Reading() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Background Theme */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎨</span>
+                    <span className="text-sm font-medium text-foreground">{t("reading.bgTheme" as any)}</span>
+                  </div>
+                  <button
+                    onClick={toggleImmersive}
+                    className={`w-12 h-7 rounded-full transition-colors relative ${immersiveEnabled ? "bg-primary" : "bg-muted"}`}
+                  >
+                    <motion.div
+                      animate={{ x: immersiveEnabled ? 20 : 2 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md"
+                    />
+                  </button>
+                </div>
+                {immersiveEnabled && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {BG_OPTIONS.map((opt) => {
+                      const selected = choices.reading === opt.id;
+                      const thumb = BG_THUMBS[opt.id];
+                      return (
+                        <button
+                          key={opt.id}
+                          onClick={() => setModeTheme("reading", opt.id)}
+                          className={`relative rounded-xl overflow-hidden border-2 transition-all aspect-[4/3] ${
+                            selected ? "border-primary ring-2 ring-primary/30 scale-[1.02]" : "border-border hover:border-muted-foreground/40"
+                          }`}
+                        >
+                          {thumb ? (
+                            <img src={thumb} alt={opt.label} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-muted flex items-center justify-center">
+                              <span className="text-lg">⬜</span>
+                            </div>
+                          )}
+                          <div className="absolute inset-x-0 bottom-0 bg-foreground/60 backdrop-blur-sm px-1 py-0.5">
+                            <span className="text-[9px] font-medium text-primary-foreground leading-none">{opt.emoji} {opt.label}</span>
+                          </div>
+                          {selected && (
+                            <div className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                              <span className="text-[8px] text-primary-foreground">✓</span>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
