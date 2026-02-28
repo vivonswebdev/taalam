@@ -601,8 +601,8 @@ export default function Quran() {
           </motion.div>
 
           {/* ─── Sourate + Difficulty on same row ─── */}
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-xl p-3">
+          <motion.div ref={surahSelectorRef} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className={`bg-card border rounded-xl p-3 transition-all duration-500 ${highlightSelector ? "border-primary ring-2 ring-primary/30 shadow-lg shadow-primary/10" : "border-border"}`}>
             <div className="flex items-center gap-2 mb-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex-shrink-0">{t("mode.surah")}</p>
               <div className="flex gap-1 flex-1">
