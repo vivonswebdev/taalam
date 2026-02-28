@@ -97,13 +97,12 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const startRecording = useCallback(() => {
     setLiveTranscript("");
     setMicError(null);
+    setPendingStop(false);
     setAyahPhase("recording");
     voice.start();
   }, [voice]);
 
-  // ─── Stop recording and compute feedback ───
-  const stopRecording = useCallback(() => {
-    voice.stop();
+  const finalizeRecording = useCallback(() => {
     if (!currentAyah) return;
 
     const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
@@ -115,7 +114,6 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         : "incorrect",
     }));
 
-    // Compute score
     const correctCount = words.filter(w => w.status === "correct").length;
     const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
     const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
@@ -124,15 +122,26 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setFeedbackScore(score);
     setAyahPhase("feedback");
 
-    // Award XP once per ayah
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
       xp.addXP(Math.max(1, Math.round(correctCount / 3)));
     }
 
-    // Fetch a simple tafsir explanation
     fetchSimpleExplanation(surah.number, currentAyah.number);
-  }, [voice, currentAyah, liveTranscript, currentAyahIdx, surah.number]);
+  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp]);
+
+  // ─── Stop recording and compute feedback ───
+  const stopRecording = useCallback(() => {
+    if (!currentAyah) return;
+    setPendingStop(true);
+    voice.stop();
+  }, [voice, currentAyah]);
+
+  useEffect(() => {
+    if (!pendingStop || ayahPhase !== "recording" || voice.isListening) return;
+    setPendingStop(false);
+    finalizeRecording();
+  }, [pendingStop, ayahPhase, voice.isListening, finalizeRecording]);
 
   // ─── Fetch 1-line explanation from translation ───
   const fetchSimpleExplanation = useCallback((surahNum: number, ayahNum: number) => {
