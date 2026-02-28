@@ -364,3 +364,14 @@
   .epic-bg-base .epic-text-light { color: rgba(255, 255, 255, 0.92); }
   .epic-bg-base .epic-text-muted { color: rgba(255, 255, 255, 0.55); }
 }
+
+/* Prayer breathing animation */
+@keyframes breathe {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.25); }
+  50% { transform: scale(1.03); box-shadow: 0 0 0 12px hsl(var(--primary) / 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+}
+
+.animate-breathe {
+  animation: breathe 2.5s ease-in-out infinite;
+}
