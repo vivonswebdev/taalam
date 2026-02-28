@@ -104,21 +104,26 @@ export default function Habits() {
 
       <div className="px-6 space-y-4">
         {/* ───── SECTION: Aujourd'hui ───── */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-3 gap-3">
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <Clock size={20} className="mx-auto text-primary mb-1" />
-            <p className="text-2xl font-bold text-foreground">{today.minutes_quran}</p>
-            <p className="text-[10px] text-muted-foreground">minutes</p>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-4 gap-2">
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Clock size={18} className="mx-auto text-primary mb-1" />
+            <p className="text-xl font-bold text-foreground">{today.minutes_quran}</p>
+            <p className="text-[9px] text-muted-foreground">min lecture</p>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <BookOpen size={20} className="mx-auto text-secondary mb-1" />
-            <p className="text-2xl font-bold text-foreground">{today.ayat_recited}</p>
-            <p className="text-[10px] text-muted-foreground">ayat</p>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Headphones size={18} className="mx-auto text-secondary mb-1" />
+            <p className="text-xl font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
+            <p className="text-[9px] text-muted-foreground">min écoute</p>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-4 text-center">
-            <Flame size={20} className="mx-auto text-destructive mb-1" />
-            <p className="text-2xl font-bold text-foreground">{streak}</p>
-            <p className="text-[10px] text-muted-foreground">jours</p>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <BookOpen size={18} className="mx-auto text-primary mb-1" />
+            <p className="text-xl font-bold text-foreground">{today.ayat_recited}</p>
+            <p className="text-[9px] text-muted-foreground">ayat</p>
+          </div>
+          <div className="bg-card border border-border rounded-2xl p-3 text-center">
+            <Flame size={18} className="mx-auto text-destructive mb-1" />
+            <p className="text-xl font-bold text-foreground">{streak}</p>
+            <p className="text-[9px] text-muted-foreground">jours</p>
           </div>
         </motion.div>
 
