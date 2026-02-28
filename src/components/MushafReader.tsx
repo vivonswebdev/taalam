@@ -72,6 +72,15 @@ export default function MushafReader({
   const currentAyah = globalAudio.state.surahNumber === surah.number ? globalAudio.state.currentAyah : 0;
   const playing = isGlobalPlaying;
 
+  // Auto-hide immersive UI after 3s
+  useEffect(() => {
+    if (readingStyle !== "immersive") return;
+    if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current);
+    setImmersiveUIVisible(true);
+    immersiveHideTimer.current = setTimeout(() => setImmersiveUIVisible(false), 3000);
+    return () => { if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current); };
+  }, [readingStyle, currentAyah]);
+
   // Tafsir state
   const [tafsirAyahIndex, setTafsirAyahIndex] = useState<number | null>(null);
   const [showSurahTafsir, setShowSurahTafsir] = useState(false);
