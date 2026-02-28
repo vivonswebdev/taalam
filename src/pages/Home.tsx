@@ -21,6 +21,7 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
+  const nooraniProgress = useNooraniProgress();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -254,7 +256,19 @@ export default function Home() {
             <span className="text-3xl">📚</span>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-foreground">{t("noorani.cardTitle" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">{t("noorani.cardDesc" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {nooraniProgress.completedLessonsCount === 0
+                  ? (t("noorani.cardDesc" as any))
+                  : `${nooraniProgress.completedLessonsCount}/${nooraniProgress.totalLessons} ${t("noorani.lessonsCompleted" as any) || "leçons"}`}
+              </p>
+              {nooraniProgress.completedLessonsCount > 0 && (
+                <div className="mt-1.5 h-1.5 rounded-full bg-muted/40 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${nooraniProgress.completionPercent >= 100 ? "bg-green-500" : "bg-primary"}`}
+                    style={{ width: `${Math.min(nooraniProgress.completionPercent, 100)}%` }}
+                  />
+                </div>
+              )}
             </div>
             <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
           </motion.button>

@@ -1039,6 +1039,14 @@ const translations = {
   "noorani.listen": { fr: "🔊 Écouter", en: "🔊 Listen", nl: "🔊 Luister", ar: "🔊 استمع", tr: "🔊 Dinle", ur: "🔊 سنیں" },
   "noorani.cardTitle": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
   "noorani.cardDesc": { fr: "Apprends l'alphabet en jouant", en: "Learn the alphabet by playing", nl: "Leer het alfabet spelend", ar: "تعلّم الأبجدية باللعب", tr: "Oynayarak alfabe öğren", ur: "کھیل کر حروف سیکھیں" },
+  "noorani.lessonsCompleted": { fr: "leçons", en: "lessons", nl: "lessen", ar: "دروس", tr: "ders", ur: "اسباق" },
+  "noorani.quizTitle": { fr: "Quiz", en: "Quiz", nl: "Quiz", ar: "اختبار", tr: "Quiz", ur: "کوئز" },
+  "noorani.quizQuestion": { fr: "Où est la lettre", en: "Where is the letter", nl: "Waar is de letter", ar: "أين الحرف", tr: "Harf nerede", ur: "حرف کہاں ہے" },
+  "noorani.quizCorrectFeedback": { fr: "Bravo ! 🎉", en: "Well done! 🎉", nl: "Goed zo! 🎉", ar: "أحسنت! 🎉", tr: "Aferin! 🎉", ur: "شاباش! 🎉" },
+  "noorani.quizWrongFeedback": { fr: "Essaie encore 😊", en: "Try again 😊", nl: "Probeer opnieuw 😊", ar: "حاول مرة أخرى 😊", tr: "Tekrar dene 😊", ur: "دوبارہ کوشش کریں 😊" },
+  "noorani.quizCorrect": { fr: "bonnes réponses", en: "correct answers", nl: "goede antwoorden", ar: "إجابات صحيحة", tr: "doğru cevap", ur: "درست جوابات" },
+  "noorani.tryAgainLater": { fr: "On refait plus tard, inshaAllah", en: "Let's try again later, inshaAllah", nl: "We proberen het later, inshaAllah", ar: "سنعيد لاحقاً إن شاء الله", tr: "Daha sonra tekrar deneriz, inshaAllah", ur: "بعد میں دوبارہ کریں گے، ان شاء اللہ" },
+  "noorani.reviewLetters": { fr: "Tu peux revoir les lettres.", en: "You can review the letters.", nl: "Je kunt de letters herhalen.", ar: "يمكنك مراجعة الحروف.", tr: "Harfleri gözden geçirebilirsin.", ur: "آپ حروف دوبارہ دیکھ سکتے ہیں۔" },
   "noorani.tryNoorani": { fr: "Apprendre les lettres ? Essaie Noorani Qaida →", en: "Learn letters? Try Noorani Qaida →", nl: "Letters leren? Probeer Noorani Qaida →", ar: "تعلّم الحروف؟ جرّب القاعدة النورانية →", tr: "Harf öğrenmek ister misin? Noorani Qaida →", ur: "حروف سیکھنا ہے؟ نورانی قاعدہ آزمائیں →" },
 
   // Child mode enhancements
