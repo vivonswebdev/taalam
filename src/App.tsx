@@ -42,6 +42,8 @@ import More from "./pages/More";
 import HifzPlanPage from "./pages/HifzPlanPage";
 import Study from "./pages/Study";
 import Listening from "./pages/Listening";
+import Noorani from "./pages/Noorani";
+import NooraniLesson from "./pages/NooraniLesson";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
