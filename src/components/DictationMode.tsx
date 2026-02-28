@@ -3,9 +3,10 @@ import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { motion } from "framer-motion";
 import {
-  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft,
+  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft, Server,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
+import { Switch } from "@/components/ui/switch";
 import {
   useVoiceRecognition,
   compareSurahDictation,
