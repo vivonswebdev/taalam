@@ -190,7 +190,10 @@ function HajjQuiz({ t, onBack }: { t: any; onBack: () => void }) {
     setTimeout(() => {
       setSelected(null);
       setStep((s) => s + 1);
-      if (step + 1 >= questions.length) setShowConfetti(true);
+      if (step + 1 >= questions.length) {
+        setShowConfetti(true);
+        trackEvent("kids_hajj_quiz_completed", "kids_hajj", { score: score + (correct ? 1 : 0), total: questions.length });
+      }
     }, 800);
   };
 

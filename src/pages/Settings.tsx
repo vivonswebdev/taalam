@@ -286,3 +286,34 @@ export default function Settings() {
     </div>
   );
 }
+
+function AdminLink() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
+  }, [user]);
+
+  if (!isAdmin) return null;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+      <button onClick={() => navigate("/admin-dashboard")} className="w-full flex items-center gap-4 p-4 text-left">
+        <Shield size={20} className="text-primary" />
+        <div className="flex-1">
+          <p className="text-sm font-medium text-card-foreground">Super Admin Dashboard</p>
+          <p className="text-xs text-muted-foreground">Stats produit & analytics</p>
+        </div>
+      </button>
+    </motion.div>
+  );
+}

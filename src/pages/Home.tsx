@@ -324,7 +324,7 @@ export default function Home() {
             title={t("home.leaderboardButton")}
             desc={t("home.leaderboardButtonDesc")}
             cta={t("home.open")}
-            onClick={() => navigate("/leaderboard")}
+            onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
             gradient="bg-gradient-to-br from-amber-800/60 to-yellow-700/30"
             delay={0.6}
           />

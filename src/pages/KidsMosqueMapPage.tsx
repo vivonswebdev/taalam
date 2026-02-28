@@ -57,6 +57,7 @@ export default function KidsMosqueMapPage() {
 
   useEffect(() => {
     if (!coords) return;
+    trackEvent("module_open", "kids_mosque_map");
     let cancelled = false;
     (async () => {
       setLoading(true); setError(null);

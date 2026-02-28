@@ -308,6 +308,7 @@ export default function NooraniLesson() {
         setQuizScore(finalScore);
         if (finalScore >= 2 && lessonId) {
           saveProgress(lessonId);
+          trackEvent("noorani_lesson_completed", "noorani", { lessonId });
           setShowConfetti(true);
           if (isChildMode) {
             const s = earnSticker(0);
