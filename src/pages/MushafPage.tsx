@@ -44,37 +44,49 @@ function MushafImageView({
 }) {
   const [chromeVisible, setChromeVisible] = useState(true);
   const [imgLoading, setImgLoading] = useState(true);
+  const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
 
-  const goPrev = () => onChangePage(Math.max(1, currentPage - 1));
-  const goNext = () => onChangePage(Math.min(TOTAL_MUSHAF_PAGES, currentPage + 1));
+  const goPrev = () => {
+    if (currentPage > 1) { setDirection(1); onChangePage(currentPage - 1); }
+  };
+  const goNext = () => {
+    if (currentPage < TOTAL_MUSHAF_PAGES) { setDirection(-1); onChangePage(currentPage + 1); }
+  };
 
   useEffect(() => {
     setImgLoading(true);
   }, [currentPage]);
 
   return (
-    <div className="fixed inset-0 z-40 bg-black">
+    <div className="fixed inset-0 z-40 bg-[#f5f0e8]">
       {/* Full-screen tap zone to toggle chrome */}
       <div
         className="absolute inset-0"
         onClick={() => setChromeVisible((v) => !v)}
       />
 
-      {/* Page image */}
-      <div className="relative z-10 h-full w-full flex items-center justify-center">
+      {/* Page image with slide transition */}
+      <div className="relative z-10 h-full w-full flex items-center justify-center overflow-hidden">
         {imgLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-amber-300/40 border-t-amber-600 animate-spin" />
           </div>
         )}
-        <img
-          src={getMushafImageUrl(currentPage)}
-          alt={`Mushaf page ${currentPage}`}
-          className="max-h-[100dvh] max-w-full object-contain select-none"
-          onLoad={() => setImgLoading(false)}
-          onError={() => setImgLoading(false)}
-          draggable={false}
-        />
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.img
+            key={currentPage}
+            src={getMushafImageUrl(currentPage)}
+            alt={`Mushaf page ${currentPage}`}
+            className="max-h-[100dvh] max-w-full object-contain select-none"
+            initial={{ x: direction * 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction * -300, opacity: 0 }}
+            transition={{ type: "tween", duration: 0.25 }}
+            onLoad={() => setImgLoading(false)}
+            onError={() => setImgLoading(false)}
+            draggable={false}
+          />
+        </AnimatePresence>
 
         {/* Navigation zones (Arabic book: left = next page) */}
         <button
@@ -97,26 +109,26 @@ function MushafImageView({
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -40, opacity: 0 }}
-              className="absolute top-0 left-0 right-0 z-50 pt-10 px-4 pb-3 bg-gradient-to-b from-black/80 to-transparent flex items-center gap-3"
+              className="absolute top-0 left-0 right-0 z-50 pt-10 px-4 pb-3 bg-gradient-to-b from-[#e8dfcf]/95 to-transparent flex items-center gap-3"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={onBack}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center"
               >
-                <ArrowLeft size={18} className="text-white" />
+                <ArrowLeft size={18} className="text-amber-900" />
               </button>
               <div className="flex-1 text-center">
-                <p className="font-['Amiri','serif'] text-white text-base">{surahMeta?.nameArabic || ""}</p>
-                <p className="text-[10px] text-white/70">
+                <p className="font-['Amiri','serif'] text-amber-900 text-base">{surahMeta?.nameArabic || ""}</p>
+                <p className="text-[10px] text-amber-800/70">
                   {t("mushaf.page" as any)} {currentPage} / {TOTAL_MUSHAF_PAGES} — {t("mushaf.juz" as any)} {juz}
                 </p>
               </div>
               <button
                 onClick={onToggleBookmark}
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center"
               >
-                <Star size={16} className={isBookmarked ? "text-yellow-400 fill-yellow-400" : "text-white/70"} />
+                <Star size={16} className={isBookmarked ? "text-yellow-600 fill-yellow-500" : "text-amber-800/70"} />
               </button>
             </motion.div>
 
@@ -124,7 +136,7 @@ function MushafImageView({
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 40, opacity: 0 }}
-              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-xs text-white/80"
+              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-4 bg-gradient-to-t from-[#e8dfcf]/95 to-transparent flex items-center justify-between text-xs text-amber-900/80"
               onClick={(e) => e.stopPropagation()}
             >
               <button onClick={goPrev} disabled={currentPage <= 1} className="p-2 disabled:opacity-30">←</button>
