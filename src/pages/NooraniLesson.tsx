@@ -9,6 +9,7 @@ import { useNooraniAudio } from "@/hooks/useNooraniAudio";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { getChildSuccessMessage } from "@/lib/childMessages";
 import Confetti from "@/components/Confetti";
+import { trackEvent } from "@/lib/trackEvent";
 import StickerReward from "@/components/StickerReward";
 import type { EarnedSticker } from "@/hooks/useChildMode";
 
