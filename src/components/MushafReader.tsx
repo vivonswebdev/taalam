@@ -502,7 +502,7 @@ export default function MushafReader({
             })()}
           </div>
 
-          {/* Bottom controls — auto-hide */}
+          {/* Bottom controls — auto-hide, fixed center */}
           <AnimatePresence>
             {immersiveUIVisible && (
               <motion.div
@@ -510,16 +510,32 @@ export default function MushafReader({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 30 }}
                 transition={{ duration: 0.25 }}
-                className="relative z-10 px-6 pb-8 pt-4"
+                className="fixed left-1/2 z-[1002]"
+                style={{
+                  transform: "translateX(-50%)",
+                  bottom: "max(15vh, calc(env(safe-area-inset-bottom, 0px) + 20px))",
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center gap-4">
+                <style>{`
+                  @media (orientation: landscape) {
+                    .immersive-controls-bar { bottom: 10vh !important; }
+                  }
+                `}</style>
+                <div
+                  className="immersive-controls-bar flex items-center gap-5 shadow-2xl"
+                  style={{
+                    background: "rgba(0,0,0,0.8)",
+                    borderRadius: "50px",
+                    padding: "15px 20px",
+                  }}
+                >
                   <button
                     disabled={currentAyah <= 0}
                     onClick={() => globalAudio.prevAyah()}
-                    className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+                    className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition-opacity shadow-lg"
                   >
-                    ← Précédent
+                    <ChevronsLeft size={20} />
                   </button>
                   <button
                     onClick={() => {
@@ -527,16 +543,16 @@ export default function MushafReader({
                       else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
                       else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
                     }}
-                    className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
+                    className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
                   >
-                    {playing ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
+                    {playing ? <Pause size={22} /> : <Play size={22} className="ml-0.5" />}
                   </button>
                   <button
                     disabled={currentAyah >= surah.ayahs.length - 1}
                     onClick={() => globalAudio.nextAyah()}
-                    className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+                    className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition-opacity shadow-lg"
                   >
-                    Suivant →
+                    <ChevronsRight size={20} />
                   </button>
                 </div>
               </motion.div>
