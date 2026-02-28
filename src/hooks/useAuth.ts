@@ -1,17 +1,40 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const welcomeShown = useRef(false);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // If "remember me" was off, clear session when tab is reopened
+    const rememberMe = localStorage.getItem("taalam_remember_me");
+    const sessionTabActive = sessionStorage.getItem("taalam_session_active");
+
+    if (rememberMe === "false" && !sessionTabActive) {
+      // User chose not to be remembered and this is a new tab/window
+      supabase.auth.signOut().then(() => {
+        setUser(null);
+        setSession(null);
+        setLoading(false);
+      });
+      return;
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Show welcome back toast on auto-restore (not on fresh login)
+      if (event === "INITIAL_SESSION" && session?.user && !welcomeShown.current) {
+        welcomeShown.current = true;
+        const name = session.user.user_metadata?.display_name || "";
+        toast.success(name ? `Bienvenue de retour, ${name} 🌙` : "Bienvenue de retour 🌙");
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -54,6 +77,8 @@ export function useAuth() {
   }, []);
 
   const signOut = useCallback(async () => {
+    localStorage.removeItem("taalam_remember_me");
+    sessionStorage.removeItem("taalam_session_active");
     await supabase.auth.signOut();
   }, []);
 

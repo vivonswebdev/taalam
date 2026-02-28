@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound } from "lucide-react";
+import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -28,6 +29,9 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [rememberMe, setRememberMe] = useState(() => {
+    return localStorage.getItem("taalam_remember_me") !== "false";
+  });
 
   const handleSignUp = async () => {
     if (!email.trim() || !displayName.trim() || !password.trim()) {
@@ -78,6 +82,10 @@ export default function Auth() {
         password: password.trim(),
       });
       if (error) throw error;
+      localStorage.setItem("taalam_remember_me", rememberMe ? "true" : "false");
+      if (!rememberMe) {
+        sessionStorage.setItem("taalam_session_active", "true");
+      }
       toast.success("Connecté !");
       navigate(redirectTo);
     } catch (err: any) {
@@ -295,6 +303,16 @@ export default function Auth() {
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="remember-me"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                  />
+                  <label htmlFor="remember-me" className="text-sm text-muted-foreground cursor-pointer select-none">
+                    Se souvenir de moi
+                  </label>
                 </div>
                 <Button onClick={handleLogin} disabled={loading} className="w-full h-12 text-base rounded-xl">
                   <Mail size={18} />
