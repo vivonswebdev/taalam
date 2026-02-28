@@ -9,11 +9,9 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 type Tab = "moods" | "maladies" | "athkar";
 
-const TABS: { id: Tab; label: string; emoji: string }[] = [
-  { id: "moods", label: "États du cœur", emoji: "💓" },
-  { id: "maladies", label: "Maladies", emoji: "🩺" },
-  { id: "athkar", label: "Athkâr", emoji: "📿" },
-];
+const TAB_IDS: Tab[] = ["moods", "maladies", "athkar"];
+const TAB_EMOJIS: Record<Tab, string> = { moods: "💓", maladies: "🩺", athkar: "📿" };
+const TAB_KEYS: Record<Tab, string> = { moods: "moods.tabMoods", maladies: "moods.tabMaladies", athkar: "moods.tabAthkar" };
 
 function MoodCard({ icon, title, desc, loop, onClick }: {
   icon: string; title: string; desc: string; loop?: boolean; onClick?: () => void;
