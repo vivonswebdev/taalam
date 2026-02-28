@@ -8,6 +8,7 @@ export interface WordResult {
 interface UseVoiceRecognitionOptions {
   lang?: string;
   continuous?: boolean;
+  forceServer?: boolean;
   onResult?: (transcript: string) => void;
   onEnd?: () => void;
   onError?: (error: string) => void;
@@ -21,7 +22,7 @@ const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
 const MAX_NATIVE_RETRIES = 1; // After 1 silent attempt, force server fallback immediately
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
-  const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
+  const { lang = "ar-SA", continuous = true, forceServer = false, onResult, onEnd, onError } = options;
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isSupported, setIsSupported] = useState(false);
@@ -443,9 +444,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    // If native SR already failed in a previous verse, stay on server
-    if (forceServerRef.current) {
-      console.info("[VoiceRecognition] Reusing server STT (native previously failed)");
+    // If user toggled "force server" or native SR failed previously, use server
+    if (forceServer || forceServerRef.current) {
+      console.info("[VoiceRecognition] Using server STT (forced)");
       setMode("server");
       startServer();
       return;
@@ -459,7 +460,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       setMode("server");
       startServer();
     }
-  }, [startNative, startServer]);
+  }, [startNative, startServer, forceServer]);
 
   const stop = useCallback(() => {
     console.info("[VoiceRecognition] Stop requested");

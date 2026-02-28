@@ -3,9 +3,10 @@ import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { motion } from "framer-motion";
 import {
-  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft,
+  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft, Server,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
+import { Switch } from "@/components/ui/switch";
 import {
   useVoiceRecognition,
   compareSurahDictation,
@@ -43,7 +44,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [simpleExplanation, setSimpleExplanation] = useState<string>("");
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [completedAyahs, setCompletedAyahs] = useState<Set<number>>(new Set());
-
+  const [forceServerSTT, setForceServerSTT] = useState(() => {
+    try { return localStorage.getItem("dictation_force_server") === "true"; } catch { return false; }
+  });
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<number>>(new Set());
 
@@ -58,6 +61,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const voice = useVoiceRecognition({
     lang: "ar-SA",
     continuous: true,
+    forceServer: forceServerSTT,
     onResult: (transcript) => {
       setLiveTranscript(transcript);
     },
@@ -245,6 +249,26 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
       {/* Reciter picker */}
       {ayahPhase === "listen" && <ReciterPicker selected={reciter} onChange={setReciter} compact />}
+
+      {/* Force server STT toggle */}
+      {(ayahPhase === "listen" || ayahPhase === "recite") && (
+        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-3 py-2">
+          <div className="flex items-center gap-2">
+            <Server size={14} className="text-primary" />
+            <div>
+              <span className="text-sm font-medium">Mode serveur</span>
+              <p className="text-[10px] text-muted-foreground">Plus fiable sur certains téléphones</p>
+            </div>
+          </div>
+          <Switch
+            checked={forceServerSTT}
+            onCheckedChange={(v) => {
+              setForceServerSTT(v);
+              try { localStorage.setItem("dictation_force_server", v ? "true" : "false"); } catch {}
+            }}
+          />
+        </div>
+      )}
 
       {/* ═══ LISTEN PHASE ═══ */}
       {ayahPhase === "listen" && currentAyah && (
