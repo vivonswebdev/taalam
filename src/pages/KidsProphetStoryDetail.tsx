@@ -49,7 +49,7 @@ export default function KidsProphetStoryDetail() {
 
   return (
     <div className="min-h-screen pb-24 relative">
-      {showConfetti && <Confetti />}
+      {showConfetti && <Confetti active={true} />}
 
       {/* Header */}
       <div className="px-6 pt-14 pb-2 flex items-center gap-3">
