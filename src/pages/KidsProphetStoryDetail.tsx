@@ -90,8 +90,19 @@ export default function KidsProphetStoryDetail() {
               </div>
             </div>
 
-            {/* Story title */}
-            <h2 className="text-xl font-bold text-foreground mb-3">{story.title[langKey]}</h2>
+            {/* Story title + listen button */}
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xl font-bold text-foreground">{story.title[langKey]}</h2>
+              <button
+                onClick={() => toggleNarration(story.story[langKey], langKey)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  isNarrating ? "bg-primary text-primary-foreground animate-pulse" : "bg-muted text-foreground"
+                }`}
+                aria-label={isNarrating ? "Stop" : "Listen"}
+              >
+                {isNarrating ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              </button>
+            </div>
 
             {/* Story text */}
             <div className="bg-card border border-border rounded-2xl p-5 mb-4">
