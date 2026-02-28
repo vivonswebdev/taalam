@@ -209,7 +209,7 @@ function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey, onRestart }:
         </p>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStep(0); setScore(0); setShowConfetti(false); }}
+            onClick={() => { if (onRestart) onRestart(); else { setStep(0); setScore(0); setShowConfetti(false); } }}
             className="flex-1 py-3 rounded-2xl bg-muted text-sm font-semibold flex items-center justify-center gap-1"
           >
             <RotateCcw size={14} /> {t("kidsPrayer.restart" as any)}
