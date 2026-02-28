@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, GraduationCap, Users, BookOpen, Brain, Clock, Trophy, Plus, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeft, GraduationCap, Users, BookOpen, Brain, Clock, Trophy, Plus, Trash2, ToggleLeft, ToggleRight, HelpCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -164,9 +164,14 @@ export default function TeacherDashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-bold">{t("teacher.assignments" as any)}</p>
-              <button onClick={() => setShowForm(!showForm)} className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                <Plus size={16} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={() => navigate("/assignments-tutorial")} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center" title={t("tuto.pageTitle" as any)}>
+                  <HelpCircle size={14} className="text-muted-foreground" />
+                </button>
+                <button onClick={() => setShowForm(!showForm)} className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                  <Plus size={16} />
+                </button>
+              </div>
             </div>
 
             {showForm && (
