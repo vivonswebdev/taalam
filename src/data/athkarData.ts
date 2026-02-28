@@ -1,4 +1,4 @@
-export type AthkarCategory = "morning" | "evening" | "after-prayer" | "protection" | "forgiveness" | "praise";
+export type AthkarCategory = "morning" | "evening" | "after-prayer" | "protection" | "forgiveness" | "praise" | "divers";
 
 export interface Dhikr {
   id: string;
