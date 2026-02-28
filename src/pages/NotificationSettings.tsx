@@ -1,15 +1,19 @@
-import { ArrowLeft, Bell, BellOff, Clock, Calendar, Heart } from "lucide-react";
+import { ArrowLeft, Bell, BellOff, BellRing, Clock, Calendar, Heart, Smartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
 
 export default function NotificationSettings() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { prefs, loading, saving, savePrefs } = useNotificationPreferences();
+  const { pushState, loading: pushLoading, requestPermission } = usePushNotifications();
 
   const timeLabel = `${String(prefs.reminder_hour).padStart(2, "0")}:${String(prefs.reminder_minute).padStart(2, "0")}`;
 
