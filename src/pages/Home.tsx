@@ -21,7 +21,7 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
-import { useNooraniProgress } from "@/hooks/useNooraniProgress";
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
-  const nooraniProgress = useNooraniProgress();
+  
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -242,7 +242,7 @@ export default function Home() {
         </motion.button>
       </div>
 
-      {/* Noorani Qaida card (child mode only) */}
+      {/* Espace enfants – single card (child mode only) */}
       {isChildMode && (
         <div className="px-5 mt-3">
           <motion.button
@@ -250,78 +250,15 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/noorani")}
-            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-primary/15 to-primary/5 border border-primary/20"
+            onClick={() => navigate("/kids")}
+            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/30 shadow-lg"
           >
-            <span className="text-3xl">📚</span>
+            <span className="text-3xl">🧸</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground">{t("noorani.cardTitle" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">
-                {nooraniProgress.completedLessonsCount === 0
-                  ? (t("noorani.cardDesc" as any))
-                  : `${nooraniProgress.completedLessonsCount}/${nooraniProgress.totalLessons} ${t("noorani.lessonsCompleted" as any) || "leçons"}`}
-              </p>
-              {nooraniProgress.completedLessonsCount > 0 && (
-                <div className="mt-1.5 h-1.5 rounded-full bg-muted/40 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${nooraniProgress.completionPercent >= 100 ? "bg-green-500" : "bg-primary"}`}
-                    style={{ width: `${Math.min(nooraniProgress.completionPercent, 100)}%` }}
-                  />
-                </div>
-              )}
+              <p className="text-sm font-bold text-foreground">{t("home.kidsSpace" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">{t("home.kidsSpaceDesc" as any)}</p>
             </div>
-            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
-          </motion.button>
-
-          {/* Kids Prayer card */}
-          <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/kids-prayer")}
-            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-emerald-600/20 to-teal-600/10 border border-emerald-500/20"
-          >
-            <span className="text-3xl">🕌</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground">{t("home.kidsPrayer" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">{t("home.kidsPrayerDesc" as any)}</p>
-            </div>
-            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
-          </motion.button>
-
-          {/* Kids Hajj & Umra card */}
-          <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/kids-hajj")}
-            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-amber-600/20 to-orange-600/10 border border-amber-500/20"
-          >
-            <span className="text-3xl">🕋</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground">{t("home.kidsHajj" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">{t("home.kidsHajjDesc" as any)}</p>
-            </div>
-            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
-          </motion.button>
-
-          {/* Kids Mosque Map card */}
-          <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/kids-mosque-map")}
-            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-cyan-600/20 to-teal-600/10 border border-cyan-500/20"
-          >
-            <span className="text-3xl">🕌</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground">{t("home.kidsMosque" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">{t("home.kidsMosqueDesc" as any)}</p>
-            </div>
-            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
+            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")} →</span>
           </motion.button>
         </div>
       )}
