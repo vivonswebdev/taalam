@@ -271,7 +271,7 @@ export default function HifzPlanPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${task.task_type === "new" ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary"}`}>
-                                {task.task_type === "new" ? "Nouveau" : "Révision"}
+                                {task.task_type === "new" ? t("hifz.new") : t("hifz.review")}
                               </span>
                               <span className="font-arabic text-sm text-primary">{surah?.nameArabic}</span>
                             </div>
