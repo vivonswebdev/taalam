@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moodPresets } from "@/data/moodPresets";
 import { maladiesPresets } from "@/data/maladiesPresets";
-import { athkarGroups, ATHKAR_FILTERS, type AthkarCategory } from "@/data/athkarData";
+import { athkarGroups, ATHKAR_FILTERS, CORE_ATHKAR_IDS, type AthkarCategory } from "@/data/athkarData";
 import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -204,24 +204,54 @@ export default function Moods() {
               ))}
             </div>
 
-            {/* Cards */}
-            <div className="grid grid-cols-2 gap-3 p-4">
-              {filteredAthkar.map((g, i) => (
-                <motion.div
-                  key={g.id}
-                  initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-                >
-                  <MoodCard
-                    icon={g.emoji}
-                    title={g.title}
-                    desc={g.subtitle}
-                    onClick={() => navigate(`/athkar/${g.id}`)}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            {/* Core athkar */}
+            {(() => {
+              const coreFiltered = filteredAthkar.filter(g => CORE_ATHKAR_IDS.includes(g.id));
+              const situationFiltered = filteredAthkar.filter(g => !CORE_ATHKAR_IDS.includes(g.id));
+              return (
+                <>
+                  {coreFiltered.length > 0 && (
+                    <>
+                      <div className="px-4 pt-2 pb-1">
+                        <h2 className="text-sm font-bold text-foreground">📿 Adhkar principaux</h2>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 px-4 pb-2">
+                        {coreFiltered.map((g, i) => (
+                          <motion.div
+                            key={g.id}
+                            initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+                          >
+                            <MoodCard icon={g.emoji} title={g.title} desc={g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
+                          </motion.div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  {situationFiltered.length > 0 && (
+                    <>
+                      <div className="px-4 pt-3 pb-1">
+                        <h2 className="text-sm font-bold text-foreground">🗂️ Situations particulières</h2>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Voyage, maison, mosquée, événements de vie…</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+                        {situationFiltered.map((g, i) => (
+                          <motion.div
+                            key={g.id}
+                            initial={{ opacity: 0, y: 24, scale: 0.92 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
+                          >
+                            <MoodCard icon={g.emoji} title={g.title} desc={g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
+                          </motion.div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })()}
           </motion.div>
         )}
       </AnimatePresence>
