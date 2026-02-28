@@ -223,9 +223,14 @@ export default function TeacherDashboardPage() {
                   <div key={a.id} className="bg-card border border-border rounded-xl p-3 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate">{a.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <Badge variant="secondary" className="text-[10px]">{a.type}</Badge>
                         <span className="text-[10px] text-muted-foreground">📅 {a.due_date}</span>
+                        {typeof a.completed === "number" && typeof a.totalStudents === "number" && (
+                          <span className="text-[10px] font-semibold text-primary">
+                            ✅ {a.completed}/{a.totalStudents}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <button onClick={() => toggleAssignment(a.id, a.is_active)} className="text-muted-foreground">
