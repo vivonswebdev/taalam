@@ -257,32 +257,61 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       onResultRef.current?.(full);
     };
 
-    recognition.onend = () => {
-      if (isListeningRef.current && recognitionRef.current === recognition) {
-        // If we never got results, count as a failed retry
-        if (!hasReceivedResultRef.current) {
-          nativeRetryCountRef.current++;
-          console.warn(`[VoiceRecognition] Native SR ended without results (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
-          if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
-            console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
-            forceServerRef.current = true;
-            recognitionRef.current = null;
-            setMode("server");
-            startServer();
-            return;
-          }
+    const armNativeSilenceTimer = () => {
+      if (nativeSilenceTimerRef.current) {
+        clearTimeout(nativeSilenceTimerRef.current);
+      }
+      nativeSilenceTimerRef.current = setTimeout(() => {
+        if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
+          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
+          try { recognition.stop(); } catch {}
         }
-        // Mobile browsers may stop on silence; try one more native restart
+      }, NATIVE_SILENCE_TIMEOUT_MS);
+    };
+
+    const handleNativeNoResultFailure = (source: "onend" | "onerror") => {
+      nativeRetryCountRef.current++;
+      console.warn(`[VoiceRecognition] Native SR ended without results via ${source} (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
+
+      if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+        console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
+        forceServerRef.current = true;
+        recognitionRef.current = null;
+        setMode("server");
+        startServer();
+        return;
+      }
+
+      try {
+        hasReceivedResultRef.current = false;
+        recognition.start();
+        armNativeSilenceTimer();
+      } catch (e) {
+        console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
+        forceServerRef.current = true;
+        recognitionRef.current = null;
+        setMode("server");
+        startServer();
+      }
+    };
+
+    recognition.onend = () => {
+      if (nativeNoEndTimerRef.current) {
+        clearTimeout(nativeNoEndTimerRef.current);
+        nativeNoEndTimerRef.current = null;
+      }
+
+      if (isListeningRef.current && recognitionRef.current === recognition) {
+        if (!hasReceivedResultRef.current) {
+          handleNativeNoResultFailure("onend");
+          return;
+        }
+
+        // Mobile browsers may stop on silence; restart native SR
         try {
           hasReceivedResultRef.current = false;
           recognition.start();
-          // Set a new silence timer for this retry
-          nativeSilenceTimerRef.current = setTimeout(() => {
-            if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-              console.warn("[VoiceRecognition] No results after timeout (retry), stopping native SR");
-              try { recognition.stop(); } catch {}
-            }
-          }, NATIVE_SILENCE_TIMEOUT_MS);
+          armNativeSilenceTimer();
           return;
         } catch (e) {
           console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
@@ -293,6 +322,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
           return;
         }
       }
+
       if (recognitionRef.current === recognition) {
         setIsListening(false);
         onEndRef.current?.();
@@ -302,6 +332,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     recognition.onerror = (event: any) => {
       const error = event?.error || "unknown";
       console.warn("[VoiceRecognition] Error:", error);
+
       if (error === "not-allowed" || error === "service-not-allowed") {
         // Try server fallback instead of just giving up
         console.warn("[VoiceRecognition] Permission denied for native, forcing server fallback...");
@@ -312,7 +343,23 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         startServer();
         return;
       }
-      if (error === "no-speech" || error === "aborted") return;
+
+      if (error === "no-speech" || error === "aborted") {
+        if (!isListeningRef.current || recognitionRef.current !== recognition || hasReceivedResultRef.current) return;
+
+        if (nativeNoEndTimerRef.current) {
+          clearTimeout(nativeNoEndTimerRef.current);
+        }
+
+        // Some mobile browsers emit aborted/no-speech without a follow-up onend.
+        nativeNoEndTimerRef.current = setTimeout(() => {
+          if (!isListeningRef.current || recognitionRef.current !== recognition || hasReceivedResultRef.current) return;
+          console.warn("[VoiceRecognition] Native SR aborted/no-speech without onend, forcing recovery");
+          handleNativeNoResultFailure("onerror");
+        }, 450);
+        return;
+      }
+
       if (recognitionRef.current === recognition) {
         forceServerRef.current = true;
         isListeningRef.current = false;
