@@ -95,6 +95,7 @@ const App = () => (
               <Route path="/more" element={<More />} />
               <Route path="/hifz-plan" element={<HifzPlanPage />} />
               <Route path="/study" element={<Study />} />
+              <Route path="/listening" element={<Listening />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

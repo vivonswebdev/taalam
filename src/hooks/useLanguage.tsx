@@ -980,6 +980,37 @@ const translations = {
   "home.hifzOpenLink": { fr: "Ouvrir mon plan →", en: "Open my plan →", nl: "Open mijn plan →", ar: "→ فتح خطتي", tr: "Planımı aç →", ur: "→ میرا پلان کھولیں" },
   "home.hifzTasksToday": { fr: "tâche(s) aujourd'hui", en: "task(s) today", nl: "taak/taken vandaag", ar: "مهمة/مهام اليوم", tr: "bugünkü görev(ler)", ur: "آج کے کام" },
   "home.open": { fr: "Ouvrir →", en: "Open →", nl: "Openen →", ar: "→ فتح", tr: "Aç →", ur: "→ کھولیں" },
+  "home.hifzProgress": { fr: "Avancement", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
+  "home.planStarted": { fr: "Plan démarré", en: "Plan started", nl: "Plan gestart", ar: "بدأت الخطة", tr: "Plan başladı", ur: "پلان شروع ہوا" },
+
+  // Listening mode
+  "listening.title": { fr: "Mode écoute avancé", en: "Advanced Listening", nl: "Geavanceerd luisteren", ar: "وضع الاستماع المتقدم", tr: "Gelişmiş Dinleme", ur: "ایڈوانسڈ سننا" },
+  "listening.subtitle": { fr: "Écoute attentive et quiz", en: "Attentive listening & quiz", nl: "Aandachtig luisteren & quiz", ar: "استماع يقظ واختبار", tr: "Dikkatli dinleme ve quiz", ur: "توجہ سے سننا اور کوئز" },
+  "listening.chooseSurah": { fr: "Choisis une sourate", en: "Choose a surah", nl: "Kies een soera", ar: "اختر سورة", tr: "Sure seç", ur: "سورت چنیں" },
+  "listening.simple": { fr: "Écoute simple", en: "Simple listen", nl: "Eenvoudig luisteren", ar: "استماع بسيط", tr: "Basit dinleme", ur: "سادہ سننا" },
+  "listening.simpleDesc": { fr: "Suivre la récitation", en: "Follow the recitation", nl: "Volg de recitatie", ar: "متابعة التلاوة", tr: "Tilaveti takip et", ur: "تلاوت کی پیروی" },
+  "listening.withQuiz": { fr: "Écoute + Quiz", en: "Listen + Quiz", nl: "Luisteren + Quiz", ar: "استماع + اختبار", tr: "Dinle + Quiz", ur: "سنیں + کوئز" },
+  "listening.withQuizDesc": { fr: "Quiz à la fin de la session", en: "Quiz at end of session", nl: "Quiz na de sessie", ar: "اختبار في نهاية الجلسة", tr: "Oturum sonunda quiz", ur: "سیشن کے آخر میں کوئز" },
+  "listening.start": { fr: "Lancer l'écoute", en: "Start listening", nl: "Start luisteren", ar: "ابدأ الاستماع", tr: "Dinlemeye başla", ur: "سننا شروع کریں" },
+  "listening.sessionActive": { fr: "Session en cours", en: "Session active", nl: "Sessie actief", ar: "الجلسة نشطة", tr: "Oturum aktif", ur: "سیشن فعال" },
+  "listening.duration": { fr: "Durée", en: "Duration", nl: "Duur", ar: "المدة", tr: "Süre", ur: "مدت" },
+  "listening.ayahsListened": { fr: "Ayahs écoutées", en: "Ayahs listened", nl: "Ayahs geluisterd", ar: "الآيات المستمع إليها", tr: "Dinlenen ayetler", ur: "سنی ہوئی آیات" },
+  "listening.endSession": { fr: "Terminer la session", en: "End session", nl: "Sessie beëindigen", ar: "إنهاء الجلسة", tr: "Oturumu bitir", ur: "سیشن ختم کریں" },
+  "listening.quizTime": { fr: "Quiz d'écoute", en: "Listening Quiz", nl: "Luisterquiz", ar: "اختبار الاستماع", tr: "Dinleme Quizi", ur: "سننے کا کوئز" },
+  "listening.score": { fr: "Score", en: "Score", nl: "Score", ar: "النتيجة", tr: "Puan", ur: "اسکور" },
+  "listening.badge.attentive": { fr: "🎧 Écoute attentive", en: "🎧 Attentive Listener", nl: "🎧 Aandachtige luisteraar", ar: "🎧 مستمع يقظ", tr: "🎧 Dikkatli Dinleyici", ur: "🎧 توجہ سے سننے والا" },
+  "listening.badge.hafiz": { fr: "👂 Oreille de Hafiz", en: "👂 Hafiz Ear", nl: "👂 Hafiz Oor", ar: "👂 أذن الحافظ", tr: "👂 Hafız Kulağı", ur: "👂 حافظ کان" },
+  "listening.backHome": { fr: "Retour à l'accueil", en: "Back to home", nl: "Terug naar home", ar: "العودة للرئيسية", tr: "Ana sayfaya dön", ur: "ہوم پر واپسی" },
+  "listening.newSession": { fr: "Nouvelle session", en: "New session", nl: "Nieuwe sessie", ar: "جلسة جديدة", tr: "Yeni oturum", ur: "نیا سیشن" },
+  "listening.all": { fr: "Tout", en: "All", nl: "Alles", ar: "الكل", tr: "Hepsi", ur: "سب" },
+  "listening.easy": { fr: "Facile", en: "Easy", nl: "Makkelijk", ar: "سهل", tr: "Kolay", ur: "آسان" },
+  "listening.medium": { fr: "Moyen", en: "Medium", nl: "Gemiddeld", ar: "متوسط", tr: "Orta", ur: "درمیانہ" },
+  "listening.hard": { fr: "Difficile", en: "Hard", nl: "Moeilijk", ar: "صعب", tr: "Zor", ur: "مشکل" },
+  "listening.todayMinutes": { fr: "min aujourd'hui", en: "min today", nl: "min vandaag", ar: "دقيقة اليوم", tr: "dk bugün", ur: "آج منٹ" },
+
+  // More - listening
+  "more.advancedListening": { fr: "Mode écoute avancé", en: "Advanced Listening", nl: "Geavanceerd luisteren", ar: "وضع الاستماع المتقدم", tr: "Gelişmiş Dinleme", ur: "ایڈوانسڈ سننا" },
+  "more.advancedListeningDesc": { fr: "Écoute + quiz & suivi", en: "Listening + quiz & tracking", nl: "Luisteren + quiz & tracking", ar: "استماع + اختبار وتتبع", tr: "Dinleme + quiz ve takip", ur: "سننا + کوئز اور ٹریکنگ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

@@ -261,22 +261,41 @@ export default function Home() {
           transition={{ delay: 0.55 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/hifz-plan")}
-          className="w-full flex items-center gap-3 rounded-2xl p-4 bg-muted/50 border border-border text-left"
+          className="w-full flex flex-col gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-left"
         >
-          <span className="text-2xl shrink-0">📖</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
-            {plan ? (
-              <p className="text-[10px] text-muted-foreground line-clamp-2">
-                {plan.name} · {overallProgress}% · {todayTasks.length} {t("home.hifzTasksToday")}
-              </p>
-            ) : (
-              <p className="text-[10px] text-muted-foreground">{t("home.hifzCreate")}</p>
-            )}
+          <div className="flex items-center gap-3">
+            <span className="text-2xl shrink-0">📖</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
+              {plan ? (
+                <p className="text-[10px] text-muted-foreground line-clamp-2">
+                  {plan.name} · {todayTasks.length} {t("home.hifzTasksToday")}
+                </p>
+              ) : (
+                <p className="text-[10px] text-muted-foreground">{t("home.hifzCreate")}</p>
+              )}
+            </div>
+            <span className="text-[10px] font-semibold text-primary shrink-0">
+              {plan ? t("home.hifzOpenLink") : t("home.hifzCreateLink")}
+            </span>
           </div>
-          <span className="text-[10px] font-semibold text-primary shrink-0">
-            {plan ? t("home.hifzOpenLink") : t("home.hifzCreateLink")}
-          </span>
+          {plan && (
+            <div>
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>{t("home.hifzProgress")}</span>
+                <span>{overallProgress >= 100 ? "🎉 " : ""}{overallProgress}%</span>
+              </div>
+              <div className="mt-1 h-1.5 rounded-full bg-muted/40 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-primary"}`}
+                  style={{ width: `${Math.min(overallProgress, 100)}%` }}
+                />
+              </div>
+              {overallProgress === 0 && (
+                <p className="text-[10px] text-muted-foreground mt-1">{t("home.planStarted")}</p>
+              )}
+            </div>
+          )}
         </motion.button>
       </div>
 
