@@ -769,6 +769,8 @@ const translations = {
   "home.findAyahButton": { fr: "Trouver mon āyah", en: "Find my āyah", nl: "Zoek mijn āyah", ar: "ابحث عن الآية", tr: "Âyetimi bul", ur: "میری آیت تلاش کریں" },
   "home.findAyahButtonDesc": { fr: "Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation", en: "Like a Qur'an Shazam: find the surah from your recitation", nl: "Als een Koran-Shazam: vind de soera via je recitatie", ar: "مثل شازام للقرآن: اعرف السورة من تلاوتك", tr: "Kur'an için Shazam gibi: tilavetinden sûreyi bul", ur: "قرآن کے لیے شازام کی طرح: اپنی تلاوت سے سورہ تلاش کریں" },
   "home.sectionSuivi": { fr: "Suivi", en: "Tracking", nl: "Opvolging", ar: "المتابعة", tr: "Takip", ur: "ٹریکنگ" },
+  "home.quizButton": { fr: "Commencer le Quiz Niveau", en: "Start the Level Quiz", nl: "Start de Nivelquiz", ar: "ابدأ اختبار المستوى", tr: "Seviye testine başla", ur: "لیول کوئز شروع کریں" },
+  "home.quizButtonDesc": { fr: "Testez votre niveau Hifz", en: "Test your Hifz level", nl: "Test je Hifz-niveau", ar: "اختبر مستوى حفظك", tr: "Hıfz seviyeni test et", ur: "اپنے حفظ کے درجے کو پرکھیں" },
   "home.sectionClasses": { fr: "Classes", en: "Classes", nl: "Klassen", ar: "الفصول", tr: "Sınıflar", ur: "کلاسز" },
   "home.familyClass": { fr: "Classe Famille", en: "Family Class", nl: "Familieklas", ar: "فصل العائلة", tr: "Aile Sınıfı", ur: "فیملی کلاس" },
   "home.familyClassDesc": { fr: "Suivez vos enfants", en: "Track your children", nl: "Volg je kinderen", ar: "تابع أطفالك", tr: "Çocuklarınızı takip edin", ur: "اپنے بچوں کی نگرانی کریں" },
