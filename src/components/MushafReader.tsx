@@ -51,6 +51,30 @@ export default function MushafReader({
   const [readingStyle, setReadingStyle] = useState<"cards" | "immersive">(() => {
     try { return (localStorage.getItem("reading-style") as "cards" | "immersive") || "cards"; } catch { return "cards"; }
   });
+  const [immersiveUIVisible, setImmersiveUIVisible] = useState(true);
+  const immersiveHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Auto-hide immersive UI after 3s
+  useEffect(() => {
+    if (readingStyle !== "immersive") return;
+    const startTimer = () => {
+      if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current);
+      immersiveHideTimer.current = setTimeout(() => setImmersiveUIVisible(false), 3000);
+    };
+    startTimer();
+    return () => { if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current); };
+  }, [readingStyle, currentAyah]);
+
+  const toggleImmersiveUI = useCallback(() => {
+    setImmersiveUIVisible(prev => {
+      const next = !prev;
+      if (next && immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current);
+      if (next) {
+        immersiveHideTimer.current = setTimeout(() => setImmersiveUIVisible(false), 3000);
+      }
+      return next;
+    });
+  }, []);
 
   // Derive playing state from global audio
   const isGlobalPlaying = globalAudio.state.surahNumber === surah.number && globalAudio.state.isPlaying;
