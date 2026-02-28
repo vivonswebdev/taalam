@@ -426,9 +426,14 @@ export default function ClassroomDetail() {
           {/* Student assignments */}
           {!isTeacherFinal && studentAssignments.length > 0 && (
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <ClipboardList size={14} className="text-primary" />
-                <p className="text-xs font-bold">{t("teacher.assignments" as any)}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ClipboardList size={14} className="text-primary" />
+                  <p className="text-xs font-bold">{t("teacher.assignments" as any)}</p>
+                </div>
+                <button onClick={() => navigate("/assignments-tutorial")} className="text-[10px] text-primary font-medium hover:underline">
+                  {t("tuto.pageTitle" as any)}
+                </button>
               </div>
               {studentAssignments.map((a) => (
                 <button
