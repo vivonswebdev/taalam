@@ -161,7 +161,7 @@ export const moodPresets: MoodPreset[] = [
     id: "love",
     title: "Amour d'Allah",
     titleAr: "حب الله",
-    emoji: "❤️",
+    emoji: "🕋",
     subtitle: "Proximité et amour divin",
     loop: false,
     type: "emotion",
