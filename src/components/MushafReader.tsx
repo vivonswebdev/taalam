@@ -54,16 +54,7 @@ export default function MushafReader({
   const [immersiveUIVisible, setImmersiveUIVisible] = useState(true);
   const immersiveHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Auto-hide immersive UI after 3s
-  useEffect(() => {
-    if (readingStyle !== "immersive") return;
-    const startTimer = () => {
-      if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current);
-      immersiveHideTimer.current = setTimeout(() => setImmersiveUIVisible(false), 3000);
-    };
-    startTimer();
-    return () => { if (immersiveHideTimer.current) clearTimeout(immersiveHideTimer.current); };
-  }, [readingStyle, currentAyah]);
+  // Auto-hide immersive UI after 3s (placed after currentAyah derivation below)
 
   const toggleImmersiveUI = useCallback(() => {
     setImmersiveUIVisible(prev => {
