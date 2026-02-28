@@ -92,3 +92,42 @@ export const KIDS_PRAYER_QUIZ: PrayerQuizQuestion[] = [
     ],
   },
 ];
+
+export const KIDS_WUDU_QUIZ: PrayerQuizQuestion[] = [
+  {
+    id: "wq1",
+    questionKey: "wudu.quiz.q1",
+    options: [
+      { labelKey: "wudu.quiz.q1.opt1", correct: true },
+      { labelKey: "wudu.quiz.q1.opt2", correct: false },
+      { labelKey: "wudu.quiz.q1.opt3", correct: false },
+    ],
+  },
+  {
+    id: "wq2",
+    questionKey: "wudu.quiz.q2",
+    options: [
+      { labelKey: "wudu.quiz.q2.opt1", correct: false },
+      { labelKey: "wudu.quiz.q2.opt2", correct: true },
+      { labelKey: "wudu.quiz.q2.opt3", correct: false },
+    ],
+  },
+  {
+    id: "wq3",
+    questionKey: "wudu.quiz.q3",
+    options: [
+      { labelKey: "wudu.quiz.q3.opt1", correct: false },
+      { labelKey: "wudu.quiz.q3.opt2", correct: false },
+      { labelKey: "wudu.quiz.q3.opt3", correct: true },
+    ],
+  },
+  {
+    id: "wq4",
+    questionKey: "wudu.quiz.q4",
+    options: [
+      { labelKey: "wudu.quiz.q4.opt1", correct: true },
+      { labelKey: "wudu.quiz.q4.opt2", correct: false },
+      { labelKey: "wudu.quiz.q4.opt3", correct: false },
+    ],
+  },
+];

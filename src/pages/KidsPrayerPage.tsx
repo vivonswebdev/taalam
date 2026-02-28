@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { PRAYER_STEPS, KIDS_PRAYER_QUIZ, WUDU_STEPS } from "@/data/kidsPrayer";
-import type { PrayerStep, WuduStep } from "@/data/kidsPrayer";
+import { PRAYER_STEPS, KIDS_PRAYER_QUIZ, WUDU_STEPS, KIDS_WUDU_QUIZ } from "@/data/kidsPrayer";
+import type { PrayerStep, WuduStep, PrayerQuizQuestion } from "@/data/kidsPrayer";
 import Confetti from "@/components/Confetti";
 
-type Section = "menu" | "steps" | "wudu" | "quiz";
+type Section = "menu" | "steps" | "wudu" | "wudu-quiz" | "quiz";
 
 export default function KidsPrayerPage() {
   const navigate = useNavigate();
@@ -32,7 +32,8 @@ export default function KidsPrayerPage() {
         {section === "menu" && <MenuSection key="menu" onSelect={setSection} t={t} />}
         {section === "steps" && <StepViewer key="steps" steps={PRAYER_STEPS} t={t} />}
         {section === "wudu" && <StepViewer key="wudu" steps={WUDU_STEPS} t={t} />}
-        {section === "quiz" && <PrayerQuiz key="quiz" t={t} onBack={() => setSection("menu")} />}
+        {section === "wudu-quiz" && <GenericQuiz key="wudu-quiz" questions={KIDS_WUDU_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="wudu.quizBravo" tryAgainKey="wudu.quizTryAgain" />}
+        {section === "quiz" && <GenericQuiz key="quiz" questions={KIDS_PRAYER_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="kidsPrayer.quizBravo" tryAgainKey="kidsPrayer.quizTryAgain" />}
       </AnimatePresence>
     </div>
   );
@@ -44,6 +45,7 @@ function MenuSection({ onSelect, t }: { onSelect: (s: Section) => void; t: any }
     { id: "steps" as Section, emoji: "🧎", titleKey: "kidsPrayer.menuSteps", descKey: "kidsPrayer.menuStepsDesc", gradient: "from-emerald-600 to-teal-700" },
     { id: "wudu" as Section, emoji: "💧", titleKey: "kidsPrayer.menuWudu", descKey: "kidsPrayer.menuWuduDesc", gradient: "from-sky-600 to-blue-700" },
     { id: "quiz" as Section, emoji: "🧠", titleKey: "kidsPrayer.menuQuiz", descKey: "kidsPrayer.menuQuizDesc", gradient: "from-amber-500 to-orange-600" },
+    { id: "wudu-quiz" as Section, emoji: "💧🧠", titleKey: "wudu.menuQuiz", descKey: "wudu.menuQuizDesc", gradient: "from-cyan-500 to-blue-600" },
   ];
 
   return (
@@ -165,14 +167,13 @@ function StepViewer({ steps, t }: { steps: (PrayerStep | WuduStep)[]; t: any }) 
   );
 }
 
-/* ═══ Quiz ═══ */
-function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
+/* ═══ Generic Quiz ═══ */
+function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const questions = KIDS_PRAYER_QUIZ;
   const current = questions[step];
   const isDone = step >= questions.length;
 
@@ -194,7 +195,7 @@ function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
         {showConfetti && <Confetti active={true} />}
         <span className="text-6xl inline-block mb-4">{score >= 3 ? "🏆" : "💪"}</span>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {score >= 3 ? t("kidsPrayer.quizBravo" as any) : t("kidsPrayer.quizTryAgain" as any)}
+          {score >= 3 ? t(bravoKey as any) : t(tryAgainKey as any)}
         </h2>
         <p className="text-lg text-muted-foreground mb-6">
           {score}/{questions.length} {t("noorani.quizCorrect" as any)}
