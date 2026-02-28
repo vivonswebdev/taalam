@@ -107,6 +107,14 @@ export function useChildDashboard(childId: string | undefined): ChildDashboardSt
     const kidsPrayerDone = getKidsModuleDone(`kidsPrayer_${childId}`);
     const kidsHajjDone = getKidsModuleDone(`kidsHajj_${childId}`);
 
+    // Checklist today
+    const checklistData = (() => {
+      try { return JSON.parse(localStorage.getItem("kids_checklist") || "{}"); } catch { return {}; }
+    })();
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const checklistToday = (checklistData[todayKey] || []).length;
+    const checklistTotal = 6;
+
     // Day timeline (last 7 days)
     const dayTimeline: DayActivity[] = [];
     for (let i = 6; i >= 0; i--) {
