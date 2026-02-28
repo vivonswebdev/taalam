@@ -1115,6 +1115,47 @@ const translations = {
   "kidsPrayer.quiz.q4.opt2": { fr: "Allahu Akbar", en: "Allahu Akbar", nl: "Allahu Akbar", ar: "الله أكبر", tr: "Allahu Ekber", ur: "اللہ اکبر" },
   "kidsPrayer.quiz.q4.opt3": { fr: "Alhamdulillah", en: "Alhamdulillah", nl: "Alhamdulillah", ar: "الحمد لله", tr: "Elhamdülillah", ur: "الحمدللہ" },
 
+  // New prayer quiz questions (q5–q12)
+  "kidsPrayer.quiz.q5": { fr: "Dans quelle position met-on le front au sol ?", en: "In which position do you put your forehead on the ground?", nl: "In welke positie raak je de grond met je voorhoofd?", ar: "في أي وضعية نضع الجبهة على الأرض؟", tr: "Hangi pozisyonda alın yere konur?", ur: "کس پوزیشن میں پیشانی زمین پر رکھتے ہیں؟" },
+  "kidsPrayer.quiz.q5.opt1": { fr: "Le sujud (prosternation)", en: "Sujud (prostration)", nl: "Sujud (prosternatie)", ar: "السجود", tr: "Secde", ur: "سجدہ" },
+  "kidsPrayer.quiz.q5.opt2": { fr: "Le ruku (inclinaison)", en: "Ruku (bowing)", nl: "Ruku (buiging)", ar: "الركوع", tr: "Rüku", ur: "رکوع" },
+  "kidsPrayer.quiz.q5.opt3": { fr: "Le qiyam (debout)", en: "Qiyam (standing)", nl: "Qiyam (staand)", ar: "القيام", tr: "Kıyam", ur: "قیام" },
+
+  "kidsPrayer.quiz.q6": { fr: "Combien de prosternations dans une raka'a ?", en: "How many prostrations in one raka'a?", nl: "Hoeveel kniebuigingen in één raka'a?", ar: "كم سجدة في الركعة الواحدة؟", tr: "Bir rekatta kaç secde vardır?", ur: "ایک رکعت میں کتنے سجدے ہوتے ہیں؟" },
+  "kidsPrayer.quiz.q6.opt1": { fr: "1", en: "1", nl: "1", ar: "١", tr: "1", ur: "1" },
+  "kidsPrayer.quiz.q6.opt2": { fr: "2", en: "2", nl: "2", ar: "٢", tr: "2", ur: "2" },
+  "kidsPrayer.quiz.q6.opt3": { fr: "3", en: "3", nl: "3", ar: "٣", tr: "3", ur: "3" },
+
+  "kidsPrayer.quiz.q7": { fr: "Où regarde-t-on pendant la prière ?", en: "Where do you look during prayer?", nl: "Waar kijk je tijdens het gebed?", ar: "أين ننظر أثناء الصلاة؟", tr: "Namazda nereye bakılır?", ur: "نماز کے دوران کہاں دیکھتے ہیں؟" },
+  "kidsPrayer.quiz.q7.opt1": { fr: "Vers le plafond", en: "At the ceiling", nl: "Naar het plafond", ar: "إلى السقف", tr: "Tavana", ur: "چھت کی طرف" },
+  "kidsPrayer.quiz.q7.opt2": { fr: "Autour de soi", en: "Around you", nl: "Om je heen", ar: "حولك", tr: "Etrafına", ur: "اردگرد" },
+  "kidsPrayer.quiz.q7.opt3": { fr: "Vers l'endroit de prosternation", en: "At the place of prostration", nl: "Naar de plek van prosternatie", ar: "إلى موضع السجود", tr: "Secde yerine", ur: "سجدے کی جگہ کی طرف" },
+
+  "kidsPrayer.quiz.q8": { fr: "Que dit-on en ruku (inclinaison) ?", en: "What do you say in ruku (bowing)?", nl: "Wat zeg je in ruku (buiging)?", ar: "ماذا نقول في الركوع؟", tr: "Rükuda ne denir?", ur: "رکوع میں کیا کہتے ہیں؟" },
+  "kidsPrayer.quiz.q8.opt1": { fr: "Subhana Rabbiyal Adhim", en: "Subhana Rabbiyal Adhim", nl: "Subhana Rabbiyal Adhim", ar: "سبحان ربي العظيم", tr: "Sübhane Rabbiyel Azim", ur: "سبحان ربی العظیم" },
+  "kidsPrayer.quiz.q8.opt2": { fr: "Subhana Rabbiyal A'la", en: "Subhana Rabbiyal A'la", nl: "Subhana Rabbiyal A'la", ar: "سبحان ربي الأعلى", tr: "Sübhane Rabbiyel A'la", ur: "سبحان ربی الاعلیٰ" },
+  "kidsPrayer.quiz.q8.opt3": { fr: "Allahu Akbar", en: "Allahu Akbar", nl: "Allahu Akbar", ar: "الله أكبر", tr: "Allahu Ekber", ur: "اللہ اکبر" },
+
+  "kidsPrayer.quiz.q9": { fr: "Dans quelle direction prie-t-on ?", en: "In which direction do we pray?", nl: "In welke richting bidden we?", ar: "في أي اتجاه نصلي؟", tr: "Hangi yöne doğru namaz kılınır?", ur: "ہم کس سمت نماز پڑھتے ہیں؟" },
+  "kidsPrayer.quiz.q9.opt1": { fr: "Vers le nord", en: "Towards the north", nl: "Naar het noorden", ar: "نحو الشمال", tr: "Kuzeye doğru", ur: "شمال کی طرف" },
+  "kidsPrayer.quiz.q9.opt2": { fr: "Vers la Qibla (la Kaaba)", en: "Towards the Qibla (the Kaaba)", nl: "Richting de Qibla (de Kaaba)", ar: "نحو القبلة (الكعبة)", tr: "Kıble'ye (Kabe'ye) doğru", ur: "قبلہ (کعبہ) کی طرف" },
+  "kidsPrayer.quiz.q9.opt3": { fr: "N'importe où", en: "Anywhere", nl: "Overal", ar: "في أي اتجاه", tr: "Herhangi bir yöne", ur: "کہیں بھی" },
+
+  "kidsPrayer.quiz.q10": { fr: "Combien de rakats dans la prière du Maghrib ?", en: "How many rakats in Maghrib prayer?", nl: "Hoeveel rakats in het Maghrib-gebed?", ar: "كم ركعة في صلاة المغرب؟", tr: "Akşam namazı kaç rekattır?", ur: "مغرب کی نماز میں کتنی رکعتیں ہیں؟" },
+  "kidsPrayer.quiz.q10.opt1": { fr: "2", en: "2", nl: "2", ar: "٢", tr: "2", ur: "2" },
+  "kidsPrayer.quiz.q10.opt2": { fr: "4", en: "4", nl: "4", ar: "٤", tr: "4", ur: "4" },
+  "kidsPrayer.quiz.q10.opt3": { fr: "3", en: "3", nl: "3", ar: "٣", tr: "3", ur: "3" },
+
+  "kidsPrayer.quiz.q11": { fr: "Faut-il être propre pour prier ?", en: "Do you need to be clean to pray?", nl: "Moet je schoon zijn om te bidden?", ar: "هل يجب أن تكون طاهراً للصلاة؟", tr: "Namaz kılmak için temiz olmak gerekir mi?", ur: "کیا نماز کے لیے پاک ہونا ضروری ہے؟" },
+  "kidsPrayer.quiz.q11.opt1": { fr: "Oui, avec le wudu", en: "Yes, with wudu", nl: "Ja, met wudu", ar: "نعم، بالوضوء", tr: "Evet, abdestle", ur: "ہاں، وضو کے ساتھ" },
+  "kidsPrayer.quiz.q11.opt2": { fr: "Non, pas besoin", en: "No, not needed", nl: "Nee, niet nodig", ar: "لا، ليس ضرورياً", tr: "Hayır, gerek yok", ur: "نہیں، ضرورت نہیں" },
+  "kidsPrayer.quiz.q11.opt3": { fr: "Seulement le vendredi", en: "Only on Friday", nl: "Alleen op vrijdag", ar: "فقط يوم الجمعة", tr: "Sadece cuma günü", ur: "صرف جمعہ کو" },
+
+  "kidsPrayer.quiz.q12": { fr: "Combien de prières obligatoires par jour ?", en: "How many obligatory prayers per day?", nl: "Hoeveel verplichte gebeden per dag?", ar: "كم صلاة مفروضة في اليوم؟", tr: "Günde kaç vakit farz namaz vardır?", ur: "روزانہ کتنی فرض نمازیں ہیں؟" },
+  "kidsPrayer.quiz.q12.opt1": { fr: "3", en: "3", nl: "3", ar: "٣", tr: "3", ur: "3" },
+  "kidsPrayer.quiz.q12.opt2": { fr: "5", en: "5", nl: "5", ar: "٥", tr: "5", ur: "5" },
+  "kidsPrayer.quiz.q12.opt3": { fr: "7", en: "7", nl: "7", ar: "٧", tr: "7", ur: "7" },
+
   // Wudu steps
   "wudu.step.niyyah.title": { fr: "L'intention (Niyyah)", en: "Intention (Niyyah)", nl: "Intentie (Niyyah)", ar: "النية", tr: "Niyet", ur: "نیت" },
   "wudu.step.niyyah.desc": { fr: "Dans ton cœur, dis que tu veux faire tes ablutions pour Allah 💚", en: "In your heart, say you want to make wudu for Allah 💚", nl: "Zeg in je hart dat je wudu wilt doen voor Allah 💚", ar: "في قلبك، انوِ أنك تريد أن تتوضأ لله 💚", tr: "Kalbinde Allah için abdest almak istediğini söyle 💚", ur: "اپنے دل میں کہیں کہ آپ اللہ کے لیے وضو کرنا چاہتے ہیں 💚" },
