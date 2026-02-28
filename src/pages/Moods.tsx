@@ -134,8 +134,8 @@ export default function Moods() {
               >
                 <MoodCard
                   icon={m.emoji}
-                  title={m.title}
-                  desc={m.subtitle}
+                  title={t(`maladie.${m.id}` as any) || m.title}
+                  desc={t(`maladie.${m.id}.sub` as any) || m.subtitle}
                   loop={m.loop}
                   onClick={() => navigate(`/maladies/${m.id}`)}
                 />
