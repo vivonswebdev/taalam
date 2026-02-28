@@ -155,19 +155,22 @@ export default function Moods() {
           >
             {/* Filters */}
             <div className="px-4 pt-3 pb-1 flex gap-1.5 overflow-x-auto no-scrollbar">
-              {ATHKAR_FILTERS.map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setAthkarFilter(f.id)}
-                  className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                    athkarFilter === f.id
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card/70 text-muted-foreground border-border hover:border-primary/40"
-                  }`}
-                >
-                  {f.emoji} {f.label}
-                </button>
-              ))}
+              {ATHKAR_FILTERS.map((f) => {
+                const filterKey = f.id === "all" ? "athkar.filterAll" : `athkar.filter${f.id.charAt(0).toUpperCase()}${f.id.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())}`;
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => setAthkarFilter(f.id)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                      athkarFilter === f.id
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card/70 text-muted-foreground border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {f.emoji} {t(filterKey as any) || f.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Core athkar */}
