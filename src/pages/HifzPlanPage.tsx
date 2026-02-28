@@ -208,10 +208,10 @@ export default function HifzPlanPage() {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-5">
             <div className="text-center mb-5">
               <span className="text-4xl">📖</span>
-              <h2 className="text-base font-bold text-foreground mt-2">Crée ton plan de mémorisation</h2>
-              <p className="text-xs text-muted-foreground mt-1">Choisis tes sourates, ton rythme, et on génère ton planning</p>
+              <h2 className="text-base font-bold text-foreground mt-2">{t("hifz.createTitle")}</h2>
+              <p className="text-xs text-muted-foreground mt-1">{t("hifz.createSubtitle")}</p>
             </div>
-            <CreatePlanWizard onCreate={createPlan} />
+            <CreatePlanWizard onCreate={createPlan} t={t} />
           </motion.div>
         ) : (
           <>
