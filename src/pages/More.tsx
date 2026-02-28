@@ -71,6 +71,7 @@ export default function More() {
     { icon: <Star size={20} className="text-yellow-500" />, label: t("more.bookmarks"), desc: t("more.bookmarksDesc"), path: "/bookmarks" },
     { icon: <Users size={20} className="text-pink-500" />, label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
     { icon: <Users size={20} className="text-indigo-500" />, label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
+    { icon: <GraduationCap size={20} className="text-emerald-600" />, label: t("teacher.dashboard" as any), desc: t("teacher.dashboardDesc" as any), path: "/teacher-dashboard" },
   ];
 
   return (
