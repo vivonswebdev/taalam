@@ -976,8 +976,8 @@ const translations = {
   "study.noTafsir": { fr: "Aucun tafsir disponible", en: "No tafsir available", nl: "Geen tafsir beschikbaar", ar: "لا يوجد تفسير متاح", tr: "Tefsir mevcut değil", ur: "کوئی تفسیر دستیاب نہیں" },
 
   // Home - Hifz widget
-  "home.hifzPlan": { fr: "Plan Hifz", en: "Hifz Plan", nl: "Hifz Plan", ar: "خطة الحفظ", tr: "Hıfz Planı", ur: "حفظ پلان" },
-  "home.hifzCreate": { fr: "Crée ton planning de mémorisation", en: "Create your memorization plan", nl: "Maak je memorisatieplan", ar: "أنشئ خطة حفظك", tr: "Ezberleme planını oluştur", ur: "اپنا حفظ پلان بنائیں" },
+  "home.hifzPlan": { fr: "Plan Hifz", en: "Hifz plan", nl: "Hifz-plan", ar: "خطة الحفظ", tr: "Hıfz planı", ur: "حفظ کا منصوبہ" },
+  "home.hifzCreate": { fr: "Crée ton planning de mémorisation", en: "Create your memorization plan", nl: "Maak je memorisatieplan", ar: "أنشئ خطة الحفظ الخاصة بك", tr: "Kendi ezber planını oluştur", ur: "اپنا حفظ منصوبہ بنائیں" },
   "home.hifzCreateLink": { fr: "Créer mon plan →", en: "Create my plan →", nl: "Maak mijn plan →", ar: "→ إنشاء خطتي", tr: "Planımı oluştur →", ur: "→ میرا پلان بنائیں" },
   "home.hifzOpenLink": { fr: "Ouvrir mon plan →", en: "Open my plan →", nl: "Open mijn plan →", ar: "→ فتح خطتي", tr: "Planımı aç →", ur: "→ میرا پلان کھولیں" },
   "home.hifzTasksToday": { fr: "tâche(s) aujourd'hui", en: "task(s) today", nl: "taak/taken vandaag", ar: "مهمة/مهام اليوم", tr: "bugünkü görev(ler)", ur: "آج کے کام" },
