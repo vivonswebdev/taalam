@@ -77,6 +77,8 @@ export function useAuth() {
   }, []);
 
   const signOut = useCallback(async () => {
+    localStorage.removeItem("taalam_remember_me");
+    sessionStorage.removeItem("taalam_session_active");
     await supabase.auth.signOut();
   }, []);
 
