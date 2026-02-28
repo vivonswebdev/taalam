@@ -242,31 +242,11 @@ export default function Home() {
         </motion.button>
       </div>
 
-      {/* Espace enfants – single card (child mode only) */}
-      {isChildMode && (
-        <div className="px-5 mt-3">
-          <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/kids")}
-            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/30 shadow-lg"
-          >
-            <span className="text-3xl">🧸</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-foreground">{t("home.kidsSpace" as any)}</p>
-              <p className="text-[11px] text-muted-foreground">{t("home.kidsSpaceDesc" as any)}</p>
-            </div>
-            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")} →</span>
-          </motion.button>
-        </div>
-      )}
-
-      {/* ═══ SECTION D – Suivi & Classes ═══ */}
+      {/* ═══ SECTION D – Suivi & Outils ═══ */}
       <div className="px-5 mt-6 space-y-3">
-        {/* Suivi */}
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.sectionSuivi")}</p>
+
+        {/* 2×2 grid: Progression, Leaderboard, Plan Hifz, Espace enfants */}
         <div className="grid grid-cols-2 gap-3">
           <motion.button
             initial={{ opacity: 0, y: 10 }}
@@ -280,6 +260,7 @@ export default function Home() {
             <p className="text-xs font-bold text-foreground">{t("home.progressButton")}</p>
             <p className="text-[10px] text-muted-foreground">{t("home.progressButtonDesc")}</p>
           </motion.button>
+
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -292,51 +273,47 @@ export default function Home() {
             <p className="text-xs font-bold text-foreground">{t("home.leaderboardButton")}</p>
             <p className="text-[10px] text-muted-foreground">{t("home.leaderboardButtonDesc")}</p>
           </motion.button>
-        </div>
 
-        {/* Plan Hifz widget */}
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/hifz-plan")}
-          className="w-full flex flex-col gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-left"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl shrink-0">📖</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
-              {plan ? (
-                <p className="text-[10px] text-muted-foreground line-clamp-2">
-                  {plan.name} · {todayTasks.length} {t("home.hifzTasksToday")}
-                </p>
-              ) : (
-                <p className="text-[10px] text-muted-foreground">{t("home.hifzCreate")}</p>
-              )}
-            </div>
-            <span className="text-[10px] font-semibold text-primary shrink-0">
-              {plan ? t("home.hifzOpenLink") : t("home.hifzCreateLink")}
-            </span>
-          </div>
-          {plan && (
-            <div>
-              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>{t("home.hifzProgress")}</span>
-                <span>{overallProgress >= 100 ? "🎉 " : ""}{overallProgress}%</span>
+          {/* Plan Hifz card */}
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/hifz-plan")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-emerald-600/20 to-teal-600/10 border border-emerald-500/20 text-center"
+          >
+            <span className="text-2xl">📖</span>
+            <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
+            <p className="text-[10px] text-muted-foreground">
+              {plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
+            </p>
+            {plan && (
+              <div className="w-full mt-1">
+                <div className="h-1 rounded-full bg-muted/40 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-500" : "bg-primary"}`}
+                    style={{ width: `${Math.min(overallProgress, 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="mt-1 h-1.5 rounded-full bg-muted/40 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-primary"}`}
-                  style={{ width: `${Math.min(overallProgress, 100)}%` }}
-                />
-              </div>
-              {overallProgress === 0 && (
-                <p className="text-[10px] text-muted-foreground mt-1">{t("home.planStarted")}</p>
-              )}
-            </div>
-          )}
-        </motion.button>
+            )}
+          </motion.button>
+
+          {/* Espace enfants card – always visible */}
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/kids")}
+            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/20 text-center"
+          >
+            <span className="text-2xl">🧸</span>
+            <p className="text-xs font-bold text-foreground">{t("home.kidsSpace" as any)}</p>
+            <p className="text-[10px] text-muted-foreground">{t("home.kidsSpaceDesc" as any)}</p>
+          </motion.button>
+        </div>
       </div>
 
       {/* Weak Surahs */}
