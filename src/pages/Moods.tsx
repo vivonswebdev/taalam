@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moodPresets } from "@/data/moodPresets";
 import { maladiesPresets } from "@/data/maladiesPresets";
-import { athkarGroups, ATHKAR_FILTERS, type AthkarCategory } from "@/data/athkarData";
+import { athkarGroups, ATHKAR_FILTERS, CORE_ATHKAR_IDS, type AthkarCategory } from "@/data/athkarData";
 import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
