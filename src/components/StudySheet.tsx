@@ -89,9 +89,9 @@ export default function StudySheet({
   }, [open, tab, surahNumber, ayahNumber]);
 
   const tabs = [
-    { key: "translations" as const, label: "Traductions" },
-    { key: "tafsir" as const, label: "Tafsîr" },
-    { key: "notes" as const, label: "Notes" },
+    { key: "translations" as const, label: t("study.translations") },
+    { key: "tafsir" as const, label: t("study.tafsir") },
+    { key: "notes" as const, label: t("study.notes") },
   ];
 
   return (
