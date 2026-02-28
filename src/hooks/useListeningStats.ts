@@ -36,6 +36,7 @@ export function useListeningStats() {
     lastSession: null,
     averageQuizScore: null,
     sessionsCount: 0,
+    dailyListening: {},
   });
   const [loading, setLoading] = useState(true);
 
