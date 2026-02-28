@@ -171,7 +171,39 @@ export default function Home() {
 
       {/* ═══ HEADER ═══ */}
       <div className="relative overflow-visible">
-        <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 opacity-[0.06] pointer-events-none" />
+        {/* Animated glow orbs */}
+        <motion.div
+          className="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsla(152,60%,40%,0.25) 0%, transparent 70%)" }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: [0, 1, 0.7, 1], scale: [0.5, 1.1, 1] }}
+          transition={{ duration: 2, ease: "easeOut" }}
+        />
+        <motion.div
+          className="absolute -top-6 left-[20%] w-40 h-40 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsla(210,60%,50%,0.15) 0%, transparent 70%)" }}
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
+        />
+        <motion.div
+          className="absolute -top-4 right-[15%] w-36 h-36 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsla(43,70%,50%,0.12) 0%, transparent 70%)" }}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.8, delay: 0.5, ease: "easeOut" }}
+        />
+
+        {/* Islamic pattern with parallax fade */}
+        <motion.img
+          src={islamicPattern}
+          alt=""
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-56 pointer-events-none"
+          initial={{ opacity: 0, scale: 1.2, rotate: -8 }}
+          animate={{ opacity: 0.08, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+
         <div className="relative px-6 pt-12 pb-4 text-center">
           {/* Top bar */}
           <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
@@ -183,35 +215,57 @@ export default function Home() {
             <LanguageSwitcher />
           </div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-arabic text-lg text-primary mb-0.5">
+          {/* Basmala with glow entrance */}
+          <motion.p
+            initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="font-arabic text-xl text-primary mb-1 drop-shadow-[0_0_12px_hsla(152,50%,42%,0.4)]"
+          >
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </motion.p>
 
-          {/* Stats row */}
+          {/* Stats row – staggered pop-in */}
           <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="mt-2 flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="mt-3 flex items-center justify-center gap-3"
           >
-            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
-              <span className="text-sm">🔥</span>
-              <span className="text-xs font-semibold text-foreground">{xp.streakDays} {t("home.days")}</span>
-            </div>
-            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
-              <span className="text-sm">⭐</span>
-              <span className="text-xs font-semibold text-foreground">{xp.xpToday} XP {t("home.today")}</span>
-            </div>
-            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
-              <span className="text-sm">🏅</span>
-              <span className="text-xs font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
-            </div>
+            {[
+              { icon: "🔥", label: `${xp.streakDays} ${t("home.days")}`, delay: 0.5 },
+              { icon: "⭐", label: `${xp.xpToday} XP ${t("home.today")}`, delay: 0.65 },
+              { icon: "🏅", label: `${t("home.level.label")} ${xp.level}`, delay: 0.8 },
+            ].map((stat) => (
+              <motion.div
+                key={stat.icon}
+                initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: stat.delay, type: "spring", stiffness: 300, damping: 20 }}
+                className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1"
+              >
+                <span className="text-sm">{stat.icon}</span>
+                <span className="text-xs font-semibold text-foreground">{stat.label}</span>
+              </motion.div>
+            ))}
           </motion.div>
 
-          {/* Logo */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-3 flex items-center justify-center gap-2">
-            <img src={taaloumLogo} alt="Ta'alam" className="w-8 h-8 rounded-full shadow-lg shadow-primary/20" />
-            <span className="text-sm font-bold tracking-wide" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          {/* Logo with glow pulse */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
+            className="mt-3 flex items-center justify-center gap-2"
+          >
+            <motion.img
+              src={taaloumLogo}
+              alt="Ta'alam"
+              className="w-8 h-8 rounded-full"
+              style={{ boxShadow: "0 0 20px hsla(152,50%,42%,0.4)" }}
+              animate={{ boxShadow: ["0 0 12px hsla(152,50%,42%,0.3)", "0 0 24px hsla(152,50%,42%,0.5)", "0 0 12px hsla(152,50%,42%,0.3)"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <span className="text-sm font-bold tracking-wide" style={{ background: "linear-gradient(135deg, hsl(152,50%,42%), hsl(43,70%,55%))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Ta'alam
             </span>
           </motion.div>
