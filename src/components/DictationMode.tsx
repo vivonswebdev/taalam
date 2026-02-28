@@ -161,6 +161,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   // ─── Retry same ayah ───
   const retryAyah = useCallback(() => {
     setLiveTranscript("");
+    setPendingStop(false);
     setFeedbackWords([]);
     setFeedbackScore(0);
     setSimpleExplanation("");
