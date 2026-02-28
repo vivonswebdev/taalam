@@ -18,7 +18,7 @@ const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 1_000;
 const MIN_CHUNK_SIZE = 1;
 const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
-const MAX_NATIVE_RETRIES = 2; // After N silent restarts, force server fallback
+const MAX_NATIVE_RETRIES = 1; // After 1 silent attempt, force server fallback immediately
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
@@ -443,8 +443,13 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    // Reset server-force flag and retry counter each new recording session
-    forceServerRef.current = false;
+    // If native SR already failed in a previous verse, stay on server
+    if (forceServerRef.current) {
+      console.info("[VoiceRecognition] Reusing server STT (native previously failed)");
+      setMode("server");
+      startServer();
+      return;
+    }
     nativeRetryCountRef.current = 0;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
