@@ -64,17 +64,17 @@ export default function Moods() {
       {/* Tabs */}
       <div className="px-4 pt-3 pb-1">
         <div className="flex bg-muted/60 rounded-2xl p-1 gap-1">
-          {TABS.map((tab) => (
+          {TAB_IDS.map((tabId) => (
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              key={tabId}
+              onClick={() => setActiveTab(tabId)}
               className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === tab.id
+                activeTab === tabId
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab.emoji} {tab.label}
+              {TAB_EMOJIS[tabId]} {t(TAB_KEYS[tabId] as any)}
             </button>
           ))}
         </div>
