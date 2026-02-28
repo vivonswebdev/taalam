@@ -83,6 +83,7 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
+  const { settings: adminSettings, loading: adminSettingsLoading } = useAdminSettings();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
