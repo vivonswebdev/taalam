@@ -423,6 +423,35 @@ export default function ClassroomDetail() {
             memberProfiles={dbMembers}
           />
 
+          {/* Student assignments */}
+          {!isTeacherFinal && studentAssignments.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <ClipboardList size={14} className="text-primary" />
+                <p className="text-xs font-bold">{t("teacher.assignments" as any)}</p>
+              </div>
+              {studentAssignments.map((a) => (
+                <button
+                  key={a.id}
+                  onClick={() => markSeen(a.id)}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-card border border-border text-left"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold truncate">{a.title}</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {a.type} • 📅 {a.due_date}
+                    </p>
+                  </div>
+                  {a.isNew && (
+                    <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0 ml-2">
+                      NEW
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Past challenges history */}
           {pastChallenges.length > 0 && (
             <div className="space-y-2">
