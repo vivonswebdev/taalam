@@ -12,7 +12,6 @@ import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
 import { useChildMode } from "@/hooks/useChildMode";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import RoundActionButton from "@/components/RoundActionButton";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
@@ -22,6 +21,60 @@ import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 
+// Reusable home card
+function HomeCard({
+  emoji,
+  title,
+  desc,
+  cta,
+  onClick,
+  gradient,
+  delay = 0,
+  badge,
+  children,
+}: {
+  emoji: string;
+  title: string;
+  desc: string;
+  cta: string;
+  onClick: () => void;
+  gradient: string;
+  delay?: number;
+  badge?: React.ReactNode;
+  children?: React.ReactNode;
+}) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      whileTap={{ scale: 0.97 }}
+      onClick={onClick}
+      className={`card-shimmer relative overflow-hidden flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left border border-white/10 shadow-lg ${gradient}`}
+    >
+      {badge && (
+        <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
+          {badge}
+        </span>
+      )}
+      <div className="flex items-start gap-3">
+        <motion.span
+          className="text-2xl shrink-0"
+          whileHover={{ scale: 1.3, rotate: 10 }}
+          transition={{ type: "spring", stiffness: 400 }}
+        >
+          {emoji}
+        </motion.span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-white leading-tight">{title}</p>
+          <p className="text-[11px] text-white/60 mt-1 line-clamp-2">{desc}</p>
+        </div>
+      </div>
+      {children}
+      <span className="mt-auto pt-2 text-[11px] font-semibold text-white/50">{cta} →</span>
+    </motion.button>
+  );
+}
 
 export default function Home() {
   const navigate = useNavigate();
@@ -37,7 +90,6 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
-  
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -125,7 +177,7 @@ export default function Home() {
         </motion.div>
       )}
 
-      {/* ═══ SECTION A – Header compact ═══ */}
+      {/* ═══ HEADER ═══ */}
       <div className="relative overflow-visible">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
         <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 opacity-10 pointer-events-none" />
@@ -175,144 +227,106 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ SECTION B+C – 4 features en grille 2×2 ═══ */}
+      {/* ═══ BLOC 1 – Tarteel & États du cœur ═══ */}
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
-        {/* ❤️ États du cœur */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/moods")}
-          className="card-shimmer relative overflow-hidden rounded-2xl p-4 text-left border border-white/10 flex flex-col"
-          style={{ background: "linear-gradient(135deg, #0f172a, #1e293b, #10b981)" }}
-        >
-          <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
-            🆕
-          </span>
-          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: 10 }} transition={{ type: "spring", stiffness: 400 }}>❤️</motion.span>
-          <p className="text-sm font-bold text-white leading-tight">{t("home.moodsTitle")}</p>
-          <p className="text-[11px] text-white/60 mt-1 line-clamp-2">{t("home.moodsSubtitle")}</p>
-          <span className="mt-auto pt-3 text-[11px] font-semibold text-white/50">{t("home.moodsButton")} →</span>
-        </motion.button>
-
-        {/* 🎤 Tarteel */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          whileTap={{ scale: 0.97 }}
+        <HomeCard
+          emoji="🎤"
+          title={t("home.tarteelButton")}
+          desc={t("home.tarteelButtonDesc")}
+          cta={t("home.open")}
           onClick={() => navigate("/quran?mode=dictation")}
-          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
-        >
-          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: -10 }} transition={{ type: "spring", stiffness: 400 }}>🎤</motion.span>
-          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.tarteelButton")}</p>
-          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.tarteelButtonDesc")}</p>
-          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">{t("home.open")} </span>
-        </motion.button>
-
-        {/* 🧠 Quiz */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/quiz")}
-          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
-        >
-          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, y: -4 }} transition={{ type: "spring", stiffness: 400 }}>🧠</motion.span>
-          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.quizButton")}</p>
-          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.quizButtonDesc")}</p>
-          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">{t("home.open")} </span>
-        </motion.button>
-
-        {/* 🔍 Trouver mon ayah */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/find-ayah")}
-          className="card-shimmer rounded-2xl p-4 text-left flex flex-col bg-gradient-to-br from-primary to-accent-foreground shadow-lg shadow-primary/20"
-        >
-          <motion.span className="text-2xl mb-2 inline-block" whileHover={{ scale: 1.3, rotate: 15 }} transition={{ type: "spring", stiffness: 400 }}>🔍</motion.span>
-          <p className="text-sm font-bold text-primary-foreground leading-tight">{t("home.findAyahButton")}</p>
-          <p className="text-[11px] text-primary-foreground/60 mt-1 line-clamp-2">{t("home.findAyahButtonDesc")}</p>
-          <span className="mt-auto pt-3 text-[11px] font-semibold text-primary-foreground/50">{t("home.open")} </span>
-        </motion.button>
+          gradient="bg-gradient-to-br from-emerald-800/60 to-teal-700/30"
+          delay={0.25}
+        />
+        <HomeCard
+          emoji="❤️"
+          title={t("home.moodsTitle")}
+          desc={t("home.moodsSubtitle")}
+          cta={t("home.moodsButton")}
+          onClick={() => navigate("/moods")}
+          gradient="bg-gradient-to-br from-teal-800/60 to-emerald-700/30"
+          delay={0.3}
+          badge="🆕"
+        />
       </div>
 
-      {/* ═══ SECTION D – Suivi & Outils ═══ */}
+      {/* ═══ BLOC 2 – Recherche & Kids ═══ */}
+      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
+        <HomeCard
+          emoji="🔍"
+          title={t("home.findAyahButton")}
+          desc={t("home.findAyahButtonDesc")}
+          cta={t("home.open")}
+          onClick={() => navigate("/find-ayah")}
+          gradient="bg-gradient-to-br from-violet-800/60 to-blue-700/30"
+          delay={0.35}
+        />
+        <HomeCard
+          emoji="🧸"
+          title={t("home.kidsSpace" as any)}
+          desc={t("home.kidsSpaceDesc" as any)}
+          cta={t("home.open")}
+          onClick={() => navigate("/kids")}
+          gradient="bg-gradient-to-br from-blue-800/60 to-violet-700/30"
+          delay={0.4}
+        />
+      </div>
+
+      {/* ═══ BLOC 3 – Hifz & Quiz ═══ */}
+      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
+        <HomeCard
+          emoji="📖"
+          title={t("home.hifzPlan")}
+          desc={plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
+          cta={plan ? t("home.open") : t("home.hifzCreate")}
+          onClick={() => navigate("/hifz-plan")}
+          gradient="bg-gradient-to-br from-indigo-800/60 to-cyan-700/30"
+          delay={0.45}
+        >
+          {plan && (
+            <div className="w-full mt-2">
+              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-400" : "bg-white/70"}`}
+                  style={{ width: `${Math.min(overallProgress, 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </HomeCard>
+        <HomeCard
+          emoji="🧠"
+          title={t("home.quizButton")}
+          desc={t("home.quizButtonDesc")}
+          cta={t("home.open")}
+          onClick={() => navigate("/quiz")}
+          gradient="bg-gradient-to-br from-cyan-800/60 to-indigo-700/30"
+          delay={0.5}
+        />
+      </div>
+
+      {/* ═══ BLOC 4 – Suivi ═══ */}
       <div className="px-5 mt-6 space-y-3">
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.sectionSuivi")}</p>
-
-        {/* 2×2 grid: Progression, Leaderboard, Plan Hifz, Espace enfants */}
         <div className="grid grid-cols-2 gap-3">
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            whileTap={{ scale: 0.97 }}
+          <HomeCard
+            emoji="📊"
+            title={t("home.progressButton")}
+            desc={t("home.progressButtonDesc")}
+            cta={t("home.open")}
             onClick={() => navigate("/habits")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
-          >
-            <span className="text-2xl">📊</span>
-            <p className="text-xs font-bold text-foreground">{t("home.progressButton")}</p>
-            <p className="text-[10px] text-muted-foreground">{t("home.progressButtonDesc")}</p>
-          </motion.button>
-
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            whileTap={{ scale: 0.97 }}
+            gradient="bg-gradient-to-br from-slate-800/60 to-gray-700/30"
+            delay={0.55}
+          />
+          <HomeCard
+            emoji="🏆"
+            title={t("home.leaderboardButton")}
+            desc={t("home.leaderboardButtonDesc")}
+            cta={t("home.open")}
             onClick={() => navigate("/leaderboard")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-muted/50 border border-border text-center"
-          >
-            <span className="text-2xl">🏆</span>
-            <p className="text-xs font-bold text-foreground">{t("home.leaderboardButton")}</p>
-            <p className="text-[10px] text-muted-foreground">{t("home.leaderboardButtonDesc")}</p>
-          </motion.button>
-
-          {/* Plan Hifz card */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/hifz-plan")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-emerald-600/20 to-teal-600/10 border border-emerald-500/20 text-center"
-          >
-            <span className="text-2xl">📖</span>
-            <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
-            <p className="text-[10px] text-muted-foreground">
-              {plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
-            </p>
-            {plan && (
-              <div className="w-full mt-1">
-                <div className="h-1 rounded-full bg-muted/40 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-500" : "bg-primary"}`}
-                    style={{ width: `${Math.min(overallProgress, 100)}%` }}
-                  />
-                </div>
-              </div>
-            )}
-          </motion.button>
-
-          {/* Espace enfants card – always visible */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/kids")}
-            className="flex flex-col items-center gap-2 rounded-2xl p-4 bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/20 text-center"
-          >
-            <span className="text-2xl">🧸</span>
-            <p className="text-xs font-bold text-foreground">{t("home.kidsSpace" as any)}</p>
-            <p className="text-[10px] text-muted-foreground">{t("home.kidsSpaceDesc" as any)}</p>
-          </motion.button>
+            gradient="bg-gradient-to-br from-amber-800/60 to-yellow-700/30"
+            delay={0.6}
+          />
         </div>
       </div>
 
