@@ -85,14 +85,15 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     mediaStreamRef.current = null;
   }, []);
 
-  // Helper to get the best auth token (user JWT if logged in, else anon key)
-  const getAuthToken = useCallback(async (): Promise<string> => {
+  // Helper to get user auth token for protected backend STT
+  const getAuthToken = useCallback(async (): Promise<string | null> => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) return session.access_token;
-    } catch {}
-    return import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      return session?.access_token ?? null;
+    } catch {
+      return null;
+    }
   }, []);
 
   const processQueue = useCallback(async () => {
