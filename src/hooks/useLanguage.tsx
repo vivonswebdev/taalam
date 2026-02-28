@@ -1516,6 +1516,23 @@ const translations = {
   // More page
   "more.helpFaq": { fr: "Aide & FAQ", en: "Help & FAQ", nl: "Help & FAQ", ar: "المساعدة والأسئلة", tr: "Yardım & SSS", ur: "مدد اور سوالات" },
   "more.helpFaqDesc": { fr: "Questions fréquentes & conditions", en: "Frequently asked questions & terms", nl: "Veelgestelde vragen & voorwaarden", ar: "الأسئلة الشائعة والشروط", tr: "Sık sorulan sorular ve koşullar", ur: "اکثر پوچھے جانے والے سوالات اور شرائط" },
+  "more.notifications": { fr: "Notifications", en: "Notifications", nl: "Meldingen", ar: "الإشعارات", tr: "Bildirimler", ur: "اطلاعات" },
+  "more.notificationsDesc": { fr: "Rappels Hifz, devoirs et encouragements", en: "Hifz reminders, assignments & nudges", nl: "Hifz herinneringen, opdrachten & duwtjes", ar: "تذكيرات الحفظ والواجبات والتشجيع", tr: "Hifz hatırlatmaları, ödevler ve teşvikler", ur: "حفظ یاد دہانی، اسائنمنٹس اور حوصلہ افزائی" },
+
+  // Notification settings page
+  "notif.title": { fr: "Notifications", en: "Notifications", nl: "Meldingen", ar: "الإشعارات", tr: "Bildirimler", ur: "اطلاعات" },
+  "notif.subtitle": { fr: "Gère tes rappels quotidiens", en: "Manage your daily reminders", nl: "Beheer je dagelijkse herinneringen", ar: "إدارة التذكيرات اليومية", tr: "Günlük hatırlatmalarını yönet", ur: "اپنی روزانہ یاد دہانیاں منظم کریں" },
+  "notif.hifzReminder": { fr: "Rappel Hifz quotidien", en: "Daily Hifz reminder", nl: "Dagelijkse Hifz herinnering", ar: "تذكير يومي بالحفظ", tr: "Günlük Hifz hatırlatması", ur: "روزانہ حفظ یاد دہانی" },
+  "notif.hifzReminderDesc": { fr: "Reçois un rappel pour garder ton streak de mémorisation", en: "Get a reminder to keep your memorization streak", nl: "Ontvang een herinnering om je memorisatie streak te behouden", ar: "احصل على تذكير للحفاظ على سلسلة الحفظ", tr: "Ezberleme serini korumak için hatırlatma al", ur: "اپنی حفظ سلسلہ برقرار رکھنے کے لیے یاد دہانی حاصل کریں" },
+  "notif.assignmentReminder": { fr: "Rappel devoirs", en: "Assignment reminder", nl: "Opdracht herinnering", ar: "تذكير بالواجبات", tr: "Ödev hatırlatması", ur: "اسائنمنٹ یاد دہانی" },
+  "notif.assignmentReminderDesc": { fr: "Notification quand un devoir approche de la date limite", en: "Notification when an assignment is due soon", nl: "Melding wanneer een opdracht bijna af moet zijn", ar: "إشعار عند اقتراب موعد تسليم الواجب", tr: "Ödev teslim tarihi yaklaştığında bildirim", ur: "جب اسائنمنٹ کی آخری تاریخ قریب ہو تو اطلاع" },
+  "notif.nudge": { fr: "Encouragement doux", en: "Gentle nudge", nl: "Vriendelijk duwtje", ar: "تشجيع لطيف", tr: "Nazik teşvik", ur: "نرم حوصلہ افزائی" },
+  "notif.nudgeDesc": { fr: "Message bienveillant si tu es inactif depuis quelques jours", en: "Kind message if you've been inactive for a few days", nl: "Vriendelijk bericht als je een paar dagen inactief bent", ar: "رسالة لطيفة إذا كنت غير نشط لبضعة أيام", tr: "Birkaç gündür aktif değilseniz nazik bir mesaj", ur: "اگر آپ کچھ دنوں سے غیر فعال ہیں تو شفقت آمیز پیغام" },
+  "notif.nudgeAfter": { fr: "Envoyer après", en: "Send after", nl: "Verzend na", ar: "إرسال بعد", tr: "Sonra gönder", ur: "بعد بھیجیں" },
+  "notif.days": { fr: "jours d'inactivité", en: "days of inactivity", nl: "dagen inactiviteit", ar: "أيام من عدم النشاط", tr: "gün hareketsizlik", ur: "دن غیر فعالیت" },
+  "notif.reminderTime": { fr: "Heure du rappel", en: "Reminder time", nl: "Herinneringstijd", ar: "وقت التذكير", tr: "Hatırlatma zamanı", ur: "یاد دہانی کا وقت" },
+  "notif.reminderTimeDesc": { fr: "Choisis à quelle heure tu veux être rappelé(e)", en: "Choose when you want to be reminded", nl: "Kies wanneer je herinnerd wilt worden", ar: "اختر الوقت الذي تريد أن يتم تذكيرك فيه", tr: "Hatırlatılmak istediğiniz zamanı seçin", ur: "وہ وقت منتخب کریں جب آپ یاد دہانی چاہتے ہیں" },
+  "notif.pushInfo": { fr: "Les notifications push nécessitent la configuration de Firebase Cloud Messaging. Sans cela, les rappels fonctionnent uniquement lorsque l'app est ouverte.", en: "Push notifications require Firebase Cloud Messaging setup. Without it, reminders only work when the app is open.", nl: "Push meldingen vereisen Firebase Cloud Messaging configuratie. Zonder dit werken herinneringen alleen als de app open is.", ar: "تتطلب الإشعارات الفورية إعداد Firebase Cloud Messaging. بدونها تعمل التذكيرات فقط عندما يكون التطبيق مفتوحًا.", tr: "Push bildirimler Firebase Cloud Messaging kurulumu gerektirir. Bu olmadan hatırlatmalar yalnızca uygulama açıkken çalışır.", ur: "پش اطلاعات کے لیے Firebase Cloud Messaging سیٹ اپ درکار ہے۔ اس کے بغیر یاد دہانیاں صرف ایپ کھلی ہونے پر کام کرتی ہیں۔" },
 
   // Help & FAQ page
   "help.title": { fr: "Aide & FAQ", en: "Help & FAQ", nl: "Help & FAQ", ar: "المساعدة والأسئلة", tr: "Yardım & SSS", ur: "مدد اور سوالات" },
