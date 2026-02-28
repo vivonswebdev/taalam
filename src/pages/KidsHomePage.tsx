@@ -63,6 +63,7 @@ export default function KidsHomePage() {
   const { t } = useLanguage();
   const noorani = useNooraniProgress();
   const { profiles } = useChildProfiles();
+  const checklist = useKidsChecklist();
   const hasChildren = profiles.length > 0;
 
   // Quiz stats from localStorage
