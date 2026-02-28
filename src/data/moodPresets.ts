@@ -24,7 +24,7 @@ export const moodPresets: MoodPreset[] = [
     id: "sleep",
     title: "Pour dormir",
     titleAr: "للنوم",
-    emoji: "😴",
+    emoji: "🌙",
     subtitle: "Calme et protection avant le sommeil",
     loop: true,
     type: "sleep",
