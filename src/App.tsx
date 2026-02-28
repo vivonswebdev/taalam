@@ -40,6 +40,7 @@ import LiveQuran from "./pages/LiveQuran";
 import Habits from "./pages/Habits";
 import More from "./pages/More";
 import HifzPlanPage from "./pages/HifzPlanPage";
+import Study from "./pages/Study";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
