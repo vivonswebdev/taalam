@@ -45,6 +45,7 @@ import Listening from "./pages/Listening";
 import Noorani from "./pages/Noorani";
 import NooraniLesson from "./pages/NooraniLesson";
 import KidsPrayerPage from "./pages/KidsPrayerPage";
+import KidsHajjUmraPage from "./pages/KidsHajjUmraPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -102,6 +103,7 @@ const App = () => (
               <Route path="/noorani" element={<Noorani />} />
               <Route path="/noorani/:lessonId" element={<NooraniLesson />} />
               <Route path="/kids-prayer" element={<KidsPrayerPage />} />
+              <Route path="/kids-hajj" element={<KidsHajjUmraPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

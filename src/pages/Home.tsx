@@ -289,6 +289,23 @@ export default function Home() {
             </div>
             <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
           </motion.button>
+
+          {/* Kids Hajj & Umra card */}
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/kids-hajj")}
+            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-amber-600/20 to-orange-600/10 border border-amber-500/20"
+          >
+            <span className="text-3xl">🕋</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-foreground">{t("home.kidsHajj" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">{t("home.kidsHajjDesc" as any)}</p>
+            </div>
+            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
+          </motion.button>
         </div>
       )}
 
