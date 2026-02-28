@@ -1851,14 +1851,14 @@ const translations = {
 
   // Quiz UI
   "quiz.hifzTitle": { fr: "Quiz Hifz", en: "Hifz Quiz", nl: "Hifz Quiz", ar: "اختبار الحفظ", tr: "Hıfz Testi", ur: "حفظ کوئز" },
-  "quiz.chooseCategory": { fr: "Choisis ta catégorie et progresse", en: "Choose your category and progress", nl: "Kies je categorie en vorder", ar: "اختر فئتك وتقدّم", tr: "Kategorini seç ve ilerle", ur: "اپنا زمرہ منتخب کریں اور آگے بڑھیں" },
+  "quiz.chooseCategoryAlt": { fr: "Choisis ta catégorie et progresse", en: "Choose your category and progress", nl: "Kies je categorie en vorder", ar: "اختر فئتك وتقدّم", tr: "Kategorini seç ve ilerle", ur: "اپنا زمرہ منتخب کریں اور آگے بڑھیں" },
   "quiz.streakLabel": { fr: "Streak Quiz", en: "Quiz Streak", nl: "Quiz Reeks", ar: "سلسلة الاختبارات", tr: "Test Serisi", ur: "کوئز سلسلہ" },
   "quiz.streakContinue": { fr: "Continue chaque jour pour maintenir ta série", en: "Continue every day to keep your streak", nl: "Ga elke dag door om je reeks te behouden", ar: "واصل كل يوم للحفاظ على سلسلتك", tr: "Serini korumak için her gün devam et", ur: "اپنا سلسلہ جاری رکھنے کے لیے ہر روز جاری رکھیں" },
   "quiz.bravoQuiz": { fr: "Bravo pour ce quiz !", en: "Well done on this quiz!", nl: "Goed gedaan met deze quiz!", ar: "أحسنت في هذا الاختبار!", tr: "Bu testte harika!", ur: "اس کوئز میں شاباش!" },
   "quiz.xpEarned": { fr: "XP gagnés", en: "XP earned", nl: "XP verdiend", ar: "نقاط الخبرة المكتسبة", tr: "Kazanılan XP", ur: "حاصل کردہ XP" },
   "quiz.bestStreak": { fr: "Meilleure série", en: "Best streak", nl: "Beste reeks", ar: "أفضل سلسلة", tr: "En iyi seri", ur: "بہترین سلسلہ" },
   "quiz.comeBackTomorrow": { fr: "Reviens demain pour continuer ta série", en: "Come back tomorrow to continue your streak", nl: "Kom morgen terug om je reeks voort te zetten", ar: "عد غدًا لمواصلة سلسلتك", tr: "Serini sürdürmek için yarın gel", ur: "اپنا سلسلہ جاری رکھنے کے لیے کل واپس آئیں" },
-  "quiz.otherQuiz": { fr: "Autre quiz", en: "Other quiz", nl: "Andere quiz", ar: "اختبار آخر", tr: "Başka test", ur: "دوسرا کوئز" },
+  "quiz.otherQuizAlt": { fr: "Autre quiz", en: "Other quiz", nl: "Andere quiz", ar: "اختبار آخر", tr: "Başka test", ur: "دوسرا کوئز" },
   "quiz.replay": { fr: "Rejouer", en: "Replay", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar oyna", ur: "دوبارہ کھیلیں" },
   "quiz.weekRanking": { fr: "Classement de la semaine", en: "Weekly ranking", nl: "Weekranglijst", ar: "ترتيب الأسبوع", tr: "Haftalık sıralama", ur: "ہفتہ وار درجہ بندی" },
   "quiz.questionNum": { fr: "Question", en: "Question", nl: "Vraag", ar: "سؤال", tr: "Soru", ur: "سوال" },

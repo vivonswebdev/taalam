@@ -361,7 +361,29 @@ export default function Home() {
         />
       </div>
 
-      {/* ═══ BLOC 4 – Suivi ═══ */}
+      {/* ═══ BLOC 4 – Communauté & Enseignant ═══ */}
+      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
+        <HomeCard
+          emoji="🌍"
+          title={t("community.title" as any)}
+          desc={t("community.menuDesc" as any)}
+          cta={t("home.open" as any)}
+          onClick={() => { trackEvent("module_open", "community"); navigate("/community"); }}
+          gradient="bg-gradient-to-br from-pink-700/60 to-rose-700/30 border border-pink-400/40"
+          delay={0.55}
+        />
+        <HomeCard
+          emoji="🎓"
+          title={t("teacher.dashboard" as any)}
+          desc={t("teacher.dashboardDesc" as any)}
+          cta={t("home.open" as any)}
+          onClick={() => { trackEvent("module_open", "teacher"); navigate("/teacher-dashboard"); }}
+          gradient="bg-gradient-to-br from-pink-700/60 to-rose-700/30 border border-pink-400/40"
+          delay={0.6}
+        />
+      </div>
+
+      {/* ═══ BLOC 5 – Suivi ═══ */}
       <div className="px-5 mt-6 space-y-3">
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.trackingSection" as any)}</p>
         <div className="grid grid-cols-2 gap-3">
@@ -372,7 +394,7 @@ export default function Home() {
             cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
-            delay={0.55}
+            delay={0.65}
           />
           <HomeCard
             emoji="🏆"
@@ -381,7 +403,111 @@ export default function Home() {
             cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
-            delay={0.6}
+            delay={0.7}
+          />
+        </div>
+      </div>
+
+      {/* ═══ BLOC 6 – Outils rapides ═══ */}
+      <div className="px-5 mt-6 space-y-3">
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("more.sectionQuran" as any)}</p>
+        <div className="grid grid-cols-2 gap-3">
+          <HomeCard
+            emoji="📖"
+            title={t("more.mushaf" as any)}
+            desc={t("more.mushafDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/mushaf")}
+            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
+            delay={0.75}
+          />
+          <HomeCard
+            emoji="📿"
+            title={t("more.athkar" as any)}
+            desc={t("more.athkarDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/moods")}
+            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
+            delay={0.8}
+          />
+          <HomeCard
+            emoji="📻"
+            title={t("more.liveQuran" as any)}
+            desc={t("more.liveQuranDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/live-quran")}
+            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
+            delay={0.85}
+          />
+          <HomeCard
+            emoji="🎧"
+            title={t("more.advancedListening" as any)}
+            desc={t("more.advancedListeningDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/listening")}
+            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
+            delay={0.9}
+          />
+        </div>
+      </div>
+
+      {/* ═══ BLOC 7 – Modules ═══ */}
+      <div className="px-5 mt-6 space-y-3">
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("more.sectionModules" as any)}</p>
+        <div className="grid grid-cols-2 gap-3">
+          <HomeCard
+            emoji="🧠"
+            title={t("more.hifzPlan" as any)}
+            desc={t("more.hifzPlanDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/hifz-plan")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={0.95}
+          />
+          <HomeCard
+            emoji="📝"
+            title={t("more.studyMode" as any)}
+            desc={t("more.studyModeDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/study?surah=1")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={1}
+          />
+          <HomeCard
+            emoji="⭐"
+            title={t("more.bookmarks" as any)}
+            desc={t("more.bookmarksDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/bookmarks")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={1.05}
+          />
+          <HomeCard
+            emoji="👨‍👩‍👧"
+            title={t("more.familyClass" as any)}
+            desc={t("more.familyClassDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/family")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={1.1}
+          />
+          <HomeCard
+            emoji="🕐"
+            title={t("more.prayerTimes" as any)}
+            desc={t("more.prayerTimesDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/prayers")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={1.15}
+          />
+          <HomeCard
+            emoji="📚"
+            title={t("more.juzHizb" as any)}
+            desc={t("more.juzHizbDesc" as any)}
+            cta={t("home.open" as any)}
+            onClick={() => navigate("/juz")}
+            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
+            delay={1.2}
           />
         </div>
       </div>
