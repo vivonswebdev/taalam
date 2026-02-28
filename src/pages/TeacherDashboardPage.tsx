@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
+import TeacherStatsSection from "@/components/TeacherStatsSection";
 
 interface TeacherClass {
   id: string;
