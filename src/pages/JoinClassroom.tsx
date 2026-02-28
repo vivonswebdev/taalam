@@ -33,11 +33,9 @@ export default function JoinClassroom() {
     if (!code) { setNotFound(true); setLoading(false); return; }
 
     (async () => {
-      const { data } = await supabase
-        .from("classrooms")
-        .select("id, name, join_code, teacher_id")
-        .eq("join_code", code.toUpperCase())
-        .maybeSingle();
+      const { data: rpcData } = await supabase
+        .rpc("lookup_classroom_by_code", { _join_code: code.toUpperCase() });
+      const data = rpcData?.[0] || null;
 
       if (!data) {
         setNotFound(true);

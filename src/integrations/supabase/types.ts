@@ -798,6 +798,15 @@ export type Database = {
         Args: { _family_id: string; _user_id: string }
         Returns: boolean
       }
+      lookup_classroom_by_code: {
+        Args: { _join_code: string }
+        Returns: {
+          id: string
+          join_code: string
+          name: string
+          teacher_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

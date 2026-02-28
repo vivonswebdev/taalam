@@ -139,11 +139,9 @@ export default function Classrooms() {
     setJoining(true);
     try {
       // Look up classroom by join_code
-      const { data: classroom, error } = await supabase
-        .from("classrooms")
-        .select("id, name")
-        .eq("join_code", code)
-        .maybeSingle();
+      const { data: rpcData, error } = await supabase
+        .rpc("lookup_classroom_by_code", { _join_code: code.toUpperCase() });
+      const classroom = rpcData?.[0] || null;
 
       if (error) throw error;
       if (!classroom) {

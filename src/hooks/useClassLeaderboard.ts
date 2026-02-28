@@ -149,11 +149,9 @@ export function useClassLeaderboard() {
     if (!user) return { error: "not_authenticated" };
     
     // Look up classroom - use anon access via the public policy
-    const { data: classroom } = await supabase
-      .from("classrooms")
-      .select("*")
-      .eq("join_code", code.toUpperCase())
-      .maybeSingle();
+    const { data: rpcData } = await supabase
+      .rpc("lookup_classroom_by_code", { _join_code: code.toUpperCase() });
+    const classroom = rpcData?.[0] || null;
 
     if (!classroom) return { error: "not_found" };
 

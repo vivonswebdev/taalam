@@ -2,3 +2,9 @@ project_id = "usgqmmfigvkmxneoegig"
 
 [functions.stt]
 verify_jwt = false
+
+[functions.stt-chunk]
+verify_jwt = false
+
+[functions.find-ayah]
+verify_jwt = false
