@@ -109,6 +109,8 @@ const App = () => (
               <Route path="/moods" element={<Moods />} />
               <Route path="/moods/:id" element={<MoodDetail />} />
               <Route path="/moods/:id/read" element={<MoodRead />} />
+              <Route path="/maladies/:id" element={<MaladieDetail />} />
+              <Route path="/athkar/:id" element={<AthkarDetail />} />
               <Route path="/live-quran" element={<LiveQuran />} />
               <Route path="/habits" element={<Habits />} />
               <Route path="/more" element={<More />} />
