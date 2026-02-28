@@ -360,6 +360,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       }
 
       if (recognitionRef.current === recognition) {
+        activeEngineRef.current = null;
         setIsListening(false);
         onEndRef.current?.();
       }
