@@ -39,7 +39,7 @@ function MenuSection({ title, items }: { title: string; items: MenuItem[] }) {
 
 export default function More() {
   const { t } = useLanguage();
-  const { isChildMode } = useChildMode();
+  const { mode } = useUserMode();
 
   const childSection: MenuItem[] = [
     { icon: "🧸", label: t("home.kidsSpace" as any), desc: t("home.kidsSpaceDesc" as any), path: "/kids" },
