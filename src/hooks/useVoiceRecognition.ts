@@ -105,13 +105,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     isProcessingRef.current = true;
 
     const authToken = await getAuthToken();
-    if (!authToken) {
-      // Protected backend STT requires logged-in user token
-      chunkQueueRef.current = [];
-      isProcessingRef.current = false;
-      onErrorRef.current?.("auth-required");
-      return;
-    }
 
     while (chunkQueueRef.current.length > 0) {
       const blob = chunkQueueRef.current.shift()!;
@@ -121,14 +114,26 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         const base64 = btoa(new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), ""));
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "apikey": supabaseKey,
+        };
+        if (authToken) {
+          headers.Authorization = `Bearer ${authToken}`;
+        }
+
         const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}`, "apikey": supabaseKey },
+          headers,
           body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
         });
 
         if (res.status === 401 || res.status === 403) {
           onErrorRef.current?.("auth-required");
+          isListeningRef.current = false;
+          cleanupServer();
+          setIsListening(false);
+          onEndRef.current?.();
           break;
         }
 
@@ -148,7 +153,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     }
 
     isProcessingRef.current = false;
-  }, [lang, getAuthToken]);
+  }, [lang, getAuthToken, cleanupServer]);
 
   const startServer = useCallback(async () => {
     console.info("[VoiceRecognition] Starting server STT");
