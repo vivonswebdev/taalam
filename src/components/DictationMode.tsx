@@ -44,7 +44,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [simpleExplanation, setSimpleExplanation] = useState<string>("");
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [completedAyahs, setCompletedAyahs] = useState<Set<number>>(new Set());
-
+  const [forceServerSTT, setForceServerSTT] = useState(() => {
+    try { return localStorage.getItem("dictation_force_server") === "true"; } catch { return false; }
+  });
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<number>>(new Set());
 
