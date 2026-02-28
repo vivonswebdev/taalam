@@ -1519,10 +1519,7 @@ const translations = {
   "hifz.habitToday": { fr: "tâches Hifz aujourd'hui", en: "Hifz tasks today", nl: "Hifz-taken vandaag", ar: "مهام الحفظ اليوم", tr: "bugünkü Hıfz görevleri", ur: "آج کے حفظ کام" },
   "hifz.streakDays": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
   "hifz.managePlan": { fr: "Gérer mon plan", en: "Manage plan", nl: "Plan beheren", ar: "إدارة خطتي", tr: "Planımı yönet", ur: "پلان کا انتظام" },
-  "hifz.createPlan": { fr: "Créer un plan", en: "Create a plan", nl: "Plan aanmaken", ar: "إنشاء خطة", tr: "Plan oluştur", ur: "پلان بنائیں" },
   "hifz.noPlanYet": { fr: "Pas de plan Hifz. Crée-en un pour suivre ta mémorisation !", en: "No Hifz plan yet. Create one to track your memorization!", nl: "Nog geen Hifz-plan. Maak er een om je memorisatie te volgen!", ar: "لا توجد خطة حفظ بعد. أنشئ واحدة لمتابعة حفظك!", tr: "Henüz Hıfz planı yok. Ezberinizi takip etmek için bir plan oluşturun!", ur: "ابھی تک کوئی حفظ پلان نہیں۔ اپنا حفظ ٹریک کرنے کے لیے بنائیں!" },
-  "hifz.review": { fr: "Révision", en: "Review", nl: "Herhaling", ar: "مراجعة", tr: "Tekrar", ur: "مراجعہ" },
-  "hifz.new": { fr: "Nouveau", en: "New", nl: "Nieuw", ar: "جديد", tr: "Yeni", ur: "نیا" },
   "hifz.moreTasks": { fr: "tâches en plus", en: "more tasks", nl: "meer taken", ar: "مهام إضافية", tr: "daha fazla görev", ur: "مزید کام" },
 
   // PDF Report
