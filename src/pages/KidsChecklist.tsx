@@ -51,7 +51,7 @@ export default function KidsChecklist() {
 
   return (
     <div className="min-h-screen pb-24">
-      {showConfetti && <Confetti />}
+      {<Confetti active={showConfetti} />}
 
       {/* Header */}
       <div className="px-6 pt-14 pb-2">
