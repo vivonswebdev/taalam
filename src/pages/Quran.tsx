@@ -575,7 +575,19 @@ export default function Quran() {
                 onClick={() => {
                   if (item.nav) { navigate(item.nav); return; }
                   setRecitationMode(item.mode);
-                  if (lastUsedSurah) { handleSelectSurah(lastUsedSurah); }
+                  if (lastUsedSurah) {
+                    handleSelectSurah(lastUsedSurah);
+                  } else {
+                    setShowDropdown(true);
+                    setHighlightSelector(true);
+                    setTimeout(() => setHighlightSelector(false), 3000);
+                    setTimeout(() => {
+                      surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }, 100);
+                    toast.info(t("mode.noSurahTitle" as any), {
+                      description: t("mode.noSurahDesc" as any),
+                    });
+                  }
                 }}
                 className={`card-shimmer relative overflow-hidden rounded-2xl p-3.5 flex flex-col gap-1 text-left shadow-sm bg-gradient-to-br ${item.gradient} ${
                   recitationMode === item.mode ? "ring-2 ring-white/40 shadow-lg" : ""
