@@ -980,8 +980,8 @@ const translations = {
   "home.hifzCreate": { fr: "Crée ton planning de mémorisation", en: "Create your memorization plan", nl: "Maak je memorisatieplan", ar: "أنشئ خطة الحفظ الخاصة بك", tr: "Kendi ezber planını oluştur", ur: "اپنا حفظ منصوبہ بنائیں" },
   "home.hifzCreateLink": { fr: "Créer mon plan →", en: "Create my plan →", nl: "Maak mijn plan →", ar: "→ إنشاء خطتي", tr: "Planımı oluştur →", ur: "→ میرا پلان بنائیں" },
   "home.hifzOpenLink": { fr: "Ouvrir mon plan →", en: "Open my plan →", nl: "Open mijn plan →", ar: "→ فتح خطتي", tr: "Planımı aç →", ur: "→ میرا پلان کھولیں" },
-  "home.hifzTasksToday": { fr: "tâche(s) aujourd'hui", en: "task(s) today", nl: "taak/taken vandaag", ar: "مهمة/مهام اليوم", tr: "bugünkü görev(ler)", ur: "آج کے کام" },
-  "home.open": { fr: "Ouvrir →", en: "Open →", nl: "Openen →", ar: "→ فتح", tr: "Aç →", ur: "→ کھولیں" },
+  "home.hifzTasksToday": { fr: "tâches pour aujourd'hui", en: "tasks for today", nl: "taken voor vandaag", ar: "مهام اليوم", tr: "bugünün görevleri", ur: "آج کے کام" },
+  "home.open": { fr: "Ouvrir", en: "Open", nl: "Openen", ar: "افتح", tr: "Aç", ur: "کھولیں" },
   "home.hifzProgress": { fr: "Avancement", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
   "home.planStarted": { fr: "Plan démarré", en: "Plan started", nl: "Plan gestart", ar: "بدأت الخطة", tr: "Plan başladı", ur: "پلان شروع ہوا" },
 
