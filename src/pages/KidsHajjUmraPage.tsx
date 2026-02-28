@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { UMRA_STEPS, HAJJ_STEPS, KIDS_HAJJ_QUIZ } from "@/data/kidsHajjUmra";
-import type { RitualStep } from "@/data/kidsHajjUmra";
+import { UMRA_STEPS, HAJJ_STEPS, getRandomHajjQuiz } from "@/data/kidsHajjUmra";
+import type { RitualStep, HajjQuizQuestion } from "@/data/kidsHajjUmra";
 import Confetti from "@/components/Confetti";
 
 type Section = "menu" | "umra" | "hajj" | "quiz";
