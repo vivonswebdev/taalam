@@ -44,37 +44,49 @@ function MushafImageView({
 }) {
   const [chromeVisible, setChromeVisible] = useState(true);
   const [imgLoading, setImgLoading] = useState(true);
+  const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
 
-  const goPrev = () => onChangePage(Math.max(1, currentPage - 1));
-  const goNext = () => onChangePage(Math.min(TOTAL_MUSHAF_PAGES, currentPage + 1));
+  const goPrev = () => {
+    if (currentPage > 1) { setDirection(1); onChangePage(currentPage - 1); }
+  };
+  const goNext = () => {
+    if (currentPage < TOTAL_MUSHAF_PAGES) { setDirection(-1); onChangePage(currentPage + 1); }
+  };
 
   useEffect(() => {
     setImgLoading(true);
   }, [currentPage]);
 
   return (
-    <div className="fixed inset-0 z-40 bg-black">
+    <div className="fixed inset-0 z-40 bg-[#f5f0e8]">
       {/* Full-screen tap zone to toggle chrome */}
       <div
         className="absolute inset-0"
         onClick={() => setChromeVisible((v) => !v)}
       />
 
-      {/* Page image */}
-      <div className="relative z-10 h-full w-full flex items-center justify-center">
+      {/* Page image with slide transition */}
+      <div className="relative z-10 h-full w-full flex items-center justify-center overflow-hidden">
         {imgLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-amber-300/40 border-t-amber-600 animate-spin" />
           </div>
         )}
-        <img
-          src={getMushafImageUrl(currentPage)}
-          alt={`Mushaf page ${currentPage}`}
-          className="max-h-[100dvh] max-w-full object-contain select-none"
-          onLoad={() => setImgLoading(false)}
-          onError={() => setImgLoading(false)}
-          draggable={false}
-        />
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.img
+            key={currentPage}
+            src={getMushafImageUrl(currentPage)}
+            alt={`Mushaf page ${currentPage}`}
+            className="max-h-[100dvh] max-w-full object-contain select-none"
+            initial={{ x: direction * 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction * -300, opacity: 0 }}
+            transition={{ type: "tween", duration: 0.25 }}
+            onLoad={() => setImgLoading(false)}
+            onError={() => setImgLoading(false)}
+            draggable={false}
+          />
+        </AnimatePresence>
 
         {/* Navigation zones (Arabic book: left = next page) */}
         <button
