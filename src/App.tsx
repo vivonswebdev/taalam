@@ -56,6 +56,7 @@ import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
 import FaqAndTermsPage from "./pages/FaqAndTermsPage";
 import NotificationSettings from "./pages/NotificationSettings";
+import InstallAppPage from "./pages/InstallAppPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
