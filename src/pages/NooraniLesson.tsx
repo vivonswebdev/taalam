@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ThumbsUp, Eye } from "lucide-react";
+import { ArrowLeft, ThumbsUp, Eye, Volume2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
 import { useChildMode } from "@/hooks/useChildMode";
+import { useNooraniAudio } from "@/hooks/useNooraniAudio";
 import { getChildSuccessMessage } from "@/lib/childMessages";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
