@@ -244,7 +244,7 @@ export default function Home() {
           title={t("home.moodsTitle")}
           desc={t("home.moodsSubtitle")}
           cta={t("home.moodsButton")}
-          onClick={() => navigate("/moods")}
+          onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
           gradient="bg-gradient-to-br from-teal-800/60 to-emerald-700/30"
           delay={0.3}
           badge="🆕"
