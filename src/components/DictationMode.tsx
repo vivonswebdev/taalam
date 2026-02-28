@@ -61,6 +61,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const voice = useVoiceRecognition({
     lang: "ar-SA",
     continuous: true,
+    forceServer: forceServerSTT,
     onResult: (transcript) => {
       setLiveTranscript(transcript);
     },
