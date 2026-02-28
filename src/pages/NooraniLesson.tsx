@@ -105,13 +105,13 @@ export default function NooraniLesson() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <div className="px-5 pt-12 pb-3">
-        <button onClick={() => navigate("/noorani")} className="flex items-center gap-1 text-muted-foreground mb-3">
+      <div className="px-5 pt-10 pb-2">
+        <button onClick={() => navigate("/noorani")} className="flex items-center gap-1 text-muted-foreground mb-2">
           <ArrowLeft size={18} />
           <span className="text-sm">{t("noorani.backToLessons" as any)}</span>
         </button>
         <p className="text-sm font-bold text-foreground">{t(lesson.titleKey as any)}</p>
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-1.5 flex items-center gap-2">
           <div className="flex-1 h-2 rounded-full bg-muted/40 overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-primary"
@@ -124,7 +124,7 @@ export default function NooraniLesson() {
       </div>
 
       {/* Main card */}
-      <div className="flex-1 flex items-center justify-center px-6 pb-4">
+      <div className="flex-1 flex items-start justify-center px-6 pt-4 pb-2">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
