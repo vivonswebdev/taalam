@@ -375,13 +375,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
-      // If no results after timeout, stop native (triggers onend which handles retry count)
-      nativeSilenceTimerRef.current = setTimeout(() => {
-        if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
-          try { recognition.stop(); } catch {}
-        }
-      }, NATIVE_SILENCE_TIMEOUT_MS);
+      hasReceivedResultRef.current = false;
+      armNativeSilenceTimer();
     } catch (e) {
       console.error("[VoiceRecognition] Start failed:", e);
       isListeningRef.current = false;
