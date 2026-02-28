@@ -101,7 +101,7 @@ export const moodPresets: MoodPreset[] = [
     id: "forgiveness",
     title: "Besoin de pardon",
     titleAr: "طلب المغفرة",
-    emoji: "🥺",
+    emoji: "🕊️",
     subtitle: "Implorer le pardon d'Allah",
     loop: false,
     type: "emotion",
