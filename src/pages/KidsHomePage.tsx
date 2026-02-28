@@ -4,6 +4,7 @@ import { ArrowLeft, UserPlus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
+import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import { Badge } from "@/components/ui/badge";
 
 const KIDS_CARDS = [
@@ -47,6 +48,14 @@ const KIDS_CARDS = [
     gradient: "from-pink-600/30 to-rose-600/15",
     border: "border-pink-500/25",
   },
+  {
+    emoji: "🌙",
+    titleKey: "kidsHome.checklist",
+    descKey: "kidsHome.checklistDesc",
+    path: "/kids-checklist",
+    gradient: "from-indigo-600/30 to-violet-600/15",
+    border: "border-indigo-500/25",
+  },
 ];
 
 export default function KidsHomePage() {
@@ -54,6 +63,7 @@ export default function KidsHomePage() {
   const { t } = useLanguage();
   const noorani = useNooraniProgress();
   const { profiles } = useChildProfiles();
+  const checklist = useKidsChecklist();
   const hasChildren = profiles.length > 0;
 
   // Quiz stats from localStorage
@@ -73,6 +83,8 @@ export default function KidsHomePage() {
       return `${quizScore.correct}/${quizScore.total}`;
     if (path === "/kids-prayer" && prayerDone) return "✅";
     if (path === "/kids-hajj" && hajjDone) return "✅";
+    if (path === "/kids-checklist" && checklist.completedCount > 0)
+      return `${checklist.completedCount}/${checklist.totalCount}`;
     return null;
   };
 

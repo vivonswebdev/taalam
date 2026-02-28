@@ -190,6 +190,13 @@ export default function ChildDetail() {
                     <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-[10px]">Non commencé</span>
                   )}
                 </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">🌙</span>
+                  <span className="flex-1 text-sm text-foreground">Bonnes actions (aujourd'hui)</span>
+                  <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-semibold">
+                    {dashboard.checklistToday}/{dashboard.checklistTotal}
+                  </span>
+                </div>
               </div>
             </motion.div>
 
