@@ -312,10 +312,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
-      // Native may need more time on mobile; do a soft native restart instead of immediate server fallback.
+      // If no results after timeout, stop native (triggers onend which handles retry count)
       nativeSilenceTimerRef.current = setTimeout(() => {
         if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, restarting native SR");
+          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
           try { recognition.stop(); } catch {}
         }
       }, NATIVE_SILENCE_TIMEOUT_MS);
