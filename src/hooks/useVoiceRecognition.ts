@@ -249,15 +249,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onend = () => {
       if (isListeningRef.current && recognitionRef.current === recognition) {
-        // If we never got results and it ended, fallback to server
-        if (!hasReceivedResultRef.current) {
-          console.warn("[VoiceRecognition] Native ended with no results, forcing server STT");
-          forceServerRef.current = true;
-          recognitionRef.current = null;
-          setMode("server");
-          startServer();
-          return;
-        }
+        // Mobile browsers may stop on silence; keep native engine alive while user is still listening.
         try {
           recognition.start();
           return;
