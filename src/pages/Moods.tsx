@@ -201,8 +201,8 @@ export default function Moods() {
                   {situationFiltered.length > 0 && (
                     <>
                       <div className="px-4 pt-3 pb-1">
-                        <h2 className="text-sm font-bold text-foreground">🗂️ Situations particulières</h2>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Voyage, maison, mosquée, événements de vie…</p>
+                        <h2 className="text-sm font-bold text-foreground">🗂️ {t("athkar.situationsTitle" as any)}</h2>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">{t("athkar.situationsSubtitle" as any)}</p>
                       </div>
                       <div className="grid grid-cols-2 gap-3 px-4 pb-4">
                         {situationFiltered.map((g, i) => (
