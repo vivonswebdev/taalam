@@ -17,7 +17,8 @@ interface UseVoiceRecognitionOptions {
 const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 2_000;
 const MIN_CHUNK_SIZE = 120;
-const NATIVE_SILENCE_TIMEOUT_MS = 4_000; // Auto-fallback if no result after 4s
+const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
+const MAX_NATIVE_RETRIES = 2; // After N silent restarts, force server fallback
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
@@ -43,6 +44,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const isProcessingRef = useRef(false);
   const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
+  const nativeRetryCountRef = useRef(0);
 
   const hasNativeSR = useRef(false);
   const forceServerRef = useRef(false);
@@ -249,7 +251,20 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onend = () => {
       if (isListeningRef.current && recognitionRef.current === recognition) {
-        // Mobile browsers may stop on silence; keep native engine alive while user is still listening.
+        // If we never got results, count as a failed retry
+        if (!hasReceivedResultRef.current) {
+          nativeRetryCountRef.current++;
+          console.warn(`[VoiceRecognition] Native SR ended without results (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
+          if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+            console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
+            forceServerRef.current = true;
+            recognitionRef.current = null;
+            setMode("server");
+            startServer();
+            return;
+          }
+        }
+        // Mobile browsers may stop on silence; try one more native restart
         try {
           recognition.start();
           return;
@@ -297,10 +312,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     try {
       recognition.start();
-      // Native may need more time on mobile; do a soft native restart instead of immediate server fallback.
+      // If no results after timeout, stop native (triggers onend which handles retry count)
       nativeSilenceTimerRef.current = setTimeout(() => {
         if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
-          console.warn("[VoiceRecognition] No results after timeout, restarting native SR");
+          console.warn("[VoiceRecognition] No results after timeout, stopping native SR");
           try { recognition.stop(); } catch {}
         }
       }, NATIVE_SILENCE_TIMEOUT_MS);
@@ -331,8 +346,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
-    // Reset server-force flag each new recording session so native is re-attempted
+    // Reset server-force flag and retry counter each new recording session
     forceServerRef.current = false;
+    nativeRetryCountRef.current = 0;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
       setMode("native");
