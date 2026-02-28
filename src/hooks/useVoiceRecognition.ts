@@ -251,7 +251,20 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onend = () => {
       if (isListeningRef.current && recognitionRef.current === recognition) {
-        // Mobile browsers may stop on silence; keep native engine alive while user is still listening.
+        // If we never got results, count as a failed retry
+        if (!hasReceivedResultRef.current) {
+          nativeRetryCountRef.current++;
+          console.warn(`[VoiceRecognition] Native SR ended without results (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
+          if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+            console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
+            forceServerRef.current = true;
+            recognitionRef.current = null;
+            setMode("server");
+            startServer();
+            return;
+          }
+        }
+        // Mobile browsers may stop on silence; try one more native restart
         try {
           recognition.start();
           return;
