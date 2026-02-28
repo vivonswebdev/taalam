@@ -63,6 +63,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     },
     onError: (error) => {
       if (error === "not-allowed") setMicError("not-allowed");
+      if (error === "mic-error" || error === "auth-required") setMicError("mic-error");
     },
   });
 
