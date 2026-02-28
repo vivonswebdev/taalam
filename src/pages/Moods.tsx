@@ -16,24 +16,24 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-between gap-3 rounded-2xl px-3 py-2.5 bg-card/70 border border-border hover:border-primary/70 transition-colors"
+      className="w-full flex flex-col items-start gap-2 rounded-2xl px-3 py-3 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[90px]"
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-center justify-between w-full">
         <span className="text-3xl leading-none">{icon}</span>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="text-sm font-semibold text-foreground truncate">
-            {title}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-            {desc}
-          </p>
-        </div>
+        {loop && (
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap">
+            {t("moods.loopBadge" as any)}
+          </span>
+        )}
       </div>
-      {loop && (
-        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap shrink-0">
-          {t("moods.loopBadge" as any)}
-        </span>
-      )}
+      <div className="text-left">
+        <p className="text-sm font-semibold text-foreground leading-tight">
+          {title}
+        </p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
+          {desc}
+        </p>
+      </div>
     </button>
   );
 }
