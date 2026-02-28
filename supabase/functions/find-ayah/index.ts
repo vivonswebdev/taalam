@@ -20,6 +20,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const MAX_AUDIO_SIZE = 10 * 1024 * 1024 * 4 / 3; // ~10MB base64
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -59,11 +61,36 @@ serve(async (req) => {
 
     const { audio, scope } = await req.json();
 
-    if (!audio) {
+    // Input validation
+    if (!audio || typeof audio !== 'string') {
       return new Response(JSON.stringify({ error: 'No audio data provided' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    if (audio.length > MAX_AUDIO_SIZE) {
+      return new Response(JSON.stringify({ results: [], error: 'Audio data too large' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate scope parameters
+    if (scope?.type === 'surah') {
+      const s = Number(scope.surah);
+      if (!Number.isInteger(s) || s < 1 || s > 114) {
+        return new Response(JSON.stringify({ results: [], error: 'Invalid surah number' }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+    if (scope?.type === 'juz') {
+      const j = Number(scope.juz);
+      if (!Number.isInteger(j) || j < 1 || j > 30) {
+        return new Response(JSON.stringify({ results: [], error: 'Invalid juz number' }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     // Step 1: Transcribe the audio
@@ -170,8 +197,7 @@ Example: [{"surahNumber":1,"ayahNumber":2,"surahNameArabic":"الفاتحة","su
     });
   } catch (error: unknown) {
     console.error('find-ayah error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ results: [], error: errorMessage }), {
+    return new Response(JSON.stringify({ results: [], error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
