@@ -133,7 +133,14 @@ export default function KidsHomePage() {
             onClick={() => navigate(card.path)}
             className={`flex flex-col gap-2 rounded-2xl p-4 text-left bg-gradient-to-br ${card.gradient} border ${card.border} shadow-lg`}
           >
-            <span className="text-3xl">{card.emoji}</span>
+            <div className="flex items-start justify-between w-full">
+              <span className="text-3xl">{card.emoji}</span>
+              {badgeForCard(card.path) && (
+                <Badge variant="secondary" className="text-[9px] px-1.5 py-0.5 shrink-0">
+                  {badgeForCard(card.path)}
+                </Badge>
+              )}
+            </div>
             <p className="text-sm font-bold text-foreground leading-tight">
               {t(card.titleKey as any)}
             </p>
