@@ -265,17 +265,17 @@ export default function Home() {
         >
           <span className="text-2xl shrink-0">📖</span>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-foreground">Plan Hifz</p>
+            <p className="text-xs font-bold text-foreground">{t("home.hifzPlan")}</p>
             {plan ? (
               <p className="text-[10px] text-muted-foreground line-clamp-2">
-                {plan.name} · {overallProgress}% · {todayTasks.length} tâche{todayTasks.length !== 1 ? "s" : ""} aujourd'hui
+                {plan.name} · {overallProgress}% · {todayTasks.length} {t("home.hifzTasksToday")}
               </p>
             ) : (
-              <p className="text-[10px] text-muted-foreground">Crée ton planning de mémorisation</p>
+              <p className="text-[10px] text-muted-foreground">{t("home.hifzCreate")}</p>
             )}
           </div>
           <span className="text-[10px] font-semibold text-primary shrink-0">
-            {plan ? "Ouvrir mon plan →" : "Créer mon plan →"}
+            {plan ? t("home.hifzOpenLink") : t("home.hifzCreateLink")}
           </span>
         </motion.button>
       </div>
