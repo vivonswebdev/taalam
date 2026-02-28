@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ThumbsUp, Eye, Volume2, CheckCircle2, XCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { NOORANI_LESSONS } from "@/data/nooraniLessons";
+import { NOORANI_LESSONS, type NooraniItem, type NooraniLesson as NooraniLessonType } from "@/data/nooraniLessons";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useNooraniAudio } from "@/hooks/useNooraniAudio";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
@@ -12,15 +12,15 @@ import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import type { EarnedSticker } from "@/hooks/useChildMode";
 
-type Phase = "items" | "quiz" | "done";
+type Phase = "items" | "exercise" | "quiz" | "done";
 
 type NooraniQuestion = {
-  target: { arabic: string; label?: string };
-  options: { arabic: string; label?: string }[];
+  target: NooraniItem;
+  options: NooraniItem[];
   correctIndex: number;
 };
 
-function generateQuiz(items: { arabic: string; label?: string }[]): NooraniQuestion[] {
+function generateQuiz(items: NooraniItem[]): NooraniQuestion[] {
   const count = Math.min(3, items.length);
   const shuffled = [...items].sort(() => Math.random() - 0.5);
   const targets = shuffled.slice(0, count);
@@ -36,6 +36,213 @@ function generateQuiz(items: { arabic: string; label?: string }[]): NooraniQuest
   });
 }
 
+// ═══════════════════════════════════════════
+// Recognition Exercise (lettres isolées)
+// ═══════════════════════════════════════════
+function RecognitionExercise({
+  lesson,
+  onDone,
+  playAudio,
+}: {
+  lesson: NooraniLessonType;
+  onDone: () => void;
+  playAudio: (item: NooraniItem) => void;
+}) {
+  const [step, setStep] = useState(0);
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
+  const [score, setScore] = useState(0);
+
+  const questions = useMemo(() => {
+    const base = lesson.items.slice(0, 6);
+    return base.slice(0, 3).map((target) => {
+      const others = base.filter((x) => x.arabic !== target.arabic).sort(() => 0.5 - Math.random()).slice(0, 2);
+      const options = [target, ...others].sort(() => 0.5 - Math.random());
+      return { target, options };
+    });
+  }, [lesson.items]);
+
+  const current = questions[step];
+
+  if (!current) {
+    onDone();
+    return null;
+  }
+
+  const handlePick = (opt: NooraniItem) => {
+    if (feedback) return;
+    playAudio(opt);
+    const isCorrect = opt.arabic === current.target.arabic;
+    if (isCorrect) setScore((s) => s + 1);
+    setFeedback(isCorrect ? "correct" : "wrong");
+    setTimeout(() => {
+      setFeedback(null);
+      if (step + 1 >= questions.length) {
+        onDone();
+      } else {
+        setStep((s) => s + 1);
+      }
+    }, 1200);
+  };
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
+      <motion.div key={step} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-3">
+        <p className="text-sm font-bold text-muted-foreground">
+          ✏️ Exercice {step + 1}/{questions.length}
+        </p>
+        <p className="text-lg font-semibold text-foreground">
+          Où est la lettre :
+        </p>
+        <p className="font-arabic text-6xl text-primary">{current.target.arabic}</p>
+      </motion.div>
+
+      <div className="flex gap-3 w-full max-w-sm">
+        {current.options.map((opt, i) => {
+          let bgClass = "bg-card border-border";
+          if (feedback) {
+            if (opt.arabic === current.target.arabic) bgClass = "bg-green-500/15 border-green-500";
+            else bgClass = "bg-card border-border opacity-50";
+          }
+          return (
+            <motion.button
+              key={i}
+              whileTap={!feedback ? { scale: 0.95 } : undefined}
+              onClick={() => handlePick(opt)}
+              disabled={!!feedback}
+              className={`flex-1 h-20 rounded-2xl border-2 text-3xl font-arabic flex items-center justify-center transition-colors ${bgClass}`}
+            >
+              {opt.arabic}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      <AnimatePresence>
+        {feedback && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
+              feedback === "correct" ? "bg-green-500/15 text-green-600" : "bg-red-500/15 text-red-500"
+            }`}
+          >
+            {feedback === "correct" ? (
+              <><CheckCircle2 size={18} /> Bravo ! 🎉</>
+            ) : (
+              <><XCircle size={18} /> Essaie encore 😊</>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
+// Audio Choice Exercise (voyelles)
+// ═══════════════════════════════════════════
+function AudioChoiceExercise({
+  lesson,
+  onDone,
+  playAudio,
+}: {
+  lesson: NooraniLessonType;
+  onDone: () => void;
+  playAudio: (item: NooraniItem) => void;
+}) {
+  const [step, setStep] = useState(0);
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
+
+  const questions = useMemo(() => {
+    const base = lesson.items.slice(0, 6);
+    return base.slice(0, 3).map((target) => {
+      const others = base.filter((x) => x.arabic !== target.arabic).sort(() => 0.5 - Math.random()).slice(0, 2);
+      const options = [target, ...others].sort(() => 0.5 - Math.random());
+      return { target, options };
+    });
+  }, [lesson.items]);
+
+  const current = questions[step];
+
+  if (!current) {
+    onDone();
+    return null;
+  }
+
+  const handlePick = (opt: NooraniItem) => {
+    if (feedback) return;
+    const isCorrect = opt.arabic === current.target.arabic;
+    setFeedback(isCorrect ? "correct" : "wrong");
+    setTimeout(() => {
+      setFeedback(null);
+      if (step + 1 >= questions.length) {
+        onDone();
+      } else {
+        setStep((s) => s + 1);
+      }
+    }, 1200);
+  };
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
+      <motion.div key={step} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-3">
+        <p className="text-sm font-bold text-muted-foreground">
+          🔊 Exercice {step + 1}/{questions.length}
+        </p>
+        <p className="text-lg font-semibold text-foreground">
+          Écoute et choisis la bonne écriture
+        </p>
+        <button
+          onClick={() => playAudio(current.target)}
+          className="mx-auto flex items-center gap-2 px-5 py-3 rounded-full bg-primary/10 text-primary text-base font-semibold active:scale-[0.96] transition-transform"
+        >
+          <Volume2 size={22} /> Écouter
+        </button>
+      </motion.div>
+
+      <div className="flex gap-3 w-full max-w-sm">
+        {current.options.map((opt, i) => {
+          let bgClass = "bg-card border-border";
+          if (feedback) {
+            if (opt.arabic === current.target.arabic) bgClass = "bg-green-500/15 border-green-500";
+            else bgClass = "bg-card border-border opacity-50";
+          }
+          return (
+            <motion.button
+              key={i}
+              whileTap={!feedback ? { scale: 0.95 } : undefined}
+              onClick={() => handlePick(opt)}
+              disabled={!!feedback}
+              className={`flex-1 h-20 rounded-2xl border-2 text-3xl font-arabic flex items-center justify-center transition-colors ${bgClass}`}
+            >
+              {opt.arabic}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      <AnimatePresence>
+        {feedback && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
+              feedback === "correct" ? "bg-green-500/15 text-green-600" : "bg-red-500/15 text-red-500"
+            }`}
+          >
+            {feedback === "correct" ? (
+              <><CheckCircle2 size={18} /> Bravo ! 🎉</>
+            ) : (
+              <><XCircle size={18} /> Essaie encore 😊</>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
+// Main NooraniLesson page
+// ═══════════════════════════════════════════
 export default function NooraniLesson() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
@@ -66,20 +273,28 @@ export default function NooraniLesson() {
   const handleChoice = (isKnown: boolean) => {
     if (isKnown) setKnown((k) => k + 1);
     if (current + 1 >= total) {
-      // Move to quiz phase
-      const q = generateQuiz(items);
-      setQuestions(q);
-      setQuizIndex(0);
-      setQuizScore(0);
-      setQuizFeedback(null);
-      setPhase("quiz");
+      // If lesson has an exercise type, go to exercise first
+      if (lesson?.exerciseType) {
+        setPhase("exercise");
+      } else {
+        startQuiz();
+      }
     } else {
       setCurrent((c) => c + 1);
     }
   };
 
+  const startQuiz = () => {
+    const q = generateQuiz(items);
+    setQuestions(q);
+    setQuizIndex(0);
+    setQuizScore(0);
+    setQuizFeedback(null);
+    setPhase("quiz");
+  };
+
   const handleQuizAnswer = (optionIndex: number) => {
-    if (quizFeedback) return; // Prevent double tap
+    if (quizFeedback) return;
     const q = questions[quizIndex];
     const isCorrect = optionIndex === q.correctIndex;
     if (isCorrect) setQuizScore((s) => s + 1);
@@ -89,7 +304,6 @@ export default function NooraniLesson() {
       setQuizFeedback(null);
       if (quizIndex + 1 >= questions.length) {
         const finalScore = isCorrect ? quizScore + 1 : quizScore;
-        // Done
         setQuizScore(finalScore);
         if (finalScore >= 2 && lessonId) {
           saveProgress(lessonId);
@@ -149,20 +363,48 @@ export default function NooraniLesson() {
             </p>
           )}
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={() => navigate("/noorani")}
-              className="px-5 py-3 rounded-2xl bg-primary text-primary-foreground font-bold"
-            >
+            <button onClick={() => navigate("/noorani")} className="px-5 py-3 rounded-2xl bg-primary text-primary-foreground font-bold">
               {t("noorani.backToLessons" as any)}
             </button>
-            <button
-              onClick={resetLesson}
-              className="px-5 py-3 rounded-2xl border border-border text-foreground font-bold"
-            >
+            <button onClick={resetLesson} className="px-5 py-3 rounded-2xl border border-border text-foreground font-bold">
               {t("noorani.retry" as any)}
             </button>
           </div>
         </motion.div>
+      </div>
+    );
+  }
+
+  // ═══ EXERCISE PHASE ═══
+  if (phase === "exercise") {
+    return (
+      <div className="min-h-screen flex flex-col pb-20">
+        <div className="px-5 pt-10 pb-2">
+          <button onClick={() => navigate("/noorani")} className="flex items-center gap-1 text-muted-foreground mb-2">
+            <ArrowLeft size={18} />
+            <span className="text-sm">{t("noorani.backToLessons" as any)}</span>
+          </button>
+          <p className="text-sm font-bold text-foreground">{t(lesson.titleKey as any)} – Exercice</p>
+          <div className="mt-1.5 h-2 rounded-full bg-muted/40 overflow-hidden">
+            <div className="h-full rounded-full bg-primary w-full" />
+          </div>
+        </div>
+
+        {lesson.exerciseType === "recognition" && (
+          <RecognitionExercise
+            lesson={lesson}
+            playAudio={(item) => speak(item.arabic)}
+            onDone={startQuiz}
+          />
+        )}
+
+        {lesson.exerciseType === "audio-choice" && (
+          <AudioChoiceExercise
+            lesson={lesson}
+            playAudio={(item) => speak(item.arabic)}
+            onDone={startQuiz}
+          />
+        )}
       </div>
     );
   }
@@ -190,19 +432,12 @@ export default function NooraniLesson() {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
-          <motion.div
-            key={quizIndex}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center space-y-3"
-          >
+          <motion.div key={quizIndex} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-3">
             <p className="text-lg font-semibold text-foreground">
               {t("noorani.quizQuestion" as any) || "Où est la lettre"} :
             </p>
             <p className="font-arabic text-6xl text-primary">{q.target.arabic}</p>
-            {q.target.label && (
-              <p className="text-sm text-muted-foreground">({q.target.label})</p>
-            )}
+            {q.target.label && <p className="text-sm text-muted-foreground">({q.target.label})</p>}
           </motion.div>
 
           <div className="flex gap-3 w-full max-w-sm">
@@ -229,13 +464,9 @@ export default function NooraniLesson() {
           <AnimatePresence>
             {quizFeedback && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
-                  quizFeedback === "correct"
-                    ? "bg-green-500/15 text-green-600"
-                    : "bg-red-500/15 text-red-500"
+                  quizFeedback === "correct" ? "bg-green-500/15 text-green-600" : "bg-red-500/15 text-red-500"
                 }`}
               >
                 {quizFeedback === "correct" ? (
@@ -256,7 +487,6 @@ export default function NooraniLesson() {
 
   return (
     <div className="min-h-screen flex flex-col pb-20">
-      {/* Header */}
       <div className="px-5 pt-10 pb-2">
         <button onClick={() => navigate("/noorani")} className="flex items-center gap-1 text-muted-foreground mb-2">
           <ArrowLeft size={18} />
@@ -275,7 +505,6 @@ export default function NooraniLesson() {
         </div>
       </div>
 
-      {/* Main card */}
       <div className="flex items-start justify-center px-6 pt-4 pb-4">
         <AnimatePresence mode="wait">
           <motion.div
@@ -287,9 +516,7 @@ export default function NooraniLesson() {
             className="bg-card border border-border rounded-3xl p-8 w-full max-w-sm text-center shadow-lg"
           >
             <p className="font-arabic text-7xl leading-tight text-foreground mb-4">{item.arabic}</p>
-            {item.label && (
-              <p className="text-sm text-muted-foreground font-medium mb-3">{item.label}</p>
-            )}
+            {item.label && <p className="text-sm text-muted-foreground font-medium mb-3">{item.label}</p>}
             <button
               onClick={() => speak(item.arabic)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors min-h-[44px] bg-primary/10 text-primary active:scale-[0.96]"
@@ -301,7 +528,6 @@ export default function NooraniLesson() {
         </AnimatePresence>
       </div>
 
-      {/* Action buttons */}
       <div className="px-6 pt-2 flex gap-3">
         <button
           onClick={() => handleChoice(false)}
