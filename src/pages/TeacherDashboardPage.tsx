@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, GraduationCap, Users, BookOpen, Brain, Clock, Trophy, Plus, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeft, GraduationCap, Users, BookOpen, Brain, Clock, Trophy, Plus, Trash2, ToggleLeft, ToggleRight, HelpCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
