@@ -30,6 +30,7 @@ export default function Home() {
   const epicBg = immersiveEnabled ? getEpicBg(choices.home) : null;
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
+  const { isChildMode } = useChildMode();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
