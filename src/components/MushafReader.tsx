@@ -419,25 +419,36 @@ export default function MushafReader({
       {/* Ayahs scrollable area */}
       {readingStyle === "immersive" ? (
         /* ═══ FULLSCREEN IMMERSIVE MODE ═══ */
-        <div className="fixed inset-0 z-50 flex flex-col">
+        <div className="fixed inset-0 z-50 flex flex-col" onClick={toggleImmersiveUI}>
           {/* Dark immersive background */}
           <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--primary)/0.15)] via-[hsl(0,0%,5%)] to-[hsl(var(--accent)/0.1)]" />
           <div className="absolute inset-0 bg-black/60" />
 
-          {/* Top bar */}
-          <div className="relative z-10 flex items-center gap-3 px-4 pt-10 pb-3">
+          {/* Floating back button — always visible */}
+          <div className="absolute top-10 left-4 z-20">
             <button
-              onClick={() => { setReadingStyle("cards"); localStorage.setItem("reading-style", "cards"); }}
-              className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center"
+              onClick={(e) => { e.stopPropagation(); setReadingStyle("cards"); localStorage.setItem("reading-style", "cards"); }}
+              className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-lg transition-opacity"
             >
-              <ArrowLeft size={18} className="text-white" />
+              <ArrowLeft size={18} className="text-white/80" />
             </button>
-            <div className="flex-1 text-center">
-              <p className="font-arabic text-lg text-white/90">{surah.nameArabic}</p>
-              <p className="text-[10px] text-white/50">Ayah {surah.ayahs[currentAyah]?.number} / {surah.ayahs.length}</p>
-            </div>
-            <div className="w-9" />
           </div>
+
+          {/* Surah info — auto-hide */}
+          <AnimatePresence>
+            {immersiveUIVisible && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.25 }}
+                className="absolute top-10 left-0 right-0 z-10 text-center pointer-events-none"
+              >
+                <p className="font-arabic text-lg text-white/70">{surah.nameArabic}</p>
+                <p className="text-[10px] text-white/40">Ayah {surah.ayahs[currentAyah]?.number} / {surah.ayahs.length}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Center — single ayah */}
           <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
@@ -491,35 +502,46 @@ export default function MushafReader({
             })()}
           </div>
 
-          {/* Bottom nav — prev/next */}
-          <div className="relative z-10 px-6 pb-8 pt-4">
-            <div className="flex items-center gap-4">
-              <button
-                disabled={currentAyah <= 0}
-                onClick={() => globalAudio.prevAyah()}
-                className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+          {/* Bottom controls — auto-hide */}
+          <AnimatePresence>
+            {immersiveUIVisible && (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.25 }}
+                className="relative z-10 px-6 pb-8 pt-4"
+                onClick={(e) => e.stopPropagation()}
               >
-                ← Précédent
-              </button>
-              <button
-                onClick={() => {
-                  if (playing) globalAudio.pause();
-                  else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
-                  else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
-                }}
-                className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
-              >
-                {playing ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
-              </button>
-              <button
-                disabled={currentAyah >= surah.ayahs.length - 1}
-                onClick={() => globalAudio.nextAyah()}
-                className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
-              >
-                Suivant →
-              </button>
-            </div>
-          </div>
+                <div className="flex items-center gap-4">
+                  <button
+                    disabled={currentAyah <= 0}
+                    onClick={() => globalAudio.prevAyah()}
+                    className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+                  >
+                    ← Précédent
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (playing) globalAudio.pause();
+                      else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
+                      else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
+                    }}
+                    className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
+                  >
+                    {playing ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
+                  </button>
+                  <button
+                    disabled={currentAyah >= surah.ayahs.length - 1}
+                    onClick={() => globalAudio.nextAyah()}
+                    className="flex-1 py-3 rounded-2xl bg-white/10 backdrop-blur-sm text-white font-semibold text-sm disabled:opacity-30 transition-opacity"
+                  >
+                    Suivant →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
         /* ═══ CARDS MODE (existing) ═══ */
