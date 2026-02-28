@@ -300,7 +300,7 @@ export default function Home() {
           title={t("home.quizButton")}
           desc={t("home.quizButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/quiz")}
+          onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
           gradient="bg-gradient-to-br from-cyan-800/60 to-indigo-700/30"
           delay={0.5}
         />
