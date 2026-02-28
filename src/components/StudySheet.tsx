@@ -218,7 +218,7 @@ export default function StudySheet({
                 <textarea
                   value={noteText}
                   onChange={(e) => setNoteText(e.target.value)}
-                  placeholder="Écris ta réflexion sur ce verset..."
+                  placeholder={t("study.notePlaceholder")}
                   className="w-full min-h-[80px] rounded-xl bg-muted/50 border border-border p-3 text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
                 <div className="flex items-center justify-between">
