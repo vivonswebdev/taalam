@@ -41,6 +41,7 @@ import Habits from "./pages/Habits";
 import More from "./pages/More";
 import HifzPlanPage from "./pages/HifzPlanPage";
 import Study from "./pages/Study";
+import Listening from "./pages/Listening";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -94,6 +95,7 @@ const App = () => (
               <Route path="/more" element={<More />} />
               <Route path="/hifz-plan" element={<HifzPlanPage />} />
               <Route path="/study" element={<Study />} />
+              <Route path="/listening" element={<Listening />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

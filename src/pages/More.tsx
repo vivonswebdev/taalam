@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search } from "lucide-react";
+import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface MenuItem {
@@ -44,6 +44,7 @@ export default function More() {
     { icon: <Search size={20} className="text-indigo-500" />, label: t("more.findAyah"), desc: t("more.findAyahDesc"), path: "/find-ayah" },
     { icon: <Trophy size={20} className="text-amber-500" />, label: t("more.ranking"), desc: t("more.rankingDesc"), path: "/leaderboard" },
     { icon: <BookOpen size={20} className="text-teal-500" />, label: t("more.juzHizb"), desc: t("more.juzHizbDesc"), path: "/juz" },
+    { icon: <Headphones size={20} className="text-cyan-500" />, label: t("more.advancedListening"), desc: t("more.advancedListeningDesc"), path: "/listening" },
   ];
 
   const accountSection: MenuItem[] = [
