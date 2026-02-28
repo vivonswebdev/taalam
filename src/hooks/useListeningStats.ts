@@ -13,12 +13,19 @@ export interface ListeningSession {
   created_at: string;
 }
 
+export interface DailyListening {
+  date: string;
+  minutes: number;
+  sessions: number;
+}
+
 export interface ListeningStats {
   todayListeningMinutes: number;
   totalListeningMinutes: number;
   lastSession: ListeningSession | null;
   averageQuizScore: number | null;
   sessionsCount: number;
+  dailyListening: Record<string, DailyListening>;
 }
 
 export function useListeningStats() {
