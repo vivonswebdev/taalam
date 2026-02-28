@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { ActiveChildProvider } from "@/hooks/useActiveChild";
 import { GlobalAudioProvider } from "@/hooks/useGlobalAudio";
+import { UserModeProvider } from "@/hooks/useUserMode";
 import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
 import Learn from "./pages/Learn";
