@@ -137,6 +137,8 @@ export default function ClassroomDetail() {
     createChallenge, submitResult, weekStart, pastChallenges,
   } = useWeeklyChallenge(classId ?? undefined);
 
+  const { assignments: studentAssignments, markSeen } = useStudentAssignments(classId);
+
   const classroom = classrooms.find((c) => c.id === classId || c.id === rawClassId);
   const isTeacher = !!(user && classroom && classroom.teacherId === user.id);
   const [dbTeacherId, setDbTeacherId] = useState<string | null>(null);
