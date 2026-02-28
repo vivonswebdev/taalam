@@ -213,7 +213,7 @@ export default function StudySheet({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <PenLine size={14} className="text-primary" />
-                  <span className="text-xs font-bold text-foreground">Ma note</span>
+                  <span className="text-xs font-bold text-foreground">{t("study.myNote")}</span>
                 </div>
                 <textarea
                   value={noteText}
