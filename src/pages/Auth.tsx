@@ -28,6 +28,9 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [rememberMe, setRememberMe] = useState(() => {
+    return localStorage.getItem("taalam_remember_me") !== "false";
+  });
 
   const handleSignUp = async () => {
     if (!email.trim() || !displayName.trim() || !password.trim()) {
