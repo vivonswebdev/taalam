@@ -242,7 +242,7 @@ export default function Settings() {
           <div className="flex items-center gap-4 p-4">
             <Info size={20} className="text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-card-foreground">QuranEasy v1.0</p>
+              <p className="text-sm font-medium text-card-foreground">Ta'alam v1.0</p>
               <p className="text-xs text-muted-foreground">{t("settings.version")}</p>
             </div>
           </div>
