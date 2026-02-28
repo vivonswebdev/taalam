@@ -251,8 +251,8 @@ export default function HifzPlanPage() {
               {todayTasks.length === 0 ? (
                 <div className="bg-card border border-border rounded-2xl p-6 text-center">
                   <span className="text-3xl">🎉</span>
-                  <p className="text-sm font-medium text-foreground mt-2">Rien pour aujourd'hui !</p>
-                  <p className="text-xs text-muted-foreground">Reviens demain pour ta prochaine tâche</p>
+                   <p className="text-sm font-medium text-foreground mt-2">{t("hifz.nothingToday")}</p>
+                   <p className="text-xs text-muted-foreground">{t("hifz.comeBackTomorrow")}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
