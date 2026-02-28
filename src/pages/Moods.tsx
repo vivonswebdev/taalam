@@ -9,11 +9,9 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 type Tab = "moods" | "maladies" | "athkar";
 
-const TABS: { id: Tab; label: string; emoji: string }[] = [
-  { id: "moods", label: "États du cœur", emoji: "💓" },
-  { id: "maladies", label: "Maladies", emoji: "🩺" },
-  { id: "athkar", label: "Athkâr", emoji: "📿" },
-];
+const TAB_IDS: Tab[] = ["moods", "maladies", "athkar"];
+const TAB_EMOJIS: Record<Tab, string> = { moods: "💓", maladies: "🩺", athkar: "📿" };
+const TAB_KEYS: Record<Tab, string> = { moods: "moods.tabMoods", maladies: "moods.tabMaladies", athkar: "moods.tabAthkar" };
 
 function MoodCard({ icon, title, desc, loop, onClick }: {
   icon: string; title: string; desc: string; loop?: boolean; onClick?: () => void;
@@ -66,17 +64,17 @@ export default function Moods() {
       {/* Tabs */}
       <div className="px-4 pt-3 pb-1">
         <div className="flex bg-muted/60 rounded-2xl p-1 gap-1">
-          {TABS.map((tab) => (
+          {TAB_IDS.map((tabId) => (
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              key={tabId}
+              onClick={() => setActiveTab(tabId)}
               className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === tab.id
+                activeTab === tabId
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab.emoji} {tab.label}
+              {TAB_EMOJIS[tabId]} {t(TAB_KEYS[tabId] as any)}
             </button>
           ))}
         </div>
@@ -136,8 +134,8 @@ export default function Moods() {
               >
                 <MoodCard
                   icon={m.emoji}
-                  title={m.title}
-                  desc={m.subtitle}
+                  title={t(`maladie.${m.id}` as any) || m.title}
+                  desc={t(`maladie.${m.id}.sub` as any) || m.subtitle}
                   loop={m.loop}
                   onClick={() => navigate(`/maladies/${m.id}`)}
                 />
@@ -157,19 +155,22 @@ export default function Moods() {
           >
             {/* Filters */}
             <div className="px-4 pt-3 pb-1 flex gap-1.5 overflow-x-auto no-scrollbar">
-              {ATHKAR_FILTERS.map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setAthkarFilter(f.id)}
-                  className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                    athkarFilter === f.id
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card/70 text-muted-foreground border-border hover:border-primary/40"
-                  }`}
-                >
-                  {f.emoji} {f.label}
-                </button>
-              ))}
+              {ATHKAR_FILTERS.map((f) => {
+                const filterKey = f.id === "all" ? "athkar.filterAll" : `athkar.filter${f.id.charAt(0).toUpperCase()}${f.id.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())}`;
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => setAthkarFilter(f.id)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                      athkarFilter === f.id
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card/70 text-muted-foreground border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {f.emoji} {t(filterKey as any) || f.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Core athkar */}
@@ -181,7 +182,7 @@ export default function Moods() {
                   {coreFiltered.length > 0 && (
                     <>
                       <div className="px-4 pt-2 pb-1">
-                        <h2 className="text-sm font-bold text-foreground">📿 Adhkar principaux</h2>
+                        <h2 className="text-sm font-bold text-foreground">📿 {t("athkar.coreTitle" as any)}</h2>
                       </div>
                       <div className="grid grid-cols-2 gap-3 px-4 pb-2">
                         {coreFiltered.map((g, i) => (
@@ -191,7 +192,7 @@ export default function Moods() {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
                           >
-                            <MoodCard icon={g.emoji} title={g.title} desc={g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
+                            <MoodCard icon={g.emoji} title={t(`athkar.${g.id}` as any) || g.title} desc={t(`athkar.${g.id}.sub` as any) || g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
                           </motion.div>
                         ))}
                       </div>
@@ -200,8 +201,8 @@ export default function Moods() {
                   {situationFiltered.length > 0 && (
                     <>
                       <div className="px-4 pt-3 pb-1">
-                        <h2 className="text-sm font-bold text-foreground">🗂️ Situations particulières</h2>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Voyage, maison, mosquée, événements de vie…</p>
+                        <h2 className="text-sm font-bold text-foreground">🗂️ {t("athkar.situationsTitle" as any)}</h2>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">{t("athkar.situationsSubtitle" as any)}</p>
                       </div>
                       <div className="grid grid-cols-2 gap-3 px-4 pb-4">
                         {situationFiltered.map((g, i) => (
@@ -211,7 +212,7 @@ export default function Moods() {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
                           >
-                            <MoodCard icon={g.emoji} title={g.title} desc={g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
+                            <MoodCard icon={g.emoji} title={t(`athkar.${g.id}` as any) || g.title} desc={t(`athkar.${g.id}.sub` as any) || g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
                           </motion.div>
                         ))}
                       </div>

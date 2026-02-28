@@ -4,10 +4,12 @@ import { ArrowLeft, Play, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useCallback } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function MaladieDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const maladie = getMaladieById(id || "");
   const { play } = useGlobalAudio();
 
@@ -22,10 +24,18 @@ export default function MaladieDetail() {
   if (!maladie) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Maladie non trouvée</p>
+        <p className="text-muted-foreground">{t("maladie.notFound" as any)}</p>
       </div>
     );
   }
+
+  const title = t(`maladie.${maladie.id}` as any) || maladie.title;
+  const subtitle = t(`maladie.${maladie.id}.sub` as any) || maladie.subtitle;
+  const versesCount = maladie.verses.reduce((acc, v) => {
+    if (v.start && v.end) return acc + (v.end - v.start + 1);
+    if (v.ayahs) return acc + v.ayahs.length;
+    return acc;
+  }, 0);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${maladie.color} relative`}>
@@ -49,17 +59,13 @@ export default function MaladieDetail() {
           </motion.span>
 
           <div>
-            <h1 className="text-2xl font-bold text-white">{maladie.title}</h1>
+            <h1 className="text-2xl font-bold text-white">{title}</h1>
             <p className="text-white/50 text-lg mt-1">{maladie.titleAr}</p>
-            <p className="text-white/70 text-sm mt-3 max-w-xs mx-auto">{maladie.subtitle}</p>
+            <p className="text-white/70 text-sm mt-3 max-w-xs mx-auto">{subtitle}</p>
           </div>
 
           <div className="text-white/40 text-xs">
-            {maladie.verses.length} passages · {maladie.verses.reduce((acc, v) => {
-              if (v.start && v.end) return acc + (v.end - v.start + 1);
-              if (v.ayahs) return acc + v.ayahs.length;
-              return acc;
-            }, 0)} versets
+            {maladie.verses.length} {t("maladie.passages" as any)} · {versesCount} {t("maladie.verses" as any)}
           </div>
 
           <div className="flex flex-col gap-3 w-full max-w-xs mt-4">
@@ -68,7 +74,7 @@ export default function MaladieDetail() {
               className="flex items-center justify-center gap-3 bg-white/15 hover:bg-white/25 text-white font-semibold py-4 rounded-2xl border border-white/20 transition-colors"
             >
               <Play size={22} fill="white" />
-              {maladie.loop ? "🔁 Écouter en boucle" : "▶️ Écouter"}
+              {maladie.loop ? `🔁 ${t("maladie.listenLoop" as any)}` : `▶️ ${t("maladie.listen" as any)}`}
             </button>
             <button
               onClick={() => {
@@ -81,7 +87,7 @@ export default function MaladieDetail() {
               className="flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white/90 font-medium py-4 rounded-2xl border border-white/10 transition-colors"
             >
               <BookOpen size={20} />
-              📖 Lire les versets
+              📖 {t("maladie.readVerses" as any)}
             </button>
           </div>
 
