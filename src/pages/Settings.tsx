@@ -249,6 +249,9 @@ export default function Settings() {
             </div>
           </div>
         </motion.div>
+
+        {/* Admin link - only visible if admin */}
+        <AdminLink />
       </div>
 
       {/* Reset confirmation */}
