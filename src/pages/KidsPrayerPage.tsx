@@ -32,7 +32,8 @@ export default function KidsPrayerPage() {
         {section === "menu" && <MenuSection key="menu" onSelect={setSection} t={t} />}
         {section === "steps" && <StepViewer key="steps" steps={PRAYER_STEPS} t={t} />}
         {section === "wudu" && <StepViewer key="wudu" steps={WUDU_STEPS} t={t} />}
-        {section === "quiz" && <PrayerQuiz key="quiz" t={t} onBack={() => setSection("menu")} />}
+        {section === "wudu-quiz" && <GenericQuiz key="wudu-quiz" questions={KIDS_WUDU_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="wudu.quizBravo" tryAgainKey="wudu.quizTryAgain" />}
+        {section === "quiz" && <GenericQuiz key="quiz" questions={KIDS_PRAYER_QUIZ} t={t} onBack={() => setSection("menu")} bravoKey="kidsPrayer.quizBravo" tryAgainKey="kidsPrayer.quizTryAgain" />}
       </AnimatePresence>
     </div>
   );
