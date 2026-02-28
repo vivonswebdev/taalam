@@ -9,6 +9,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useXP } from "@/hooks/useXP";
 import { useListeningStats } from "@/hooks/useListeningStats";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
@@ -78,6 +79,7 @@ export default function Habits() {
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
   const xp = useXP();
+  const { profile } = useUserProfile();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
@@ -112,7 +114,7 @@ export default function Habits() {
       : 0;
 
     generateProgressReport({
-      displayName: "Ta'alam User",
+      displayName: profile?.display_name || "Ta'alam User",
       streak: xp.streakDays,
       level: xp.level,
       xpTotal: xp.xpTotal,
