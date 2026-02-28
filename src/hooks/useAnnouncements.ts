@@ -19,17 +19,23 @@ export function useAnnouncements(classCodes: string[]) {
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
+  // Stabilize classCodes to prevent infinite re-renders
+  const stableClassCodes = useMemo(() => {
+    return classCodes.sort().join(",");
+  }, [classCodes.join(",")]);
+
   const fetchAnnouncements = useCallback(async () => {
-    if (!classCodes.length) { setAnnouncements([]); setLoading(false); return; }
+    const codes = stableClassCodes ? stableClassCodes.split(",") : [];
+    if (!codes.length) { setAnnouncements([]); setLoading(false); return; }
     const { data } = await supabase
       .from("announcements")
       .select("*")
-      .in("class_code", classCodes)
+      .in("class_code", codes)
       .order("created_at", { ascending: false })
       .limit(100);
     setAnnouncements((data as Announcement[]) || []);
     setLoading(false);
-  }, [classCodes]);
+  }, [stableClassCodes]);
 
   const fetchReads = useCallback(async () => {
     if (!user) return;
