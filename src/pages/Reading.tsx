@@ -273,6 +273,59 @@ export default function Reading() {
                   ))}
                 </div>
               </div>
+
+              {/* Background Theme */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎨</span>
+                    <span className="text-sm font-medium text-foreground">{t("reading.bgTheme" as any)}</span>
+                  </div>
+                  <button
+                    onClick={toggleImmersive}
+                    className={`w-12 h-7 rounded-full transition-colors relative ${immersiveEnabled ? "bg-primary" : "bg-muted"}`}
+                  >
+                    <motion.div
+                      animate={{ x: immersiveEnabled ? 20 : 2 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md"
+                    />
+                  </button>
+                </div>
+                {immersiveEnabled && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {BG_OPTIONS.map((opt) => {
+                      const selected = choices.reading === opt.id;
+                      const thumb = BG_THUMBS[opt.id];
+                      return (
+                        <button
+                          key={opt.id}
+                          onClick={() => setModeTheme("reading", opt.id)}
+                          className={`relative rounded-xl overflow-hidden border-2 transition-all aspect-[4/3] ${
+                            selected ? "border-primary ring-2 ring-primary/30 scale-[1.02]" : "border-border hover:border-muted-foreground/40"
+                          }`}
+                        >
+                          {thumb ? (
+                            <img src={thumb} alt={opt.label} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-muted flex items-center justify-center">
+                              <span className="text-lg">⬜</span>
+                            </div>
+                          )}
+                          <div className="absolute inset-x-0 bottom-0 bg-foreground/60 backdrop-blur-sm px-1 py-0.5">
+                            <span className="text-[9px] font-medium text-primary-foreground leading-none">{opt.emoji} {opt.label}</span>
+                          </div>
+                          {selected && (
+                            <div className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                              <span className="text-[8px] text-primary-foreground">✓</span>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
