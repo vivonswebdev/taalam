@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, BookOpen } from "lucide-react";
+import { ArrowLeft, ChevronRight, BookOpen, Volume2, VolumeX } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { prophetStories } from "@/data/prophetStories";
 import { Button } from "@/components/ui/button";
 import Confetti from "@/components/Confetti";
+import { useStoryNarration } from "@/hooks/useStoryNarration";
 
 type Step = "story" | "quiz" | "sticker";
 
