@@ -315,7 +315,7 @@ export default function Home() {
             title={t("home.progressButton")}
             desc={t("home.progressButtonDesc")}
             cta={t("home.open")}
-            onClick={() => navigate("/habits")}
+            onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
             gradient="bg-gradient-to-br from-slate-800/60 to-gray-700/30"
             delay={0.55}
           />
