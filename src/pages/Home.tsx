@@ -307,18 +307,18 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🔍"
-          title="Trouver mon ayah"
-          desc="Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation"
-          cta="Ouvrir"
+          title={t("home.findAyahTitle" as any)}
+          desc={t("home.findAyahDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
           gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.35}
         />
         <HomeCard
           emoji="🧩"
-          title="Espace enfants"
-          desc="Noorani, prière, 'Umra & Hajj, mosquées, quiz…"
-          cta="Ouvrir"
+          title={t("home.kidsTitle" as any)}
+          desc={t("home.kidsDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
           gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.4}
