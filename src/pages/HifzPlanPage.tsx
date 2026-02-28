@@ -310,7 +310,7 @@ export default function HifzPlanPage() {
                         </span>
                         <span className="font-arabic text-xs text-primary">{surah?.nameArabic}</span>
                         <span className="text-[10px] text-muted-foreground flex-1">v.{task.ayah_from}–{task.ayah_to}</span>
-                        <span className="text-[10px] text-muted-foreground">{new Date(task.task_date).toLocaleDateString("fr", { day: "numeric", month: "short" })}</span>
+                        <span className="text-[10px] text-muted-foreground">{new Date(task.task_date).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</span>
                       </div>
                     );
                   })}
