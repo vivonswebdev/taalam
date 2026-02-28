@@ -19,7 +19,7 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
     descKey: "noorani.lesson1Desc",
     level: "beginner",
     emoji: "🔤",
-    items: [
+    exerciseType: "recognition",
       { arabic: "ا" },
       { arabic: "ب" },
       { arabic: "ت" },
