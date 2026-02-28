@@ -266,7 +266,15 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         }
         // Mobile browsers may stop on silence; try one more native restart
         try {
+          hasReceivedResultRef.current = false;
           recognition.start();
+          // Set a new silence timer for this retry
+          nativeSilenceTimerRef.current = setTimeout(() => {
+            if (isListeningRef.current && !hasReceivedResultRef.current && recognitionRef.current === recognition) {
+              console.warn("[VoiceRecognition] No results after timeout (retry), stopping native SR");
+              try { recognition.stop(); } catch {}
+            }
+          }, NATIVE_SILENCE_TIMEOUT_MS);
           return;
         } catch (e) {
           console.warn("[VoiceRecognition] Native restart failed, forcing server STT:", e);
