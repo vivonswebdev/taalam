@@ -58,6 +58,8 @@ import FaqAndTermsPage from "./pages/FaqAndTermsPage";
 import NotificationSettings from "./pages/NotificationSettings";
 import InstallAppPage from "./pages/InstallAppPage";
 import MushafPage from "./pages/MushafPage";
+import MaladieDetail from "./pages/MaladieDetail";
+import AthkarDetail from "./pages/AthkarDetail";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -107,6 +109,8 @@ const App = () => (
               <Route path="/moods" element={<Moods />} />
               <Route path="/moods/:id" element={<MoodDetail />} />
               <Route path="/moods/:id/read" element={<MoodRead />} />
+              <Route path="/maladies/:id" element={<MaladieDetail />} />
+              <Route path="/athkar/:id" element={<AthkarDetail />} />
               <Route path="/live-quran" element={<LiveQuran />} />
               <Route path="/habits" element={<Habits />} />
               <Route path="/more" element={<More />} />
