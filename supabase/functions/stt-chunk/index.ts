@@ -46,6 +46,12 @@ serve(async (req) => {
       });
     }
 
+    if (!checkRateLimit(claimsData.user.id)) {
+      return new Response(JSON.stringify({ text: '', error: 'Rate limit exceeded' }), {
+        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
