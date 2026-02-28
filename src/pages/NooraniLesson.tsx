@@ -124,7 +124,7 @@ export default function NooraniLesson() {
       </div>
 
       {/* Main card */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      <div className="flex-1 flex items-center justify-center px-6 pb-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
@@ -155,7 +155,7 @@ export default function NooraniLesson() {
       </div>
 
       {/* Action buttons */}
-      <div className="px-6 pb-8 flex gap-3">
+      <div className="px-6 pb-6 pt-2 flex gap-3">
         <button
           onClick={() => handleChoice(false)}
           className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-border text-foreground font-bold text-sm active:scale-[0.97] transition-transform min-h-[56px]"
