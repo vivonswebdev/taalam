@@ -255,7 +255,7 @@ export default function StudySheet({
               {/* Shared notes from others */}
               {sharedNotes.length > 0 && (
                 <div className="space-y-2 pt-2 border-t border-border">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Notes partagées</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{t("study.sharedNotes")}</p>
                   {sharedNotes.map((n) => (
                     <div key={n.id} className="rounded-xl bg-muted/30 border border-border p-3">
                       <p className="text-sm text-foreground leading-relaxed">{n.content}</p>
