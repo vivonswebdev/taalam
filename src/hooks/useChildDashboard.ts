@@ -26,6 +26,8 @@ export interface ChildDashboardStats {
   nooraniTotal: number;
   kidsPrayerDone: boolean;
   kidsHajjDone: boolean;
+  checklistToday: number;
+  checklistTotal: number;
   dayTimeline: DayActivity[];
   recentActivities: RecentActivityItem[];
 }
