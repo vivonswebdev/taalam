@@ -195,7 +195,7 @@ function PrayerQuiz({ t, onBack }: { t: any; onBack: () => void }) {
   if (isDone) {
     return (
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="px-5 text-center py-8">
-        {showConfetti && <Confetti />}
+        {showConfetti && <Confetti active={true} />}
         <span className="text-6xl inline-block mb-4">{score >= 3 ? "🏆" : "💪"}</span>
         <h2 className="text-2xl font-bold text-foreground mb-2">
           {score >= 3 ? t("kidsPrayer.quizBravo" as any) : t("kidsPrayer.quizTryAgain" as any)}
