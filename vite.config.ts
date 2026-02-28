@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,woff2}"],
       },
       manifest: {
-        name: "QuranEasy - Apprendre le Coran",
-        short_name: "QuranEasy",
+        name: "Ta'alam - Apprendre le Coran",
+        short_name: "Ta'alam",
         description: "Apprenez le Coran facilement avec des quiz et de la récitation guidée",
         theme_color: "#1a6b3c",
         background_color: "#f5f0e8",
@@ -29,7 +29,8 @@ export default defineConfig(({ mode }) => ({
         orientation: "portrait",
         start_url: "/",
         icons: [
-          { src: "/favicon.ico", sizes: "64x64", type: "image/x-icon" },
+          { src: "/taalam-icon.png", sizes: "512x512", type: "image/png" },
+          { src: "/taalam-icon.png", sizes: "192x192", type: "image/png" },
         ],
       },
     }),
