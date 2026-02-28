@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, RotateCcw, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { UMRA_STEPS, HAJJ_STEPS, KIDS_HAJJ_QUIZ } from "@/data/kidsHajjUmra";
-import type { RitualStep } from "@/data/kidsHajjUmra";
+import { UMRA_STEPS, HAJJ_STEPS, getRandomHajjQuiz } from "@/data/kidsHajjUmra";
+import type { RitualStep, HajjQuizQuestion } from "@/data/kidsHajjUmra";
 import Confetti from "@/components/Confetti";
 
 type Section = "menu" | "umra" | "hajj" | "quiz";
@@ -171,12 +171,13 @@ function RitualStepViewer({ steps, t }: { steps: RitualStep[]; t: any }) {
 
 /* ═══ Quiz ═══ */
 function HajjQuiz({ t, onBack }: { t: any; onBack: () => void }) {
+  const [key, setKey] = useState(0);
+  const questions = useMemo(() => getRandomHajjQuiz(5), [key]);
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const questions = KIDS_HAJJ_QUIZ;
   const current = questions[step];
   const isDone = step >= questions.length;
 
@@ -205,7 +206,7 @@ function HajjQuiz({ t, onBack }: { t: any; onBack: () => void }) {
         </p>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStep(0); setScore(0); setShowConfetti(false); }}
+            onClick={() => { setKey(k => k + 1); setStep(0); setScore(0); setShowConfetti(false); }}
             className="flex-1 py-3 rounded-2xl bg-muted text-sm font-semibold flex items-center justify-center gap-1"
           >
             <RotateCcw size={14} /> {t("kidsPrayer.restart" as any)}

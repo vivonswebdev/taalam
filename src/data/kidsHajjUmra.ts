@@ -38,41 +38,78 @@ export type HajjQuizQuestion = {
   options: { labelKey: string; correct: boolean }[];
 };
 
-export const KIDS_HAJJ_QUIZ: HajjQuizQuestion[] = [
-  {
-    id: "q1",
-    questionKey: "kidsHajj.quiz.q1",
-    options: [
-      { labelKey: "kidsHajj.quiz.q1.opt1", correct: true },
-      { labelKey: "kidsHajj.quiz.q1.opt2", correct: false },
-      { labelKey: "kidsHajj.quiz.q1.opt3", correct: false },
-    ],
-  },
-  {
-    id: "q2",
-    questionKey: "kidsHajj.quiz.q2",
-    options: [
-      { labelKey: "kidsHajj.quiz.q2.opt1", correct: false },
-      { labelKey: "kidsHajj.quiz.q2.opt2", correct: true },
-      { labelKey: "kidsHajj.quiz.q2.opt3", correct: false },
-    ],
-  },
-  {
-    id: "q3",
-    questionKey: "kidsHajj.quiz.q3",
-    options: [
-      { labelKey: "kidsHajj.quiz.q3.opt1", correct: false },
-      { labelKey: "kidsHajj.quiz.q3.opt2", correct: false },
-      { labelKey: "kidsHajj.quiz.q3.opt3", correct: true },
-    ],
-  },
-  {
-    id: "q4",
-    questionKey: "kidsHajj.quiz.q4",
-    options: [
-      { labelKey: "kidsHajj.quiz.q4.opt1", correct: true },
-      { labelKey: "kidsHajj.quiz.q4.opt2", correct: false },
-      { labelKey: "kidsHajj.quiz.q4.opt3", correct: false },
-    ],
-  },
+export const KIDS_HAJJ_QUESTION_BANK: HajjQuizQuestion[] = [
+  { id: "hq1", questionKey: "kidsHajj.quiz.q1", options: [
+    { labelKey: "kidsHajj.quiz.q1.opt1", correct: true },
+    { labelKey: "kidsHajj.quiz.q1.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q1.opt3", correct: false },
+  ]},
+  { id: "hq2", questionKey: "kidsHajj.quiz.q2", options: [
+    { labelKey: "kidsHajj.quiz.q2.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q2.opt2", correct: true },
+    { labelKey: "kidsHajj.quiz.q2.opt3", correct: false },
+  ]},
+  { id: "hq3", questionKey: "kidsHajj.quiz.q3", options: [
+    { labelKey: "kidsHajj.quiz.q3.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q3.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q3.opt3", correct: true },
+  ]},
+  { id: "hq4", questionKey: "kidsHajj.quiz.q4", options: [
+    { labelKey: "kidsHajj.quiz.q4.opt1", correct: true },
+    { labelKey: "kidsHajj.quiz.q4.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q4.opt3", correct: false },
+  ]},
+  { id: "hq5", questionKey: "kidsHajj.quiz.q5", options: [
+    { labelKey: "kidsHajj.quiz.q5.opt1", correct: true },
+    { labelKey: "kidsHajj.quiz.q5.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q5.opt3", correct: false },
+  ]},
+  { id: "hq6", questionKey: "kidsHajj.quiz.q6", options: [
+    { labelKey: "kidsHajj.quiz.q6.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q6.opt2", correct: true },
+    { labelKey: "kidsHajj.quiz.q6.opt3", correct: false },
+  ]},
+  { id: "hq7", questionKey: "kidsHajj.quiz.q7", options: [
+    { labelKey: "kidsHajj.quiz.q7.opt1", correct: true },
+    { labelKey: "kidsHajj.quiz.q7.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q7.opt3", correct: false },
+  ]},
+  { id: "hq8", questionKey: "kidsHajj.quiz.q8", options: [
+    { labelKey: "kidsHajj.quiz.q8.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q8.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q8.opt3", correct: true },
+  ]},
+  { id: "hq9", questionKey: "kidsHajj.quiz.q9", options: [
+    { labelKey: "kidsHajj.quiz.q9.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q9.opt2", correct: true },
+    { labelKey: "kidsHajj.quiz.q9.opt3", correct: false },
+  ]},
+  { id: "hq10", questionKey: "kidsHajj.quiz.q10", options: [
+    { labelKey: "kidsHajj.quiz.q10.opt1", correct: true },
+    { labelKey: "kidsHajj.quiz.q10.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q10.opt3", correct: false },
+  ]},
+  { id: "hq11", questionKey: "kidsHajj.quiz.q11", options: [
+    { labelKey: "kidsHajj.quiz.q11.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q11.opt2", correct: true },
+    { labelKey: "kidsHajj.quiz.q11.opt3", correct: false },
+  ]},
+  { id: "hq12", questionKey: "kidsHajj.quiz.q12", options: [
+    { labelKey: "kidsHajj.quiz.q12.opt1", correct: false },
+    { labelKey: "kidsHajj.quiz.q12.opt2", correct: false },
+    { labelKey: "kidsHajj.quiz.q12.opt3", correct: true },
+  ]},
 ];
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export function getRandomHajjQuiz(count = 5): HajjQuizQuestion[] {
+  return shuffleArray(KIDS_HAJJ_QUESTION_BANK).slice(0, count);
+}
