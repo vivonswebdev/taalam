@@ -44,6 +44,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const isProcessingRef = useRef(false);
   const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
+  const nativeRetryCountRef = useRef(0);
 
   const hasNativeSR = useRef(false);
   const forceServerRef = useRef(false);
