@@ -87,7 +87,8 @@ export default function More() {
       </div>
 
       <div className="px-5 pt-4 space-y-5">
-        <MenuSection title={t("more.sectionChild" as any)} items={childSection} />
+        <ModeSelector />
+        {(mode === "child" || mode === "solo") && <MenuSection title={t("more.sectionChild" as any)} items={childSection} />}
         <MenuSection title={t("more.sectionQuran")} items={quranSection} />
         <MenuSection title={t("more.sectionAccount")} items={accountSection} />
         <MenuSection title={t("more.sectionModules")} items={modulesSection} />

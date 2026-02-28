@@ -131,6 +131,7 @@ const App = () => (
           </div>
           </GlobalAudioProvider>
         </BrowserRouter>
+        </UserModeProvider>
         </ActiveChildProvider>
       </LanguageProvider>
     </TooltipProvider>
