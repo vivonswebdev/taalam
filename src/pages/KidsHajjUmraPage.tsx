@@ -206,7 +206,7 @@ function HajjQuiz({ t, onBack }: { t: any; onBack: () => void }) {
         </p>
         <div className="flex gap-3">
           <button
-            onClick={() => { setStep(0); setScore(0); setShowConfetti(false); }}
+            onClick={() => { setKey(k => k + 1); setStep(0); setScore(0); setShowConfetti(false); }}
             className="flex-1 py-3 rounded-2xl bg-muted text-sm font-semibold flex items-center justify-center gap-1"
           >
             <RotateCcw size={14} /> {t("kidsPrayer.restart" as any)}

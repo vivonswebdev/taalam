@@ -1311,6 +1311,47 @@ const translations = {
   "kidsHajj.quiz.q4.opt2": { fr: "Bismillah", en: "Bismillah", nl: "Bismillah", ar: "بسم الله", tr: "Bismillah", ur: "بسم اللہ" },
   "kidsHajj.quiz.q4.opt3": { fr: "Allahu Akbar", en: "Allahu Akbar", nl: "Allahu Akbar", ar: "الله أكبر", tr: "Allahu Ekber", ur: "اللہ اکبر" },
 
+  // New Hajj quiz questions (q5–q12)
+  "kidsHajj.quiz.q5": { fr: "Où dort-on sous les étoiles ?", en: "Where do you sleep under the stars?", nl: "Waar slaap je onder de sterren?", ar: "أين ننام تحت النجوم؟", tr: "Yıldızların altında nerede uyunur?", ur: "ستاروں تلے کہاں سوتے ہیں؟" },
+  "kidsHajj.quiz.q5.opt1": { fr: "Muzdalifah", en: "Muzdalifah", nl: "Muzdalifah", ar: "مزدلفة", tr: "Müzdelife", ur: "مزدلفہ" },
+  "kidsHajj.quiz.q5.opt2": { fr: "Mina", en: "Mina", nl: "Mina", ar: "منى", tr: "Mina", ur: "منیٰ" },
+  "kidsHajj.quiz.q5.opt3": { fr: "Safa", en: "Safa", nl: "Safa", ar: "الصفا", tr: "Safa", ur: "صفا" },
+
+  "kidsHajj.quiz.q6": { fr: "Quelle étape vient juste avant Arafat ?", en: "Which step comes right before Arafat?", nl: "Welke stap komt vlak vóór Arafat?", ar: "ما الخطوة التي تسبق عرفات مباشرة؟", tr: "Arafat'tan hemen önce hangi adım gelir?", ur: "عرفات سے ٹھیک پہلے کون سا مرحلہ آتا ہے؟" },
+  "kidsHajj.quiz.q6.opt1": { fr: "Le Tawaf", en: "Tawaf", nl: "De Tawaf", ar: "الطواف", tr: "Tavaf", ur: "طواف" },
+  "kidsHajj.quiz.q6.opt2": { fr: "Mina (8e Dhul-Hijjah)", en: "Mina (8th Dhul-Hijjah)", nl: "Mina (8e Dhul-Hijjah)", ar: "منى (٨ ذو الحجة)", tr: "Mina (8 Zilhicce)", ur: "منیٰ (8 ذوالحجہ)" },
+  "kidsHajj.quiz.q6.opt3": { fr: "Muzdalifah", en: "Muzdalifah", nl: "Muzdalifah", ar: "مزدلفة", tr: "Müzdelife", ur: "مزدلفہ" },
+
+  "kidsHajj.quiz.q7": { fr: "Comment s'appelle l'état spécial du Hajj ?", en: "What is the special state of Hajj called?", nl: "Hoe heet de speciale staat van de Hadj?", ar: "ما اسم الحالة الخاصة بالحج؟", tr: "Hac'ın özel haline ne denir?", ur: "حج کی خاص حالت کا نام کیا ہے؟" },
+  "kidsHajj.quiz.q7.opt1": { fr: "L'Ihram", en: "Ihram", nl: "Ihram", ar: "الإحرام", tr: "İhram", ur: "احرام" },
+  "kidsHajj.quiz.q7.opt2": { fr: "Le Tawaf", en: "Tawaf", nl: "Tawaf", ar: "الطواف", tr: "Tavaf", ur: "طواف" },
+  "kidsHajj.quiz.q7.opt3": { fr: "Le Sa'i", en: "Sa'i", nl: "Sa'i", ar: "السعي", tr: "Sa'y", ur: "سعی" },
+
+  "kidsHajj.quiz.q8": { fr: "Les habits d'ihram pour les hommes sont…", en: "The ihram garments for men are…", nl: "De ihram-kleding voor mannen is…", ar: "ملابس الإحرام للرجال هي…", tr: "Erkekler için ihram kıyafeti…", ur: "مردوں کے لیے احرام کے کپڑے…" },
+  "kidsHajj.quiz.q8.opt1": { fr: "Une djellaba verte", en: "A green robe", nl: "Een groen gewaad", ar: "جلابية خضراء", tr: "Yeşil bir cübbe", ur: "سبز جبہ" },
+  "kidsHajj.quiz.q8.opt2": { fr: "Des vêtements normaux", en: "Normal clothes", nl: "Gewone kleren", ar: "ملابس عادية", tr: "Normal kıyafet", ur: "عام کپڑے" },
+  "kidsHajj.quiz.q8.opt3": { fr: "Deux tissus blancs non cousus", en: "Two white unsewn cloths", nl: "Twee witte niet-genaaide doeken", ar: "قطعتان بيضاوان غير مخيطتين", tr: "İki beyaz dikişsiz kumaş", ur: "دو سفید بغیر سلے ہوئے کپڑے" },
+
+  "kidsHajj.quiz.q9": { fr: "L''Umra se fait…", en: "'Umra can be performed…", nl: "'Umra kan worden gedaan…", ar: "العمرة تُؤدى…", tr: "Umre yapılabilir…", ur: "عمرہ ادا کیا جا سکتا ہے…" },
+  "kidsHajj.quiz.q9.opt1": { fr: "Seulement en Ramadan", en: "Only in Ramadan", nl: "Alleen in Ramadan", ar: "فقط في رمضان", tr: "Sadece Ramazan'da", ur: "صرف رمضان میں" },
+  "kidsHajj.quiz.q9.opt2": { fr: "À n'importe quel moment de l'année", en: "At any time of the year", nl: "Op elk moment van het jaar", ar: "في أي وقت من السنة", tr: "Yılın herhangi bir zamanında", ur: "سال کے کسی بھی وقت" },
+  "kidsHajj.quiz.q9.opt3": { fr: "Seulement en Dhul-Hijjah", en: "Only in Dhul-Hijjah", nl: "Alleen in Dhul-Hijjah", ar: "فقط في ذي الحجة", tr: "Sadece Zilhicce'de", ur: "صرف ذوالحجہ میں" },
+
+  "kidsHajj.quiz.q10": { fr: "Le Hajj se fait au mois de…", en: "Hajj takes place in the month of…", nl: "De Hadj vindt plaats in de maand…", ar: "الحج يكون في شهر…", tr: "Hac hangi ayda yapılır?", ur: "حج کس مہینے میں ہوتا ہے؟" },
+  "kidsHajj.quiz.q10.opt1": { fr: "Dhul-Hijjah", en: "Dhul-Hijjah", nl: "Dhul-Hijjah", ar: "ذو الحجة", tr: "Zilhicce", ur: "ذوالحجہ" },
+  "kidsHajj.quiz.q10.opt2": { fr: "Ramadan", en: "Ramadan", nl: "Ramadan", ar: "رمضان", tr: "Ramazan", ur: "رمضان" },
+  "kidsHajj.quiz.q10.opt3": { fr: "Muharram", en: "Muharram", nl: "Muharram", ar: "محرم", tr: "Muharrem", ur: "محرم" },
+
+  "kidsHajj.quiz.q11": { fr: "Après le Jamarat, que fait-on ?", en: "After Jamarat, what do you do?", nl: "Wat doe je na de Jamarat?", ar: "بعد الجمرات، ماذا نفعل؟", tr: "Cemarat'tan sonra ne yapılır?", ur: "جمرات کے بعد کیا کرتے ہیں؟" },
+  "kidsHajj.quiz.q11.opt1": { fr: "On dort à Muzdalifah", en: "Sleep at Muzdalifah", nl: "Slapen in Muzdalifah", ar: "ننام في مزدلفة", tr: "Müzdelife'de uyuruz", ur: "مزدلفہ میں سوتے ہیں" },
+  "kidsHajj.quiz.q11.opt2": { fr: "On se coupe les cheveux", en: "Cut the hair", nl: "Haar knippen", ar: "نقص الشعر", tr: "Saç kesilir", ur: "بال کاٹتے ہیں" },
+  "kidsHajj.quiz.q11.opt3": { fr: "On fait le Sa'i", en: "Do Sa'i", nl: "Sa'i doen", ar: "نسعى", tr: "Sa'y yapılır", ur: "سعی کرتے ہیں" },
+
+  "kidsHajj.quiz.q12": { fr: "Le Sa'i se fait entre…", en: "Sa'i is done between…", nl: "Sa'i wordt gedaan tussen…", ar: "السعي يكون بين…", tr: "Sa'y nerede yapılır?", ur: "سعی کن دو جگہوں کے درمیان ہوتی ہے؟" },
+  "kidsHajj.quiz.q12.opt1": { fr: "Mina et Arafat", en: "Mina and Arafat", nl: "Mina en Arafat", ar: "منى وعرفات", tr: "Mina ve Arafat", ur: "منیٰ اور عرفات" },
+  "kidsHajj.quiz.q12.opt2": { fr: "La Kaaba et Muzdalifah", en: "Kaaba and Muzdalifah", nl: "De Kaaba en Muzdalifah", ar: "الكعبة ومزدلفة", tr: "Kâbe ve Müzdelife", ur: "کعبہ اور مزدلفہ" },
+  "kidsHajj.quiz.q12.opt3": { fr: "Safa et Marwa", en: "Safa and Marwa", nl: "Safa en Marwa", ar: "الصفا والمروة", tr: "Safa ve Merve", ur: "صفا اور مروہ" },
+
   // Home card
   "home.kidsHajj": { fr: "Apprendre 'Umra & Hajj", en: "Learn 'Umra & Hajj", nl: "Leer 'Umra & Hadj", ar: "تعلّم العمرة والحج", tr: "Umre & Hac öğren", ur: "عمرہ اور حج سیکھیں" },
   "home.kidsHajjDesc": { fr: "Découvre les rites étape par étape", en: "Discover the rituals step by step", nl: "Ontdek de rituelen stap voor stap", ar: "اكتشف المناسك خطوة بخطوة", tr: "İbadetleri adım adım keşfet", ur: "مناسک قدم بہ قدم دریافت کریں" },
