@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Shield, Users, BookOpen, Baby, Brain, RefreshCw, BarChart3 } from "lucide-react";
+import { ArrowLeft, Shield, Users, BookOpen, Baby, Brain, RefreshCw, BarChart3, EyeOff, Eye } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminStats } from "@/hooks/useAdminStats";
+import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Switch } from "@/components/ui/switch";
 
 const KIDS_MODULES = ["noorani", "kids_prayer", "kids_hajj", "kids_mosque_map", "kids_space"];
 
