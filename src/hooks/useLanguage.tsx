@@ -1465,6 +1465,28 @@ const translations = {
   "kidsDuas.daily4Trans": { fr: "Louange à Allah.", en: "Praise be to Allah.", nl: "Lof zij Allah.", ar: "الحمد لله", tr: "Allah'a hamd olsun.", ur: "اللہ کی تعریف۔" },
   "kidsDuas.daily5Title": { fr: "En se regardant dans le miroir", en: "Looking in the mirror", nl: "In de spiegel kijken", ar: "عند النظر في المرآة", tr: "Aynaya bakarken", ur: "آئینے میں دیکھتے وقت" },
   "kidsDuas.daily5Trans": { fr: "Ô Allah, Tu as embelli ma création, alors embellis mon caractère.", en: "O Allah, You have beautified my form, so beautify my character.", nl: "O Allah, U hebt mijn uiterlijk verfraaid, verfraai dus mijn karakter.", ar: "اللهم أنت حسّنت خلقي فحسّن خلقي", tr: "Allah'ım yaratılışımı güzelleştirdiğin gibi ahlakımı da güzelleştir.", ur: "اے اللہ تو نے میری صورت خوبصورت بنائی تو میرے اخلاق بھی خوبصورت بنا دے۔" },
+
+  // Teacher Dashboard
+  "teacher.title": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
+  "teacher.subtitle": { fr: "Suivez la progression de vos classes", en: "Track your classes' progress", nl: "Volg de voortgang van je klassen", ar: "تابع تقدم فصولك", tr: "Sınıflarınızın ilerlemesini takip edin", ur: "اپنی کلاسوں کی پیشرفت دیکھیں" },
+  "teacher.loginRequired": { fr: "Connectez-vous pour accéder au Dashboard", en: "Log in to access the Dashboard", nl: "Log in om het Dashboard te openen", ar: "سجّل الدخول للوصول إلى اللوحة", tr: "Panele erişmek için giriş yapın", ur: "ڈیش بورڈ تک رسائی کے لیے لاگ ان کریں" },
+  "teacher.noClasses": { fr: "Vous n'avez pas encore de classe. Créez-en une d'abord.", en: "You don't have any classes yet. Create one first.", nl: "Je hebt nog geen klassen. Maak er eerst een aan.", ar: "ليس لديك فصول بعد. أنشئ واحداً أولاً.", tr: "Henüz sınıfınız yok. Önce bir tane oluşturun.", ur: "ابھی آپ کی کوئی کلاس نہیں۔ پہلے ایک بنائیں۔" },
+  "teacher.createClass": { fr: "Créer une classe", en: "Create a class", nl: "Maak een klas", ar: "إنشاء فصل", tr: "Sınıf oluştur", ur: "کلاس بنائیں" },
+  "teacher.students": { fr: "Élèves", en: "Students", nl: "Leerlingen", ar: "الطلاب", tr: "Öğrenciler", ur: "طلباء" },
+  "teacher.avgQuran7d": { fr: "Qur'an moy. (7j)", en: "Avg Quran (7d)", nl: "Gem. Koran (7d)", ar: "متوسط القرآن (7أ)", tr: "Ort. Kur'an (7g)", ur: "اوسط قرآن (7د)" },
+  "teacher.avgHifz7d": { fr: "Hifz moy. (7j)", en: "Avg Hifz (7d)", nl: "Gem. Hifz (7d)", ar: "متوسط الحفظ (7أ)", tr: "Ort. Hifz (7g)", ur: "اوسط حفظ (7د)" },
+  "teacher.totalQuizzes": { fr: "Quiz total", en: "Total quizzes", nl: "Totaal quizzen", ar: "إجمالي الاختبارات", tr: "Toplam test", ur: "کل کوئزز" },
+  "teacher.studentProgress": { fr: "Progression des élèves", en: "Student progress", nl: "Voortgang leerlingen", ar: "تقدم الطلاب", tr: "Öğrenci ilerlemesi", ur: "طلباء کی پیشرفت" },
+  "teacher.noStudents": { fr: "Aucun élève dans cette classe", en: "No students in this class", nl: "Geen leerlingen in deze klas", ar: "لا طلاب في هذا الفصل", tr: "Bu sınıfta öğrenci yok", ur: "اس کلاس میں کوئی طالب علم نہیں" },
+  "teacher.assignments": { fr: "Devoirs de la classe", en: "Class assignments", nl: "Huiswerk", ar: "واجبات الفصل", tr: "Sınıf ödevleri", ur: "کلاس اسائنمنٹس" },
+  "teacher.noAssignments": { fr: "Aucun devoir actif", en: "No active assignments", nl: "Geen actief huiswerk", ar: "لا واجبات نشطة", tr: "Aktif ödev yok", ur: "کوئی فعال اسائنمنٹ نہیں" },
+  "teacher.assignmentTitle": { fr: "Titre du devoir", en: "Assignment title", nl: "Titel huiswerk", ar: "عنوان الواجب", tr: "Ödev başlığı", ur: "اسائنمنٹ کا عنوان" },
+  "teacher.selectLesson": { fr: "Choisir une leçon", en: "Select a lesson", nl: "Kies een les", ar: "اختر درساً", tr: "Ders seçin", ur: "سبق منتخب کریں" },
+  "teacher.createBtn": { fr: "Créer le devoir", en: "Create assignment", nl: "Huiswerk aanmaken", ar: "إنشاء واجب", tr: "Ödev oluştur", ur: "اسائنمنٹ بنائیں" },
+  "teacher.assignmentCreated": { fr: "Devoir créé !", en: "Assignment created!", nl: "Huiswerk aangemaakt!", ar: "تم إنشاء الواجب!", tr: "Ödev oluşturuldu!", ur: "اسائنمنٹ بن گئی!" },
+  "teacher.other": { fr: "Autre", en: "Other", nl: "Overig", ar: "أخرى", tr: "Diğer", ur: "دیگر" },
+  "teacher.dashboard": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
+  "teacher.dashboardDesc": { fr: "Stats & devoirs de vos classes", en: "Stats & assignments for your classes", nl: "Stats & huiswerk van je klassen", ar: "إحصائيات وواجبات فصولك", tr: "Sınıflarınızın istatistikleri ve ödevleri", ur: "آپ کی کلاسوں کے اعداد و شمار اور اسائنمنٹس" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

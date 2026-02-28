@@ -355,13 +355,23 @@ export default function Classrooms() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleViewDetail(c.id)}
-                  className="w-full py-2 text-xs font-semibold text-primary bg-primary/5 rounded-lg"
-                >
-                  {t("classrooms.viewDetail")}
-                  {newCount > 0 && <span className="ml-1 text-destructive">({newCount} {t("classrooms.new")})</span>}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleViewDetail(c.id)}
+                    className="flex-1 py-2 text-xs font-semibold text-primary bg-primary/5 rounded-lg"
+                  >
+                    {t("classrooms.viewDetail")}
+                    {newCount > 0 && <span className="ml-1 text-destructive">({newCount} {t("classrooms.new")})</span>}
+                  </button>
+                  {user && c.teacherId === user.id && (
+                    <button
+                      onClick={() => navigate("/teacher-dashboard")}
+                      className="py-2 px-3 text-xs font-semibold text-primary-foreground bg-primary rounded-lg flex items-center gap-1"
+                    >
+                      <GraduationCap size={14} /> Dashboard
+                    </button>
+                  )}
+                </div>
               </motion.div>
             );
           })
