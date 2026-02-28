@@ -11,8 +11,23 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Authenticate: only allow calls with the service role key or a dedicated cron secret
+  const authHeader = req.headers.get("Authorization");
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+  // Accept either service_role key or anon key (used by pg_net cron)
+  const expectedTokens = [serviceRoleKey, anonKey].filter(Boolean);
+  const token = authHeader?.replace("Bearer ", "");
+
+  if (!token || !expectedTokens.includes(token)) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const fcmServerKey = Deno.env.get("FCM_SERVER_KEY");
 
   if (!fcmServerKey) {
