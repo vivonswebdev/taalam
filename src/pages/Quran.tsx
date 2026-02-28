@@ -90,6 +90,8 @@ export default function Quran() {
     : null;
 
   const easySurahsList = surahs.filter(s => EASY_SURAH_NUMBERS.includes(s.number));
+  const surahSelectorRef = useRef<HTMLDivElement>(null);
+  const [highlightSelector, setHighlightSelector] = useState(false);
 
   // Full Quran list (114 surahs)
   const [allSurahsMeta, setAllSurahsMeta] = useState<SurahMeta[]>([]);
