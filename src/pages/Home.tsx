@@ -240,6 +240,27 @@ export default function Home() {
         </motion.button>
       </div>
 
+      {/* Noorani Qaida card (child mode only) */}
+      {isChildMode && (
+        <div className="px-5 mt-3">
+          <motion.button
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate("/noorani")}
+            className="w-full card-shimmer rounded-2xl p-4 text-left flex items-center gap-4 bg-gradient-to-r from-primary/15 to-primary/5 border border-primary/20"
+          >
+            <span className="text-3xl">📚</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-foreground">{t("noorani.cardTitle" as any)}</p>
+              <p className="text-[11px] text-muted-foreground">{t("noorani.cardDesc" as any)}</p>
+            </div>
+            <span className="text-[11px] font-semibold text-primary shrink-0">{t("home.open")}</span>
+          </motion.button>
+        </div>
+      )}
+
       {/* ═══ SECTION D – Suivi & Classes ═══ */}
       <div className="px-5 mt-6 space-y-3">
         {/* Suivi */}
