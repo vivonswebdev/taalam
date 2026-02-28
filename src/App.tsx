@@ -47,6 +47,7 @@ import NooraniLesson from "./pages/NooraniLesson";
 import KidsPrayerPage from "./pages/KidsPrayerPage";
 import KidsHajjUmraPage from "./pages/KidsHajjUmraPage";
 import KidsMosqueMapPage from "./pages/KidsMosqueMapPage";
+import KidsHomePage from "./pages/KidsHomePage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";

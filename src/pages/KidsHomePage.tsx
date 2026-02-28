@@ -1,0 +1,120 @@
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useNooraniProgress } from "@/hooks/useNooraniProgress";
+
+const KIDS_CARDS = [
+  {
+    emoji: "🔤",
+    titleKey: "kidsHome.noorani",
+    descKey: "kidsHome.nooraniDesc",
+    path: "/noorani",
+    gradient: "from-violet-600/30 to-purple-600/15",
+    border: "border-violet-500/25",
+  },
+  {
+    emoji: "🧎",
+    titleKey: "kidsHome.prayer",
+    descKey: "kidsHome.prayerDesc",
+    path: "/kids-prayer",
+    gradient: "from-emerald-600/30 to-teal-600/15",
+    border: "border-emerald-500/25",
+  },
+  {
+    emoji: "🕋",
+    titleKey: "kidsHome.hajjUmra",
+    descKey: "kidsHome.hajjUmraDesc",
+    path: "/kids-hajj",
+    gradient: "from-amber-600/30 to-orange-600/15",
+    border: "border-amber-500/25",
+  },
+  {
+    emoji: "📍🕌",
+    titleKey: "kidsHome.mosqueMap",
+    descKey: "kidsHome.mosqueMapDesc",
+    path: "/kids-mosque-map",
+    gradient: "from-cyan-600/30 to-teal-600/15",
+    border: "border-cyan-500/25",
+  },
+  {
+    emoji: "🧠",
+    titleKey: "kidsHome.quizzes",
+    descKey: "kidsHome.quizzesDesc",
+    path: "/quiz",
+    gradient: "from-pink-600/30 to-rose-600/15",
+    border: "border-pink-500/25",
+  },
+];
+
+export default function KidsHomePage() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const noorani = useNooraniProgress();
+
+  return (
+    <div className="min-h-screen pb-24">
+      {/* Header */}
+      <div className="px-6 pt-14 pb-2">
+        <div className="flex items-center gap-3 mb-3">
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+            <ArrowLeft size={18} className="text-foreground" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <span>🧸</span> {t("kidsHome.title" as any)}
+            </h1>
+            <p className="text-xs text-muted-foreground">{t("kidsHome.subtitle" as any)}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Cards grid */}
+      <div className="px-5 grid grid-cols-2 gap-3">
+        {KIDS_CARDS.map((card, i) => (
+          <motion.button
+            key={card.path}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => navigate(card.path)}
+            className={`flex flex-col gap-2 rounded-2xl p-4 text-left bg-gradient-to-br ${card.gradient} border ${card.border} shadow-lg`}
+          >
+            <span className="text-3xl">{card.emoji}</span>
+            <p className="text-sm font-bold text-foreground leading-tight">
+              {t(card.titleKey as any)}
+            </p>
+            <p className="text-[10px] text-muted-foreground line-clamp-2">
+              {t(card.descKey as any)}
+            </p>
+            {/* Noorani progress indicator */}
+            {card.path === "/noorani" && noorani.completedLessonsCount > 0 && (
+              <div className="mt-1">
+                <p className="text-[9px] text-muted-foreground mb-0.5">
+                  {noorani.completedLessonsCount}/{noorani.totalLessons}
+                </p>
+                <div className="h-1 rounded-full bg-muted/40 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${Math.min(noorani.completionPercent, 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            <span className="mt-auto pt-1 text-[10px] font-semibold text-primary">
+              {t("home.open" as any)} →
+            </span>
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Safety message */}
+      <div className="px-5 mt-4">
+        <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300 text-center">
+          ⚠️ {t("kidsMosque.safetyMsg" as any) || "Va toujours avec un adulte (Papa, Maman ou un proche). Ne pars jamais seul."}
+        </div>
+      </div>
+    </div>
+  );
+}
