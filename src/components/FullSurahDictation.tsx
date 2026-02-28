@@ -265,10 +265,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       setCurrentAyahIdx(prev => prev + 1);
       setLiveTranscript("");
       setMicError(null);
-      setPhase("recording");
-      voice.start();
+      // Don't auto-start voice from setTimeout — requires user gesture on mobile
+      // Instead go to "reading" phase so user taps to record
+      setPhase("reading");
     }
-  }, [currentAyahIdx, blockAyahCount, blockResults, voice]);
+  }, [currentAyahIdx, blockAyahCount, blockResults]);
 
   // Auto-advance after feedback (1s delay)
   useEffect(() => {
