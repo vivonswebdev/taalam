@@ -8,6 +8,7 @@ import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useWeeklyChallenge } from "@/hooks/useWeeklyChallenge";
+import { useStudentAssignments } from "@/hooks/useStudentAssignments";
 import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
 import { surahs } from "@/data/surahs";
