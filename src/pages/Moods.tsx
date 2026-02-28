@@ -113,6 +113,7 @@ export default function Moods() {
                   </motion.div>
                 );
               })}
+            </div>
           </motion.div>
         )}
 
