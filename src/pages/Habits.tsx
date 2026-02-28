@@ -83,6 +83,7 @@ export default function Habits() {
   const { isChildMode, stickers } = useChildMode();
   const xp = useXP();
   const { profile } = useUserProfile();
+  const { mode } = useUserMode();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
