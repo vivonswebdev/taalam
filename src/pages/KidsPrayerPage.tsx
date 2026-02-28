@@ -167,8 +167,15 @@ function StepViewer({ steps, t }: { steps: (PrayerStep | WuduStep)[]; t: any }) 
   );
 }
 
+/* ═══ Random Quiz Wrapper ═══ */
+function RandomQuiz({ getQuestions, t, onBack, bravoKey, tryAgainKey }: { getQuestions: (n?: number) => PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
+  const [key, setKey] = useState(0);
+  const questions = useMemo(() => getQuestions(5), [key, getQuestions]);
+  return <GenericQuiz key={key} questions={questions} t={t} onBack={onBack} bravoKey={bravoKey} tryAgainKey={tryAgainKey} onRestart={() => setKey(k => k + 1)} />;
+}
+
 /* ═══ Generic Quiz ═══ */
-function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string }) {
+function GenericQuiz({ questions, t, onBack, bravoKey, tryAgainKey, onRestart }: { questions: PrayerQuizQuestion[]; t: any; onBack: () => void; bravoKey: string; tryAgainKey: string; onRestart?: () => void }) {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
