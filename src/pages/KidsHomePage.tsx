@@ -56,6 +56,26 @@ export default function KidsHomePage() {
   const { profiles } = useChildProfiles();
   const hasChildren = profiles.length > 0;
 
+  // Quiz stats from localStorage
+  const quizScore = (() => {
+    try {
+      const d = JSON.parse(localStorage.getItem("quran_quiz_stats") || "{}");
+      return { correct: d.correct || 0, total: d.total || 0 };
+    } catch { return { correct: 0, total: 0 }; }
+  })();
+  const prayerDone = (() => { try { return localStorage.getItem("kids_prayer_completed") === "true"; } catch { return false; } })();
+  const hajjDone = (() => { try { return localStorage.getItem("kids_hajj_completed") === "true"; } catch { return false; } })();
+
+  const badgeForCard = (path: string) => {
+    if (path === "/noorani" && noorani.completedLessonsCount > 0)
+      return `${noorani.completedLessonsCount}/${noorani.totalLessons}`;
+    if (path === "/quiz" && quizScore.total > 0)
+      return `${quizScore.correct}/${quizScore.total}`;
+    if (path === "/kids-prayer" && prayerDone) return "✅";
+    if (path === "/kids-hajj" && hajjDone) return "✅";
+    return null;
+  };
+
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
