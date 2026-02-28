@@ -240,8 +240,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       hasReceivedResultRef.current = true;
-      // Clear silence timer since we got results
+      // Clear timers since we got results
       if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
+      if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
 
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
