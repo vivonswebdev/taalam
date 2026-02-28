@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, Navigation, ExternalLink, RefreshCw } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { trackEvent } from "@/lib/trackEvent";
 
 type Mosque = { id: number; name: string; lat: number; lon: number; distance?: number };
 
