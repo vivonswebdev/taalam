@@ -42,9 +42,9 @@ export function useImmersiveBg() {
   const [enabled, setEnabled] = useState<boolean>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored !== null ? stored === "true" : true;
+      return stored !== null ? stored === "true" : false;
     } catch {
-      return true;
+      return false;
     }
   });
 
