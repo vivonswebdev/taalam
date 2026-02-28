@@ -1645,6 +1645,29 @@ const translations = {
   "more.modeActive": { fr: "Actif", en: "Active", nl: "Actief", ar: "نشط", tr: "Aktif", ur: "فعال" },
   "more.modeSolo.title": { fr: "Mode solo", en: "Solo mode", nl: "Solomodus", ar: "الوضع الفردي", tr: "Bireysel mod", ur: "سولو موڈ" },
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
+
+  // Stats Dashboard
+  "stats.quranWeek": { fr: "Qur'an cette semaine", en: "Qur'an this week", nl: "Koran deze week", ar: "القرآن هذا الأسبوع", tr: "Bu hafta Kur'an", ur: "اس ہفتے قرآن" },
+  "stats.hifzMonth": { fr: "Āyāt mémorisées", en: "Āyāt memorized", nl: "Āyāt gememoriseerd", ar: "آيات محفوظة", tr: "Ezberlenen ayet", ur: "حفظ شدہ آیات" },
+  "stats.streakDays": { fr: "Jours de streak", en: "Streak days", nl: "Reeksdagen", ar: "أيام متتالية", tr: "Seri günleri", ur: "سلسلہ دن" },
+  "stats.habitsCompletion30": { fr: "Habitudes (30 j)", en: "Habits (30 d)", nl: "Gewoontes (30 d)", ar: "العادات (30 يوم)", tr: "Alışkanlıklar (30 g)", ur: "عادات (30 دن)" },
+  "stats.quranTime30": { fr: "Temps avec le Qur'an (30 j)", en: "Time with Qur'an (30 d)", nl: "Tijd met Koran (30 d)", ar: "الوقت مع القرآن (30 يوم)", tr: "Kur'an ile geçen süre (30 g)", ur: "قرآن کے ساتھ وقت (30 دن)" },
+  "stats.quranAverage": { fr: "En moyenne {minutes} min/jour", en: "Average {minutes} min/day", nl: "Gemiddeld {minutes} min/dag", ar: "بمعدل {minutes} دقيقة/يوم", tr: "Ortalama {minutes} dk/gün", ur: "اوسط {minutes} منٹ/دن" },
+  "stats.hifzProjection": { fr: "À ce rythme, tu termineras dans {days} jours", en: "At this pace, you'll finish in {days} days", nl: "In dit tempo ben je klaar in {days} dagen", ar: "بهذا الإيقاع، ستنتهي في {days} يوماً", tr: "Bu hızla {days} günde tamamlarsınız", ur: "اس رفتار سے {days} دنوں میں مکمل ہوگا" },
+  "stats.heatmapTitle": { fr: "Activité 30 jours", en: "30-day activity", nl: "30 dagen activiteit", ar: "نشاط 30 يوم", tr: "30 günlük aktivite", ur: "30 دن کی سرگرمی" },
+  "stats.heatmapLegend": { fr: "Plus la couleur est forte, plus ta journée a été riche en Qur'an et en bonnes habitudes", en: "The stronger the color, the richer your day was with Qur'an and good habits", nl: "Hoe sterker de kleur, hoe rijker je dag was met Koran en goede gewoontes", ar: "كلما كان اللون أقوى، كان يومك أغنى بالقرآن والعادات الحسنة", tr: "Renk ne kadar koyuysa, günün Kur'an ve iyi alışkanlıklarla o kadar dolu geçmiştir", ur: "رنگ جتنا گہرا، آپ کا دن قرآن اور اچھی عادات سے اتنا بھرپور" },
+  "stats.hifzOverall": { fr: "Progression globale", en: "Overall progress", nl: "Totale voortgang", ar: "التقدم الإجمالي", tr: "Genel ilerleme", ur: "مجموعی پیشرفت" },
+  "stats.sectionTitle": { fr: "📊 Stats avancées", en: "📊 Advanced Stats", nl: "📊 Geavanceerde stats", ar: "📊 إحصائيات متقدمة", tr: "📊 Gelişmiş istatistikler", ur: "📊 جدید اعداد و شمار" },
+
+  // Teacher stats
+  "teacher.stats.sectionTitle": { fr: "Stats de la classe", en: "Class Stats", nl: "Klasstatistieken", ar: "إحصائيات الفصل", tr: "Sınıf istatistikleri", ur: "کلاس کے اعداد و شمار" },
+  "teacher.stats.quranClass7d": { fr: "Activité Qur'an (7 jours)", en: "Qur'an activity (7 days)", nl: "Koran activiteit (7 dagen)", ar: "نشاط القرآن (7 أيام)", tr: "Kur'an aktivitesi (7 gün)", ur: "قرآن سرگرمی (7 دن)" },
+  "teacher.stats.assignmentsCompletion": { fr: "Devoirs rendus", en: "Assignment completion", nl: "Opdrachten ingeleverd", ar: "الواجبات المقدمة", tr: "Ödev teslimi", ur: "اسائنمنٹ مکمل" },
+  "teacher.stats.atRisk": { fr: "Élèves à surveiller", en: "Students to watch", nl: "Leerlingen om te volgen", ar: "طلاب يحتاجون متابعة", tr: "Takip edilecek öğrenciler", ur: "نظر رکھنے والے طلباء" },
+
+  // Parent stats
+  "parent.stats.comingSoonTitle": { fr: "Tableau de bord parent bientôt disponible", en: "Parent dashboard coming soon", nl: "Ouder-dashboard binnenkort beschikbaar", ar: "لوحة الوالدين قريباً", tr: "Ebeveyn panosu yakında", ur: "والدین کا ڈیش بورڈ جلد آ رہا ہے" },
+  "parent.stats.comingSoonDesc": { fr: "Vous pourrez bientôt suivre le Hifz, les habitudes et la constance de vos enfants dans Taaloum.", en: "You'll soon be able to track your children's Hifz, habits and consistency in Taaloum.", nl: "Binnenkort kunt u de Hifz, gewoontes en consistentie van uw kinderen volgen in Taaloum.", ar: "ستتمكن قريباً من متابعة حفظ أطفالك وعاداتهم ومواظبتهم في تعلّم.", tr: "Yakında çocuklarınızın Hıfz, alışkanlık ve düzenliliklerini Taaloum'da takip edebileceksiniz.", ur: "آپ جلد ہی تعلّم میں اپنے بچوں کے حفظ، عادات اور استقامت کو ٹریک کر سکیں گے۔" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

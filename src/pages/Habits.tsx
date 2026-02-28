@@ -10,6 +10,9 @@ import { useXP } from "@/hooks/useXP";
 import { useListeningStats } from "@/hooks/useListeningStats";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useUserMode } from "@/hooks/useUserMode";
+import PersonalStatsDashboard from "@/components/PersonalStatsDashboard";
+import ParentStatsPlaceholder from "@/components/ParentStatsPlaceholder";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
@@ -80,6 +83,7 @@ export default function Habits() {
   const { isChildMode, stickers } = useChildMode();
   const xp = useXP();
   const { profile } = useUserProfile();
+  const { mode } = useUserMode();
   const mastered = getMasteredCount();
   const totalAttempts = progress.surahProgress.reduce((a, s) => a + s.attempts, 0);
 
@@ -175,6 +179,20 @@ export default function Habits() {
       </div>
 
       <div className="px-6 space-y-4">
+        {/* ───── SECTION: Stats avancées (mode-aware) ───── */}
+        {mode === "parent" ? (
+          <ParentStatsPlaceholder />
+        ) : (
+          <>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("stats.sectionTitle" as any)}</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+            <PersonalStatsDashboard />
+          </>
+        )}
+
         {/* ───── SECTION: Plan Hifz ───── */}
         <HifzHabitCard />
         {/* ───── SECTION: Aujourd'hui ───── */}
