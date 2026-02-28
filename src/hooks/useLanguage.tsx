@@ -757,8 +757,6 @@ const translations = {
   "home.moodsButton": { fr: "Découvrir", en: "Explore", nl: "Ontdekken", ar: "اكتشف", tr: "Keşfet", ur: "دریافت کریں" },
   "home.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
   "home.today": { fr: "aujourd'hui", en: "today", nl: "vandaag", ar: "اليوم", tr: "bugün", ur: "آج" },
-  "home.quizButton": { fr: "Commencer le Quiz Niveau", en: "Start Level Quiz", nl: "Start Niveau Quiz", ar: "ابدأ اختبار المستوى", tr: "Seviye Testini Başlat", ur: "سطح کا امتحان شروع کریں" },
-  "home.quizButtonDesc": { fr: "Testez votre niveau Hifz", en: "Test your Hifz level", nl: "Test je Hifz-niveau", ar: "اختبر مستوى حفظك", tr: "Hıfz seviyenizi test edin", ur: "اپنا حفظ لیول ٹیسٹ کریں" },
   "home.tarteelButton": { fr: "Commencer votre Tarteel", en: "Start your Tarteel", nl: "Start je Tarteel", ar: "ابدأ ترتيلك", tr: "Tarteel'e başla", ur: "اپنی ترتیل شروع کریں" },
   "home.tarteelButtonDesc": { fr: "Récitation avec correction par IA", en: "Recitation with AI correction", nl: "Recitatie met AI-correctie", ar: "تلاوة مع تصحيح بالذكاء الاصطناعي", tr: "YZ ile tashihli tilavet", ur: "مصنوعی ذہانت کے ساتھ تصحیحِ تلاوت" },
   "home.leaderboardButton": { fr: "Voir votre classement", en: "View your ranking", nl: "Je klassement bekijken", ar: "عرض الترتيب", tr: "Sıralamanı gör", ur: "اپنی درجہ بندی دیکھیں" },
