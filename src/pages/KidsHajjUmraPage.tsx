@@ -171,12 +171,13 @@ function RitualStepViewer({ steps, t }: { steps: RitualStep[]; t: any }) {
 
 /* ═══ Quiz ═══ */
 function HajjQuiz({ t, onBack }: { t: any; onBack: () => void }) {
+  const [key, setKey] = useState(0);
+  const questions = useMemo(() => getRandomHajjQuiz(5), [key]);
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const questions = KIDS_HAJJ_QUIZ;
   const current = questions[step];
   const isDone = step >= questions.length;
 
