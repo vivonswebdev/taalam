@@ -280,7 +280,7 @@ export default function Home() {
           title={t("home.hifzPlan")}
           desc={plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
           cta={plan ? t("home.open") : t("home.hifzCreate")}
-          onClick={() => navigate("/hifz-plan")}
+          onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
           gradient="bg-gradient-to-br from-indigo-800/60 to-cyan-700/30"
           delay={0.45}
         >
