@@ -118,11 +118,9 @@ export default function ClassroomDetail() {
     }
     // Lookup by join_code in DB
     supabase
-      .from("classrooms")
-      .select("id")
-      .eq("join_code", rawClassId.toUpperCase())
-      .maybeSingle()
-      .then(({ data }) => {
+      .rpc("lookup_classroom_by_code", { _join_code: rawClassId.toUpperCase() })
+      .then(({ data: rpcData }) => {
+        const data = rpcData?.[0] || null;
         if (data) {
           setResolvedClassId(data.id);
           // Redirect to proper UUID URL

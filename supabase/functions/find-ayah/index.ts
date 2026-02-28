@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,13 +12,32 @@ serve(async (req) => {
   }
 
   try {
+    // Auth check
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ results: [], error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabase.auth.getUser(token);
+    if (claimsError || !claimsData?.user) {
+      return new Response(JSON.stringify({ results: [], error: 'Invalid token' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
     const { audio, scope } = await req.json();
-    // scope: { type: "all" } | { type: "juz", juz: number } | { type: "surah", surah: number }
 
     if (!audio) {
       return new Response(JSON.stringify({ error: 'No audio data provided' }), {
@@ -68,7 +88,7 @@ serve(async (req) => {
       });
     }
 
-    // Step 2: Ask AI to identify the ayah from the transcript
+    // Step 2: Identify ayah
     const scopeHint = scope?.type === 'surah' ? `The recitation is from Surah number ${scope.surah}.`
       : scope?.type === 'juz' ? `The recitation is from Juz ${scope.juz}.`
       : 'The recitation could be from anywhere in the Quran.';
@@ -114,8 +134,6 @@ Example: [{"surahNumber":1,"ayahNumber":2,"surahNameArabic":"الفاتحة","su
 
     const identifyData = await identifyRes.json();
     let rawContent = identifyData.choices?.[0]?.message?.content?.trim() || '[]';
-    
-    // Strip markdown code fences if present
     rawContent = rawContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
     
     let results = [];
