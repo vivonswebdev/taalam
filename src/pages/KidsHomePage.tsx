@@ -56,6 +56,14 @@ const KIDS_CARDS = [
     gradient: "from-indigo-600/30 to-violet-600/15",
     border: "border-indigo-500/25",
   },
+  {
+    emoji: "🤲",
+    titleKey: "kidsHome.duas",
+    descKey: "kidsHome.duasDesc",
+    path: "/kids-duas",
+    gradient: "from-teal-600/30 to-emerald-600/15",
+    border: "border-teal-500/25",
+  },
 ];
 
 export default function KidsHomePage() {
