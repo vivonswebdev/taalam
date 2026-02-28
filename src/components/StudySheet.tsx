@@ -246,7 +246,7 @@ export default function StudySheet({
                       disabled={!noteText.trim()}
                       className="text-xs font-bold bg-primary text-primary-foreground px-3 py-1.5 rounded-lg disabled:opacity-40"
                     >
-                      Sauvegarder
+                      {t("study.save")}
                     </button>
                   </div>
                 </div>
