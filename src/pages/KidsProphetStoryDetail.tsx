@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, BookOpen } from "lucide-react";
+import { ArrowLeft, ChevronRight, BookOpen, Volume2, VolumeX } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { prophetStories } from "@/data/prophetStories";
 import { Button } from "@/components/ui/button";
 import Confetti from "@/components/Confetti";
+import { useStoryNarration } from "@/hooks/useStoryNarration";
 
 type Step = "story" | "quiz" | "sticker";
 
@@ -28,6 +29,7 @@ export default function KidsProphetStoryDetail() {
   const [step, setStep] = useState<Step>("story");
   const [selected, setSelected] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { isNarrating, toggle: toggleNarration, stop: stopNarration } = useStoryNarration();
 
   const story = prophetStories.find((s) => s.id === storyId);
   if (!story) return <div className="p-8 text-center text-muted-foreground">Story not found</div>;
@@ -88,8 +90,19 @@ export default function KidsProphetStoryDetail() {
               </div>
             </div>
 
-            {/* Story title */}
-            <h2 className="text-xl font-bold text-foreground mb-3">{story.title[langKey]}</h2>
+            {/* Story title + listen button */}
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xl font-bold text-foreground">{story.title[langKey]}</h2>
+              <button
+                onClick={() => toggleNarration(story.story[langKey], langKey)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  isNarrating ? "bg-primary text-primary-foreground animate-pulse" : "bg-muted text-foreground"
+                }`}
+                aria-label={isNarrating ? "Stop" : "Listen"}
+              >
+                {isNarrating ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              </button>
+            </div>
 
             {/* Story text */}
             <div className="bg-card border border-border rounded-2xl p-5 mb-4">
@@ -112,7 +125,7 @@ export default function KidsProphetStoryDetail() {
               </p>
             </div>
 
-            <Button onClick={() => setStep("quiz")} className="w-full gap-2">
+            <Button onClick={() => { stopNarration(); setStep("quiz"); }} className="w-full gap-2">
               {t("kidsStories.goQuiz" as any)} <ChevronRight size={16} />
             </Button>
           </motion.div>
