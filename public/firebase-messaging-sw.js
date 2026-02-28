@@ -4,12 +4,12 @@
 
 // These values will be replaced when Firebase is configured
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
+  apiKey: "AIzaSyDWERZd7sOxTDllR_4TvoACghxkyY8fXhY",
+  authDomain: "taalam-5cc3d.firebaseapp.com",
+  projectId: "taalam-5cc3d",
+  storageBucket: "taalam-5cc3d.firebasestorage.app",
+  messagingSenderId: "29684915875",
+  appId: "1:29684915875:web:81256344af18649f242916",
 };
 
 // Import Firebase scripts
