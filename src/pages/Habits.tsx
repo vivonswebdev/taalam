@@ -96,6 +96,61 @@ export default function Habits() {
     return { name: surah?.nameArabic || `${sp.surahNumber}`, score: sp.bestScore };
   });
 
+  const handleDownloadReport = () => {
+    const totalMinutes = last30Days.reduce((s, d) => s + d.minutes_quran, 0);
+    const totalAyat = last30Days.reduce((s, d) => s + d.ayat_recited, 0);
+    const topSurahs = [...progress.surahProgress]
+      .sort((a, b) => b.bestScore - a.bestScore)
+      .slice(0, 3)
+      .map((sp) => {
+        const surah = surahs.find((s) => s.number === sp.surahNumber);
+        return { name: surah?.name || `#${sp.surahNumber}`, score: sp.bestScore };
+      });
+    const quizEntries = Object.values(quizStats);
+    const quizAvg = quizEntries.length > 0
+      ? Math.round(quizEntries.reduce((s, q) => s + (q.totalQuestions > 0 ? (q.totalCorrect / q.totalQuestions) * 100 : 0), 0) / quizEntries.length)
+      : 0;
+
+    generateProgressReport({
+      displayName: "Ta'alam User",
+      streak: xp.streakDays,
+      level: xp.level,
+      xpTotal: xp.xpTotal,
+      xpToday: xp.xpToday,
+      hifzPlan,
+      hifzTasks,
+      hifzProgress,
+      last30Days,
+      habitStreak: streak,
+      totalMinutes,
+      totalAyat,
+      topSurahs,
+      quizAvg,
+      labels: {
+        reportTitle: t("report.title" as any),
+        streak: t("report.streak" as any),
+        days: t("home.days" as any),
+        level: t("home.level.label" as any),
+        todayXP: t("home.today" as any),
+        hifzSection: t("hifz.habitTitle" as any),
+        habitsSection: t("habits.title" as any),
+        statsSection: t("report.statsSection" as any),
+        surah: t("home.surah" as any),
+        ayahs: t("report.ayahs" as any),
+        type: t("report.type" as any),
+        date: t("report.date" as any),
+        review: t("hifz.review" as any),
+        newTask: t("hifz.new" as any),
+        noPlan: t("hifz.noPlanYet" as any),
+        totalMinutes: t("report.totalMinutes" as any),
+        totalAyat: t("report.totalAyat" as any),
+        quizAvg: t("report.quizAvg" as any),
+        topSurahs: t("report.topSurahs" as any),
+        score: t("quiz.score" as any),
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
