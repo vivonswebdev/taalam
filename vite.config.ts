@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => ({
         navigateFallbackDenylist: [/^\/~oauth/],
         globPatterns: ["**/*.{js,css,html,ico,svg,woff2}"],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        globIgnores: ["**/firebase-messaging-sw.js"],
       },
       manifest: {
         name: "Ta'alam - Apprendre le Coran",
