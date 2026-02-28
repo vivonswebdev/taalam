@@ -22,7 +22,7 @@ const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
 const MAX_NATIVE_RETRIES = 1; // After 1 silent attempt, force server fallback immediately
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
-  const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
+  const { lang = "ar-SA", continuous = true, forceServer = false, onResult, onEnd, onError } = options;
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isSupported, setIsSupported] = useState(false);
