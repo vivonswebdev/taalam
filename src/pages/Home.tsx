@@ -108,6 +108,21 @@ export default function Home() {
         );
       })}
 
+      {/* Child Mode Banner */}
+      {isChildMode && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-5 mt-2 flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-xl px-3 py-2"
+        >
+          <span className="text-lg">🧒</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground">{t("child.modeBanner" as any)}</p>
+            <p className="text-[10px] text-muted-foreground">{t("child.modeBannerDesc" as any)}</p>
+          </div>
+        </motion.div>
+      )}
+
       {/* ═══ SECTION A – Header compact ═══ */}
       <div className="relative overflow-visible">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
