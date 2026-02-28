@@ -192,7 +192,7 @@ export default function Moods() {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
                           >
-                            <MoodCard icon={g.emoji} title={g.title} desc={g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
+                            <MoodCard icon={g.emoji} title={t(`athkar.${g.id}` as any) || g.title} desc={t(`athkar.${g.id}.sub` as any) || g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
                           </motion.div>
                         ))}
                       </div>
