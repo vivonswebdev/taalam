@@ -109,7 +109,7 @@ function MushafImageView({
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -40, opacity: 0 }}
-              className="absolute top-0 left-0 right-0 z-50 pt-10 px-4 pb-3 bg-gradient-to-b from-black/80 to-transparent flex items-center gap-3"
+              className="absolute top-0 left-0 right-0 z-50 pt-10 px-4 pb-3 bg-gradient-to-b from-[#e8dfcf]/95 to-transparent flex items-center gap-3"
               onClick={(e) => e.stopPropagation()}
             >
               <button
