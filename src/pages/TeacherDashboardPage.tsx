@@ -76,7 +76,7 @@ export default function TeacherDashboardPage() {
     );
   }
 
-  const activeAssignments = assignments.filter((a) => a.is_active && a.due_date >= new Date().toISOString().split("T")[0]);
+  const activeAssignments = assignmentsWithStats.filter((a) => a.is_active && a.due_date >= new Date().toISOString().split("T")[0]);
 
   const handleCreateAssignment = async () => {
     if (!formTitle.trim() || !formDueDate) return;
