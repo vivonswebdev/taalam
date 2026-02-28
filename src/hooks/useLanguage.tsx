@@ -754,7 +754,7 @@ const translations = {
   "home.moodsTitle": { fr: "États du cœur", en: "Heart states", nl: "Toestanden van het hart", ar: "أحوال القلب", tr: "Kalp halleri", ur: "دل کی کیفیتیں" },
   "home.moodsSubtitle": { fr: "Prends soin de toi avec le Coran", en: "Take care of your heart with the Qur'an", nl: "Zorg voor je hart met de Koran", ar: "اعتنِ بقلبك مع القرآن", tr: "Kalbine Kur'an ile iyi bak", ur: "قرآن کے ساتھ اپنے دل کا خیال رکھیں" },
   "home.moodsDesc": { fr: "Choisis ton état, écoute les versets qui te parlent", en: "Choose your state, listen to verses that speak to you", nl: "Kies je gevoel, luister naar verzen die je raken", ar: "اختر حالتك، واستمع للآيات التي تخاطبك", tr: "Halini seç, sana hitap eden ayetleri dinle", ur: "اپنی حالت چنیں، آپ سے بات کرنے والی آیات سنیں" },
-  "home.moodsButton": { fr: "Découvrir les États du cœur", en: "Discover States of the Heart", nl: "Ontdek Staten van het hart", ar: "اكتشف أحوال القلب", tr: "Kalp Hallerini Keşfet", ur: "دل کے احوال دریافت کریں" },
+  "home.moodsButton": { fr: "Découvrir", en: "Explore", nl: "Ontdekken", ar: "اكتشف", tr: "Keşfet", ur: "دریافت کریں" },
   "home.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
   "home.today": { fr: "aujourd'hui", en: "today", nl: "vandaag", ar: "اليوم", tr: "bugün", ur: "آج" },
   "home.quizButton": { fr: "Commencer le Quiz Niveau", en: "Start Level Quiz", nl: "Start Niveau Quiz", ar: "ابدأ اختبار المستوى", tr: "Seviye Testini Başlat", ur: "سطح کا امتحان شروع کریں" },
