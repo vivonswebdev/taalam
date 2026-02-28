@@ -207,7 +207,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Headphones size={18} className="text-cyan-500" />
+              <Headphones size={18} className="text-primary" />
               <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
             </div>
             <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
