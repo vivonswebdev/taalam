@@ -21,6 +21,7 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 
 export default function Home() {
   const navigate = useNavigate();
