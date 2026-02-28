@@ -55,17 +55,26 @@ export default function Moods() {
         </div>
       </div>
 
-      {/* List */}
-      <div className="space-y-2 p-4">
-        {moodPresets.map((mood, i) => {
+      {/* Grid 2x2 */}
+      <motion.div
+        className="grid grid-cols-2 gap-3 p-4"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.06 } },
+        }}
+      >
+        {moodPresets.map((mood) => {
           const titleKey = `mood.${mood.id}` as any;
           const subKey = `mood.${mood.id}.sub` as any;
           return (
             <motion.div
               key={mood.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.92 },
+                visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } },
+              }}
             >
               <MoodCard
                 icon={mood.emoji}
@@ -77,7 +86,7 @@ export default function Moods() {
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
