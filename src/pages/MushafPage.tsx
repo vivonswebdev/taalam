@@ -136,7 +136,7 @@ function MushafImageView({
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 40, opacity: 0 }}
-              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-xs text-white/80"
+              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-4 bg-gradient-to-t from-[#e8dfcf]/95 to-transparent flex items-center justify-between text-xs text-amber-900/80"
               onClick={(e) => e.stopPropagation()}
             >
               <button onClick={goPrev} disabled={currentPage <= 1} className="p-2 disabled:opacity-30">←</button>
