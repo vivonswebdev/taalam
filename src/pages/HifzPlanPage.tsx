@@ -242,9 +242,9 @@ export default function HifzPlanPage() {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <div className="flex items-center gap-2 mb-3">
                 <Calendar size={16} className="text-primary" />
-                <span className="text-sm font-semibold text-foreground">Révisions du jour</span>
+                <span className="text-sm font-semibold text-foreground">{t("hifz.todayReviews")}</span>
                 <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">
-                  {todayTasks.filter((t) => !t.is_completed).length} restante(s)
+                  {todayTasks.filter((tk) => !tk.is_completed).length} {t("hifz.remaining")}
                 </span>
               </div>
 
