@@ -250,6 +250,9 @@ export default function TeacherDashboardPage() {
               </div>
             )}
           </div>
+
+          {/* Class Stats Section */}
+          <TeacherStatsSection students={students} assignments={assignmentsWithStats} />
         </div>
       )}
     </div>
