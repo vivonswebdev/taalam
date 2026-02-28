@@ -37,6 +37,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [hasListened, setHasListened] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [micError, setMicError] = useState<string | null>(null);
+  const [pendingStop, setPendingStop] = useState(false);
   const [feedbackWords, setFeedbackWords] = useState<FeedbackWord[]>([]);
   const [feedbackScore, setFeedbackScore] = useState(0);
   const [simpleExplanation, setSimpleExplanation] = useState<string>("");
@@ -62,6 +63,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     },
     onError: (error) => {
       if (error === "not-allowed") setMicError("not-allowed");
+      if (error === "mic-error" || error === "auth-required") setMicError("mic-error");
     },
   });
 
@@ -95,13 +97,12 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const startRecording = useCallback(() => {
     setLiveTranscript("");
     setMicError(null);
+    setPendingStop(false);
     setAyahPhase("recording");
     voice.start();
   }, [voice]);
 
-  // ─── Stop recording and compute feedback ───
-  const stopRecording = useCallback(() => {
-    voice.stop();
+  const finalizeRecording = useCallback(() => {
     if (!currentAyah) return;
 
     const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
@@ -113,7 +114,6 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         : "incorrect",
     }));
 
-    // Compute score
     const correctCount = words.filter(w => w.status === "correct").length;
     const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
     const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
@@ -122,15 +122,26 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setFeedbackScore(score);
     setAyahPhase("feedback");
 
-    // Award XP once per ayah
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
       xp.addXP(Math.max(1, Math.round(correctCount / 3)));
     }
 
-    // Fetch a simple tafsir explanation
     fetchSimpleExplanation(surah.number, currentAyah.number);
-  }, [voice, currentAyah, liveTranscript, currentAyahIdx, surah.number]);
+  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp]);
+
+  // ─── Stop recording and compute feedback ───
+  const stopRecording = useCallback(() => {
+    if (!currentAyah) return;
+    setPendingStop(true);
+    voice.stop();
+  }, [voice, currentAyah]);
+
+  useEffect(() => {
+    if (!pendingStop || ayahPhase !== "recording" || voice.isListening) return;
+    setPendingStop(false);
+    finalizeRecording();
+  }, [pendingStop, ayahPhase, voice.isListening, finalizeRecording]);
 
   // ─── Fetch 1-line explanation from translation ───
   const fetchSimpleExplanation = useCallback((surahNum: number, ayahNum: number) => {
@@ -150,6 +161,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   // ─── Retry same ayah ───
   const retryAyah = useCallback(() => {
     setLiveTranscript("");
+    setPendingStop(false);
     setFeedbackWords([]);
     setFeedbackScore(0);
     setSimpleExplanation("");
@@ -165,6 +177,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     } else {
       setCurrentAyahIdx(prev => prev + 1);
       setLiveTranscript("");
+      setPendingStop(false);
       setFeedbackWords([]);
       setFeedbackScore(0);
       setSimpleExplanation("");
@@ -322,11 +335,15 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
             </div>
           </div>
 
-          {micError === "not-allowed" && (
+          {micError && (
             <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-2">
               <AlertCircle size={20} className="inline" />
-              <p className="text-sm font-semibold">{t("aya.micDenied")}</p>
-              <p className="text-xs opacity-80">{t("aya.micDeniedHint")}</p>
+              <p className="text-sm font-semibold">
+                {micError === "not-allowed" ? t("aya.micDenied") : "Micro indisponible pour la dictée"}
+              </p>
+              <p className="text-xs opacity-80">
+                {micError === "not-allowed" ? t("aya.micDeniedHint") : "Réessaie en autorisant le micro puis recommence le verset."}
+              </p>
             </div>
           )}
 

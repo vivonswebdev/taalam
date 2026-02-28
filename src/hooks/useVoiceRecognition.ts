@@ -15,8 +15,8 @@ interface UseVoiceRecognitionOptions {
 
 // ─── Constants for server fallback ──────────────────────────
 const MAX_RECORDING_DURATION_MS = 60_000;
-const TIMESLICE_MS = 2_000;
-const MIN_CHUNK_SIZE = 120;
+const TIMESLICE_MS = 1_000;
+const MIN_CHUNK_SIZE = 1;
 const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
 const MAX_NATIVE_RETRIES = 2; // After N silent restarts, force server fallback
 
@@ -41,7 +41,9 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const maxDurationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transcriptRef = useRef("");
   const chunkQueueRef = useRef<Blob[]>([]);
-  const isProcessingRef = useRef(false);
+  const processingPromiseRef = useRef<Promise<void> | null>(null);
+  const serverStoppingRef = useRef(false);
+  const activeEngineRef = useRef<"native" | "server" | null>(null);
   const nativeSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nativeNoEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
@@ -100,63 +102,69 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     }
   }, []);
 
-  const processQueue = useCallback(async () => {
-    if (isProcessingRef.current) return;
-    isProcessingRef.current = true;
+  const processQueue = useCallback((): Promise<void> => {
+    if (processingPromiseRef.current) return processingPromiseRef.current;
 
-    const authToken = await getAuthToken();
+    processingPromiseRef.current = (async () => {
+      const authToken = await getAuthToken();
 
-    while (chunkQueueRef.current.length > 0) {
-      const blob = chunkQueueRef.current.shift()!;
-      if (blob.size < MIN_CHUNK_SIZE) continue;
-      try {
-        const arrayBuffer = await blob.arrayBuffer();
-        const base64 = btoa(new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), ""));
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          "apikey": supabaseKey,
-        };
-        if (authToken) {
-          headers.Authorization = `Bearer ${authToken}`;
+      while (chunkQueueRef.current.length > 0) {
+        const blob = chunkQueueRef.current.shift()!;
+        if (blob.size < MIN_CHUNK_SIZE) continue;
+        try {
+          const arrayBuffer = await blob.arrayBuffer();
+          const base64 = btoa(new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), ""));
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+          const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+          const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            "apikey": supabaseKey,
+          };
+          if (authToken) {
+            headers.Authorization = `Bearer ${authToken}`;
+          }
+
+          const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
+          });
+
+          if (res.status === 401 || res.status === 403) {
+            onErrorRef.current?.("auth-required");
+            isListeningRef.current = false;
+            activeEngineRef.current = null;
+            cleanupServer();
+            setIsListening(false);
+            onEndRef.current?.();
+            break;
+          }
+
+          if (!res.ok) {
+            throw new Error(`stt-chunk failed with ${res.status}`);
+          }
+
+          const data = await res.json();
+          if (data.text) {
+            transcriptRef.current = (transcriptRef.current + " " + data.text).trim();
+            setTranscript(transcriptRef.current);
+            onResultRef.current?.(transcriptRef.current);
+          }
+        } catch (e) {
+          console.warn("[VoiceRecognition] chunk STT error:", e);
         }
-
-        const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
-        });
-
-        if (res.status === 401 || res.status === 403) {
-          onErrorRef.current?.("auth-required");
-          isListeningRef.current = false;
-          cleanupServer();
-          setIsListening(false);
-          onEndRef.current?.();
-          break;
-        }
-
-        if (!res.ok) {
-          throw new Error(`stt-chunk failed with ${res.status}`);
-        }
-
-        const data = await res.json();
-        if (data.text) {
-          transcriptRef.current = (transcriptRef.current + " " + data.text).trim();
-          setTranscript(transcriptRef.current);
-          onResultRef.current?.(transcriptRef.current);
-        }
-      } catch (e) {
-        console.warn("[VoiceRecognition] chunk STT error:", e);
       }
-    }
+    })().finally(() => {
+      processingPromiseRef.current = null;
+    });
 
-    isProcessingRef.current = false;
+    return processingPromiseRef.current;
   }, [lang, getAuthToken, cleanupServer]);
 
   const startServer = useCallback(async () => {
     console.info("[VoiceRecognition] Starting server STT");
+    activeEngineRef.current = "server";
+    serverStoppingRef.current = false;
     setPermissionDenied(false);
     setTranscript("");
     transcriptRef.current = "";
@@ -171,10 +179,19 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
       mediaRecorderRef.current = recorder;
       recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) { chunkQueueRef.current.push(e.data); processQueue(); }
+        if (e.data.size >= MIN_CHUNK_SIZE) {
+          chunkQueueRef.current.push(e.data);
+          void processQueue();
+        }
       };
       recorder.onstop = () => {
-        processQueue();
+        void processQueue().finally(() => {
+          serverStoppingRef.current = false;
+          activeEngineRef.current = null;
+          cleanupServer();
+          setIsListening(false);
+          onEndRef.current?.();
+        });
       };
       recorder.start(TIMESLICE_MS);
       isListeningRef.current = true;
@@ -182,20 +199,36 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       maxDurationTimeoutRef.current = setTimeout(() => { if (isListeningRef.current) stop(); }, MAX_RECORDING_DURATION_MS);
     } catch (e: any) {
       console.warn("[VoiceRecognition] Server STT start error:", e);
+      activeEngineRef.current = null;
+      serverStoppingRef.current = false;
       if (e?.name === "NotAllowedError") { setPermissionDenied(true); onErrorRef.current?.("not-allowed"); }
       else { onErrorRef.current?.("mic-error"); }
       setIsListening(false);
       isListeningRef.current = false;
     }
-  }, [processQueue]);
+  }, [processQueue, cleanupServer]);
 
   const stopServer = useCallback(() => {
     console.info("[VoiceRecognition] Stopping server STT");
     isListeningRef.current = false;
+    serverStoppingRef.current = true;
+    if (maxDurationTimeoutRef.current) {
+      clearTimeout(maxDurationTimeoutRef.current);
+      maxDurationTimeoutRef.current = null;
+    }
+
     const recorder = mediaRecorderRef.current;
-    try {
-      if (recorder?.state === "recording") recorder.requestData();
-    } catch {}
+    if (recorder?.state === "recording") {
+      try {
+        recorder.requestData();
+      } catch {}
+      try {
+        recorder.stop();
+      } catch {}
+      return;
+    }
+
+    activeEngineRef.current = null;
     cleanupServer();
     setIsListening(false);
     onEndRef.current?.();
@@ -223,6 +256,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       startServer();
       return;
     }
+
+    activeEngineRef.current = "native";
 
     // Cleanup old instance but start the new one synchronously (user gesture required)
     cleanupNative();
@@ -325,6 +360,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       }
 
       if (recognitionRef.current === recognition) {
+        activeEngineRef.current = null;
         setIsListening(false);
         onEndRef.current?.();
       }
@@ -390,6 +426,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [lang, continuous, cleanupNative, startServer]);
 
   const stopNative = useCallback(() => {
+    activeEngineRef.current = null;
     isListeningRef.current = false;
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
     if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
@@ -421,7 +458,14 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   const stop = useCallback(() => {
     console.info("[VoiceRecognition] Stop requested");
-    // Stop both engines to avoid mode-race inconsistencies.
+    if (activeEngineRef.current === "server") {
+      stopServer();
+      return;
+    }
+    if (activeEngineRef.current === "native") {
+      stopNative();
+      return;
+    }
     stopNative();
     stopServer();
   }, [stopNative, stopServer]);
