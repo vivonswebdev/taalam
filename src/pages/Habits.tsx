@@ -197,6 +197,41 @@ export default function Habits() {
           })()}
         </motion.div>
 
+        {/* ───── SECTION: Écoute avancée ───── */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="bg-card border border-border rounded-2xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Headphones size={18} className="text-cyan-500" />
+              <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
+            </div>
+            <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
+              Ouvrir →
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
+              <p className="text-[10px] text-muted-foreground">min aujourd'hui</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.sessionsCount}</p>
+              <p className="text-[10px] text-muted-foreground">sessions</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-foreground">{listeningStats.averageQuizScore != null ? `${listeningStats.averageQuizScore}%` : "–"}</p>
+              <p className="text-[10px] text-muted-foreground">score quiz moy.</p>
+            </div>
+          </div>
+          {listeningStats.totalListeningMinutes > 0 && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+              <span>Total : {listeningStats.totalListeningMinutes} min d'écoute</span>
+              {listeningStats.lastSession && (
+                <span>Sourate {listeningStats.lastSession.surah_number}</span>
+              )}
+            </div>
+          )}
+        </motion.div>
+
         {/* Cloud sync hint */}
         {!isAuthenticated && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
