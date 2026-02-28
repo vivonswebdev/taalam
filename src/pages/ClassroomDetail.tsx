@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History, QrCode, X } from "lucide-react";
+import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History, QrCode, X, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
