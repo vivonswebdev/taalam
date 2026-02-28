@@ -518,6 +518,7 @@ export default function Quran() {
   // ─── Render ───────────────────────────────────────────────
   return (
     <div className="min-h-screen pb-28">
+      <MicPermissionModal />
       <Confetti active={showConfetti} emoji={isChildMode} />
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
 
