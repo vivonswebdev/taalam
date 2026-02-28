@@ -13,7 +13,254 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
 const LAST_PAGE_KEY = "mushaf_last_page";
+const READING_STYLE_KEY = "mushaf_reading_style";
 
+type ReadingStyle = "cards" | "immersive" | "mushaf";
+
+function getMushafImageUrl(page: number) {
+  const padded = String(page).padStart(3, "0");
+  return `https://surah.my/images/quran-images/page${padded}.png`;
+}
+
+// ─── Mushaf Image View (fullscreen book mode) ───
+function MushafImageView({
+  currentPage,
+  onChangePage,
+  surahMeta,
+  juz,
+  onBack,
+  onToggleBookmark,
+  isBookmarked,
+  t,
+}: {
+  currentPage: number;
+  onChangePage: (p: number) => void;
+  surahMeta: SurahMeta | undefined;
+  juz: number;
+  onBack: () => void;
+  onToggleBookmark: () => void;
+  isBookmarked: boolean;
+  t: (k: any) => string;
+}) {
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const [imgLoading, setImgLoading] = useState(true);
+
+  const goPrev = () => onChangePage(Math.max(1, currentPage - 1));
+  const goNext = () => onChangePage(Math.min(TOTAL_MUSHAF_PAGES, currentPage + 1));
+
+  useEffect(() => {
+    setImgLoading(true);
+  }, [currentPage]);
+
+  return (
+    <div className="fixed inset-0 z-40 bg-[#1a1408]">
+      {/* Tap zone to toggle chrome */}
+      <div
+        className="absolute inset-0 z-20"
+        onClick={() => setChromeVisible((v) => !v)}
+      />
+
+      {/* Page image */}
+      <div className="relative z-10 h-full w-full flex items-center justify-center">
+        {imgLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+        <img
+          src={getMushafImageUrl(currentPage)}
+          alt={`Mushaf page ${currentPage}`}
+          className="max-h-[100dvh] max-w-full object-contain select-none"
+          onLoad={() => setImgLoading(false)}
+          onError={() => setImgLoading(false)}
+          draggable={false}
+        />
+
+        {/* Left/right tap navigation zones */}
+        <button
+          onClick={(e) => { e.stopPropagation(); goNext(); }}
+          className="absolute inset-y-0 left-0 w-1/4 z-30"
+          aria-label="Next page"
+        />
+        <button
+          onClick={(e) => { e.stopPropagation(); goPrev(); }}
+          className="absolute inset-y-0 right-0 w-1/4 z-30"
+          aria-label="Previous page"
+        />
+      </div>
+
+      {/* Header overlay */}
+      <AnimatePresence>
+        {chromeVisible && (
+          <>
+            <motion.div
+              initial={{ y: -60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -60, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute top-0 left-0 right-0 z-40 pt-10 px-4 pb-3 bg-gradient-to-b from-black/80 via-black/50 to-transparent"
+            >
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={(e) => { e.stopPropagation(); onBack(); }}
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                >
+                  <ChevronLeft size={18} className="text-white" />
+                </button>
+                <div className="flex-1 text-center">
+                  <p className="font-['Amiri','serif'] text-white text-base">{surahMeta?.nameArabic || ""}</p>
+                  <p className="text-[10px] text-white/60">
+                    {t("mushaf.page" as any)} {currentPage} / {TOTAL_MUSHAF_PAGES} — {t("mushaf.juz" as any)} {juz}
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onToggleBookmark(); }}
+                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+                >
+                  <Star size={16} className={isBookmarked ? "text-yellow-400 fill-yellow-400" : "text-white/70"} />
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Footer overlay */}
+            <motion.div
+              initial={{ y: 60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 60, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute bottom-0 left-0 right-0 z-40 pb-8 px-6 pt-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent"
+            >
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                  disabled={currentPage <= 1}
+                  className="p-2 disabled:opacity-30"
+                >
+                  <ArrowRight size={22} className="text-white" />
+                </button>
+                <p className="text-[10px] text-white/50">{t("mushaf.tipTap" as any)}</p>
+                <button
+                  onClick={(e) => { e.stopPropagation(); goNext(); }}
+                  disabled={currentPage >= TOTAL_MUSHAF_PAGES}
+                  className="p-2 disabled:opacity-30"
+                >
+                  <ArrowLeft size={22} className="text-white" />
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Immersive Verse View ───
+function ImmersiveVerseView({
+  ayahs,
+  currentIndex,
+  onChangeIndex,
+  surahMeta,
+  onBack,
+  fontSize,
+  t,
+}: {
+  ayahs: { number: number; arabic: string; surahNumber: number }[];
+  currentIndex: number;
+  onChangeIndex: (i: number) => void;
+  surahMeta: SurahMeta | undefined;
+  onBack: () => void;
+  fontSize: number;
+  t: (k: any) => string;
+}) {
+  const [chromeVisible, setChromeVisible] = useState(true);
+  const currentAyah = ayahs[currentIndex];
+
+  if (!currentAyah) return null;
+
+  return (
+    <div className="fixed inset-0 z-40 bg-background">
+      <div
+        className="absolute inset-0 z-10"
+        onClick={() => setChromeVisible((v) => !v)}
+      />
+
+      {/* Center ayah */}
+      <div className="relative z-10 h-full w-full flex items-center justify-center px-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="text-center"
+            dir="rtl"
+          >
+            <p
+              className="font-['Amiri','Scheherazade_New','serif'] text-foreground leading-[2.4]"
+              style={{ fontSize: `${fontSize + 4}px` }}
+            >
+              {currentAyah.arabic}
+            </p>
+            <p className="text-primary/60 text-sm font-sans mt-4">
+              ﴿{currentAyah.number}﴾
+            </p>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Left/right navigation */}
+        <button
+          onClick={(e) => { e.stopPropagation(); onChangeIndex(Math.min(ayahs.length - 1, currentIndex + 1)); }}
+          disabled={currentIndex >= ayahs.length - 1}
+          className="absolute inset-y-0 left-0 w-1/5 z-20 disabled:opacity-0"
+        />
+        <button
+          onClick={(e) => { e.stopPropagation(); onChangeIndex(Math.max(0, currentIndex - 1)); }}
+          disabled={currentIndex <= 0}
+          className="absolute inset-y-0 right-0 w-1/5 z-20 disabled:opacity-0"
+        />
+      </div>
+
+      <AnimatePresence>
+        {chromeVisible && (
+          <>
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              className="absolute top-0 left-0 right-0 z-40 pt-10 px-4 pb-3 bg-gradient-to-b from-background via-background/80 to-transparent"
+            >
+              <div className="flex items-center gap-3">
+                <button onClick={(e) => { e.stopPropagation(); onBack(); }} className="p-2 -ml-2">
+                  <ChevronLeft size={22} className="text-foreground" />
+                </button>
+                <div className="flex-1 text-center">
+                  <p className="text-sm font-semibold text-foreground">{surahMeta?.nameArabic}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {t("mushaf.page" as any)} — {currentIndex + 1} / {ayahs.length}
+                  </p>
+                </div>
+                <div className="w-9" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              className="absolute bottom-0 left-0 right-0 z-40 pb-8 px-4 pt-3 bg-gradient-to-t from-background via-background/80 to-transparent"
+            >
+              <p className="text-[10px] text-muted-foreground text-center">{t("mushaf.tipTap" as any)}</p>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Main MushafPage ───
 export default function MushafPage() {
   const { t, isRTL } = useLanguage();
   const navigate = useNavigate();
@@ -26,6 +273,10 @@ export default function MushafPage() {
   const [bookmarkedPages, setBookmarkedPages] = useState<Set<number>>(new Set());
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [bookmarksList, setBookmarksList] = useState<{ page_number: number; id: string }[]>([]);
+  const [immersiveIndex, setImmersiveIndex] = useState(0);
+  const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
+    try { return (localStorage.getItem(READING_STYLE_KEY) as ReadingStyle) || "cards"; } catch { return "cards"; }
+  });
   const [fontSize, setFontSize] = useState(() => {
     try { return Number(localStorage.getItem("mushaf_font_size")) || 28; } catch { return 28; }
   });
@@ -64,13 +315,13 @@ export default function MushafPage() {
 
   useEffect(() => { loadBookmarks(); }, [loadBookmarks]);
 
-  // Load page content - fetch ayahs for the current surah on this page
+  // Load page content
   useEffect(() => {
+    if (readingStyle === "mushaf") return; // No text needed for image mode
     let cancelled = false;
     setLoading(true);
 
     const surahNum = getSurahForPage(currentPage);
-    // Also check if next surah starts on this page
     const nextSurah = surahNum < 114 ? surahNum + 1 : null;
     const nextSurahStartsHere = nextSurah && surahStartPage[nextSurah] === currentPage;
 
@@ -88,13 +339,14 @@ export default function MushafPage() {
         }
       }
       setAyahs(allAyahs);
+      setImmersiveIndex(0);
       setLoading(false);
     }).catch(() => {
       if (!cancelled) setLoading(false);
     });
 
     return () => { cancelled = true; };
-  }, [currentPage]);
+  }, [currentPage, readingStyle]);
 
   const toggleBookmark = async () => {
     if (!user) {
@@ -121,10 +373,47 @@ export default function MushafPage() {
     setCurrentPage(Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, page)));
   };
 
+  const changeStyle = (style: ReadingStyle) => {
+    setReadingStyle(style);
+    localStorage.setItem(READING_STYLE_KEY, style);
+  };
+
   const currentSurahNum = getSurahForPage(currentPage);
   const currentJuz = getJuzForPage(currentPage);
   const currentSurahMeta = surahList.find((s) => s.number === currentSurahNum);
 
+  // ─── Mushaf image mode ───
+  if (readingStyle === "mushaf") {
+    return (
+      <MushafImageView
+        currentPage={currentPage}
+        onChangePage={goTo}
+        surahMeta={currentSurahMeta}
+        juz={currentJuz}
+        onBack={() => changeStyle("cards")}
+        onToggleBookmark={toggleBookmark}
+        isBookmarked={bookmarkedPages.has(currentPage)}
+        t={t}
+      />
+    );
+  }
+
+  // ─── Immersive verse mode ───
+  if (readingStyle === "immersive") {
+    return (
+      <ImmersiveVerseView
+        ayahs={ayahs}
+        currentIndex={immersiveIndex}
+        onChangeIndex={setImmersiveIndex}
+        surahMeta={currentSurahMeta}
+        onBack={() => changeStyle("cards")}
+        fontSize={fontSize}
+        t={t}
+      />
+    );
+  }
+
+  // ─── Cards (text) mode ───
   return (
     <div className="min-h-screen pb-24 bg-background">
       {/* Header */}
@@ -164,7 +453,7 @@ export default function MushafPage() {
                     <ScrollArea className="h-[45vh]">
                       <div className="space-y-1 p-2">
                         {surahList.map((s) => (
-                          <button key={s.number} onClick={() => { goTo(surahStartPage[s.number] || 1); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-accent/40 flex justify-between items-center">
+                          <button key={s.number} onClick={() => goTo(surahStartPage[s.number] || 1)} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-accent/40 flex justify-between items-center">
                             <span className="text-sm"><span className="text-muted-foreground mr-2">{s.number}.</span> {s.nameArabic} — {s.name}</span>
                             <span className="text-[10px] text-muted-foreground">p.{surahStartPage[s.number]}</span>
                           </button>
@@ -193,9 +482,7 @@ export default function MushafPage() {
                         defaultValue={currentPage}
                         className="w-full rounded-xl border border-border bg-card px-4 py-3 text-center text-lg"
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            goTo(Number((e.target as HTMLInputElement).value));
-                          }
+                          if (e.key === "Enter") goTo(Number((e.target as HTMLInputElement).value));
                         }}
                       />
                       <p className="text-[11px] text-muted-foreground text-center">{t("mushaf.enterPage" as any)}</p>
@@ -233,16 +520,41 @@ export default function MushafPage() {
                 </ScrollArea>
               </SheetContent>
             </Sheet>
-            {/* Font size */}
+            {/* Settings */}
             <Sheet>
               <SheetTrigger asChild>
                 <button className="p-2"><Settings2 size={20} className="text-muted-foreground" /></button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="max-h-[40vh]">
+              <SheetContent side="bottom" className="max-h-[50vh]">
                 <SheetHeader>
                   <SheetTitle>{t("mushaf.readSettings" as any)}</SheetTitle>
                 </SheetHeader>
-                <div className="p-4 space-y-4">
+                <div className="p-4 space-y-5">
+                  {/* Reading style toggle */}
+                  <div>
+                    <p className="text-sm font-medium mb-2">{t("mushaf.readingStyle" as any)}</p>
+                    <div className="flex gap-2">
+                      {([
+                        { key: "cards" as const, emoji: "🃏", label: t("mushaf.styleCards" as any) },
+                        { key: "immersive" as const, emoji: "🌌", label: t("mushaf.styleImmersive" as any) },
+                        { key: "mushaf" as const, emoji: "📖", label: t("mushaf.styleMushaf" as any) },
+                      ]).map((s) => (
+                        <button
+                          key={s.key}
+                          onClick={() => changeStyle(s.key)}
+                          className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-medium border transition-colors ${
+                            readingStyle === s.key
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border bg-card text-muted-foreground hover:bg-accent/40"
+                          }`}
+                        >
+                          <span className="block text-base mb-0.5">{s.emoji}</span>
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Font size (only for text modes) */}
                   <div>
                     <p className="text-sm font-medium mb-2">{t("mushaf.textSize" as any)}</p>
                     <input
@@ -266,7 +578,7 @@ export default function MushafPage() {
         </div>
       </div>
 
-      {/* Reading area */}
+      {/* Reading area - Cards mode */}
       <div className="px-4 py-6">
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -283,7 +595,7 @@ export default function MushafPage() {
             dir="rtl"
           >
             <p className="font-['Amiri','Scheherazade_New','serif'] text-foreground">
-              {ayahs.map((a, i) => (
+              {ayahs.map((a) => (
                 <span key={`${a.surahNumber}-${a.number}`}>
                   {a.arabic}{" "}
                   <span className="text-primary/70 text-[0.6em] font-sans">﴿{a.number}﴾</span>{" "}
