@@ -235,7 +235,7 @@ export default function Home() {
           title={t("home.tarteelButton")}
           desc={t("home.tarteelButtonDesc")}
           cta={t("home.open")}
-          onClick={() => navigate("/quran?mode=dictation")}
+          onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
           gradient="bg-gradient-to-br from-emerald-800/60 to-teal-700/30"
           delay={0.25}
         />
