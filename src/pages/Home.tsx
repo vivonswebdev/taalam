@@ -329,9 +329,9 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="📖"
-          title="Plan Hifz"
-          desc="Crée ton planning de mémorisation"
-          cta={plan ? "Ouvrir" : "Créer mon plan"}
+          title={t("home.hifzPlanTitle" as any)}
+          desc={t("home.hifzPlanDesc" as any)}
+          cta={plan ? t("home.open" as any) : t("home.hifzCreatePlan" as any)}
           onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
           gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.45}
@@ -349,9 +349,9 @@ export default function Home() {
         </HomeCard>
         <HomeCard
           emoji="🧠"
-          title="Commencer le Quiz Niveau"
-          desc="Testez votre niveau Hifz"
-          cta="Ouvrir"
+          title={t("home.startQuiz" as any)}
+          desc={t("home.quizDesc" as any)}
+          cta={t("home.open" as any)}
           onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
           gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.5}
