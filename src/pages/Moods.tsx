@@ -16,24 +16,24 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-between gap-3 rounded-2xl px-3 py-2.5 bg-card/70 border border-border hover:border-primary/70 transition-colors"
+      className="w-full flex flex-col items-start gap-2 rounded-2xl px-3 py-3 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[90px]"
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-center justify-between w-full">
         <span className="text-3xl leading-none">{icon}</span>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="text-sm font-semibold text-foreground truncate">
-            {title}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-            {desc}
-          </p>
-        </div>
+        {loop && (
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap">
+            {t("moods.loopBadge" as any)}
+          </span>
+        )}
       </div>
-      {loop && (
-        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap shrink-0">
-          {t("moods.loopBadge" as any)}
-        </span>
-      )}
+      <div className="text-left">
+        <p className="text-sm font-semibold text-foreground leading-tight">
+          {title}
+        </p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
+          {desc}
+        </p>
+      </div>
     </button>
   );
 }
@@ -55,17 +55,26 @@ export default function Moods() {
         </div>
       </div>
 
-      {/* List */}
-      <div className="space-y-2 p-4">
-        {moodPresets.map((mood, i) => {
+      {/* Grid 2x2 */}
+      <motion.div
+        className="grid grid-cols-2 gap-3 p-4"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.06 } },
+        }}
+      >
+        {moodPresets.map((mood) => {
           const titleKey = `mood.${mood.id}` as any;
           const subKey = `mood.${mood.id}.sub` as any;
           return (
             <motion.div
               key={mood.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
+              variants={{
+                hidden: { opacity: 0, y: 24, scale: 0.92 },
+                visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } },
+              }}
             >
               <MoodCard
                 icon={mood.emoji}
@@ -77,7 +86,7 @@ export default function Moods() {
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
