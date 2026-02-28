@@ -426,6 +426,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [lang, continuous, cleanupNative, startServer]);
 
   const stopNative = useCallback(() => {
+    activeEngineRef.current = null;
     isListeningRef.current = false;
     if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
     if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
@@ -457,7 +458,14 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   const stop = useCallback(() => {
     console.info("[VoiceRecognition] Stop requested");
-    // Stop both engines to avoid mode-race inconsistencies.
+    if (activeEngineRef.current === "server") {
+      stopServer();
+      return;
+    }
+    if (activeEngineRef.current === "native") {
+      stopNative();
+      return;
+    }
     stopNative();
     stopServer();
   }, [stopNative, stopServer]);
