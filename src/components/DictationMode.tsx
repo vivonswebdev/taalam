@@ -250,6 +250,26 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       {/* Reciter picker */}
       {ayahPhase === "listen" && <ReciterPicker selected={reciter} onChange={setReciter} compact />}
 
+      {/* Force server STT toggle */}
+      {(ayahPhase === "listen" || ayahPhase === "recite") && (
+        <div className="flex items-center justify-between bg-card border border-border rounded-xl px-3 py-2">
+          <div className="flex items-center gap-2">
+            <Server size={14} className="text-primary" />
+            <div>
+              <span className="text-sm font-medium">Mode serveur</span>
+              <p className="text-[10px] text-muted-foreground">Plus fiable sur certains téléphones</p>
+            </div>
+          </div>
+          <Switch
+            checked={forceServerSTT}
+            onCheckedChange={(v) => {
+              setForceServerSTT(v);
+              try { localStorage.setItem("dictation_force_server", v ? "true" : "false"); } catch {}
+            }}
+          />
+        </div>
+      )}
+
       {/* ═══ LISTEN PHASE ═══ */}
       {ayahPhase === "listen" && currentAyah && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
