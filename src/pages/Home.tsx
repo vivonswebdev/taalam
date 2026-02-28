@@ -17,12 +17,9 @@ import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
-import { useImmersiveBg } from "@/hooks/useImmersiveBg";
-import { getEpicBg } from "@/lib/epicBg";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { trackEvent } from "@/lib/trackEvent";
 
-// Reusable home card
 function HomeCard({
   emoji,
   title,
@@ -31,7 +28,6 @@ function HomeCard({
   onClick,
   gradient,
   delay = 0,
-  badge,
   children,
 }: {
   emoji: string;
@@ -41,7 +37,6 @@ function HomeCard({
   onClick: () => void;
   gradient: string;
   delay?: number;
-  badge?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   return (
@@ -51,13 +46,8 @@ function HomeCard({
       transition={{ delay }}
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className={`card-shimmer relative overflow-hidden flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left border border-white/10 shadow-lg ${gradient}`}
+      className={`flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left shadow-lg ${gradient}`}
     >
-      {badge && (
-        <span className="absolute top-2 right-2 text-[9px] font-bold bg-emerald-400 text-emerald-950 px-1.5 py-0.5 rounded-full">
-          {badge}
-        </span>
-      )}
       <div className="flex items-start gap-3">
         <motion.span
           className="text-2xl shrink-0"
@@ -72,7 +62,9 @@ function HomeCard({
         </div>
       </div>
       {children}
-      <span className="mt-auto pt-2 text-[11px] font-semibold text-white/50">{cta} →</span>
+      <span className="mt-auto pt-2 text-[11px] font-semibold text-primary flex items-center gap-1">
+        {cta} →
+      </span>
     </motion.button>
   );
 }
@@ -81,8 +73,6 @@ export default function Home() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const xp = useXP();
-  const { immersiveEnabled, choices } = useImmersiveBg();
-  const epicBg = immersiveEnabled ? getEpicBg(choices.home) : null;
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const { isChildMode } = useChildMode();
@@ -124,7 +114,7 @@ export default function Home() {
   }, [classrooms]);
 
   return (
-    <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+    <div className="home-bg min-h-screen pb-24">
       {/* Daily Tarteel Challenge */}
       {!dailyChallenge.isCompleted && dailyChallenge.surah && (
         <DailyTarteelChallenge
@@ -133,6 +123,7 @@ export default function Home() {
           onDismiss={() => dailyChallenge.dismiss()}
         />
       )}
+
       {/* Weekly Class Challenge Banner */}
       {weeklyChallenges.filter((ch) => !myResults.some((r) => r.challenge_id === ch.id)).map((ch) => {
         const surah = surahs.find((s) => s.number === ch.surah_number);
@@ -180,8 +171,7 @@ export default function Home() {
 
       {/* ═══ HEADER ═══ */}
       <div className="relative overflow-visible">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-background" />
-        <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 opacity-10 pointer-events-none" />
+        <img src={islamicPattern} alt="" className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 opacity-[0.06] pointer-events-none" />
         <div className="relative px-6 pt-12 pb-4 text-center">
           {/* Top bar */}
           <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
@@ -204,25 +194,25 @@ export default function Home() {
             transition={{ delay: 0.15 }}
             className="mt-2 flex items-center justify-center gap-3"
           >
-            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
               <span className="text-sm">🔥</span>
               <span className="text-xs font-semibold text-foreground">{xp.streakDays} {t("home.days")}</span>
             </div>
-            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
               <span className="text-sm">⭐</span>
               <span className="text-xs font-semibold text-foreground">{xp.xpToday} XP {t("home.today")}</span>
             </div>
-            <div className="flex items-center gap-1 bg-card/80 backdrop-blur-sm border border-border rounded-full px-2.5 py-1">
+            <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2.5 py-1">
               <span className="text-sm">🏅</span>
               <span className="text-xs font-semibold text-foreground">{t("home.level.label")} {xp.level}</span>
             </div>
           </motion.div>
 
           {/* Logo */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-2 flex items-center justify-center gap-1.5">
-            <img src={taaloumLogo} alt="Taaloum" className="w-6 h-6 rounded-full" />
-            <span className="text-[11px] font-semibold" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              Taaloum
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-3 flex items-center justify-center gap-2">
+            <img src={taaloumLogo} alt="Ta'alam" className="w-8 h-8 rounded-full shadow-lg shadow-primary/20" />
+            <span className="text-sm font-bold tracking-wide" style={{ background: "linear-gradient(135deg, #10B981, #FCD34D)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Ta'alam
             </span>
           </motion.div>
         </div>
@@ -232,22 +222,21 @@ export default function Home() {
       <div className="px-5 mt-5 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🎤"
-          title={t("home.tarteelButton")}
-          desc={t("home.tarteelButtonDesc")}
-          cta={t("home.open")}
+          title="Commencer votre Tarteel"
+          desc="Récitation + Correction IA"
+          cta="Ouvrir"
           onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
-          gradient="bg-gradient-to-br from-emerald-800/60 to-teal-700/30"
+          gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.25}
         />
         <HomeCard
           emoji="❤️"
-          title={t("home.moodsTitle")}
-          desc={t("home.moodsSubtitle")}
-          cta={t("home.moodsButton")}
+          title="États du cœur"
+          desc="Prends soin de toi avec le Coran"
+          cta="Découvrir"
           onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
-          gradient="bg-gradient-to-br from-teal-800/60 to-emerald-700/30"
+          gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
           delay={0.3}
-          badge="🆕"
         />
       </div>
 
@@ -255,20 +244,20 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🔍"
-          title={t("home.findAyahButton")}
-          desc={t("home.findAyahButtonDesc")}
-          cta={t("home.open")}
+          title="Trouver mon ayah"
+          desc="Comme un Shazam du Coran : retrouve la sourate à partir de ta récitation"
+          cta="Ouvrir"
           onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
-          gradient="bg-gradient-to-br from-violet-800/60 to-blue-700/30"
+          gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.35}
         />
         <HomeCard
           emoji="🧸"
-          title={t("home.kidsSpace" as any)}
-          desc={t("home.kidsSpaceDesc" as any)}
-          cta={t("home.open")}
+          title="Espace enfants"
+          desc="Noorani, prière, 'Umra & Hajj, mosquées, quiz…"
+          cta="Ouvrir"
           onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
-          gradient="bg-gradient-to-br from-blue-800/60 to-violet-700/30"
+          gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
           delay={0.4}
         />
       </div>
@@ -277,11 +266,11 @@ export default function Home() {
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="📖"
-          title={t("home.hifzPlan")}
-          desc={plan ? `${todayTasks.length} ${t("home.hifzTasksToday")}` : t("home.hifzCreate")}
-          cta={plan ? t("home.open") : t("home.hifzCreate")}
+          title="Plan Hifz"
+          desc="Crée ton planning de mémorisation"
+          cta={plan ? "Ouvrir" : "Créer mon plan"}
           onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
-          gradient="bg-gradient-to-br from-indigo-800/60 to-cyan-700/30"
+          gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.45}
         >
           {plan && (
@@ -297,35 +286,35 @@ export default function Home() {
         </HomeCard>
         <HomeCard
           emoji="🧠"
-          title={t("home.quizButton")}
-          desc={t("home.quizButtonDesc")}
-          cta={t("home.open")}
+          title="Commencer le Quiz Niveau"
+          desc="Testez votre niveau Hifz"
+          cta="Ouvrir"
           onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
-          gradient="bg-gradient-to-br from-cyan-800/60 to-indigo-700/30"
+          gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
           delay={0.5}
         />
       </div>
 
       {/* ═══ BLOC 4 – Suivi ═══ */}
       <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.sectionSuivi")}</p>
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">Suivi</p>
         <div className="grid grid-cols-2 gap-3">
           <HomeCard
             emoji="📊"
-            title={t("home.progressButton")}
-            desc={t("home.progressButtonDesc")}
-            cta={t("home.open")}
+            title="Voir ma progression"
+            desc="Maîtrise & Hifz Map"
+            cta="Ouvrir"
             onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
-            gradient="bg-gradient-to-br from-slate-800/60 to-gray-700/30"
+            gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.55}
           />
           <HomeCard
             emoji="🏆"
-            title={t("home.leaderboardButton")}
-            desc={t("home.leaderboardButtonDesc")}
-            cta={t("home.open")}
+            title="Voir votre classement"
+            desc="Top mondial / pays"
+            cta="Ouvrir"
             onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
-            gradient="bg-gradient-to-br from-amber-800/60 to-yellow-700/30"
+            gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.6}
           />
         </div>

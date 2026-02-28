@@ -99,6 +99,15 @@
     background: hsl(var(--background) / 0.85);
   }
 
+  /* ── Home background ── */
+  .home-bg {
+    background:
+      radial-gradient(circle at 15% 10%, hsla(152, 60%, 30%, 0.18), transparent 55%),
+      radial-gradient(circle at 85% 15%, hsla(210, 60%, 35%, 0.15), transparent 55%),
+      radial-gradient(circle at 50% 90%, hsla(43, 70%, 45%, 0.10), transparent 55%),
+      hsl(var(--background));
+  }
+
   /* ═══════════════════════════════════════════════════
      EPIC BACKGROUNDS — shared base
      ═══════════════════════════════════════════════════ */
