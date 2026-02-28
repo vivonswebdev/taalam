@@ -1509,6 +1509,31 @@ const translations = {
   "admin.tasksCompleted": { fr: "Tâches complétées", en: "Tasks completed", nl: "Taken voltooid", ar: "مهام مكتملة", tr: "Tamamlanan görevler", ur: "مکمل شدہ کام" },
   "admin.engagementRatio": { fr: "Ratio d'engagement", en: "Engagement ratio", nl: "Betrokkenheidsratio", ar: "نسبة المشاركة", tr: "Katılım oranı", ur: "مشغولیت کا تناسب" },
   "admin.totalEvents": { fr: "Total événements", en: "Total events", nl: "Totaal events", ar: "إجمالي الأحداث", tr: "Toplam olaylar", ur: "کل واقعات" },
+
+  // Habits page
+  "habits.title": { fr: "Habitudes & progression", en: "Habits & Progress", nl: "Gewoontes & Voortgang", ar: "العادات والتقدم", tr: "Alışkanlıklar & İlerleme", ur: "عادات اور پیشرفت" },
+  "habits.subtitle": { fr: "Suis ta progression quotidienne et ton avancement dans le Qur'an", en: "Track your daily progress and Qur'an advancement", nl: "Volg je dagelijkse voortgang en Koran-vooruitgang", ar: "تابع تقدمك اليومي وتطورك في القرآن", tr: "Günlük ilerlemenizi ve Kur'an gelişiminizi takip edin", ur: "اپنی روزانہ پیشرفت اور قرآن میں ترقی کو ٹریک کریں" },
+
+  // Hifz habit card
+  "hifz.habitTitle": { fr: "Plan Hifz", en: "Hifz Plan", nl: "Hifz-plan", ar: "خطة الحفظ", tr: "Hıfz Planı", ur: "حفظ پلان" },
+  "hifz.habitToday": { fr: "tâches Hifz aujourd'hui", en: "Hifz tasks today", nl: "Hifz-taken vandaag", ar: "مهام الحفظ اليوم", tr: "bugünkü Hıfz görevleri", ur: "آج کے حفظ کام" },
+  "hifz.streakDays": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
+  "hifz.managePlan": { fr: "Gérer mon plan", en: "Manage plan", nl: "Plan beheren", ar: "إدارة خطتي", tr: "Planımı yönet", ur: "پلان کا انتظام" },
+  "hifz.noPlanYet": { fr: "Pas de plan Hifz. Crée-en un pour suivre ta mémorisation !", en: "No Hifz plan yet. Create one to track your memorization!", nl: "Nog geen Hifz-plan. Maak er een om je memorisatie te volgen!", ar: "لا توجد خطة حفظ بعد. أنشئ واحدة لمتابعة حفظك!", tr: "Henüz Hıfz planı yok. Ezberinizi takip etmek için bir plan oluşturun!", ur: "ابھی تک کوئی حفظ پلان نہیں۔ اپنا حفظ ٹریک کرنے کے لیے بنائیں!" },
+  "hifz.moreTasks": { fr: "tâches en plus", en: "more tasks", nl: "meer taken", ar: "مهام إضافية", tr: "daha fazla görev", ur: "مزید کام" },
+
+  // PDF Report
+  "report.download": { fr: "📄 Télécharger le rapport", en: "📄 Download report", nl: "📄 Rapport downloaden", ar: "📄 تحميل التقرير", tr: "📄 Raporu indir", ur: "📄 رپورٹ ڈاؤنلوڈ" },
+  "report.title": { fr: "Rapport de progression", en: "Progress Report", nl: "Voortgangsrapport", ar: "تقرير التقدم", tr: "İlerleme Raporu", ur: "پیشرفت رپورٹ" },
+  "report.streak": { fr: "Streak", en: "Streak", nl: "Reeks", ar: "سلسلة", tr: "Seri", ur: "سلسلہ" },
+  "report.statsSection": { fr: "Statistiques globales", en: "Global Stats", nl: "Globale statistieken", ar: "الإحصائيات العامة", tr: "Genel İstatistikler", ur: "مجموعی اعداد و شمار" },
+  "report.ayahs": { fr: "Ayahs", en: "Ayahs", nl: "Ayahs", ar: "آيات", tr: "Ayetler", ur: "آیات" },
+  "report.type": { fr: "Type", en: "Type", nl: "Type", ar: "النوع", tr: "Tür", ur: "قسم" },
+  "report.date": { fr: "Date", en: "Date", nl: "Datum", ar: "التاريخ", tr: "Tarih", ur: "تاریخ" },
+  "report.totalMinutes": { fr: "Minutes totales de Qur'an", en: "Total Qur'an minutes", nl: "Totaal Koran-minuten", ar: "إجمالي دقائق القرآن", tr: "Toplam Kur'an dakikası", ur: "کل قرآن منٹ" },
+  "report.totalAyat": { fr: "Ayat totales récitées", en: "Total ayat recited", nl: "Totaal gereciteerde ayat", ar: "إجمالي الآيات المتلوة", tr: "Toplam okunan ayet", ur: "کل پڑھی گئی آیات" },
+  "report.quizAvg": { fr: "Score quiz moyen", en: "Average quiz score", nl: "Gemiddelde quizscore", ar: "متوسط نتيجة الاختبار", tr: "Ortalama test puanı", ur: "اوسط کوئز اسکور" },
+  "report.topSurahs": { fr: "Top sourates", en: "Top Surahs", nl: "Top soera's", ar: "أفضل السور", tr: "En iyi sureler", ur: "اعلیٰ سورتیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones } from "lucide-react";
+import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones, FileDown } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +8,13 @@ import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useXP } from "@/hooks/useXP";
 import { useListeningStats } from "@/hooks/useListeningStats";
+import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { surahs } from "@/data/surahs";
 import { loadQuizStats } from "@/pages/Quiz";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { StickerCollection } from "@/components/StickerReward";
+import HifzHabitCard from "@/components/HifzHabitCard";
+import { generateProgressReport } from "@/lib/generateReport";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 
 const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: string }[] = [
@@ -70,6 +73,7 @@ export default function Habits() {
   const { today, streak, last30Days, goal, setGoal, goalProgress, isAuthenticated } = useQuranHabits();
   const [showGoalPicker, setShowGoalPicker] = useState(false);
   const listeningStats = useListeningStats();
+  const { plan: hifzPlan, tasks: hifzTasks, overallProgress: hifzProgress } = useHifzPlan();
   // Progress data
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
@@ -92,17 +96,85 @@ export default function Habits() {
     return { name: surah?.nameArabic || `${sp.surahNumber}`, score: sp.bestScore };
   });
 
+  const handleDownloadReport = () => {
+    const totalMinutes = last30Days.reduce((s, d) => s + d.minutes_quran, 0);
+    const totalAyat = last30Days.reduce((s, d) => s + d.ayat_recited, 0);
+    const topSurahs = [...progress.surahProgress]
+      .sort((a, b) => b.bestScore - a.bestScore)
+      .slice(0, 3)
+      .map((sp) => {
+        const surah = surahs.find((s) => s.number === sp.surahNumber);
+        return { name: surah?.name || `#${sp.surahNumber}`, score: sp.bestScore };
+      });
+    const quizEntries = Object.values(quizStats);
+    const quizAvg = quizEntries.length > 0
+      ? Math.round(quizEntries.reduce((s, q) => s + (q.totalQuestions > 0 ? (q.totalCorrect / q.totalQuestions) * 100 : 0), 0) / quizEntries.length)
+      : 0;
+
+    generateProgressReport({
+      displayName: "Ta'alam User",
+      streak: xp.streakDays,
+      level: xp.level,
+      xpTotal: xp.xpTotal,
+      xpToday: xp.xpToday,
+      hifzPlan,
+      hifzTasks,
+      hifzProgress,
+      last30Days,
+      habitStreak: streak,
+      totalMinutes,
+      totalAyat,
+      topSurahs,
+      quizAvg,
+      labels: {
+        reportTitle: t("report.title" as any),
+        streak: t("report.streak" as any),
+        days: t("home.days" as any),
+        level: t("home.level.label" as any),
+        todayXP: t("home.today" as any),
+        hifzSection: t("hifz.habitTitle" as any),
+        habitsSection: t("habits.title" as any),
+        statsSection: t("report.statsSection" as any),
+        surah: t("home.surah" as any),
+        ayahs: t("report.ayahs" as any),
+        type: t("report.type" as any),
+        date: t("report.date" as any),
+        review: t("hifz.review" as any),
+        newTask: t("hifz.new" as any),
+        noPlan: t("hifz.noPlanYet" as any),
+        totalMinutes: t("report.totalMinutes" as any),
+        totalAyat: t("report.totalAyat" as any),
+        quizAvg: t("report.quizAvg" as any),
+        topSurahs: t("report.topSurahs" as any),
+        score: t("quiz.score" as any),
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
-        <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          📊 Habitudes & progression
-        </motion.h1>
-        <p className="text-sm text-muted-foreground mt-1">Suis ta progression quotidienne et ton avancement dans le Qur'an</p>
+        <div className="flex items-center justify-between">
+          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
+            📊 {t("habits.title" as any)}
+          </motion.h1>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={handleDownloadReport}
+            className="flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-xl text-xs font-semibold hover:bg-primary/20 transition-colors"
+          >
+            <FileDown size={14} />
+            {t("report.download" as any)}
+          </motion.button>
+        </div>
+        <p className="text-sm text-muted-foreground mt-1">{t("habits.subtitle" as any)}</p>
       </div>
 
       <div className="px-6 space-y-4">
+        {/* ───── SECTION: Plan Hifz ───── */}
+        <HifzHabitCard />
         {/* ───── SECTION: Aujourd'hui ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-4 gap-2">
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
