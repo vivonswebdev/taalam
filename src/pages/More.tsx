@@ -42,7 +42,7 @@ export default function More() {
   const { mode } = useUserMode();
 
   const childSection: MenuItem[] = [
-    { icon: "🧸", label: t("home.kidsSpace" as any), desc: t("home.kidsSpaceDesc" as any), path: "/kids" },
+    { icon: "🧩", label: t("home.kidsSpace" as any), desc: t("home.kidsSpaceDesc" as any), path: "/kids" },
     { icon: <Baby size={20} className="text-primary" />, label: t("settings.childMode"), desc: t("settings.childModeDesc"), path: "/settings" },
     { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
     { icon: "🕌", label: t("more.kidsPrayer" as any), desc: t("more.kidsPrayerDesc" as any), path: "/kids-prayer" },

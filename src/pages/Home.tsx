@@ -315,7 +315,7 @@ export default function Home() {
           delay={0.35}
         />
         <HomeCard
-          emoji="🧸"
+          emoji="🧩"
           title="Espace enfants"
           desc="Noorani, prière, 'Umra & Hajj, mosquées, quiz…"
           cta="Ouvrir"
