@@ -67,6 +67,7 @@ const App = () => (
     <TooltipProvider>
       <LanguageProvider>
         <ActiveChildProvider>
+        <UserModeProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
