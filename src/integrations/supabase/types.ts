@@ -493,6 +493,33 @@ export type Database = {
           },
         ]
       }
+      fcm_tokens: {
+        Row: {
+          created_at: string
+          device_info: string | null
+          id: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: string | null
+          id?: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: string | null
+          id?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       hifz_plan_tasks: {
         Row: {
           ayah_from: number
@@ -629,6 +656,75 @@ export type Database = {
           start_at?: string
           surah_number?: number
           to_ayah?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_log: {
+        Row: {
+          body: string
+          id: string
+          opened_at: string | null
+          sent_at: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          assignment_reminder: boolean
+          created_at: string
+          hifz_reminder: boolean
+          id: string
+          nudge_after_days: number
+          nudge_enabled: boolean
+          reminder_hour: number
+          reminder_minute: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assignment_reminder?: boolean
+          created_at?: string
+          hifz_reminder?: boolean
+          id?: string
+          nudge_after_days?: number
+          nudge_enabled?: boolean
+          reminder_hour?: number
+          reminder_minute?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assignment_reminder?: boolean
+          created_at?: string
+          hifz_reminder?: boolean
+          id?: string
+          nudge_after_days?: number
+          nudge_enabled?: boolean
+          reminder_hour?: number
+          reminder_minute?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
