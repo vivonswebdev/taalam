@@ -11,7 +11,7 @@ import TajwidBar from "@/components/TajwidBar";
 import TajwidAyahText from "@/components/TajwidAyahText";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { useBookmarks } from "@/hooks/useBookmarks";
-import TafsirSheet from "@/components/TafsirSheet";
+import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
