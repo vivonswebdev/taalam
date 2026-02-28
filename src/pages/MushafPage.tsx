@@ -53,10 +53,10 @@ function MushafImageView({
   }, [currentPage]);
 
   return (
-    <div className="fixed inset-0 z-40 bg-[#1a1408]">
-      {/* Tap zone to toggle chrome */}
+    <div className="fixed inset-0 z-40 bg-black">
+      {/* Full-screen tap zone to toggle chrome */}
       <div
-        className="absolute inset-0 z-20"
+        className="absolute inset-0"
         onClick={() => setChromeVisible((v) => !v)}
       />
 
@@ -64,7 +64,7 @@ function MushafImageView({
       <div className="relative z-10 h-full w-full flex items-center justify-center">
         {imgLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
           </div>
         )}
         <img
@@ -76,7 +76,7 @@ function MushafImageView({
           draggable={false}
         />
 
-        {/* Left/right tap navigation zones */}
+        {/* Navigation zones (Arabic book: left = next page) */}
         <button
           onClick={(e) => { e.stopPropagation(); goNext(); }}
           className="absolute inset-y-0 left-0 w-1/4 z-30"
@@ -89,64 +89,47 @@ function MushafImageView({
         />
       </div>
 
-      {/* Header overlay */}
+      {/* Header / Footer overlays */}
       <AnimatePresence>
         {chromeVisible && (
           <>
             <motion.div
-              initial={{ y: -60, opacity: 0 }}
+              initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -60, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute top-0 left-0 right-0 z-40 pt-10 px-4 pb-3 bg-gradient-to-b from-black/80 via-black/50 to-transparent"
+              exit={{ y: -40, opacity: 0 }}
+              className="absolute top-0 left-0 right-0 z-50 pt-10 px-4 pb-3 bg-gradient-to-b from-black/80 to-transparent flex items-center gap-3"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={(e) => { e.stopPropagation(); onBack(); }}
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
-                >
-                  <ChevronLeft size={18} className="text-white" />
-                </button>
-                <div className="flex-1 text-center">
-                  <p className="font-['Amiri','serif'] text-white text-base">{surahMeta?.nameArabic || ""}</p>
-                  <p className="text-[10px] text-white/60">
-                    {t("mushaf.page" as any)} {currentPage} / {TOTAL_MUSHAF_PAGES} — {t("mushaf.juz" as any)} {juz}
-                  </p>
-                </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onToggleBookmark(); }}
-                  className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
-                >
-                  <Star size={16} className={isBookmarked ? "text-yellow-400 fill-yellow-400" : "text-white/70"} />
-                </button>
+              <button
+                onClick={onBack}
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+              >
+                <ArrowLeft size={18} className="text-white" />
+              </button>
+              <div className="flex-1 text-center">
+                <p className="font-['Amiri','serif'] text-white text-base">{surahMeta?.nameArabic || ""}</p>
+                <p className="text-[10px] text-white/70">
+                  {t("mushaf.page" as any)} {currentPage} / {TOTAL_MUSHAF_PAGES} — {t("mushaf.juz" as any)} {juz}
+                </p>
               </div>
+              <button
+                onClick={onToggleBookmark}
+                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+              >
+                <Star size={16} className={isBookmarked ? "text-yellow-400 fill-yellow-400" : "text-white/70"} />
+              </button>
             </motion.div>
 
-            {/* Footer overlay */}
             <motion.div
-              initial={{ y: 60, opacity: 0 }}
+              initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 60, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute bottom-0 left-0 right-0 z-40 pb-8 px-6 pt-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent"
+              exit={{ y: 40, opacity: 0 }}
+              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-xs text-white/80"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                  disabled={currentPage <= 1}
-                  className="p-2 disabled:opacity-30"
-                >
-                  <ArrowRight size={22} className="text-white" />
-                </button>
-                <p className="text-[10px] text-white/50">{t("mushaf.tipTap" as any)}</p>
-                <button
-                  onClick={(e) => { e.stopPropagation(); goNext(); }}
-                  disabled={currentPage >= TOTAL_MUSHAF_PAGES}
-                  className="p-2 disabled:opacity-30"
-                >
-                  <ArrowLeft size={22} className="text-white" />
-                </button>
-              </div>
+              <button onClick={goPrev} disabled={currentPage <= 1} className="p-2 disabled:opacity-30">←</button>
+              <span className="text-[11px] opacity-80">{t("mushaf.tipTap" as any)}</span>
+              <button onClick={goNext} disabled={currentPage >= TOTAL_MUSHAF_PAGES} className="p-2 disabled:opacity-30">→</button>
             </motion.div>
           </>
         )}
