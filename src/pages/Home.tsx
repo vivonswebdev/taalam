@@ -360,22 +360,22 @@ export default function Home() {
 
       {/* ═══ BLOC 4 – Suivi ═══ */}
       <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">Suivi</p>
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.trackingSection" as any)}</p>
         <div className="grid grid-cols-2 gap-3">
           <HomeCard
             emoji="📊"
-            title="Voir ma progression"
-            desc="Maîtrise & Hifz Map"
-            cta="Ouvrir"
+            title={t("home.progressTitle" as any)}
+            desc={t("home.progressDesc" as any)}
+            cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.55}
           />
           <HomeCard
             emoji="🏆"
-            title="Voir votre classement"
-            desc="Top mondial / pays"
-            cta="Ouvrir"
+            title={t("home.leaderboardTitle" as any)}
+            desc={t("home.leaderboardDesc" as any)}
+            cta={t("home.open" as any)}
             onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
             gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
             delay={0.6}
