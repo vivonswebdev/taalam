@@ -29,6 +29,7 @@ export default function NooraniLesson() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { isChildMode, earnSticker } = useChildMode();
+  const { play } = useNooraniAudio();
 
   const lesson = NOORANI_LESSONS.find((l) => l.id === lessonId);
   const [current, setCurrent] = useState(0);
