@@ -27,19 +27,11 @@ const STICKER_LABELS: Record<StickerType, string> = {
   mosque: "Mosquée",
 };
 
-function getRandomSticker(): StickerType {
-  const types: StickerType[] = ["star", "moon", "book", "trophy", "heart", "mosque"];
-  return types[Math.floor(Math.random() * types.length)];
-}
+const STICKERS_KEY = "quranEasyStickers";
 
 export function useChildMode() {
-  const [isChildMode, setIsChildMode] = useState(() => {
-    try {
-      return localStorage.getItem(CHILD_MODE_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
+  const { mode, setMode } = useUserMode();
+  const isChildMode = mode === "child";
 
   const [stickers, setStickers] = useState<EarnedSticker[]>(() => {
     try {
@@ -51,16 +43,12 @@ export function useChildMode() {
   });
 
   useEffect(() => {
-    localStorage.setItem(CHILD_MODE_KEY, String(isChildMode));
-  }, [isChildMode]);
-
-  useEffect(() => {
     localStorage.setItem(STICKERS_KEY, JSON.stringify(stickers));
   }, [stickers]);
 
   const toggleChildMode = useCallback(() => {
-    setIsChildMode((prev) => !prev);
-  }, []);
+    setMode(isChildMode ? "solo" : "child");
+  }, [isChildMode, setMode]);
 
   const earnSticker = useCallback((surahNumber: number): EarnedSticker => {
     const sticker: EarnedSticker = {
