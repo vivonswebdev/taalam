@@ -17,7 +17,8 @@ interface UseVoiceRecognitionOptions {
 const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 2_000;
 const MIN_CHUNK_SIZE = 120;
-const NATIVE_SILENCE_TIMEOUT_MS = 4_000; // Auto-fallback if no result after 4s
+const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
+const MAX_NATIVE_RETRIES = 2; // After N silent restarts, force server fallback
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", continuous = true, onResult, onEnd, onError } = options;
