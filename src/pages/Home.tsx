@@ -9,6 +9,7 @@ import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useXP } from "@/hooks/useXP";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
+import { useChildMode } from "@/hooks/useChildMode";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import RoundActionButton from "@/components/RoundActionButton";
