@@ -125,7 +125,7 @@ export default function KidsProphetStoryDetail() {
               </p>
             </div>
 
-            <Button onClick={() => setStep("quiz")} className="w-full gap-2">
+            <Button onClick={() => { stopNarration(); setStep("quiz"); }} className="w-full gap-2">
               {t("kidsStories.goQuiz" as any)} <ChevronRight size={16} />
             </Button>
           </motion.div>
