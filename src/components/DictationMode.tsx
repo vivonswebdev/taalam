@@ -37,9 +37,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [hasListened, setHasListened] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [micError, setMicError] = useState<string | null>(null);
+  const [pendingStop, setPendingStop] = useState(false);
   const [feedbackWords, setFeedbackWords] = useState<FeedbackWord[]>([]);
   const [feedbackScore, setFeedbackScore] = useState(0);
-  const [simpleExplanation, setSimpleExplanation] = useState<string>("");
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [completedAyahs, setCompletedAyahs] = useState<Set<number>>(new Set());
 
