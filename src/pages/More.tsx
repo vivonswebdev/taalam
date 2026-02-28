@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones, Baby, GraduationCap, HelpCircle } from "lucide-react";
+import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones, Baby, GraduationCap, HelpCircle, Bell } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useChildMode } from "@/hooks/useChildMode";
 

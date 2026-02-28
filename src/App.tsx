@@ -121,6 +121,7 @@ const App = () => (
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
               <Route path="/faq" element={<FaqAndTermsPage />} />
+              <Route path="/notification-settings" element={<NotificationSettings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
