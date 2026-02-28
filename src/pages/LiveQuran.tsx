@@ -117,20 +117,29 @@ export default function LiveQuran() {
     }
 
     const audio = new Audio(station.url);
-    audio.preload = "none";
+    audio.preload = "auto";
+    audio.crossOrigin = "anonymous";
     audioRef.current = audio;
 
     audio.onplaying = () => { setIsLoading(false); setIsPlaying(true); };
     audio.onerror = () => {
       setIsLoading(false);
       setIsPlaying(false);
-      setError("Impossible de se connecter à cette station pour le moment");
+      setError("Impossible de se connecter à cette station. Vérifiez votre connexion internet.");
+    };
+    audio.onstalled = () => {
+      // Stream stalled — give it a moment then show error
+      setTimeout(() => {
+        if (audioRef.current === audio && !audio.paused && audio.readyState < 3) {
+          setError("Connexion lente… la station charge.");
+        }
+      }, 8000);
     };
 
     setActiveStation(station);
     audio.play().catch(() => {
       setIsLoading(false);
-      setError("Impossible de lancer la lecture");
+      setError("Impossible de lancer la lecture. Essayez une autre station.");
     });
   }, []);
 
