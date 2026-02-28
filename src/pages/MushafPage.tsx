@@ -240,7 +240,7 @@ export default function MushafPage() {
               </SheetTrigger>
               <SheetContent side="bottom" className="max-h-[40vh]">
                 <SheetHeader>
-                  <SheetTitle>{t("mushaf.settings" as any)}</SheetTitle>
+                  <SheetTitle>{t("mushaf.readSettings" as any)}</SheetTitle>
                 </SheetHeader>
                 <div className="p-4 space-y-4">
                   <div>
