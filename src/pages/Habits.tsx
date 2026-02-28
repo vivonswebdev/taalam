@@ -100,13 +100,26 @@ export default function Habits() {
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
-        <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
-          📊 Habitudes & progression
-        </motion.h1>
-        <p className="text-sm text-muted-foreground mt-1">Suis ta progression quotidienne et ton avancement dans le Qur'an</p>
+        <div className="flex items-center justify-between">
+          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
+            📊 {t("habits.title" as any)}
+          </motion.h1>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={handleDownloadReport}
+            className="flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-xl text-xs font-semibold hover:bg-primary/20 transition-colors"
+          >
+            <FileDown size={14} />
+            {t("report.download" as any)}
+          </motion.button>
+        </div>
+        <p className="text-sm text-muted-foreground mt-1">{t("habits.subtitle" as any)}</p>
       </div>
 
       <div className="px-6 space-y-4">
+        {/* ───── SECTION: Plan Hifz ───── */}
+        <HifzHabitCard />
         {/* ───── SECTION: Aujourd'hui ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-4 gap-2">
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
