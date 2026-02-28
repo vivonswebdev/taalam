@@ -182,7 +182,7 @@ export default function Moods() {
                   {coreFiltered.length > 0 && (
                     <>
                       <div className="px-4 pt-2 pb-1">
-                        <h2 className="text-sm font-bold text-foreground">📿 Adhkar principaux</h2>
+                        <h2 className="text-sm font-bold text-foreground">📿 {t("athkar.coreTitle" as any)}</h2>
                       </div>
                       <div className="grid grid-cols-2 gap-3 px-4 pb-2">
                         {coreFiltered.map((g, i) => (
