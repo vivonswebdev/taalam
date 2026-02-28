@@ -12,6 +12,8 @@ import BackgroundPicker from "@/components/BackgroundPicker";
 import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
