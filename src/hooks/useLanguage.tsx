@@ -2067,6 +2067,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLang = useCallback((newLang: Lang) => {
     setLangState(newLang);
     localStorage.setItem(LANG_KEY, newLang);
+    // Sync to user_metadata for email language detection
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        supabase.auth.updateUser({ data: { language: newLang } }).catch(() => {});
+      }
+    });
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {
