@@ -43,6 +43,8 @@ export default function KidsSheytanGame() {
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
   const dirRef = useRef<Direction>("none");
+  const prevDotsRef = useRef(0);
+  const prevPhaseRef = useRef<string>("playing");
 
   // Leaderboard
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
