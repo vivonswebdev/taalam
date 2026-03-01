@@ -123,6 +123,12 @@ export default function TeacherDashboardPage() {
             deleteAssignment={deleteAssignment}
           />
 
+          <TaskKanban
+            submissions={submissions}
+            onReview={reviewSubmission}
+            onGetAudioUrl={getAudioUrl}
+          />
+
           <TeacherStatsSection students={students} assignments={assignmentsWithStats} />
         </div>
       )}
