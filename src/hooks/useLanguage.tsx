@@ -1721,6 +1721,16 @@ const translations = {
   "more.teacherDashboard": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Leerkrachtdashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "استاد ڈیش بورڈ" },
   "more.teacherDashboardDesc": { fr: "Stats & devoirs de vos classes", en: "Stats & assignments for your classes", nl: "Statistieken & opdrachten van je klassen", ar: "إحصائيات وواجبات فصولك", tr: "Sınıf istatistikleri ve ödevler", ur: "کلاس کے اعدادوشمار اور اسائنمنٹس" },
 
+  // More page - Outils pédagogiques
+  "more.sectionTools": { fr: "Outils pédagogiques", en: "Learning Tools", nl: "Leermiddelen", ar: "أدوات تعليمية", tr: "Eğitim Araçları", ur: "تعلیمی ٹولز" },
+  "more.recitation": { fr: "Récitation Tarteel", en: "Tarteel Recitation", nl: "Tarteel Recitatie", ar: "تلاوة ترتيل", tr: "Tartil Tilavet", ur: "ترتیل تلاوت" },
+  "more.recitationDesc": { fr: "Écoute, mémorise et récite avec correction IA", en: "Listen, memorize and recite with AI correction", nl: "Luister, onthoud en reciteer met AI-correctie", ar: "استمع، احفظ واتلُ مع التصحيح بالذكاء الاصطناعي", tr: "Dinle, ezberle ve YZ düzeltmesiyle oku", ur: "سنیں، یاد کریں اور AI تصحیح کے ساتھ پڑھیں" },
+  "more.quranHub": { fr: "Centre du Coran", en: "Quran Hub", nl: "Koran Hub", ar: "مركز القرآن", tr: "Kur'an Merkezi", ur: "قرآن ہب" },
+  "more.quranHubDesc": { fr: "Lecture, écoute, Mushaf et traduction du Coran", en: "Reading, listening, Mushaf and Quran translation", nl: "Lezen, luisteren, Mushaf en Koran vertaling", ar: "قراءة، استماع، مصحف وترجمة القرآن", tr: "Okuma, dinleme, Mushaf ve Kur'an çevirisi", ur: "پڑھنا، سننا، مصحف اور قرآن ترجمہ" },
+  "more.assignmentsTutorial": { fr: "Guide des devoirs", en: "Assignments Guide", nl: "Opdrachtengids", ar: "دليل الواجبات", tr: "Ödev Rehberi", ur: "اسائنمنٹس گائیڈ" },
+  "more.assignmentsTutorialDesc": { fr: "Comment créer et suivre les devoirs de classe", en: "How to create and track class assignments", nl: "Hoe maak en volg je klasopdrachten", ar: "كيفية إنشاء ومتابعة واجبات الفصل", tr: "Sınıf ödevlerini nasıl oluşturur ve takip edersiniz", ur: "کلاس اسائنمنٹس کیسے بنائیں اور ٹریک کریں" },
+  "more.quranReading": { fr: "Lecture du Coran", en: "Quran Reading", nl: "Koran Lezen", ar: "قراءة القرآن", tr: "Kur'an Okuma", ur: "قرآن پڑھنا" },
+  "more.quranReadingDesc": { fr: "Lire le Coran complet avec traduction", en: "Read the complete Quran with translation", nl: "Lees de volledige Koran met vertaling", ar: "اقرأ القرآن الكريم كاملاً مع الترجمة", tr: "Kur'an'ın tamamını çeviriyle oku", ur: "ترجمے کے ساتھ مکمل قرآن پڑھیں" },
   // Stats Dashboard
   "stats.quranWeek": { fr: "Qur'an cette semaine", en: "Qur'an this week", nl: "Koran deze week", ar: "القرآن هذا الأسبوع", tr: "Bu hafta Kur'an", ur: "اس ہفتے قرآن" },
   "stats.hifzMonth": { fr: "Āyāt mémorisées", en: "Āyāt memorized", nl: "Āyāt gememoriseerd", ar: "آيات محفوظة", tr: "Ezberlenen ayet", ur: "حفظ شدہ آیات" },
