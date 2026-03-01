@@ -30,6 +30,8 @@ export default function MoodDetail() {
   const { play } = useGlobalAudio();
   const { t } = useLanguage();
 
+  useEffect(() => { if (id) trackMoodVisit(id); }, [id]);
+
   const titleKey = `mood.${id}` as any;
   const subKey = `mood.${id}.sub` as any;
 

@@ -30,6 +30,8 @@ export default function MaladieDetail() {
   const maladie = getMaladieById(id || "");
   const { play } = useGlobalAudio();
 
+  useEffect(() => { if (id) trackMoodVisit(id); }, [id]);
+
   const handleListenAll = useCallback(() => {
     if (!maladie) return;
     const first = maladie.verses[0];
