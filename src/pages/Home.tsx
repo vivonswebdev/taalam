@@ -11,6 +11,7 @@ import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useAdminSettings } from "@/hooks/useAdminSettings";
+import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
