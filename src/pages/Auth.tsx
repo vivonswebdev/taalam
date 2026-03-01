@@ -141,6 +141,16 @@ export default function Auth() {
     return localStorage.getItem("taalam_remember_me") !== "false";
   });
 
+  const filteredCountries = React.useMemo(() => {
+    if (!countrySearch.trim()) return COUNTRIES;
+    const q = countrySearch.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return COUNTRIES.filter(c =>
+      c.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q) ||
+      c.code.toLowerCase().includes(q) ||
+      c.search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q)
+    );
+  }, [countrySearch]);
+
   const handleAgeNext = () => {
     // Pre-select recommended mode
     const modes = getModesForAge(selectedAge);
