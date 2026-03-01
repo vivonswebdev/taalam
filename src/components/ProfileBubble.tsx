@@ -15,7 +15,19 @@ import { useUserMode, type UserMode } from "@/hooks/useUserMode";
 import { useOfflineManager } from "@/hooks/useOfflineManager";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useQuranXp } from "@/hooks/useQuranXp";
+import { useXP } from "@/hooks/useXP";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const PROFILE_XP_PREFIX = "profile_xp_";
+function awardOnce(key: string, amount: number, addXP: (n: number) => void, label: string) {
+  const fullKey = PROFILE_XP_PREFIX + key;
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(fullKey) === today) return;
+  localStorage.setItem(fullKey, today);
+  addXP(amount);
+  toast.success(`+${amount} XP — ${label}`);
+}
 
 const ROLE_CONFIG: Record<UserMode, { emoji: string; color: string; bg: string; border: string }> = {
   solo: { emoji: "👤", color: "text-muted-foreground", bg: "bg-muted/60", border: "border-border" },
