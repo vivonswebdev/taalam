@@ -40,19 +40,19 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex flex-col items-start gap-2 rounded-2xl px-3 py-3 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[90px] relative"
+      className="w-full flex flex-col items-start gap-1.5 rounded-2xl px-2.5 py-2.5 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[80px] relative"
     >
       <div className="flex items-center justify-between w-full">
-        <span className="text-3xl leading-none">{icon}</span>
+        <span className="text-2xl leading-none">{icon}</span>
         {loop && (
-          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap">
+          <span className="text-[8px] px-1 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap">
             {t("moods.loopBadge" as any)}
           </span>
         )}
       </div>
       <div className="text-left">
-        <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
-        <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">{desc}</p>
+        <p className="text-xs font-semibold text-foreground leading-tight">{title}</p>
+        <p className="text-[9px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">{desc}</p>
       </div>
     </button>
   );
@@ -164,7 +164,7 @@ export default function Moods() {
 
 
             {/* All moods in unified grid */}
-            <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+            <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
               {allMoods.map((mood, i) => {
                 const titleKey = `mood.${mood.id}` as any;
                 const subKey = `mood.${mood.id}.sub` as any;
@@ -197,7 +197,7 @@ export default function Moods() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-2 gap-3 p-4"
+            className="grid grid-cols-3 gap-2.5 p-4"
           >
             {maladiesPresets.map((m, i) => (
               <motion.div
@@ -258,7 +258,7 @@ export default function Moods() {
                       <div className="px-4 pt-2 pb-1">
                         <h2 className="text-sm font-bold text-foreground">📿 {t("athkar.coreTitle" as any)}</h2>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 px-4 pb-2">
+                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-2">
                         {coreFiltered.map((g, i) => (
                           <motion.div
                             key={g.id}
@@ -278,7 +278,7 @@ export default function Moods() {
                         <h2 className="text-sm font-bold text-foreground">🗂️ {t("athkar.situationsTitle" as any)}</h2>
                         <p className="text-[10px] text-muted-foreground mt-0.5">{t("athkar.situationsSubtitle" as any)}</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
                         {situationFiltered.map((g, i) => (
                           <motion.div
                             key={g.id}
