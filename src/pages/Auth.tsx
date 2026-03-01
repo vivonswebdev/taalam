@@ -11,7 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
 import { useUserMode, type UserMode, type AgeGroup } from "@/hooks/useUserMode";
 import IslamicAvatarPicker from "@/components/IslamicAvatarPicker";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 const AGE_GROUPS: { id: AgeGroup; icon: string; label: string; desc: string }[] = [
   { id: "child", icon: "👧", label: "Enfant / ado", desc: "Moins de 16 ans" },
   { id: "adult", icon: "🧑", label: "Adulte", desc: "16–60 ans" },
