@@ -144,6 +144,14 @@ export default function AyahFeedback({
         Réécouter le verset
       </button>
 
+
+      {/* Report incorrect result */}
+      {onReport && score < 90 && (
+        <div className="flex justify-center">
+          <AsrReportButton onReport={onReport} />
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex gap-3">
         <button
