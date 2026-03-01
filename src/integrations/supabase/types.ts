@@ -760,6 +760,57 @@ export type Database = {
         }
         Relationships: []
       }
+      hifz_items: {
+        Row: {
+          ayah_from: number
+          ayah_to: number
+          created_at: string
+          ease_factor: number
+          id: string
+          interval_days: number
+          last_quality: number | null
+          last_reviewed_at: string | null
+          next_review_date: string
+          repetitions: number
+          status: string
+          surah_number: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ayah_from: number
+          ayah_to: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_quality?: number | null
+          last_reviewed_at?: string | null
+          next_review_date?: string
+          repetitions?: number
+          status?: string
+          surah_number: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ayah_from?: number
+          ayah_to?: number
+          created_at?: string
+          ease_factor?: number
+          id?: string
+          interval_days?: number
+          last_quality?: number | null
+          last_reviewed_at?: string | null
+          next_review_date?: string
+          repetitions?: number
+          status?: string
+          surah_number?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       hifz_plan_tasks: {
         Row: {
           ayah_from: number
