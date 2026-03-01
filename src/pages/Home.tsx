@@ -304,8 +304,27 @@ export default function Home() {
         </div>
       </div>
 
+      {/* ═══ Raccourci Mushaf ═══ */}
+      <div className="px-5 mt-5">
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => { trackEvent("module_open", "mushaf_shortcut"); navigate("/mushaf"); }}
+          className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-r from-amber-800/40 to-yellow-900/20 border border-amber-400/30 shadow-lg"
+        >
+          <span className="text-2xl">📖</span>
+          <div className="flex-1 min-w-0 text-left">
+            <p className="text-sm font-bold text-white">Lire le Coran (Mushaf)</p>
+            <p className="text-[11px] text-white/60">Ouvrir le mushaf directement</p>
+          </div>
+          <span className="text-xs font-bold text-primary shrink-0">Ouvrir →</span>
+        </motion.button>
+      </div>
+
       {/* ═══ BLOC 1 – Tarteel & États du cœur ═══ */}
-      <div className="px-5 mt-5 grid grid-cols-2 gap-3">
+      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
           emoji="🎤"
           title={t("home.tarteelButton" as any)}
