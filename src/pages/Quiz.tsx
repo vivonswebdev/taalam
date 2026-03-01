@@ -440,7 +440,7 @@ export default function Quiz() {
             <ArrowLeft size={18} />
           </button>
           <div className="flex-1">
-            <p className="text-sm font-bold text-foreground">{catConfig?.title || "Quiz"}</p>
+            <p className="text-sm font-bold text-foreground">{catConfig ? t(catConfig.titleKey as any) : "Quiz"}</p>
             <p className="text-[11px] text-muted-foreground">Question {current + 1}</p>
           </div>
           {/* Streak indicator */}
