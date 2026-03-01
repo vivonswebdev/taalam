@@ -221,7 +221,7 @@ export default function Auth() {
         <LanguageSwitcher />
       </div>
 
-      <div className="px-6 space-y-6">
+      <div className="px-6 mt-6 space-y-6">
         {/* Forgot password flow */}
         {mode === "forgot" && (
           <motion.div key="forgot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
