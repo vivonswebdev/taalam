@@ -699,6 +699,101 @@ export type Database = {
         }
         Relationships: []
       }
+      family_challenge_scores: {
+        Row: {
+          challenge_id: string
+          completed_at: string
+          family_id: string
+          id: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string
+          family_id: string
+          id?: string
+          score?: number
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string
+          family_id?: string
+          id?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_challenge_scores_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "family_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_challenge_scores_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_challenges: {
+        Row: {
+          ayah_from: number | null
+          ayah_to: number | null
+          challenge_type: string
+          created_at: string
+          created_by: string
+          ends_at: string
+          family_id: string
+          id: string
+          starts_at: string
+          surah_number: number | null
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          ayah_from?: number | null
+          ayah_to?: number | null
+          challenge_type?: string
+          created_at?: string
+          created_by: string
+          ends_at?: string
+          family_id: string
+          id?: string
+          starts_at?: string
+          surah_number?: number | null
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          ayah_from?: number | null
+          ayah_to?: number | null
+          challenge_type?: string
+          created_at?: string
+          created_by?: string
+          ends_at?: string
+          family_id?: string
+          id?: string
+          starts_at?: string
+          surah_number?: number | null
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_challenges_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_members: {
         Row: {
           created_at: string

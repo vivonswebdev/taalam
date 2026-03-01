@@ -1,12 +1,13 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp, Share2 } from "lucide-react";
+import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp, Share2, Swords } from "lucide-react";
 import { useFamily, type FamilyMember } from "@/hooks/useFamily";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
 import FamilyShareCard from "@/components/FamilyShareCard";
+import FamilyDuels from "@/components/FamilyDuels";
 
 const TROPHIES = [
   { type: "gold", emoji: "🏆", label: "gold" },
@@ -302,6 +303,9 @@ export default function FamilyDashboard() {
                     ))}
                   </div>
                 </div>
+
+                {/* Family Duels */}
+                <FamilyDuels familyId={family.id} isParent={myRole === "parent"} />
 
                 {/* Children */}
                 <div>
