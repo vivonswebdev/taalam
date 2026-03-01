@@ -17,6 +17,9 @@ import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import AyahFeedback, { type FeedbackWord } from "@/components/AyahFeedback";
+import { useAsrLogging } from "@/hooks/useAsrLogging";
+import MicTutorial, { shouldShowMicTutorial } from "@/components/MicTutorial";
+import VoiceProfileSettings from "@/components/VoiceProfileSettings";
 
 interface DictationModeProps {
   surah: Surah;
