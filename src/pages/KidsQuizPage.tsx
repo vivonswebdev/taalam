@@ -23,7 +23,7 @@ function saveBadges(b: Record<string, number>) { localStorage.setItem(STICKERS_K
 export default function KidsQuizPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const xp = useXP();
+  const xp = useQuranXp();
   const xpAwardedRef = useRef(false);
 
   const [category, setCategory] = useState<QuizCategory | null>(null);

@@ -74,7 +74,7 @@ export default function TahaddiMode({ surah, onBack, isChildMode, t }: TahaddiMo
   useEffect(() => {
     if (session.isFinished && session.summary) {
       if (session.summary.starsEarned >= 2) setShowConfetti(true);
-      addXP(session.summary.xpEarned);
+      addXp(session.summary.xpEarned, "tarteel_block_complete");
       setScreen("results");
     }
   }, [session.isFinished, session.summary]);

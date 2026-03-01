@@ -8,7 +8,7 @@ export function usePersonalStats() {
   const { last30Days, streak } = useQuranHabits();
   const { plan, tasks, overallProgress } = useHifzPlan();
   const listeningStats = useListeningStats();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   return useMemo(() => {
     const now = new Date();

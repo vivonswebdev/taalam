@@ -28,7 +28,7 @@ const getLiveWordColor = (status: LiveWordStatus) => {
 
 export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: Props) {
   const { t } = useLanguage();
-  const xp = useXP();
+  const xp = useQuranXp();
   const { play, vibrate } = useSound();
   const [phase, setPhase] = useState<Phase>("intro");
   const [liveTranscript, setLiveTranscript] = useState("");

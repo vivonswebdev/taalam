@@ -12,7 +12,7 @@ export default function ListenTestQuiz() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
-  const xp = useXP();
+  const xp = useQuranXp();
   const xpAwardedRef = useRef(false);
 
   const surahNum = Number(searchParams.get("surah")) || 1;
