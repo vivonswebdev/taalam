@@ -26,24 +26,12 @@ export default function BottomNav() {
         {tabs.map((tab) => {
           const isActive = currentPath === tab.path;
           const Icon = tab.icon;
-          const badge = (tab as any).badge;
           return (
             <button key={tab.path} onClick={() => navigate(tab.path)} className="relative flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors">
               {isActive && (
                 <motion.div layoutId="activeTab" className="absolute inset-x-2 -top-px h-0.5 bg-primary rounded-full" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
               )}
-              <div className="relative">
-                <Icon size={22} className={isActive ? "text-primary" : "text-muted-foreground"} />
-                {badge > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[9px] font-bold px-1"
-                  >
-                    {badge}
-                  </motion.span>
-                )}
-              </div>
+              <Icon size={22} className={isActive ? "text-primary" : "text-muted-foreground"} />
               <span className={`text-[10px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}>{tab.label}</span>
             </button>
           );
