@@ -167,7 +167,7 @@ export default function FamilyDashboard() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-card border border-border rounded-2xl p-4 space-y-3"
+                  className="bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl p-4 space-y-3 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -215,7 +215,7 @@ export default function FamilyDashboard() {
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.05 }}
-                          className="bg-card border border-border rounded-2xl p-3.5 space-y-2.5"
+                          className="bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl p-3.5 space-y-2.5 shadow-sm"
                         >
                           {/* Child header */}
                           <div className="flex items-center gap-3">
@@ -275,32 +275,22 @@ export default function FamilyDashboard() {
                   <div>
                     <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 px-1">Statistiques famille</h3>
                     <div className="grid grid-cols-3 gap-2">
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-card border border-border rounded-xl p-3 text-center"
-                      >
-                        <span className="text-lg font-bold text-primary">{totalXP}</span>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">XP total</p>
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.05 }}
-                        className="bg-card border border-border rounded-xl p-3 text-center"
-                      >
-                        <span className="text-lg font-bold text-orange-400">🔥 {maxStreak}</span>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Meilleur streak</p>
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-card border border-border rounded-xl p-3 text-center"
-                      >
-                        <span className="text-lg font-bold text-yellow-400">⭐ {totalXPToday}</span>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">XP aujourd'hui</p>
-                      </motion.div>
+                      {[
+                        { value: totalXP, label: "XP total", emoji: "⚡", color: "text-primary", bg: "from-primary/15 to-primary/5" },
+                        { value: `🔥 ${maxStreak}`, label: "Meilleur streak", emoji: "", color: "text-foreground", bg: "from-orange-500/15 to-orange-500/5" },
+                        { value: `⭐ ${totalXPToday}`, label: "XP aujourd'hui", emoji: "", color: "text-foreground", bg: "from-yellow-500/15 to-yellow-500/5" },
+                      ].map((stat, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className={`bg-gradient-to-br ${stat.bg} backdrop-blur-xl border border-border/40 rounded-2xl p-3.5 text-center shadow-sm`}
+                        >
+                          <span className={`text-lg font-bold ${stat.color}`}>{stat.value}</span>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{stat.label}</p>
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
                 )}

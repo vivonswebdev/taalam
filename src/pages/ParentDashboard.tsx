@@ -1,11 +1,32 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Edit3, ChevronRight, Lock, ShieldCheck, Download, Upload, Play } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit3, ChevronRight, Lock, ShieldCheck, Download, Upload, Play, Clock, BookOpen, Flame, Star, TrendingUp } from "lucide-react";
 import { useChildProfiles, type ChildProfile } from "@/hooks/useChildProfiles";
 import { useActiveChild } from "@/hooks/useActiveChild";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useChildDashboard } from "@/hooks/useChildDashboard";
+
+function ChildQuickStats({ childId }: { childId: string }) {
+  const dashboard = useChildDashboard(childId);
+  if (!dashboard) return null;
+  return (
+    <div className="flex items-center gap-3 text-[10px] text-muted-foreground mt-1">
+      <span className="flex items-center gap-0.5">
+        <Clock size={10} className="text-primary" />
+        {dashboard.minutesQuran7d}min/7j
+      </span>
+      <span className="flex items-center gap-0.5">
+        <BookOpen size={10} className="text-secondary" />
+        {dashboard.sessionsCount7d} sessions
+      </span>
+      <span className="flex items-center gap-0.5">
+        🔤 {dashboard.nooraniCompleted}/{dashboard.nooraniTotal}
+      </span>
+    </div>
+  );
+}
 
 export default function ParentDashboard() {
   const {
@@ -116,11 +137,16 @@ export default function ParentDashboard() {
   function relativeActivity(d: string | null): string {
     if (!d) return "—";
     const days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
-    if (days === 0) return "Aujourd'hui";
-    if (days === 1) return "Hier";
-    if (days < 7) return `Il y a ${days}j`;
+    if (days === 0) return t("parent.today" as any) || "Aujourd'hui";
+    if (days === 1) return t("parent.yesterday" as any) || "Hier";
+    if (days < 7) return `${days}j`;
     return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
   }
+
+  // Summary stats
+  const totalMastery = profiles.length > 0
+    ? Math.round(profiles.reduce((sum, p) => sum + getChildMastery(p.id), 0) / profiles.length)
+    : 0;
 
   // ─── PIN Screen ───────────────────────────────────────────
   if (!unlocked) {
@@ -137,8 +163,8 @@ export default function ParentDashboard() {
 
         <div className="flex-1 flex items-center justify-center px-6">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="bg-card border border-border rounded-2xl p-8 w-full max-w-sm text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl p-8 w-full max-w-sm text-center shadow-xl">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
               {settingPin ? <ShieldCheck size={28} className="text-primary" /> : <Lock size={28} className="text-primary" />}
             </div>
             <h2 className="text-lg font-bold text-foreground mb-1">
@@ -179,6 +205,7 @@ export default function ParentDashboard() {
   // ─── Main Dashboard ───────────────────────────────────────
   return (
     <div className="min-h-screen pb-24">
+      {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -192,12 +219,39 @@ export default function ParentDashboard() {
           </div>
           <button
             onClick={() => { setShowAdd(true); setEditingId(null); setFormName(""); setFormAge(""); setFormEmoji("👦"); }}
-            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center active:scale-95 transition-transform"
+            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center active:scale-95 transition-transform shadow-lg shadow-primary/25"
           >
             <Plus size={20} className="text-primary-foreground" />
           </button>
         </div>
       </div>
+
+      {/* Summary stats bar */}
+      {profiles.length > 0 && (
+        <div className="px-6 mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-card/60 backdrop-blur-xl border border-border/40 rounded-2xl p-4 flex items-center gap-4"
+          >
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+              <span className="text-2xl">👨‍👩‍👧‍👦</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-foreground">{profiles.length} {profiles.length > 1 ? "enfants" : "enfant"}</p>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <TrendingUp size={10} className="text-primary" />
+                  {t("parent.mastery")}: {totalMastery}%
+                </span>
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-lg font-bold text-primary">{totalMastery}%</span>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <div className="px-6 space-y-3">
         {profiles.length === 0 && (
@@ -216,42 +270,55 @@ export default function ParentDashboard() {
 
         {profiles.map((p, i) => {
           const mastery = getChildMastery(p.id);
+          const color = mastery >= 70 ? "text-green-500" : mastery >= 40 ? "text-amber-500" : "text-red-500";
+          const barColor = mastery >= 70 ? "bg-green-500" : mastery >= 40 ? "bg-amber-500" : "bg-red-500";
           return (
             <motion.div
               key={p.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="bg-card border border-border rounded-2xl overflow-hidden"
+              transition={{ delay: i * 0.06 }}
+              className="bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
               <button
                 onClick={() => navigate(`/parent/child/${p.id}`)}
                 className="w-full flex items-center gap-4 p-4 text-left"
               >
-                <span className="text-3xl">{p.avatarEmoji}</span>
+                {/* Avatar with mastery ring */}
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                    <span className="text-2xl">{p.avatarEmoji}</span>
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${barColor} flex items-center justify-center`}>
+                    <span className="text-[8px] font-bold text-white">{mastery}%</span>
+                  </div>
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground truncate">{p.name}</p>
+                  <p className="font-bold text-foreground truncate">{p.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {p.age ? `${p.age} ${t("parent.years")}` : ""}{p.age ? " · " : ""}{t("parent.mastery")}: {mastery}%
-                  </p>
-                  <p className="text-[10px] text-muted-foreground/70">
+                    {p.age ? `${p.age} ${t("parent.years")}` : ""}
+                    {p.age ? " · " : ""}
                     {t("backup.lastActivity")}: {relativeActivity(getLastActivity(p.id))}
                   </p>
+                  <ChildQuickStats childId={p.id} />
                 </div>
-                {/* Mini progress bar */}
-                <div className="flex items-center gap-2 shrink-0">
-                  <div className="w-12 h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${mastery >= 70 ? "bg-green-500" : mastery >= 40 ? "bg-amber-500" : "bg-red-500"}`}
-                      style={{ width: `${mastery}%` }}
-                    />
-                  </div>
-                  <ChevronRight size={16} className="text-muted-foreground" />
-                </div>
+                <ChevronRight size={16} className="text-muted-foreground shrink-0" />
               </button>
 
+              {/* Progress bar */}
+              <div className="px-4 pb-2">
+                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${mastery}%` }}
+                    transition={{ delay: i * 0.06 + 0.2, duration: 0.6 }}
+                    className={`h-full rounded-full ${barColor}`}
+                  />
+                </div>
+              </div>
+
               {/* Quick actions */}
-              <div className="flex border-t border-border">
+              <div className="flex border-t border-border/50">
                 <button
                   onClick={() => handleStartSession(p.id)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs text-primary font-semibold hover:bg-primary/5 transition-colors"
@@ -259,7 +326,7 @@ export default function ParentDashboard() {
                   <Play size={12} />
                   {t("activeChild.startSession")}
                 </button>
-                <div className="w-px bg-border" />
+                <div className="w-px bg-border/50" />
                 <button
                   onClick={() => startEdit(p)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
@@ -267,7 +334,7 @@ export default function ParentDashboard() {
                   <Edit3 size={12} />
                   {t("parent.edit")}
                 </button>
-                <div className="w-px bg-border" />
+                <div className="w-px bg-border/50" />
                 <button
                   onClick={() => setDeleteConfirm(p.id)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs text-destructive/70 hover:text-destructive transition-colors"
@@ -283,7 +350,7 @@ export default function ParentDashboard() {
         {/* ─── Backup & Restore ─────────────────────────────── */}
         {profiles.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="bg-card border border-border rounded-2xl p-4 space-y-3 mt-4"
+            className="bg-card/60 backdrop-blur-xl border border-border/40 rounded-2xl p-4 space-y-3 mt-4"
           >
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               {t("backup.title")}
@@ -291,7 +358,7 @@ export default function ParentDashboard() {
 
             <button
               onClick={handleExport}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border hover:bg-accent/30 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 hover:bg-accent/30 transition-colors text-left"
             >
               <Download size={18} className="text-primary shrink-0" />
               <div>
@@ -302,7 +369,7 @@ export default function ParentDashboard() {
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border hover:bg-accent/30 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-border/50 hover:bg-accent/30 transition-colors text-left"
             >
               <Upload size={18} className="text-secondary shrink-0" />
               <div>
@@ -407,12 +474,15 @@ export default function ParentDashboard() {
               <h3 className="text-lg font-bold text-foreground mb-2">{t("parent.deleteConfirmTitle")}</h3>
               <p className="text-sm text-muted-foreground mb-6">{t("parent.deleteConfirmMsg")}</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground">
+                <button
+                  onClick={() => setDeleteConfirm(null)}
+                  className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-foreground"
+                >
                   {t("settings.cancel")}
                 </button>
                 <button
                   onClick={() => { deleteProfile(deleteConfirm); setDeleteConfirm(null); }}
-                  className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium active:scale-[0.98] transition-transform"
+                  className="flex-1 py-3 rounded-xl bg-destructive text-destructive-foreground text-sm font-semibold"
                 >
                   {t("parent.delete")}
                 </button>
