@@ -178,12 +178,16 @@ export function useCommunityActions() {
     return community;
   }, [user]);
 
-  const joinCommunity = useCallback(async (communityId: string, requiresApproval: boolean) => {
+  const joinCommunity = useCallback(async (communityId: string, requiresApproval: boolean, communityName?: string) => {
     if (!user) return;
     if (requiresApproval) {
       const { error } = await supabase.from("community_join_requests").insert({ community_id: communityId, user_id: user.id });
       if (error) { toast.error(error.message); return; }
       toast.success("Demande envoyée !");
+      // Notify admins
+      supabase.functions.invoke("community-notify", {
+        body: { type: "join_request", community_id: communityId, community_name: communityName || "" },
+      }).catch(() => {});
     } else {
       const { error } = await supabase.from("community_members").insert({ community_id: communityId, user_id: user.id });
       if (error) { toast.error(error.message); return; }
@@ -196,10 +200,14 @@ export function useCommunityActions() {
     await supabase.from("community_members").delete().eq("community_id", communityId).eq("user_id", user.id);
   }, [user]);
 
-  const sendMessage = useCallback(async (communityId: string, content: string, authorName: string, messageType = "text") => {
+  const sendMessage = useCallback(async (communityId: string, content: string, authorName: string, messageType = "text", communityName?: string) => {
     if (!user) return;
     const { error } = await supabase.from("community_messages").insert({ community_id: communityId, user_id: user.id, author_name: authorName, content, message_type: messageType });
-    if (error) toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
+    // Notify members (fire-and-forget)
+    supabase.functions.invoke("community-notify", {
+      body: { type: "new_message", community_id: communityId, community_name: communityName || "", author_name: authorName, message_preview: content },
+    }).catch(() => {});
   }, [user]);
 
   const deleteMessage = useCallback(async (messageId: string) => {

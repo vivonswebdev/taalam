@@ -78,7 +78,8 @@ export default function CommunityPage() {
   };
 
   const handleJoin = async (communityId: string, requiresApproval: boolean) => {
-    await joinCommunity(communityId, requiresApproval);
+    const c = communities.find(x => x.id === communityId);
+    await joinCommunity(communityId, requiresApproval, c?.name);
     refetch();
   };
 
