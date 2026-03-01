@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Baby, GraduationCap, Users, Moon, Sun, Globe, Wifi, WifiOff,
-  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X
+  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X, Shield
 } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
