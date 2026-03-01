@@ -17,6 +17,9 @@ import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import AyahFeedback, { type FeedbackWord } from "@/components/AyahFeedback";
+import { useAsrLogging } from "@/hooks/useAsrLogging";
+import MicTutorial, { shouldShowMicTutorial } from "@/components/MicTutorial";
+import VoiceProfileSettings from "@/components/VoiceProfileSettings";
 
 interface DictationModeProps {
   surah: Surah;
@@ -32,6 +35,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
   const xp = useQuranXp();
+  const asrLog = useAsrLogging();
 
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0);
   const [ayahPhase, setAyahPhase] = useState<AyahPhase>("listen");
@@ -47,6 +51,10 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [forceServerSTT, setForceServerSTT] = useState(() => {
     try { return localStorage.getItem("dictation_force_server") === "true"; } catch { return false; }
   });
+  const [showMicTutorial, setShowMicTutorial] = useState(() => shouldShowMicTutorial());
+  const [showVoiceProfile, setShowVoiceProfile] = useState(false);
+  const [lastLogId, setLastLogId] = useState<string | null>(null);
+  const recordingStartRef = useRef<number>(0);
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<number>>(new Set());
 
@@ -103,12 +111,14 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setMicError(null);
     setPendingStop(false);
     setAyahPhase("recording");
+    recordingStartRef.current = Date.now();
     voice.start();
   }, [voice]);
 
   const finalizeRecording = useCallback(() => {
     if (!currentAyah) return;
 
+    const durationMs = Date.now() - recordingStartRef.current;
     const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
     const words: FeedbackWord[] = result.wordResults.map(wr => ({
       word: wr.word,
@@ -126,13 +136,25 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setFeedbackScore(score);
     setAyahPhase("feedback");
 
+    // ASR logging
+    asrLog.logResult({
+      mode: "dictation_ayah",
+      surahNumber: surah.number,
+      ayahNumber: currentAyah.number,
+      expectedText: currentAyah.arabic,
+      recognizedText: liveTranscript,
+      confidenceScore: score / 100,
+      isCorrect: score >= 70,
+      durationMs,
+    });
+
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
       xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     fetchSimpleExplanation(surah.number, currentAyah.number);
-  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp]);
+  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp, asrLog]);
 
   // ─── Stop recording and compute feedback ───
   const stopRecording = useCallback(() => {
@@ -227,13 +249,31 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
   return (
     <div className="space-y-4">
+      {/* Mic Tutorial (first time) */}
+      {showMicTutorial && ayahPhase === "listen" && currentAyahIdx === 0 && (
+        <MicTutorial onDismiss={() => setShowMicTutorial(false)} />
+      )}
+
       {/* Header */}
       <div className="text-center">
         <p className="font-arabic text-2xl text-primary">{surah.nameArabic}</p>
-        <p className="text-xs text-muted-foreground">
-          {t("dictation.title")} · {t("detail.verse")} {currentAyahIdx + 1}/{totalAyahs}
-        </p>
+        <div className="flex items-center justify-center gap-2">
+          <p className="text-xs text-muted-foreground">
+            {t("dictation.title")} · {t("detail.verse")} {currentAyahIdx + 1}/{totalAyahs}
+          </p>
+          <button
+            onClick={() => setShowVoiceProfile(!showVoiceProfile)}
+            className="text-[10px] text-primary underline"
+          >
+            ⚙️ Profil
+          </button>
+        </div>
       </div>
+
+      {/* Voice profile settings (collapsible) */}
+      {showVoiceProfile && (
+        <VoiceProfileSettings compact />
+      )}
 
       {/* Progress bar */}
       <div className="flex items-center gap-3 px-1">
@@ -469,6 +509,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
           }}
           isLastAyah={currentAyahIdx + 1 >= totalAyahs}
           isChildMode={isChildMode}
+          onReport={(reason) => {
+            asrLog.reportResult(lastLogId || "", reason);
+          }}
         />
       )}
 

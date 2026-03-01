@@ -124,6 +124,78 @@ export type Database = {
         }
         Relationships: []
       }
+      asr_logs: {
+        Row: {
+          ayah_number: number | null
+          cer_score: number | null
+          confidence_score: number | null
+          created_at: string
+          device_info: string | null
+          duration_ms: number | null
+          expected_text: string | null
+          id: string
+          is_correct: boolean | null
+          mode: string
+          recognized_text: string | null
+          report_reason: string | null
+          reported_by_user: boolean | null
+          scoring_mode: string | null
+          session_id: string | null
+          surah_number: number | null
+          user_id: string | null
+          voice_profile: string | null
+          volume_avg: number | null
+          volume_peak: number | null
+          wer_score: number | null
+        }
+        Insert: {
+          ayah_number?: number | null
+          cer_score?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          device_info?: string | null
+          duration_ms?: number | null
+          expected_text?: string | null
+          id?: string
+          is_correct?: boolean | null
+          mode?: string
+          recognized_text?: string | null
+          report_reason?: string | null
+          reported_by_user?: boolean | null
+          scoring_mode?: string | null
+          session_id?: string | null
+          surah_number?: number | null
+          user_id?: string | null
+          voice_profile?: string | null
+          volume_avg?: number | null
+          volume_peak?: number | null
+          wer_score?: number | null
+        }
+        Update: {
+          ayah_number?: number | null
+          cer_score?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          device_info?: string | null
+          duration_ms?: number | null
+          expected_text?: string | null
+          id?: string
+          is_correct?: boolean | null
+          mode?: string
+          recognized_text?: string | null
+          report_reason?: string | null
+          reported_by_user?: boolean | null
+          scoring_mode?: string | null
+          session_id?: string | null
+          surah_number?: number | null
+          user_id?: string | null
+          voice_profile?: string | null
+          volume_avg?: number | null
+          volume_peak?: number | null
+          wer_score?: number | null
+        }
+        Relationships: []
+      }
       ayah_favorites: {
         Row: {
           ayah_number: number

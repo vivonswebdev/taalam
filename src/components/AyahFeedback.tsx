@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, Volume2, BookOpen } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
+import AsrReportButton from "@/components/AsrReportButton";
 
 export type FeedbackWordStatus = "correct" | "almost" | "incorrect" | "missing";
 
@@ -20,6 +21,7 @@ interface AyahFeedbackProps {
   onListenAyah: () => void;
   isLastAyah: boolean;
   isChildMode: boolean;
+  onReport?: (reason: string) => void;
 }
 
 export default function AyahFeedback({
@@ -32,6 +34,7 @@ export default function AyahFeedback({
   onListenAyah,
   isLastAyah,
   isChildMode,
+  onReport,
 }: AyahFeedbackProps) {
   const { t } = useLanguage();
 
@@ -140,6 +143,14 @@ export default function AyahFeedback({
         <Volume2 size={15} />
         Réécouter le verset
       </button>
+
+
+      {/* Report incorrect result */}
+      {onReport && score < 90 && (
+        <div className="flex justify-center">
+          <AsrReportButton onReport={onReport} />
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex gap-3">

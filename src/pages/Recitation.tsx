@@ -18,6 +18,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useSound } from "@/hooks/useSound";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import FloatingXpWidget from "@/components/FloatingXpWidget";
+import { useAsrLogging } from "@/hooks/useAsrLogging";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
@@ -60,6 +61,7 @@ export default function Recitation() {
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t } = useLanguage();
   const { play, vibrate } = useSound();
+  const asrLog = useAsrLogging();
 
   // Selection state
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard" | "favorites">("easy");
@@ -207,8 +209,17 @@ export default function Recitation() {
     setAyahResults((prev) => [...prev, result]);
     setLastAyahResult(result);
     setCompletedAyahs((prev) => new Set([...prev, recitingAyah]));
+    asrLog.logResult({
+      mode: "tarteel",
+      surahNumber: selectedSurah.number,
+      ayahNumber: ayah.number,
+      expectedText: ayah.arabic,
+      recognizedText: currentTranscript,
+      confidenceScore: score / 100,
+      isCorrect: score >= 70,
+    });
     setTimeout(() => setShowAyahResult(true), 500);
-  }, [selectedSurah, recitingAyah, currentTranscript, voice]);
+  }, [selectedSurah, recitingAyah, currentTranscript, voice, asrLog]);
 
   const skipAyah = useCallback(() => {
     if (!selectedSurah) return;
