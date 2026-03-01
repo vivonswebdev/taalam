@@ -254,12 +254,17 @@ export default function Auth() {
   };
 
   const handleResetPassword = async () => {
-    if (!otp.trim() || !newPassword.trim()) {
-      toast.error("Entrez le code et le nouveau mot de passe");
+    const cleanOtp = otp.trim();
+    if (!cleanOtp || !newPassword.trim()) {
+      toast.error(t("reset.fillFields" as any) || "Entrez le code et le nouveau mot de passe");
+      return;
+    }
+    if (cleanOtp.length < 6) {
+      toast.error(t("reset.otpTooShort" as any) || "Le code doit contenir 6 à 8 chiffres");
       return;
     }
     if (newPassword.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error(t("reset.passwordTooShort" as any) || "Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
     setLoading(true);
