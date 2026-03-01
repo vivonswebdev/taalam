@@ -506,7 +506,7 @@ export default function Quiz() {
                   className="mt-4 text-center"
                 >
                   <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 rounded-full px-3 py-1.5 text-xs font-bold">
-                    <Flame size={14} /> Série de {consecutiveCorrect} ! +5 XP bonus
+                    <Flame size={14} /> {t("quiz.seriesOf" as any)} {consecutiveCorrect} {t("quiz.streakBonus" as any)}
                   </span>
                 </motion.div>
               )}
