@@ -120,6 +120,17 @@ export default function KidsSheytanGame() {
         const updated = updateGame(gameRef.current, CELL_SIZE, dt);
         gameRef.current = updated;
 
+        // ─── Sound effects ─────
+        if (updated.dotsCollected > prevDotsRef.current) {
+          playSound("collectDing");
+        }
+        prevDotsRef.current = updated.dotsCollected;
+
+        if (updated.phase === "powerUp" && prevPhaseRef.current !== "powerUp") {
+          playSound("powerUpSubhanAllah");
+        }
+        prevPhaseRef.current = updated.phase;
+
         const canvas = canvasRef.current;
         if (canvas) {
           const ctx = canvas.getContext("2d");
@@ -127,6 +138,7 @@ export default function KidsSheytanGame() {
         }
 
         if (updated.phase === "gameOver") {
+          playSound("gameOverAstaghfirullah");
           saveHighScore(updated.score);
           saveGameStats(updated.collectedVerses);
           setGameState(updated);
@@ -134,6 +146,7 @@ export default function KidsSheytanGame() {
           return;
         }
         if (updated.phase === "levelComplete") {
+          playSound("levelUp");
           saveHighScore(updated.score);
           setGameState(updated);
           setQuizIdx(0);
