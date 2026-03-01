@@ -121,7 +121,7 @@ export default function Quiz() {
   const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [quizXP, setQuizXP] = useState(0);
-  const xp = useXP();
+  const qxp = useQuranXp();
   const perfectChallenge = usePerfectChallenge();
   const questionStats = useQuestionStats();
   const xpAwardedRef = useRef(false);
