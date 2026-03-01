@@ -3,7 +3,7 @@ import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap, Landmark, Lightbulb } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
