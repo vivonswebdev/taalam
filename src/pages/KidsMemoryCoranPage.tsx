@@ -163,7 +163,7 @@ export default function KidsMemoryCoranPage() {
                   {card.text[lang as keyof typeof card.text] || card.text.fr}
                 </motion.span>
               ) : (
-                <span className="text-2xl">📖</span>
+                <span className="text-2xl">☪️</span>
               )}
             </motion.button>
           );
