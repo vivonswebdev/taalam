@@ -304,6 +304,9 @@ export default function FamilyDashboard() {
                   </div>
                 </div>
 
+                {/* Family Duels */}
+                <FamilyDuels familyId={family.id} isParent={myRole === "parent"} />
+
                 {/* Children */}
                 <div>
                   <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 px-1">{t("family.children")}</h3>
