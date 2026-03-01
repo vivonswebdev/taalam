@@ -249,13 +249,31 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
   return (
     <div className="space-y-4">
+      {/* Mic Tutorial (first time) */}
+      {showMicTutorial && ayahPhase === "listen" && currentAyahIdx === 0 && (
+        <MicTutorial onDismiss={() => setShowMicTutorial(false)} />
+      )}
+
       {/* Header */}
       <div className="text-center">
         <p className="font-arabic text-2xl text-primary">{surah.nameArabic}</p>
-        <p className="text-xs text-muted-foreground">
-          {t("dictation.title")} · {t("detail.verse")} {currentAyahIdx + 1}/{totalAyahs}
-        </p>
+        <div className="flex items-center justify-center gap-2">
+          <p className="text-xs text-muted-foreground">
+            {t("dictation.title")} · {t("detail.verse")} {currentAyahIdx + 1}/{totalAyahs}
+          </p>
+          <button
+            onClick={() => setShowVoiceProfile(!showVoiceProfile)}
+            className="text-[10px] text-primary underline"
+          >
+            ⚙️ Profil
+          </button>
+        </div>
       </div>
+
+      {/* Voice profile settings (collapsible) */}
+      {showVoiceProfile && (
+        <VoiceProfileSettings compact />
+      )}
 
       {/* Progress bar */}
       <div className="flex items-center gap-3 px-1">
