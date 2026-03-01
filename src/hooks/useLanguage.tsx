@@ -2116,7 +2116,15 @@ const translations = {
    "popHassanates.gameOver": { fr: "Oh non !", en: "Oh no!", nl: "Oh nee!", ar: "يا لا!", tr: "Eyvah!", ur: "اوہ نہیں!" },
    "popHassanates.gameOverDesc": { fr: "Tu as été touché par un waswas ou tu as manqué trop de bonnes actions.", en: "You were hit by a waswas or missed too many good deeds.", nl: "Je bent geraakt door een waswas of je hebt te veel goede daden gemist.", ar: "أصابك وسواس أو فاتتك حسنات كثيرة.", tr: "Bir vesvese seni vurdu veya çok fazla iyi amel kaçırdın.", ur: "وسوسے نے آپ کو مارا یا آپ نے بہت سی نیکیاں چھوڑ دیں۔" },
    "popHassanates.score": { fr: "Score", en: "Score", nl: "Score", ar: "النتيجة", tr: "Skor", ur: "سکور" },
-   "popHassanates.replay": { fr: "Rejouer", en: "Replay", nl: "Opnieuw", ar: "أعد اللعب", tr: "Tekrar oyna", ur: "دوبارہ کھیلیں" },
+    "popHassanates.replay": { fr: "Rejouer", en: "Replay", nl: "Opnieuw", ar: "أعد اللعب", tr: "Tekrar oyna", ur: "دوبارہ کھیلیں" },
+    "popHassanates.chooseDifficulty": { fr: "Choisis la difficulté", en: "Choose difficulty", nl: "Kies moeilijkheid", ar: "اختر الصعوبة", tr: "Zorluk seç", ur: "مشکل منتخب کریں" },
+    "popHassanates.easy": { fr: "Facile", en: "Easy", nl: "Makkelijk", ar: "سهل", tr: "Kolay", ur: "آسان" },
+    "popHassanates.medium": { fr: "Moyen", en: "Medium", nl: "Gemiddeld", ar: "متوسط", tr: "Orta", ur: "درمیانہ" },
+    "popHassanates.hard": { fr: "Difficile", en: "Hard", nl: "Moeilijk", ar: "صعب", tr: "Zor", ur: "مشکل" },
+    "popHassanates.easyDesc": { fr: "Bulles lentes, peu de waswas", en: "Slow bubbles, few waswas", nl: "Langzame bubbels, weinig waswas", ar: "فقاعات بطيئة، وساوس قليلة", tr: "Yavaş balonlar, az vesvese", ur: "سست بلبلے، کم وسوسے" },
+    "popHassanates.mediumDesc": { fr: "Vitesse normale, plus de waswas", en: "Normal speed, more waswas", nl: "Normale snelheid, meer waswas", ar: "سرعة عادية، وساوس أكثر", tr: "Normal hız, daha fazla vesvese", ur: "عام رفتار، زیادہ وسوسے" },
+    "popHassanates.hardDesc": { fr: "Bulles rapides et beaucoup de waswas !", en: "Fast bubbles and lots of waswas!", nl: "Snelle bubbels en veel waswas!", ar: "فقاعات سريعة ووساوس كثيرة!", tr: "Hızlı balonlar ve çok vesvese!", ur: "تیز بلبلے اور بہت سارے وسوسے!" },
+    "popHassanates.changeDifficulty": { fr: "Changer", en: "Change", nl: "Wijzigen", ar: "تغيير", tr: "Değiştir", ur: "تبدیل کریں" },
 
   // ─── Coran Crush Game ───────────────────────────────────
   "coranCrush.title": { fr: "Coran Crush", en: "Quran Crush", nl: "Koran Crush", ar: "كراش القرآن", tr: "Kur'an Crush", ur: "قرآن کرش" },
