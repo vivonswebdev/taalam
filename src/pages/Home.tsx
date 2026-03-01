@@ -73,7 +73,7 @@ function HomeCard({
 export default function Home() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const xp = useXP();
+  const xp = useQuranXp();
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const { isChildMode } = useChildMode();

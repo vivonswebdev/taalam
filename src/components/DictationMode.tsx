@@ -484,11 +484,11 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
           {/* XP Bar */}
           <ProgressBarDuolingo
             level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
+            xpInLevel={xp.levelProgress.currentInLevel}
+            xpForNext={xp.LEVEL_XP_STEP}
+            xpTotal={xp.xp}
+            xpToday={0}
+            streakDays={0}
             lastGain={xp.lastGain}
             compact
           />
