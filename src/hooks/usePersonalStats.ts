@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { useQuranHabits } from "@/hooks/useQuranHabits";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useListeningStats } from "@/hooks/useListeningStats";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 
 export function usePersonalStats() {
   const { last30Days, streak } = useQuranHabits();
   const { plan, tasks, overallProgress } = useHifzPlan();
   const listeningStats = useListeningStats();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   return useMemo(() => {
     const now = new Date();
@@ -25,7 +25,7 @@ export function usePersonalStats() {
       .reduce((s, t) => s + (t.ayah_to - t.ayah_from + 1), 0);
 
     // KPI: Streak
-    const streakDays = xp.streakDays || streak;
+    const streakDays = streak;
 
     // Chart: Quran time 30 days
     const quranTimeData = last30Days.map(d => ({

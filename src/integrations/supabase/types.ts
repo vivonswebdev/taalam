@@ -1091,6 +1091,27 @@ export type Database = {
         }
         Relationships: []
       }
+      quran_xp: {
+        Row: {
+          last_reason: string | null
+          updated_at: string
+          user_id: string
+          xp_total: number
+        }
+        Insert: {
+          last_reason?: string | null
+          updated_at?: string
+          user_id: string
+          xp_total?: number
+        }
+        Update: {
+          last_reason?: string | null
+          updated_at?: string
+          user_id?: string
+          xp_total?: number
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           created_at: string

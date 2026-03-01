@@ -13,7 +13,7 @@ import {
 } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import AyahFeedback, { type FeedbackWord } from "@/components/AyahFeedback";
@@ -31,7 +31,7 @@ type AyahPhase = "listen" | "recite" | "recording" | "feedback" | "complete";
 export default function DictationMode({ surah, onBack, isChildMode, onRequestNextSurah }: DictationModeProps) {
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0);
   const [ayahPhase, setAyahPhase] = useState<AyahPhase>("listen");
@@ -128,7 +128,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
-      xp.addXP(Math.max(1, Math.round(correctCount / 3)));
+      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     fetchSimpleExplanation(surah.number, currentAyah.number);
@@ -484,11 +484,11 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
           {/* XP Bar */}
           <ProgressBarDuolingo
             level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
+            xpInLevel={xp.levelProgress.currentInLevel}
+            xpForNext={xp.LEVEL_XP_STEP}
+            xpTotal={xp.xp}
+            xpToday={0}
+            streakDays={0}
             lastGain={xp.lastGain}
             compact
           />

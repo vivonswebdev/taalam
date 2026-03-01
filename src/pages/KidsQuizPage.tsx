@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Flame, Zap, Star } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getChildSuccessMessage, getChildEncourageMessage } from "@/lib/childMessages";
 
@@ -23,7 +23,7 @@ function saveBadges(b: Record<string, number>) { localStorage.setItem(STICKERS_K
 export default function KidsQuizPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const xp = useXP();
+  const xp = useQuranXp();
   const xpAwardedRef = useRef(false);
 
   const [category, setCategory] = useState<QuizCategory | null>(null);
@@ -87,7 +87,7 @@ export default function KidsQuizPage() {
   if (finished && category) {
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      if (quizXP > 0) xp.addXP(quizXP);
+      if (quizXP > 0) xp.addXp(quizXP, "quiz_correct_answer");
       // Save badge progress
       const badges = loadBadges();
       badges[category] = (badges[category] || 0) + score;

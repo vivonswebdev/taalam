@@ -5,7 +5,7 @@ import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useSound } from "@/hooks/useSound";
 import Confetti from "@/components/Confetti";
 
@@ -28,7 +28,7 @@ const getLiveWordColor = (status: LiveWordStatus) => {
 
 export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: Props) {
   const { t } = useLanguage();
-  const xp = useXP();
+  const xp = useQuranXp();
   const { play, vibrate } = useSound();
   const [phase, setPhase] = useState<Phase>("intro");
   const [liveTranscript, setLiveTranscript] = useState("");
@@ -73,7 +73,7 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
   useEffect(() => {
     if (phase === "result" && !xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      xp.addXP(xpGain);
+      xp.addXp(xpGain, "tarteel_ayah_correct");
     }
   }, [phase, finalScore]);
 

@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useListeningStats } from "@/hooks/useListeningStats";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -81,7 +81,7 @@ export default function Habits() {
   // Progress data
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
-  const xp = useXP();
+  const qxp = useQuranXp();
   const { profile } = useUserProfile();
   const { mode } = useUserMode();
   const mastered = getMasteredCount();
@@ -119,10 +119,10 @@ export default function Habits() {
 
     generateProgressReport({
       displayName: profile?.display_name || "Ta'alam User",
-      streak: xp.streakDays,
-      level: xp.level,
-      xpTotal: xp.xpTotal,
-      xpToday: xp.xpToday,
+      streak: streak,
+      level: qxp.level,
+      xpTotal: qxp.xp,
+      xpToday: 0,
       hifzPlan,
       hifzTasks,
       hifzProgress,
@@ -188,23 +188,23 @@ export default function Habits() {
           </div>
 
           <ProgressBarDuolingo
-            level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
-            lastGain={xp.lastGain}
+            level={qxp.level}
+            xpInLevel={qxp.levelProgress.currentInLevel}
+            xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp}
+            xpToday={0}
+            streakDays={streak}
+            lastGain={qxp.lastGain}
           />
 
           {/* Level badge */}
           <div className="bg-card border border-border rounded-2xl p-3 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-xl">
-              {xp.levelBadge.emoji}
+              {qxp.badge.emoji}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-foreground">{xp.levelBadge.title}</p>
-              <p className="text-[11px] text-muted-foreground">Niveau {xp.level} · {xp.xpTotal} XP total</p>
+              <p className="text-sm font-semibold text-foreground">{qxp.badge.title}</p>
+              <p className="text-[11px] text-muted-foreground">Niveau {qxp.level} · {qxp.xp} XP total</p>
             </div>
           </div>
 
@@ -215,11 +215,11 @@ export default function Habits() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">
-                Streak : {xp.streakDays} jour{xp.streakDays > 1 ? "s" : ""} 🔥
+                Streak : {streak} jour{streak > 1 ? "s" : ""} 🔥
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {xp.streakDays >= 2 ? "+5 XP/jour de bonus · " : ""}
-                Prochain bonus 🎁 dans {xp.nextMilestone.daysRemaining} jour{xp.nextMilestone.daysRemaining > 1 ? "s" : ""} (+{xp.nextMilestone.bonus} XP)
+                {streak >= 2 ? "+5 XP/jour de bonus · " : ""}
+                Prochain bonus 🎁 dans {10 - (streak % 10)} jour{(10 - (streak % 10)) > 1 ? "s" : ""} (+50 XP)
               </p>
             </div>
           </div>
@@ -458,8 +458,8 @@ export default function Habits() {
         {/* XP Progress Bar */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <ProgressBarDuolingo
-            level={xp.level} xpInLevel={xp.xpInLevel} xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal} xpToday={xp.xpToday} streakDays={xp.streakDays} lastGain={xp.lastGain}
+            level={qxp.level} xpInLevel={qxp.levelProgress.currentInLevel} xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp} xpToday={0} streakDays={streak} lastGain={qxp.lastGain}
           />
         </motion.div>
 

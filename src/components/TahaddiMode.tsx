@@ -8,7 +8,7 @@ import {
 import type { Surah } from "@/data/surahs";
 import { useTahaddiSession, MAX_ATTEMPTS } from "@/hooks/useTahaddiSession";
 import { useVoiceRecognition, compareTexts } from "@/hooks/useVoiceRecognition";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import Confetti from "@/components/Confetti";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 
@@ -25,7 +25,7 @@ const THRESHOLDS = [85, 90, 95] as const;
 
 export default function TahaddiMode({ surah, onBack, isChildMode, t }: TahaddiModeProps) {
   const [screen, setScreen] = useState<Screen>("setup");
-  const { addXP } = useXP();
+  const { addXp } = useQuranXp();
 
   // Setup state
   const [ayahStart, setAyahStart] = useState(0);
@@ -74,7 +74,7 @@ export default function TahaddiMode({ surah, onBack, isChildMode, t }: TahaddiMo
   useEffect(() => {
     if (session.isFinished && session.summary) {
       if (session.summary.starsEarned >= 2) setShowConfetti(true);
-      addXP(session.summary.xpEarned);
+      addXp(session.summary.xpEarned, "tarteel_block_complete");
       setScreen("results");
     }
   }, [session.isFinished, session.summary]);

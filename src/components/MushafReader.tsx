@@ -16,7 +16,7 @@ import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useQuranHabits } from "@/hooks/useQuranHabits";
 import { calcReadingXP } from "@/lib/xpCalculator";
 import type { Surah } from "@/data/surahs";
@@ -44,7 +44,7 @@ export default function MushafReader({
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
   const habits = useQuranHabits();
   const [sessionXP, setSessionXP] = useState(0);
   const readAyahsRef = useRef<Set<number>>(new Set());
@@ -121,7 +121,7 @@ export default function MushafReader({
           readAyahsRef.current.add(ayahIdx);
           const earned = calcReadingXP(1);
           if (earned > 0) {
-            xp.addXP(earned);
+            xp.addXp(earned, "reading_ayah");
             setSessionXP(prev => prev + earned);
           }
           habits.addAyat(1);
@@ -224,7 +224,7 @@ export default function MushafReader({
             readAyahsRef.current.add(index);
             const earned = calcReadingXP(1);
             if (earned > 0) {
-              xp.addXP(earned);
+              xp.addXp(earned, "reading_ayah");
               setSessionXP(prev => prev + earned);
             }
             habits.addAyat(1);

@@ -9,7 +9,7 @@ import { localizeQuestion } from "@/data/quizI18n";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
@@ -121,7 +121,7 @@ export default function Quiz() {
   const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [quizXP, setQuizXP] = useState(0);
-  const xp = useXP();
+  const qxp = useQuranXp();
   const perfectChallenge = usePerfectChallenge();
   const questionStats = useQuestionStats();
   const xpAwardedRef = useRef(false);
@@ -318,7 +318,7 @@ export default function Quiz() {
 
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      if (totalXP > 0) xp.addXP(totalXP);
+      if (totalXP > 0) qxp.addXp(totalXP, "quiz_correct_answer");
       // Update daily quiz streak
       updateQuizStreak();
       // Submit to weekly perfect challenge if category is "perfect"
@@ -374,13 +374,13 @@ export default function Quiz() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="w-full max-w-xs mt-4">
           <ProgressBarDuolingo
-            level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
-            lastGain={xp.lastGain}
+            level={qxp.level}
+            xpInLevel={qxp.levelProgress.currentInLevel}
+            xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp}
+            xpToday={0}
+            streakDays={0}
+            lastGain={qxp.lastGain}
           />
         </motion.div>
 

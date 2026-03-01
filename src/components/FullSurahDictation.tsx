@@ -10,7 +10,7 @@ import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 
 // ─── Constants ──────────────────────────────────────────────
@@ -57,7 +57,7 @@ function hasWaqfMarker(text: string): string | null {
 export default function FullSurahDictation({ surah, onBack, isChildMode, onRequestNextSurah }: FullSurahDictationProps) {
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   // Blocks
   const blocks: BlockDef[] = useMemo(() => {
@@ -234,7 +234,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
     if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
       xpAwardedRef.current.add(xpKey);
-      xp.addXP(Math.max(1, Math.round(correctCount / 3)));
+      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     setPhase("feedback");

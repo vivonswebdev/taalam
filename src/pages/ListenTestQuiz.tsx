@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Headphones, Trophy } from "lucide-react";
 import { generateListenTestQuestions } from "@/lib/listenTestQuestions";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { surahs } from "@/data/surahs";
 import type { QuizQuestion } from "@/data/quizQuestions";
 
@@ -12,7 +12,7 @@ export default function ListenTestQuiz() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
-  const xp = useXP();
+  const xp = useQuranXp();
   const xpAwardedRef = useRef(false);
 
   const surahNum = Number(searchParams.get("surah")) || 1;
@@ -63,7 +63,7 @@ export default function ListenTestQuiz() {
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
       const xpGain = score * 4;
-      if (xpGain > 0) xp.addXP(xpGain);
+      if (xpGain > 0) xp.addXp(xpGain, "listen_test_quiz");
     }
 
     return (
