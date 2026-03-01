@@ -258,7 +258,7 @@ export default function Moods() {
                       <div className="px-4 pt-2 pb-1">
                         <h2 className="text-sm font-bold text-foreground">📿 {t("athkar.coreTitle" as any)}</h2>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 px-4 pb-2">
+                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-2">
                         {coreFiltered.map((g, i) => (
                           <motion.div
                             key={g.id}
