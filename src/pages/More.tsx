@@ -47,6 +47,11 @@ export default function More() {
   const { t } = useLanguage();
   const { mode } = useUserMode();
 
+  // SECTION – Communauté
+  const communityItems: MenuItem[] = [
+    { icon: "🌍", label: t("community.title" as any), desc: t("more.communityDesc" as any), path: "/community" },
+  ];
+
   // SECTION – Qur'an & pratique
   const quranItems: MenuItem[] = [
     { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
