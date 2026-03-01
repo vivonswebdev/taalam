@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { TOTAL_MUSHAF_PAGES, getSurahForPage, getJuzForPage, surahStartPage, juzStartPage } from "@/data/mushafPages";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
+import { getHizbMarkerAt, getSajdaAt, getHizbForPage, toArabicNum } from "@/data/hizbData";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,7 +39,7 @@ const FONT_SIZES = [
   { key: "large", value: 36, label: "Grand" },
 ];
 
-const DEFAULT_FONT_SIZE = 22; // "small" by default
+const DEFAULT_FONT_SIZE = 22;
 
 // ─── Ayah Medallion ───
 function AyahMedallion({ number, color, textColor }: { number: number; color: string; textColor: string }) {
@@ -49,8 +50,8 @@ function AyahMedallion({ number, color, textColor }: { number: number; color: st
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "28px",
-        height: "28px",
+        width: "26px",
+        height: "26px",
         borderRadius: "50%",
         backgroundColor: color,
         color: textColor,
@@ -58,13 +59,73 @@ function AyahMedallion({ number, color, textColor }: { number: number; color: st
         fontWeight: 700,
         fontFamily: "sans-serif",
         verticalAlign: "middle",
-        margin: "0 3px",
+        margin: "0 2px",
         boxShadow: `0 0 0 2px ${color}33, 0 1px 3px rgba(0,0,0,0.15)`,
         lineHeight: 1,
         flexShrink: 0,
       }}
     >
       {number}
+    </span>
+  );
+}
+
+// ─── Hizb Marker ───
+function HizbBadge({ label, frameColor, onClick }: { label: string; frameColor: string; onClick?: () => void }) {
+  return (
+    <span
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: "32px",
+        height: "24px",
+        borderRadius: "6px",
+        backgroundColor: frameColor,
+        color: "#fff",
+        fontSize: "9px",
+        fontWeight: 700,
+        fontFamily: "'Amiri', serif",
+        verticalAlign: "middle",
+        margin: "0 3px",
+        padding: "0 5px",
+        boxShadow: `0 1px 4px ${frameColor}60`,
+        cursor: onClick ? "pointer" : "default",
+        lineHeight: 1,
+        flexShrink: 0,
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+// ─── Sajda Marker ───
+function SajdaBadge({ frameColor, onClick }: { frameColor: string; onClick?: () => void }) {
+  return (
+    <span
+      onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "24px",
+        height: "24px",
+        borderRadius: "4px",
+        backgroundColor: "#d4382c",
+        color: "#fff",
+        fontSize: "11px",
+        fontWeight: 700,
+        verticalAlign: "middle",
+        margin: "0 2px",
+        cursor: onClick ? "pointer" : "default",
+        lineHeight: 1,
+        flexShrink: 0,
+      }}
+      title="سجدة التلاوة"
+    >
+      ۩
     </span>
   );
 }
@@ -99,7 +160,7 @@ function TajwidInlineText({
   );
 }
 
-// ─── Decorated mushaf content block (shared by cards + fullscreen) ───
+// ─── Decorated mushaf content block ───
 interface DecoratedContentProps {
   ayahs: { number: number; arabic: string; surahNumber: number }[];
   theme: typeof THEMES.cream;
@@ -107,9 +168,12 @@ interface DecoratedContentProps {
   tajwidEnabled: boolean;
   currentPage: number;
   currentJuz: number;
+  currentHizb: number;
   surahMeta: SurahMeta | undefined;
   t: (k: any) => string;
   fullscreen?: boolean;
+  onBookmarkHizb?: (surah: number, ayah: number, hizb: number, label: string) => void;
+  onBookmarkSajda?: (surah: number, ayah: number) => void;
 }
 
 function DecoratedMushafContent({
@@ -119,12 +183,15 @@ function DecoratedMushafContent({
   tajwidEnabled,
   currentPage,
   currentJuz,
+  currentHizb,
   surahMeta,
   t,
   fullscreen = false,
+  onBookmarkHizb,
+  onBookmarkSajda,
 }: DecoratedContentProps) {
   const outerPad = fullscreen ? "2px" : "4px";
-  const innerPad = fullscreen ? "12px 8px 16px" : "16px 12px 20px";
+  const innerPad = fullscreen ? "10px 8px 12px" : "12px 10px 14px";
 
   return (
     <div
@@ -141,7 +208,7 @@ function DecoratedMushafContent({
           borderRadius: "4px",
           padding: innerPad,
           backgroundColor: theme.bg,
-          minHeight: fullscreen ? "auto" : "60vh",
+          minHeight: fullscreen ? "auto" : "50vh",
           position: "relative",
         }}
       >
@@ -156,8 +223,8 @@ function DecoratedMushafContent({
                 position: "absolute",
                 [isTop ? "top" : "bottom"]: "-1px",
                 [isLeft ? "left" : "right"]: "-1px",
-                width: "20px",
-                height: "20px",
+                width: "18px",
+                height: "18px",
                 borderTop: isTop ? `2px solid ${theme.frame}` : "none",
                 borderBottom: !isTop ? `2px solid ${theme.frame}` : "none",
                 borderLeft: isLeft ? `2px solid ${theme.frame}` : "none",
@@ -169,30 +236,33 @@ function DecoratedMushafContent({
         })}
 
         {/* Page header inside frame */}
-        <div className="flex items-center justify-between mb-2 pb-1.5" style={{ borderBottom: `1px solid ${theme.frame}30` }}>
-          <span className="text-[10px] font-sans" style={{ color: `${theme.text}80` }}>
-            {t("mushaf.juz" as any)} {currentJuz}
+        <div className="flex items-center justify-between mb-1 pb-1" style={{ borderBottom: `1px solid ${theme.frame}30` }}>
+          <span className="text-[9px] font-sans" style={{ color: `${theme.text}80` }}>
+            {t("mushaf.juz" as any)} {currentJuz} · حزب {toArabicNum(currentHizb)}
           </span>
-          <span className="text-sm font-['Amiri','serif'] font-bold" style={{ color: theme.medallion }}>
+          <span className="text-xs font-['Amiri','serif'] font-bold" style={{ color: theme.medallion }}>
             {surahMeta?.nameArabic || ""}
           </span>
-          <span className="text-[10px] font-sans" style={{ color: `${theme.text}80` }}>
+          <span className="text-[9px] font-sans" style={{ color: `${theme.text}80` }}>
             {currentPage}
           </span>
         </div>
 
-        {/* Bismillah */}
+        {/* Bismillah - compact */}
         {ayahs.length > 0 && ayahs[0].number === 1 && ayahs[0].surahNumber !== 1 && ayahs[0].surahNumber !== 9 && (
-          <div className="text-center mb-3">
-            <div
-              className="inline-block px-5 py-1 rounded-full mb-1"
-              style={{ background: `linear-gradient(90deg, transparent, ${theme.frame}20, transparent)`, border: `1px solid ${theme.frame}40` }}
+          <div className="text-center mb-1">
+            <span
+              className="font-['Amiri','serif'] font-bold inline-block px-3 py-0.5 rounded-full"
+              style={{
+                fontSize: `${fontSize * 0.65}px`,
+                color: theme.medallion,
+                background: `linear-gradient(90deg, transparent, ${theme.frame}15, transparent)`,
+                border: `1px solid ${theme.frame}30`,
+              }}
             >
-              <span className="font-['Amiri','serif'] text-base font-bold" style={{ color: theme.medallion }}>
-                {surahMeta?.nameArabic}
-              </span>
-            </div>
-            <p className="font-['Amiri','serif'] text-sm" style={{ color: `${theme.text}cc` }} dir="rtl">
+              {surahMeta?.nameArabic}
+            </span>
+            <p className="font-['Amiri','serif']" style={{ fontSize: `${fontSize * 0.72}px`, color: `${theme.text}bb`, margin: "2px 0 4px" }} dir="rtl">
               بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
             </p>
           </div>
@@ -200,7 +270,7 @@ function DecoratedMushafContent({
 
         {/* Ayah text */}
         <div
-          className="font-['Amiri','Scheherazade_New','serif'] leading-[2.4]"
+          className="font-['Amiri','Scheherazade_New','serif'] leading-[2.2]"
           dir="rtl"
           style={{
             fontSize: `${fontSize}px`,
@@ -210,19 +280,36 @@ function DecoratedMushafContent({
             wordSpacing: "3px",
           }}
         >
-          {ayahs.map((a) => (
-            <span key={`${a.surahNumber}-${a.number}`}>
-              <TajwidInlineText text={a.arabic} tajwidEnabled={tajwidEnabled} textColor={theme.text} />
-              {" "}
-              <AyahMedallion number={a.number} color={theme.medallion} textColor={theme.medallionText} />
-              {" "}
-            </span>
-          ))}
+          {ayahs.map((a) => {
+            const hizbMarker = getHizbMarkerAt(a.surahNumber, a.number);
+            const sajdaMarker = getSajdaAt(a.surahNumber, a.number);
+            return (
+              <span key={`${a.surahNumber}-${a.number}`}>
+                {hizbMarker && (
+                  <HizbBadge
+                    label={hizbMarker.label}
+                    frameColor={theme.frame}
+                    onClick={() => onBookmarkHizb?.(a.surahNumber, a.number, hizbMarker.hizb, hizbMarker.label)}
+                  />
+                )}
+                <TajwidInlineText text={a.arabic} tajwidEnabled={tajwidEnabled} textColor={theme.text} />
+                {" "}
+                <AyahMedallion number={a.number} color={theme.medallion} textColor={theme.medallionText} />
+                {sajdaMarker && (
+                  <SajdaBadge
+                    frameColor={theme.frame}
+                    onClick={() => onBookmarkSajda?.(a.surahNumber, a.number)}
+                  />
+                )}
+                {" "}
+              </span>
+            );
+          })}
         </div>
 
         {/* Page footer */}
-        <div className="flex items-center justify-center mt-3 pt-1.5" style={{ borderTop: `1px solid ${theme.frame}30` }}>
-          <span className="text-[10px] font-sans" style={{ color: `${theme.text}60` }}>— {currentPage} —</span>
+        <div className="flex items-center justify-center mt-2 pt-1" style={{ borderTop: `1px solid ${theme.frame}30` }}>
+          <span className="text-[9px] font-sans" style={{ color: `${theme.text}60` }}>— {currentPage} —</span>
         </div>
       </div>
     </div>
@@ -234,12 +321,10 @@ function useScreenChunks(
   ayahs: { number: number; arabic: string; surahNumber: number }[],
   fontSize: number,
 ) {
-  // Estimate how many ayahs fit per screen based on font size
-  // Rough heuristic: bigger font = fewer ayahs per screen
   const ayahsPerScreen = useMemo(() => {
     if (fontSize >= 36) return 4;
     if (fontSize >= 28) return 6;
-    return 10; // small font
+    return 10;
   }, [fontSize]);
 
   const chunks = useMemo(() => {
@@ -327,6 +412,7 @@ function FullscreenMushafView({
   tajwidEnabled,
   currentPage,
   currentJuz,
+  currentHizb,
   surahMeta,
   onBack,
   onPrev,
@@ -334,6 +420,8 @@ function FullscreenMushafView({
   hasPrev,
   hasNext,
   t,
+  onBookmarkHizb,
+  onBookmarkSajda,
 }: {
   ayahs: { number: number; arabic: string; surahNumber: number }[];
   theme: typeof THEMES.cream;
@@ -341,6 +429,7 @@ function FullscreenMushafView({
   tajwidEnabled: boolean;
   currentPage: number;
   currentJuz: number;
+  currentHizb: number;
   surahMeta: SurahMeta | undefined;
   onBack: () => void;
   onPrev: () => void;
@@ -348,12 +437,13 @@ function FullscreenMushafView({
   hasPrev: boolean;
   hasNext: boolean;
   t: (k: any) => string;
+  onBookmarkHizb?: (surah: number, ayah: number, hizb: number, label: string) => void;
+  onBookmarkSajda?: (surah: number, ayah: number) => void;
 }) {
   const [chromeVisible, setChromeVisible] = useState(true);
   const chunks = useScreenChunks(ayahs, fontSize);
   const [screenIdx, setScreenIdx] = useState(0);
 
-  // Reset screen index when page changes
   useEffect(() => { setScreenIdx(0); }, [currentPage]);
 
   const currentChunk = chunks[screenIdx] || [];
@@ -390,9 +480,12 @@ function FullscreenMushafView({
                 tajwidEnabled={tajwidEnabled}
                 currentPage={currentPage}
                 currentJuz={currentJuz}
+                currentHizb={currentHizb}
                 surahMeta={surahMeta}
                 t={t}
                 fullscreen
+                onBookmarkHizb={onBookmarkHizb}
+                onBookmarkSajda={onBookmarkSajda}
               />
             </div>
           </motion.div>
@@ -419,7 +512,7 @@ function FullscreenMushafView({
                 <div className="flex-1 text-center">
                   <p className="font-['Amiri','serif'] text-sm" style={{ color: theme.text }}>{surahMeta?.nameArabic || ""}</p>
                   <p className="text-[10px]" style={{ color: `${theme.text}80` }}>
-                    {t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz}
+                    {t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz} · حزب {toArabicNum(currentHizb)}
                     {totalScreens > 1 && ` — ${screenIdx + 1}/${totalScreens}`}
                   </p>
                 </div>
@@ -433,9 +526,9 @@ function FullscreenMushafView({
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
-                <button onClick={goPrevScreen} disabled={screenIdx === 0 && !hasPrev} className="p-2 disabled:opacity-20" style={{ color: theme.text }}>←</button>
-                <span className="text-[10px]" style={{ color: `${theme.text}60` }}>{t("mushaf.tipTap" as any)}</span>
                 <button onClick={goNextScreen} disabled={screenIdx >= totalScreens - 1 && !hasNext} className="p-2 disabled:opacity-20" style={{ color: theme.text }}>→</button>
+                <span className="text-[10px]" style={{ color: `${theme.text}60` }}>{t("mushaf.tipTap" as any)}</span>
+                <button onClick={goPrevScreen} disabled={screenIdx === 0 && !hasPrev} className="p-2 disabled:opacity-20" style={{ color: theme.text }}>←</button>
               </div>
             </motion.div>
           </>
@@ -447,7 +540,7 @@ function FullscreenMushafView({
 
 // ─── Main MushafPage ───
 export default function MushafPage() {
-  const { t, isRTL } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -462,9 +555,8 @@ export default function MushafPage() {
   const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
     try {
       const saved = localStorage.getItem(READING_STYLE_KEY) as ReadingStyle;
-      // migrate old "mushaf" PNG mode to new "cards"
-      if (saved === "mushaf") return "cards";
-      return saved || "cards";
+      if (saved === "mushaf" || saved === "cards" || saved === "immersive") return saved;
+      return "cards";
     } catch { return "cards"; }
   });
   const [fontSize, setFontSize] = useState(() => {
@@ -568,6 +660,35 @@ export default function MushafPage() {
     await loadBookmarks();
   };
 
+  // Bookmark hizb position
+  const bookmarkHizb = useCallback(async (surah: number, ayah: number, hizb: number, label: string) => {
+    if (!user) { toast(t("mushaf.loginRequired" as any)); return; }
+    await supabase.from("mushaf_bookmarks").insert({
+      user_id: user.id,
+      page_number: currentPage,
+      surah_number: surah,
+      ayah_key: `${surah}:${ayah}`,
+      note: `${label}`,
+    });
+    toast.success(`${label} — Position sauvegardée ⭐`);
+    await loadBookmarks();
+  }, [user, currentPage, loadBookmarks, t]);
+
+  // Bookmark sajda position
+  const bookmarkSajda = useCallback(async (surah: number, ayah: number) => {
+    if (!user) { toast(t("mushaf.loginRequired" as any)); return; }
+    await supabase.from("mushaf_bookmarks").insert({
+      user_id: user.id,
+      page_number: currentPage,
+      surah_number: surah,
+      ayah_key: `${surah}:${ayah}`,
+      note: `سجدة التلاوة — ${surah}:${ayah}`,
+    });
+    toast.success("سجدة التلاوة — Position sauvegardée ⭐");
+    await loadBookmarks();
+  }, [user, currentPage, loadBookmarks, t]);
+
+  // FIXED: Simple page navigation, no RTL flipping
   const goTo = useCallback((page: number) => {
     const p = Math.max(1, Math.min(TOTAL_MUSHAF_PAGES, page));
     if (p !== currentPage) {
@@ -576,6 +697,9 @@ export default function MushafPage() {
     }
   }, [currentPage, pageSoundEnabled]);
 
+  const goToPrevPage = useCallback(() => { goTo(currentPage - 1); }, [goTo, currentPage]);
+  const goToNextPage = useCallback(() => { goTo(currentPage + 1); }, [goTo, currentPage]);
+
   const changeStyle = (style: ReadingStyle) => {
     setReadingStyle(style);
     localStorage.setItem(READING_STYLE_KEY, style);
@@ -583,6 +707,7 @@ export default function MushafPage() {
 
   const currentSurahNum = getSurahForPage(currentPage);
   const currentJuz = getJuzForPage(currentPage);
+  const currentHizb = getHizbForPage(currentPage);
   const currentSurahMeta = surahList.find((s) => s.number === currentSurahNum);
 
   // ─── Fullscreen decorated mushaf ───
@@ -595,13 +720,16 @@ export default function MushafPage() {
         tajwidEnabled={tajwidEnabled}
         currentPage={currentPage}
         currentJuz={currentJuz}
+        currentHizb={currentHizb}
         surahMeta={currentSurahMeta}
         onBack={() => changeStyle("cards")}
-        onPrev={() => goTo(currentPage - 1)}
-        onNext={() => goTo(currentPage + 1)}
+        onPrev={goToPrevPage}
+        onNext={goToNextPage}
         hasPrev={currentPage > 1}
         hasNext={currentPage < TOTAL_MUSHAF_PAGES}
         t={t}
+        onBookmarkHizb={bookmarkHizb}
+        onBookmarkSajda={bookmarkSajda}
       />
     );
   }
@@ -625,13 +753,12 @@ export default function MushafPage() {
   const currentChunk = chunks[screenIdx] || ayahs;
   const totalScreens = chunks.length;
 
+  // Screen nav: only changes screenIdx, never changes page
   const goPrevScreen = () => {
-    if (screenIdx > 0) { setScreenIdx(screenIdx - 1); }
-    else if (currentPage > 1) { goTo(isRTL ? currentPage + 1 : currentPage - 1); }
+    if (screenIdx > 0) setScreenIdx(screenIdx - 1);
   };
   const goNextScreen = () => {
-    if (screenIdx < totalScreens - 1) { setScreenIdx(screenIdx + 1); }
-    else if (currentPage < TOTAL_MUSHAF_PAGES) { goTo(isRTL ? currentPage - 1 : currentPage + 1); }
+    if (screenIdx < totalScreens - 1) setScreenIdx(screenIdx + 1);
   };
 
   return (
@@ -647,7 +774,7 @@ export default function MushafPage() {
           </button>
           <div className="text-center flex-1 min-w-0">
             <p className="text-[10px] truncate" style={{ color: `${theme.text}99` }}>
-              {t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz}
+              {t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz} · حزب {toArabicNum(currentHizb)}
               {totalScreens > 1 && ` — ${screenIdx + 1}/${totalScreens}`}
             </p>
             <p className="text-sm font-semibold font-['Amiri','serif'] truncate" style={{ color: theme.text }}>
@@ -846,7 +973,7 @@ export default function MushafPage() {
       </div>
 
       {/* ═══ DECORATED MUSHAF CONTENT ═══ */}
-      <div className="px-2 py-3">
+      <div className="px-2 py-2">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -867,23 +994,26 @@ export default function MushafPage() {
                 tajwidEnabled={tajwidEnabled}
                 currentPage={currentPage}
                 currentJuz={currentJuz}
+                currentHizb={currentHizb}
                 surahMeta={currentSurahMeta}
                 t={t}
+                onBookmarkHizb={bookmarkHizb}
+                onBookmarkSajda={bookmarkSajda}
               />
             </motion.div>
           </AnimatePresence>
         )}
       </div>
 
-      {/* Navigation bar */}
+      {/* Navigation bar - FIXED: ← always = page-1, → always = page+1, ▲▼ only screen */}
       <div className="fixed bottom-16 left-0 right-0 flex justify-center z-10 px-4">
         <div
           className="backdrop-blur rounded-full px-3 py-1.5 flex items-center gap-3 shadow-lg w-full max-w-sm"
           style={{ backgroundColor: `${theme.bg}ee`, border: `1px solid ${theme.frame}40` }}
         >
           <button
-            onClick={() => goTo(isRTL ? currentPage + 1 : currentPage - 1)}
-            disabled={isRTL ? currentPage >= TOTAL_MUSHAF_PAGES : currentPage <= 1}
+            onClick={goToPrevPage}
+            disabled={currentPage <= 1}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowLeft size={20} style={{ color: theme.text }} />
@@ -903,8 +1033,8 @@ export default function MushafPage() {
           )}
 
           <button
-            onClick={() => goTo(isRTL ? currentPage - 1 : currentPage + 1)}
-            disabled={isRTL ? currentPage <= 1 : currentPage >= TOTAL_MUSHAF_PAGES}
+            onClick={goToNextPage}
+            disabled={currentPage >= TOTAL_MUSHAF_PAGES}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowRight size={20} style={{ color: theme.text }} />
