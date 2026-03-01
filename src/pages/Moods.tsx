@@ -278,7 +278,7 @@ export default function Moods() {
                         <h2 className="text-sm font-bold text-foreground">🗂️ {t("athkar.situationsTitle" as any)}</h2>
                         <p className="text-[10px] text-muted-foreground mt-0.5">{t("athkar.situationsSubtitle" as any)}</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
                         {situationFiltered.map((g, i) => (
                           <motion.div
                             key={g.id}
