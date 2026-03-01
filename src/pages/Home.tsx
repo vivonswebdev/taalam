@@ -78,6 +78,7 @@ export default function Home() {
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const { isChildMode } = useChildMode();
+  const { mode: userMode, ageGroup } = useUserMode();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
