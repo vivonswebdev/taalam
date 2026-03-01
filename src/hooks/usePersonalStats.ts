@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useQuranHabits } from "@/hooks/useQuranHabits";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useListeningStats } from "@/hooks/useListeningStats";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 
 export function usePersonalStats() {
   const { last30Days, streak } = useQuranHabits();
