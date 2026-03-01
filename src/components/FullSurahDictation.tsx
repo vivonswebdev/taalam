@@ -10,7 +10,7 @@ import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 
 // ─── Constants ──────────────────────────────────────────────
