@@ -1042,7 +1042,7 @@ export default function MushafPage() {
 
           <button
             onClick={goToNextPage}
-            disabled={currentPage >= TOTAL_MUSHAF_PAGES}
+            disabled={currentSurahForNav >= 114}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowRight size={20} style={{ color: theme.text }} />
