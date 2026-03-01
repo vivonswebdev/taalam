@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Badge } from "@/components/ui/badge";
 import type { StudentStats } from "@/hooks/useTeacherDashboard";
