@@ -159,6 +159,7 @@ const App = () => (
               <Route path="/kids-asma-hunt" element={<KidsAsmaHuntPage />} />
               <Route path="/kids-prophet-game" element={<KidsProphetStoryGamePage />} />
               <Route path="/crush" element={<CoranCrush />} />
+              <Route path="/kids-memory-faith" element={<MemoryFaithPage />} />
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
