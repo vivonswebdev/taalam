@@ -197,7 +197,7 @@ export default function Moods() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-2 gap-3 p-4"
+            className="grid grid-cols-3 gap-2.5 p-4"
           >
             {maladiesPresets.map((m, i) => (
               <motion.div
