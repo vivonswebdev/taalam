@@ -14,6 +14,7 @@ import AssignmentsPanel from "@/components/teacher/AssignmentsPanel";
 import TaskKanban from "@/components/teacher/TaskKanban";
 import TeacherStatsSection from "@/components/TeacherStatsSection";
 import TeacherMessaging from "@/components/teacher/TeacherMessaging";
+import StudentTaskBoard from "@/components/teacher/StudentTaskBoard";
 
 interface TeacherClass {
   id: string;
@@ -123,6 +124,8 @@ export default function TeacherDashboardPage() {
             toggleAssignment={toggleAssignment}
             deleteAssignment={deleteAssignment}
           />
+
+          <StudentTaskBoard classId={selectedClassId} students={students.map(s => ({ userId: s.userId, displayName: s.displayName, avatarEmoji: s.avatarEmoji }))} />
 
           <TaskKanban
             submissions={submissions}

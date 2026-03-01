@@ -2328,6 +2328,25 @@ const translations = {
   "messaging.report": { fr: "Rapport", en: "Report", nl: "Rapport", ar: "تقرير", tr: "Rapor", ur: "رپورٹ" },
   "messaging.assignmentApproved": { fr: "✅ Le devoir \"{title}\" a été validé. Bravo !", en: "✅ Assignment \"{title}\" has been approved. Well done!", nl: "✅ Opdracht \"{title}\" is goedgekeurd. Goed gedaan!", ar: "✅ تمت الموافقة على الواجب \"{title}\". أحسنت!", tr: "✅ \"{title}\" ödevi onaylandı. Aferin!", ur: "✅ اسائنمنٹ \"{title}\" منظور ہو گئی۔ شاباش!" },
   "messaging.assignmentRejected": { fr: "❌ Le devoir \"{title}\" nécessite une correction.", en: "❌ Assignment \"{title}\" needs correction.", nl: "❌ Opdracht \"{title}\" moet worden gecorrigeerd.", ar: "❌ الواجب \"{title}\" يحتاج إلى تصحيح.", tr: "❌ \"{title}\" ödevi düzeltme gerektiriyor.", ur: "❌ اسائنمنٹ \"{title}\" میں اصلاح کی ضرورت ہے۔" },
+  // Student Tasks
+  "tasks.title": { fr: "Tâches élèves", en: "Student Tasks", nl: "Leerlingtaken", ar: "مهام الطلاب", tr: "Öğrenci Görevleri", ur: "طالب علم کے کام" },
+  "tasks.myTasks": { fr: "Mes tâches", en: "My Tasks", nl: "Mijn taken", ar: "مهامي", tr: "Görevlerim", ur: "میرے کام" },
+  "tasks.pending": { fr: "En attente", en: "Pending", nl: "In afwachting", ar: "قيد الانتظار", tr: "Bekleyen", ur: "زیر التواء" },
+  "tasks.completed": { fr: "Terminé", en: "Completed", nl: "Voltooid", ar: "مكتمل", tr: "Tamamlandı", ur: "مکمل" },
+  "tasks.selectStudent": { fr: "Sélectionner un élève", en: "Select a student", nl: "Selecteer een leerling", ar: "اختر طالبًا", tr: "Bir öğrenci seçin", ur: "ایک طالب علم منتخب کریں" },
+  "tasks.selectSurah": { fr: "Choisir une sourate", en: "Choose a surah", nl: "Kies een soera", ar: "اختر سورة", tr: "Bir sure seçin", ur: "ایک سورت منتخب کریں" },
+  "tasks.ayahFrom": { fr: "Ayah début", en: "From ayah", nl: "Van ayah", ar: "من الآية", tr: "Başlangıç ayeti", ur: "آیت سے" },
+  "tasks.ayahTo": { fr: "Ayah fin", en: "To ayah", nl: "Tot ayah", ar: "إلى الآية", tr: "Bitiş ayeti", ur: "آیت تک" },
+  "tasks.taskTitle": { fr: "Titre de la tâche", en: "Task title", nl: "Taak titel", ar: "عنوان المهمة", tr: "Görev başlığı", ur: "کام کا عنوان" },
+  "tasks.descriptionOpt": { fr: "Description (optionnel)", en: "Description (optional)", nl: "Beschrijving (optioneel)", ar: "الوصف (اختياري)", tr: "Açıklama (isteğe bağlı)", ur: "تفصیل (اختیاری)" },
+  "tasks.assign": { fr: "Assigner", en: "Assign", nl: "Toewijzen", ar: "تعيين", tr: "Ata", ur: "تفویض کریں" },
+  "tasks.created": { fr: "Tâche créée", en: "Task created", nl: "Taak aangemaakt", ar: "تم إنشاء المهمة", tr: "Görev oluşturuldu", ur: "کام بنایا گیا" },
+  "tasks.noPending": { fr: "Aucune tâche en attente", en: "No pending tasks", nl: "Geen openstaande taken", ar: "لا توجد مهام معلقة", tr: "Bekleyen görev yok", ur: "کوئی زیر التواء کام نہیں" },
+  "tasks.noCompleted": { fr: "Aucune tâche terminée", en: "No completed tasks", nl: "Geen voltooide taken", ar: "لا توجد مهام مكتملة", tr: "Tamamlanan görev yok", ur: "کوئی مکمل کام نہیں" },
+  "tasks.type_hifz": { fr: "Hifz", en: "Hifz", nl: "Hifz", ar: "حفظ", tr: "Hıfız", ur: "حفظ" },
+  "tasks.type_revision": { fr: "Révision", en: "Revision", nl: "Revisie", ar: "مراجعة", tr: "Tekrar", ur: "مراجعہ" },
+  "tasks.type_recitation": { fr: "Récitation", en: "Recitation", nl: "Recitatie", ar: "تلاوة", tr: "Tilavet", ur: "تلاوت" },
+  "tasks.type_other": { fr: "Autre", en: "Other", nl: "Overig", ar: "أخرى", tr: "Diğer", ur: "دیگر" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

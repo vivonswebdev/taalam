@@ -11,6 +11,7 @@ import { useWeeklyChallenge } from "@/hooks/useWeeklyChallenge";
 import { useStudentAssignments } from "@/hooks/useStudentAssignments";
 import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
+import StudentTaskKanban from "@/components/StudentTaskKanban";
 import { surahs } from "@/data/surahs";
 import WeeklyChallengeCard from "@/components/WeeklyChallengeCard";
 import { formatDistanceToNow } from "date-fns";
@@ -457,7 +458,9 @@ export default function ClassroomDetail() {
             </div>
           )}
 
-          {/* Past challenges history */}
+          {/* Student Task Kanban */}
+          {!isTeacherFinal && <StudentTaskKanban />}
+
           {pastChallenges.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-muted-foreground">

@@ -1307,6 +1307,68 @@ export type Database = {
         }
         Relationships: []
       }
+      student_tasks: {
+        Row: {
+          assigned_by: string
+          ayah_from: number | null
+          ayah_to: number | null
+          class_id: string
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          status: string
+          student_id: string
+          surah_number: number | null
+          task_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by: string
+          ayah_from?: number | null
+          ayah_to?: number | null
+          class_id: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          status?: string
+          student_id: string
+          surah_number?: number | null
+          task_type?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string
+          ayah_from?: number | null
+          ayah_to?: number | null
+          class_id?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          status?: string
+          student_id?: string
+          surah_number?: number | null
+          task_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_tasks_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_submissions: {
         Row: {
           assignment_id: string
