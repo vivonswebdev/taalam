@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, Radio, BarChart3, Settings, User, Brain, Star, Users, ChevronRight, BookOpen, Trophy, Search, Headphones, Baby, GraduationCap, HelpCircle, Bell } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
 import { ModeSelector } from "@/components/ModeSelector";
 
 interface MenuItem {
-  icon: React.ReactNode;
+  icon: string;
   label: string;
   desc?: string;
   path: string;
@@ -15,12 +15,18 @@ interface MenuItem {
 function MenuSection({ title, items }: { title: string; items: MenuItem[] }) {
   const navigate = useNavigate();
   return (
-    <div className="space-y-1">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1 mb-2">{title}</p>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-1.5"
+    >
+      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
+        {title}
+      </p>
       <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
         {items.map((item) => (
           <button
-            key={item.path}
+            key={item.path + item.label}
             onClick={() => navigate(item.path)}
             className="w-full flex items-center gap-3.5 px-4 py-3.5 text-left hover:bg-accent/40 transition-colors active:scale-[0.99]"
           >
@@ -33,61 +39,69 @@ function MenuSection({ title, items }: { title: string; items: MenuItem[] }) {
           </button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function More() {
   const { t } = useLanguage();
-  const { mode, ageGroup } = useUserMode();
+  const { mode } = useUserMode();
 
-  const childSection: MenuItem[] = [
-    { icon: "🧩", label: t("home.kidsSpace" as any), desc: t("home.kidsSpaceDesc" as any), path: "/kids" },
-    { icon: <Baby size={20} className="text-primary" />, label: t("settings.childMode"), desc: t("settings.childModeDesc"), path: "/settings" },
-    { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
-    { icon: "🕌", label: t("more.kidsPrayer" as any), desc: t("more.kidsPrayerDesc" as any), path: "/kids-prayer" },
-    { icon: "🕋", label: t("home.kidsHajj" as any), desc: t("home.kidsHajjDesc" as any), path: "/kids-hajj" },
-    { icon: "🕌", label: t("home.kidsMosque" as any), desc: t("home.kidsMosqueDesc" as any), path: "/kids-mosque-map" },
+  // SECTION 2 – Communauté
+  const communityItems: MenuItem[] = [
+    { icon: "🌍", label: t("community.title" as any), desc: t("more.communityDesc" as any), path: "/community" },
   ];
 
-  const communitySection: MenuItem[] = [
-    { icon: "🌍", label: t("community.title" as any), desc: t("community.menuDesc" as any), path: "/community" },
-  ];
-
-  const quranSection: MenuItem[] = [
+  // SECTION 3 – Qur'an & pratique
+  const quranItems: MenuItem[] = [
     { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
     { icon: "📿", label: t("more.athkar" as any), desc: t("more.athkarDesc" as any), path: "/moods" },
-    { icon: <Clock size={20} className="text-primary" />, label: t("more.prayerTimes"), desc: t("more.prayerTimesDesc"), path: "/prayers" },
-    { icon: <Radio size={20} className="text-green-500" />, label: t("more.liveQuran"), desc: t("more.liveQuranDesc"), path: "/live-quran" },
-    { icon: <Search size={20} className="text-indigo-500" />, label: t("more.findAyah"), desc: t("more.findAyahDesc"), path: "/find-ayah" },
-    { icon: <Trophy size={20} className="text-amber-500" />, label: t("more.ranking"), desc: t("more.rankingDesc"), path: "/leaderboard" },
-    { icon: <BookOpen size={20} className="text-teal-500" />, label: t("more.juzHizb"), desc: t("more.juzHizbDesc"), path: "/juz" },
-    { icon: <Headphones size={20} className="text-cyan-500" />, label: t("more.advancedListening"), desc: t("more.advancedListeningDesc"), path: "/listening" },
+    { icon: "🕋", label: t("more.prayerTimes"), desc: t("more.prayerTimesDesc"), path: "/prayers" },
+    { icon: "📡", label: t("more.liveQuran"), desc: t("more.liveQuranDesc"), path: "/live-quran" },
+    { icon: "🔍", label: t("more.findAyah"), desc: t("more.findAyahDesc"), path: "/find-ayah" },
+    { icon: "🧮", label: t("more.juzHizb"), desc: t("more.juzHizbDesc"), path: "/juz" },
+    { icon: "🎧", label: t("more.advancedListening" as any), desc: t("more.advancedListeningDesc" as any), path: "/listening" },
   ];
 
-  const accountSection: MenuItem[] = [
-    { icon: <Settings size={20} className="text-muted-foreground" />, label: t("nav.settings"), desc: t("more.settingsDesc"), path: "/settings" },
-    { icon: <BarChart3 size={20} className="text-primary" />, label: t("more.habitsProgress"), desc: t("more.habitsDesc"), path: "/habits" },
-    { icon: <User size={20} className="text-blue-500" />, label: t("more.loginProfile"), path: "/auth" },
-    { icon: <HelpCircle size={20} className="text-muted-foreground" />, label: t("more.helpFaq" as any), desc: t("more.helpFaqDesc" as any), path: "/faq" },
-    { icon: <Bell size={20} className="text-primary" />, label: t("more.notifications" as any), desc: t("more.notificationsDesc" as any), path: "/notification-settings" },
+  // SECTION 4 – Progression & gamification
+  const progressItems: MenuItem[] = [
+    { icon: "🏆", label: t("more.ranking"), desc: t("more.rankingDesc"), path: "/leaderboard" },
+    { icon: "🎯", label: t("more.habitsProgress"), desc: t("more.habitsDesc"), path: "/habits" },
+  ];
+
+  // SECTION 5 – Compte & réglages
+  const accountItems: MenuItem[] = [
+    { icon: "⚙️", label: t("nav.settings"), desc: t("more.settingsDesc"), path: "/settings" },
+    { icon: "👤", label: t("more.loginProfile"), path: "/auth" },
+    { icon: "🔔", label: t("more.notifications" as any), desc: t("more.notificationsDesc" as any), path: "/notification-settings" },
+    { icon: "❓", label: t("more.helpFaq" as any), desc: t("more.helpFaqDesc" as any), path: "/faq" },
+  ];
+
+  // SECTION 6 – Modules d'étude
+  const modulesItems: MenuItem[] = [
+    { icon: "🧠", label: t("more.hifzPlan"), desc: t("more.hifzPlanDesc"), path: "/hifz-plan" },
+    { icon: "🔁", label: t("more.hifzSrs" as any), desc: t("more.hifzSrsDesc" as any), path: "/hifz-today" },
+    { icon: "📚", label: t("more.studyMode"), desc: t("more.studyModeDesc"), path: "/study?surah=1" },
+    { icon: "📖", label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
+    { icon: "🔖", label: t("more.bookmarks"), desc: t("more.bookmarksDesc"), path: "/bookmarks" },
+    { icon: "⭐", label: t("more.favoritesNotes" as any), desc: t("more.favoritesNotesDesc" as any), path: "/favorites-notes" },
+  ];
+
+  // SECTION 7 – Famille & classes
+  const familyItems: MenuItem[] = [
+    { icon: "👨‍👩‍👧", label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
+    { icon: "👨‍🏫", label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
+    { icon: "📊", label: t("more.teacherDashboard" as any), desc: t("more.teacherDashboardDesc" as any), path: "/teacher-dashboard" },
+  ];
+
+  // SECTION 8 – Installer l'app
+  const installItems: MenuItem[] = [
     { icon: "📲", label: t("more.installApp" as any), desc: t("more.installAppDesc" as any), path: "/install-app" },
-  ];
-
-  const modulesSection: MenuItem[] = [
-    { icon: <Brain size={20} className="text-purple-500" />, label: t("more.hifzPlan"), desc: t("more.hifzPlanDesc"), path: "/hifz-plan" },
-    { icon: "🧠", label: "Hifz SRS", desc: "Répétition espacée intelligente", path: "/hifz-today" },
-    { icon: <BookOpen size={20} className="text-emerald-500" />, label: t("more.studyMode"), desc: t("more.studyModeDesc"), path: "/study?surah=1" },
-    { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
-    { icon: <Star size={20} className="text-yellow-500" />, label: t("more.bookmarks"), desc: t("more.bookmarksDesc"), path: "/bookmarks" },
-    { icon: "⭐", label: "Favoris & Notes", desc: "Vos versets préférés et annotations", path: "/favorites-notes" },
-    { icon: <Users size={20} className="text-pink-500" />, label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
-    { icon: <Users size={20} className="text-indigo-500" />, label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
-    { icon: <GraduationCap size={20} className="text-emerald-600" />, label: t("teacher.dashboard" as any), desc: t("teacher.dashboardDesc" as any), path: "/teacher-dashboard" },
   ];
 
   return (
     <div className="min-h-screen pb-24">
+      {/* Header */}
       <div className="px-6 pt-14 pb-2">
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
           {t("more.title")}
@@ -95,13 +109,32 @@ export default function More() {
         <p className="text-sm text-muted-foreground mt-0.5">{t("more.subtitle")}</p>
       </div>
 
-      <div className="px-5 pt-4 space-y-5">
+      <div className="px-5 pt-4 space-y-6">
+        {/* SECTION 1 – Mon rôle */}
         <ModeSelector />
-        <MenuSection title="🌍 Communauté" items={communitySection} />
-        {(mode === "child" || mode === "solo") && <MenuSection title={t("more.sectionChild" as any)} items={childSection} />}
-        <MenuSection title={t("more.sectionQuran")} items={quranSection} />
-        <MenuSection title={t("more.sectionAccount")} items={accountSection} />
-        <MenuSection title={t("more.sectionModules")} items={modulesSection} />
+
+        {/* SECTION 2 – Communauté */}
+        <MenuSection title={t("more.sectionCommunity" as any)} items={communityItems} />
+
+        {/* SECTION 3 – Qur'an & pratique */}
+        <MenuSection title={t("more.sectionQuranPractice" as any)} items={quranItems} />
+
+        {/* SECTION 4 – Progression */}
+        <MenuSection title={t("more.sectionProgress" as any)} items={progressItems} />
+
+        {/* SECTION 5 – Compte & réglages */}
+        <MenuSection title={t("more.sectionAccountSettings" as any)} items={accountItems} />
+
+        {/* SECTION 6 – Modules */}
+        <MenuSection title={t("more.sectionStudyModules" as any)} items={modulesItems} />
+
+        {/* SECTION 7 – Famille & classes */}
+        {(mode === "teacher" || mode === "parent" || mode === "solo") && (
+          <MenuSection title={t("more.sectionFamily" as any)} items={familyItems} />
+        )}
+
+        {/* SECTION 8 – Installer */}
+        <MenuSection title={t("more.sectionInstall" as any)} items={installItems} />
       </div>
     </div>
   );
