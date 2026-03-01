@@ -164,7 +164,7 @@ export default function Moods() {
 
 
             {/* All moods in unified grid */}
-            <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+            <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
               {allMoods.map((mood, i) => {
                 const titleKey = `mood.${mood.id}` as any;
                 const subKey = `mood.${mood.id}.sub` as any;
