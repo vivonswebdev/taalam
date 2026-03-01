@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Headphones, Trophy } from "lucide-react";
 import { generateListenTestQuestions } from "@/lib/listenTestQuestions";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { surahs } from "@/data/surahs";
 import type { QuizQuestion } from "@/data/quizQuestions";
 
