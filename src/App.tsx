@@ -54,6 +54,7 @@ import KidsDuasPage from "./pages/KidsDuasPage";
 import KidsProphetStoriesPage from "./pages/KidsProphetStoriesPage";
 import KidsProphetStoryDetail from "./pages/KidsProphetStoryDetail";
 import KidsQuizPage from "./pages/KidsQuizPage";
+import KidsSheytanGame from "./pages/KidsSheytanGame";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
