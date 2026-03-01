@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Lang = "fr" | "en" | "nl" | "ar" | "tr" | "ur";
 
