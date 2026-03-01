@@ -200,14 +200,13 @@ export const PROPHET_STORY_SCRIPTS: ProphetStoryScript[] = [
         choices: [{ label: { fr: "Continuer l'histoire", en: "Continue", ar: "تابع", nl: "Ga verder", tr: "Devam et", ur: "جاری رکھیں" }, nextSceneId: "s2" }],
       },
       {
-        id: "s2", emoji: "😢", illustration: "story-yusuf-coat",
+        id: "s2", emoji: "😢", illustration: "story-yusuf-well",
         text: {
           fr: "Hélas, ses frères étaient très jaloux de Youssouf car leur père l'aimait beaucoup. Un jour, ils l'emmenèrent loin de la maison et le jetèrent dans un puits profond ! Ils rapportèrent sa belle tunique tachée de faux sang à leur père.",
           en: "Sadly, his brothers were very jealous because their father loved Yusuf so much. One day, they took him far from home and threw him into a deep well! They brought his beautiful coat stained with fake blood to their father.",
           ar: "للأسف، كان إخوته يحسدون يوسف لأن أباهم يحبه كثيراً. ذات يوم أخذوه بعيداً وألقوه في بئر عميقة! أعادوا قميصه ملطخاً بدم كاذب إلى أبيهم.",
           nl: "Zijn broers waren jaloers en gooiden hem in een diepe put!", tr: "Kardeşleri kıskançlıktan onu derin bir kuyuya attılar!", ur: "اس کے بھائیوں نے حسد سے اسے ایک گہرے کنویں میں پھینک دیا!"
         },
-        illustration: "story-yusuf-well",
         choices: [
           { label: { fr: "Comment Youssouf s'en est sorti ?", en: "How did Yusuf get out?", ar: "كيف نجا يوسف؟", nl: "Hoe ontsnapte Yoesoef?", tr: "Yusuf nasıl kurtuldu?", ur: "یوسف کیسے نکلے؟" }, nextSceneId: "s3" },
         ],
