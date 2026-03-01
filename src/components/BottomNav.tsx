@@ -15,7 +15,7 @@ export default function BottomNav() {
   const baseTabs = [
     { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil" },
     { path: "/quran-hub", icon: BookOpen, label: t("nav.quran" as any) || "Coran" },
-    { path: "/tarteel", icon: Mic, label: t("nav.quranRecit" as any) || "Coran" },
+    { path: "/tarteel", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
     { path: "/moods", icon: Heart, label: t("nav.heart" as any) || "Cœur" },
   ];
 
