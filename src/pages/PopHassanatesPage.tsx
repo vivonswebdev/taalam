@@ -1,0 +1,157 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, RotateCcw, Heart, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/hooks/useLanguage';
+
+const GOOD_ITEMS = ['🕋', '📖', '🕌', '🌙', '📿', '🤲', '⭐'];
+const BAD_ITEMS = ['👾', '😡', '🔥'];
+
+export default function PopHassanatesPage() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const [bubbles, setBubbles] = useState<Array<{ id: number; emoji: string; isGood: boolean; x: number; duration: number }>>([]);
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
+  const [gameOver, setGameOver] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const startGame = () => {
+    setScore(0);
+    setLives(3);
+    setGameOver(false);
+    setBubbles([]);
+    setIsPlaying(true);
+  };
+
+  useEffect(() => {
+    if (!isPlaying || gameOver) return;
+    const interval = setInterval(() => {
+      const isGood = Math.random() > 0.25;
+      const emoji = isGood
+        ? GOOD_ITEMS[Math.floor(Math.random() * GOOD_ITEMS.length)]
+        : BAD_ITEMS[Math.floor(Math.random() * BAD_ITEMS.length)];
+      const newBubble = {
+        id: Date.now() + Math.random(),
+        emoji,
+        isGood,
+        x: Math.random() * 70 + 15,
+        duration: Math.random() * 2.5 + 3.5,
+      };
+      setBubbles(prev => [...prev, newBubble]);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, [isPlaying, gameOver]);
+
+  useEffect(() => {
+    if (lives <= 0) {
+      setGameOver(true);
+      setIsPlaying(false);
+    }
+  }, [lives]);
+
+  const handleBubbleClick = (bubble: typeof bubbles[0]) => {
+    if (gameOver) return;
+    setBubbles(prev => prev.filter(b => b.id !== bubble.id));
+    if (bubble.isGood) {
+      setScore(s => s + 10);
+    } else {
+      setLives(l => Math.max(0, l - 1));
+    }
+  };
+
+  const handleBubbleMiss = (bubble: typeof bubbles[0]) => {
+    setBubbles(prev => prev.filter(b => b.id !== bubble.id));
+    if (bubble.isGood && !gameOver && isPlaying) {
+      setLives(l => Math.max(0, l - 1));
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] p-4 bg-gradient-to-b from-indigo-900 via-purple-900 to-background font-sans overflow-hidden relative">
+      {/* Header (HUD) */}
+      <div className="flex justify-between items-center w-full mt-8 z-10 relative">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 bg-white/20 backdrop-blur-md rounded-full shadow-sm text-white hover:bg-white/30 transition-colors"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        <div className="flex gap-1 ml-auto mr-4">
+          {[...Array(3)].map((_, i) => (
+            <Heart key={i} className={`w-6 h-6 ${i < lives ? 'text-rose-500 fill-rose-500' : 'text-white/20'}`} />
+          ))}
+        </div>
+        <div className="bg-emerald-400 text-emerald-950 px-4 py-1.5 rounded-full font-bold shadow-sm flex items-center gap-1">
+          <Star className="w-4 h-4 fill-emerald-950" /> {score}
+        </div>
+      </div>
+
+      {/* Zone de jeu */}
+      <div className="flex-1 w-full relative">
+        {!isPlaying && !gameOver && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-20">
+            <div className="text-6xl mb-4">🫧</div>
+            <h2 className="text-3xl font-black text-white mb-2">{t("popHassanates.title" as any)}</h2>
+            <p className="text-white/80 text-sm mb-8">
+              {t("popHassanates.instruction" as any)}
+            </p>
+            <button
+              onClick={startGame}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-12 rounded-full text-lg shadow-lg shadow-emerald-500/30 active:scale-95 transition-all"
+            >
+              {t("popHassanates.play" as any)}
+            </button>
+          </div>
+        )}
+
+        {/* Rendu des bulles */}
+        <AnimatePresence>
+          {bubbles.map(bubble => (
+            <motion.div
+              key={bubble.id}
+              initial={{ y: '100dvh', x: `${bubble.x}%`, opacity: 0, scale: 0.5 }}
+              animate={{ y: '-20dvh', opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.5 }}
+              transition={{ duration: bubble.duration, ease: 'linear' }}
+              onAnimationComplete={() => handleBubbleMiss(bubble)}
+              onClick={() => handleBubbleClick(bubble)}
+              className="absolute cursor-pointer w-16 h-16 bg-white/20 backdrop-blur-md border border-white/40 rounded-full flex items-center justify-center shadow-lg hover:bg-white/30"
+              style={{ left: 0, bottom: 0 }}
+            >
+              <span className="text-3xl filter drop-shadow-md">{bubble.emoji}</span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Écran de Fin de Jeu */}
+      <AnimatePresence>
+        {gameOver && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-6"
+          >
+            <div className="bg-white p-8 rounded-3xl text-center shadow-2xl max-w-xs w-full">
+              <span className="text-6xl block mb-4">💔</span>
+              <h2 className="text-2xl font-black mb-2 text-slate-800">{t("popHassanates.gameOver" as any)}</h2>
+              <p className="text-slate-500 mb-2 text-sm">
+                {t("popHassanates.gameOverDesc" as any)}
+              </p>
+              <p className="font-bold text-emerald-600 text-xl mb-6">
+                {t("popHassanates.score" as any)} : {score}
+              </p>
+              <button
+                onClick={startGame}
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-emerald-500/30"
+              >
+                <RotateCcw className="w-5 h-5" /> {t("popHassanates.replay" as any)}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
