@@ -211,11 +211,12 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="px-6 pt-6">
-        <button onClick={handleBack} className="flex items-center gap-2 text-muted-foreground mb-6">
+      <div className="px-6 pt-6 flex items-center justify-between">
+        <button onClick={handleBack} className="flex items-center gap-2 text-muted-foreground">
           <ArrowLeft size={20} />
           <span className="text-sm">{t("join.back")}</span>
         </button>
+        <LanguageSwitcher />
       </div>
 
       <div className="px-6 space-y-6">
