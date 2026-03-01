@@ -341,7 +341,7 @@ export default function ProfileBubble() {
               {LANGUAGES.map(l => (
                 <button
                   key={l.code}
-                  onClick={() => { setLang(l.code); setShowLangPicker(false); }}
+                  onClick={() => { if (l.code !== lang) awardOnce("lang", 3, addXP, l.label); setLang(l.code); setShowLangPicker(false); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${lang === l.code ? "bg-primary/10 ring-1 ring-primary/30" : "hover:bg-accent/30"}`}
                 >
                   <span className="text-xl">{l.flag}</span>

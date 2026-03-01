@@ -25,15 +25,32 @@ const SECTIONS: { id: OfflineSection; emoji: string; tKey: string; descKey: stri
   { id: "quiz", emoji: "🧠", tKey: "offlinev2.quiz", descKey: "offlinev2.quizDesc", sizeHint: "—" },
 ];
 
+const XP_REWARDS: Record<string, number> = { mushaf: 10, moods: 15, tarteel: 10 };
+
 export default function OfflineSettings() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { addXP } = useXP();
+  const prevStatusRef = useRef<Record<string, boolean>>({});
   const {
     offlineMode, setOfflineMode,
     status, readySections, progress,
     downloadMushaf, downloadMoods, downloadTarteel, downloadAll,
     pauseDownload, resumeDownload, cancelDownload,
   } = useOfflineManager();
+
+  // Award XP when a section finishes downloading (once per section ever)
+  useEffect(() => {
+    const awarded = getOfflineXpAwarded();
+    (["mushaf", "moods", "tarteel"] as OfflineSection[]).forEach(sec => {
+      if (status[sec] && !prevStatusRef.current[sec] && !awarded[sec] && XP_REWARDS[sec]) {
+        addXP(XP_REWARDS[sec]);
+        markOfflineXpAwarded(sec);
+        toast.success(`+${XP_REWARDS[sec]} XP — ${t(`offlinev2.${sec}` as any)} offline !`);
+      }
+    });
+    prevStatusRef.current = { ...status };
+  }, [status, addXP, t]);
 
   const downloadFns: Record<OfflineSection, () => Promise<void>> = {
     mushaf: downloadMushaf,
