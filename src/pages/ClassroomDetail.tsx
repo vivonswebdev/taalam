@@ -458,7 +458,9 @@ export default function ClassroomDetail() {
             </div>
           )}
 
-          {/* Past challenges history */}
+          {/* Student Task Kanban */}
+          {!isTeacherFinal && <StudentTaskKanban />}
+
           {pastChallenges.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-muted-foreground">
