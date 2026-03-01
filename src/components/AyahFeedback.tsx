@@ -3,7 +3,6 @@ import { CheckCircle2, XCircle, Volume2, BookOpen } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import AsrReportButton from "@/components/AsrReportButton";
-import { analyzeAyahTajwid } from "@/data/tajwidRules";
 
 export type FeedbackWordStatus = "correct" | "almost" | "incorrect" | "missing";
 
