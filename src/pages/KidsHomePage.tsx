@@ -80,6 +80,46 @@ const KIDS_CARDS = [
     gradient: "from-red-600/30 to-amber-600/15",
     border: "border-red-500/25",
   },
+  {
+    emoji: "🃏",
+    titleKey: "kidsHome.memoryCoran",
+    descKey: "kidsHome.memoryCoranDesc",
+    path: "/kids-memory",
+    gradient: "from-emerald-600/30 to-green-600/15",
+    border: "border-emerald-500/25",
+  },
+  {
+    emoji: "🕋",
+    titleKey: "kidsHome.pillarQuiz",
+    descKey: "kidsHome.pillarQuizDesc",
+    path: "/kids-pillar-quiz",
+    gradient: "from-amber-600/30 to-yellow-600/15",
+    border: "border-amber-500/25",
+  },
+  {
+    emoji: "🕌",
+    titleKey: "kidsHome.prayerMaze",
+    descKey: "kidsHome.prayerMazeDesc",
+    path: "/kids-prayer-maze",
+    gradient: "from-indigo-600/30 to-blue-600/15",
+    border: "border-indigo-500/25",
+  },
+  {
+    emoji: "✨",
+    titleKey: "kidsHome.asmaHunt",
+    descKey: "kidsHome.asmaHuntDesc",
+    path: "/kids-asma-hunt",
+    gradient: "from-yellow-600/30 to-amber-600/15",
+    border: "border-yellow-500/25",
+  },
+  {
+    emoji: "📖",
+    titleKey: "kidsHome.prophetStoryGame",
+    descKey: "kidsHome.prophetStoryGameDesc",
+    path: "/kids-prophet-game",
+    gradient: "from-blue-600/30 to-indigo-600/15",
+    border: "border-blue-500/25",
+  },
 ];
 
 export default function KidsHomePage() {
