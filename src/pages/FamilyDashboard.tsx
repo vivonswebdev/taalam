@@ -8,6 +8,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
 import FamilyShareCard from "@/components/FamilyShareCard";
 import FamilyDuels from "@/components/FamilyDuels";
+import FamilyHeatmap from "@/components/FamilyHeatmap";
 
 const TROPHIES = [
   { type: "gold", emoji: "🏆", label: "gold" },
