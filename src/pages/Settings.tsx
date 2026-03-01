@@ -26,6 +26,7 @@ export default function Settings() {
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
   const dailyChallenge = useDailyTarteelChallenge();
   const { user } = useAuth();
+  const { offlineMode, setOfflineMode, readySections } = useOfflineManager();
 
   // Profile visibility
   const [isPublic, setIsPublic] = useState(true);
