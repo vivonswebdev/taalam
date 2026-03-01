@@ -185,12 +185,20 @@ export default function PopHassanatesPage() {
               <p className="font-bold text-emerald-600 text-xl mb-6">
                 {t("popHassanates.score" as any)} : {score}
               </p>
-              <button
-                onClick={startGame}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-emerald-500/30"
-              >
-                <RotateCcw className="w-5 h-5" /> {t("popHassanates.replay" as any)}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => startGame()}
+                  className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-emerald-500/30"
+                >
+                  <RotateCcw className="w-5 h-5" /> {t("popHassanates.replay" as any)}
+                </button>
+                <button
+                  onClick={() => { setDifficulty(null); setIsPlaying(false); setGameOver(false); }}
+                  className="flex-1 bg-white border border-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl text-sm active:scale-95 transition-all"
+                >
+                  {t("popHassanates.changeDifficulty" as any)}
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
