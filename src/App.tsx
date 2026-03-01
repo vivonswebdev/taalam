@@ -80,6 +80,7 @@ import FavoritesNotesPage from "./pages/FavoritesNotesPage";
 import HifzTodayPage from "./pages/HifzTodayPage";
 import JeuxKids from "./pages/JeuxKids";
 import OfflineSettings from "./pages/OfflineSettings";
+import CoordinatorDashboard from "./pages/CoordinatorDashboard";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -179,6 +180,7 @@ const App = () => (
               <Route path="/hifz-today" element={<HifzTodayPage />} />
               <Route path="/offline-settings" element={<OfflineSettings />} />
               <Route path="/jeux" element={<JeuxKids />} />
+              <Route path="/coord" element={<CoordinatorDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
