@@ -155,7 +155,7 @@ export default function MemoryFaithPage() {
               <span className="text-5xl block mb-3">🏆</span>
               <h2 className="text-xl font-bold text-foreground mb-1">{t("memoryFaith.victory" as any)}</h2>
               <p className="text-sm text-muted-foreground mb-4">
-                {t("memoryFaith.victoryDesc" as any, { moves: String(moves) } as any)}
+                {moves} {t("memoryFaith.movesLabel" as any)}
               </p>
               <div className="flex gap-2 justify-center mb-4">
                 <span className="bg-primary/15 px-3 py-1 rounded-full text-xs font-semibold text-primary">
