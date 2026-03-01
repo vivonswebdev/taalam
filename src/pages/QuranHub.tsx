@@ -15,7 +15,7 @@ export default function QuranHub() {
         <p className="text-xs text-muted-foreground mt-0.5">{t("quranHub.subtitle")}</p>
       </div>
 
-      <div className="px-5 space-y-3">
+      <div className="px-5 grid grid-cols-2 gap-3 flex-1">
         {/* Mushaf */}
         <motion.button
           initial={{ opacity: 0, y: 12 }}
@@ -23,13 +23,13 @@ export default function QuranHub() {
           transition={{ delay: 0.1 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/mushaf")}
-          className="w-full flex items-center gap-4 rounded-2xl p-5 text-left bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg"
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg aspect-square"
         >
-          <span className="w-14 h-14 rounded-2xl bg-amber-500/20 flex items-center justify-center text-3xl shrink-0">📖</span>
-          <div className="flex-1 min-w-0">
+          <span className="text-6xl">📖</span>
+          <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.mushafTitle")}</p>
-            <p className="text-sm font-semibold text-white/80 mt-0.5">{t("quranHub.mushafSubtitle")}</p>
-            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.mushafDesc")}</p>
+            <p className="text-xs font-semibold text-white/80 mt-1">{t("quranHub.mushafSubtitle")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.mushafDesc")}</p>
           </div>
         </motion.button>
 
@@ -40,15 +40,16 @@ export default function QuranHub() {
           transition={{ delay: 0.2 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/reading")}
-          className="w-full flex items-center gap-4 rounded-2xl p-5 text-left bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg"
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg aspect-square"
         >
-          <span className="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-3xl shrink-0">📚</span>
-          <div className="flex-1 min-w-0">
+          <span className="text-6xl">📚</span>
+          <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.readingTitle")}</p>
-            <p className="text-sm font-semibold text-white/80 mt-0.5">{t("quranHub.readingSubtitle")}</p>
-            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.readingDesc")}</p>
+            <p className="text-xs font-semibold text-white/80 mt-1">{t("quranHub.readingSubtitle")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.readingDesc")}</p>
           </div>
         </motion.button>
+      </div>
 
         {/* Raccourcis rapides */}
         <div className="pt-3">
