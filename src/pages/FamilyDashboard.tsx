@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp } from "lucide-react";
+import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp, Share2 } from "lucide-react";
 import { useFamily, type FamilyMember } from "@/hooks/useFamily";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
