@@ -318,7 +318,7 @@ export default function Quiz() {
 
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      if (totalXP > 0) xp.addXP(totalXP);
+      if (totalXP > 0) qxp.addXp(totalXP, "quiz_correct_answer");
       // Update daily quiz streak
       updateQuizStreak();
       // Submit to weekly perfect challenge if category is "perfect"
