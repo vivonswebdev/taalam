@@ -697,8 +697,16 @@ export default function MushafPage() {
     }
   }, [currentPage, pageSoundEnabled]);
 
-  const goToPrevPage = useCallback(() => { goTo(currentPage - 1); }, [goTo, currentPage]);
-  const goToNextPage = useCallback(() => { goTo(currentPage + 1); }, [goTo, currentPage]);
+  // Navigate by SURAH: ← = previous surah start, → = next surah start
+  const currentSurahForNav = getSurahForPage(currentPage);
+  const goToPrevPage = useCallback(() => {
+    if (currentSurahForNav <= 1) return;
+    goTo(surahStartPage[currentSurahForNav - 1]);
+  }, [goTo, currentSurahForNav]);
+  const goToNextPage = useCallback(() => {
+    if (currentSurahForNav >= 114) return;
+    goTo(surahStartPage[currentSurahForNav + 1]);
+  }, [goTo, currentSurahForNav]);
 
   const changeStyle = (style: ReadingStyle) => {
     setReadingStyle(style);
