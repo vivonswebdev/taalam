@@ -80,6 +80,9 @@ export function useTaskSubmissions(classId: string | null) {
     note?: string
   ) => {
     if (!user) return;
+    // Find the submission to get student info
+    const sub = submissions.find(s => s.id === submissionId);
+    
     const { error } = await supabase
       .from("task_submissions")
       .update({
@@ -91,8 +94,22 @@ export function useTaskSubmissions(classId: string | null) {
       })
       .eq("id", submissionId);
     if (error) throw error;
+
+    // Send auto-notification to student/parent
+    if (sub) {
+      const title = sub.assignment_title || "?";
+      const msg = status === "approved"
+        ? `✅ Le devoir "${title}" a été validé. Bravo !`
+        : `❌ Le devoir "${title}" nécessite une correction.${note ? ` Note: ${note}` : ""}`;
+      try {
+        await sendAutoNotification(sub.student_id, msg, sub.student_id);
+      } catch (e) {
+        console.warn("Auto notification failed:", e);
+      }
+    }
+
     await fetchSubmissions();
-  }, [user, fetchSubmissions]);
+  }, [user, fetchSubmissions, submissions, sendAutoNotification]);
 
   const getAudioUrl = useCallback(async (path: string) => {
     const { data } = await supabase.storage
