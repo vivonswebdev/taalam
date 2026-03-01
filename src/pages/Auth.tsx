@@ -137,6 +137,7 @@ export default function Auth() {
           is_public: isPublic,
           preferred_mode: selectedUserMode,
           age_group: selectedAge,
+          country_code: countryCode || null,
         } as any);
         if (profileError) console.error("Profile creation error:", profileError);
       }
