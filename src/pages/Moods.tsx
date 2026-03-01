@@ -84,7 +84,7 @@ export default function Moods() {
       {moodPresets.filter(m => m.loop).length > 0 && (
         <div className="px-4 pt-3 pb-1">
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">🔁 {t("moods.loopSection" as any) || "Boucles Coran"}</p>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+          <div className="grid grid-cols-2 gap-2">
             {moodPresets.filter(m => m.loop).map((mood) => {
               const titleKey = `mood.${mood.id}` as any;
               return (
