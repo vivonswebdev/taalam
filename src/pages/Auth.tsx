@@ -137,6 +137,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [rememberMe, setRememberMe] = useState(() => {
     return localStorage.getItem("taalam_remember_me") !== "false";
   });
@@ -253,12 +254,17 @@ export default function Auth() {
   };
 
   const handleResetPassword = async () => {
-    if (!otp.trim() || !newPassword.trim()) {
-      toast.error("Entrez le code et le nouveau mot de passe");
+    const cleanOtp = otp.trim();
+    if (!cleanOtp || !newPassword.trim()) {
+      toast.error(t("reset.fillFields" as any) || "Entrez le code et le nouveau mot de passe");
+      return;
+    }
+    if (cleanOtp.length < 6) {
+      toast.error(t("reset.otpTooShort" as any) || "Le code doit contenir 6 à 8 chiffres");
       return;
     }
     if (newPassword.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error(t("reset.passwordTooShort" as any) || "Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
     setLoading(true);
@@ -326,11 +332,11 @@ export default function Auth() {
           <motion.div key="reset" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
             <div className="text-center">
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-5xl mb-3">📧</motion.div>
-              <h1 className="text-2xl font-bold text-foreground">Entrez le code</h1>
-              <p className="text-muted-foreground text-sm mt-1">Un code a été envoyé à <strong>{email}</strong></p>
+              <h1 className="text-2xl font-bold text-foreground">{t("reset.enterCode" as any) || "Entrez le code"}</h1>
+              <p className="text-muted-foreground text-sm mt-1">{t("reset.codeSentTo" as any) || "Un code a été envoyé à"} <strong>{email}</strong></p>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Code de vérification</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t("reset.otpLabel" as any) || "Code 6-8 chiffres"}</label>
               <Input
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 8))}
@@ -341,13 +347,13 @@ export default function Auth() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block">Nouveau mot de passe</label>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">{t("reset.newPassword" as any) || "Nouveau mot de passe"}</label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Min. 6 caractères"
+                  placeholder={t("reset.minChars" as any) || "Min. 6 caractères"}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -356,8 +362,30 @@ export default function Auth() {
             </div>
             <Button onClick={handleResetPassword} disabled={loading} className="w-full h-12 text-base rounded-xl">
               <KeyRound size={18} />
-              {loading ? "..." : "Réinitialiser le mot de passe"}
+              {loading ? "..." : (t("reset.submit" as any) || "Réinitialiser le mot de passe")}
             </Button>
+            <button
+              type="button"
+              disabled={resendCooldown > 0 || loading}
+              onClick={async () => {
+                setResendCooldown(60);
+                const interval = setInterval(() => {
+                  setResendCooldown(prev => {
+                    if (prev <= 1) { clearInterval(interval); return 0; }
+                    return prev - 1;
+                  });
+                }, 1000);
+                try {
+                  await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/auth` });
+                  toast.success(t("reset.resent" as any) || "Code renvoyé !");
+                } catch { toast.error("Erreur"); }
+              }}
+              className="w-full text-center text-sm text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+            >
+              {resendCooldown > 0
+                ? `${t("reset.resendIn" as any) || "Renvoyer dans"} ${resendCooldown}s`
+                : (t("reset.resend" as any) || "Renvoyer le code")}
+            </button>
           </motion.div>
         )}
 
