@@ -273,6 +273,13 @@ export default function FamilyDashboard() {
                       {copiedCode === family.invite_code ? <Check size={12} /> : <Copy size={12} />}
                       {copiedCode === family.invite_code ? t("family.copied") : t("family.copy")}
                     </button>
+                    <button
+                      onClick={() => setShareFamily(family.id)}
+                      className="flex items-center gap-1 bg-emerald-500/10 text-emerald-600 rounded-lg px-3 py-1.5 text-xs font-semibold active:scale-95 transition-transform"
+                    >
+                      <Share2 size={12} />
+                      {t("share.share" as any)}
+                    </button>
                   </div>
                 </motion.div>
 
