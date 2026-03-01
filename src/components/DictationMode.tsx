@@ -13,7 +13,7 @@ import {
 } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import ReciterPicker, { getStoredReciter, type ReciterOption } from "@/components/ReciterPicker";
 import AyahFeedback, { type FeedbackWord } from "@/components/AyahFeedback";
