@@ -472,10 +472,11 @@ export default function Quiz() {
 
         <AnimatePresence mode="wait">
           <motion.div key={current} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-            <h2 className="text-xl font-bold text-foreground mb-8">{question?.question}</h2>
+            {(() => { const lq = question ? localizeQuestion(question, lang) : null; return (<>
+            <h2 className="text-xl font-bold text-foreground mb-8">{lq?.question}</h2>
 
             <div className="space-y-3">
-              {question?.options.map((option, idx) => {
+              {lq?.options.map((option, idx) => {
                 const isSelected = selected === idx;
                 const isCorrect = idx === question.correctIndex;
                 let style = "bg-card border-border text-card-foreground";
