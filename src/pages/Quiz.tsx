@@ -9,7 +9,7 @@ import { localizeQuestion } from "@/data/quizI18n";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
