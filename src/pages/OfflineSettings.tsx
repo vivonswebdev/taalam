@@ -8,9 +8,14 @@ import { useXP } from "@/hooks/useXP";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
-const OFFLINE_XP_KEY = "offline_xp_awarded";
-function getOfflineXpAwarded(): Record<string, boolean> {
-  try { return JSON.parse(localStorage.getItem(OFFLINE_XP_KEY) || "{}"); } catch { return {}; }
+function awardOnce(key: string, amount: number, addXP: (n: number) => void, label: string) {
+  const fullKey = "offline_xp_" + key;
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(fullKey) === today) return;
+  localStorage.setItem(fullKey, today);
+  addXP(amount);
+  toast.success(`+${amount} XP — ${label}`);
+}
 }
 function markOfflineXpAwarded(section: string) {
   const data = getOfflineXpAwarded();
