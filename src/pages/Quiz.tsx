@@ -3,7 +3,7 @@ import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap, Landmark, Lightbulb } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -25,6 +25,9 @@ interface QuizStats {
   kids: { completed: number; totalCorrect: number; totalQuestions: number };
   perfect: { completed: number; totalCorrect: number; totalQuestions: number };
   adaptive: { completed: number; totalCorrect: number; totalQuestions: number };
+  prophets: { completed: number; totalCorrect: number; totalQuestions: number };
+  islam_basics: { completed: number; totalCorrect: number; totalQuestions: number };
+  animals: { completed: number; totalCorrect: number; totalQuestions: number };
 }
 
 interface QuizStreak {
@@ -37,8 +40,12 @@ function loadQuizStats(): QuizStats {
     const stored = localStorage.getItem(QUIZ_STATS_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (!parsed.perfect) parsed.perfect = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
-      if (!parsed.adaptive) parsed.adaptive = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      const defaults = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      if (!parsed.perfect) parsed.perfect = { ...defaults };
+      if (!parsed.adaptive) parsed.adaptive = { ...defaults };
+      if (!parsed.prophets) parsed.prophets = { ...defaults };
+      if (!parsed.islam_basics) parsed.islam_basics = { ...defaults };
+      if (!parsed.animals) parsed.animals = { ...defaults };
       return parsed;
     }
   } catch {}
@@ -49,6 +56,9 @@ function loadQuizStats(): QuizStats {
     kids: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     perfect: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     adaptive: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    prophets: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    islam_basics: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    animals: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
   };
 }
 
@@ -123,6 +133,27 @@ const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; title: 
     title: "Quiz Enfants",
     subtitle: "Histoires des prophètes et bases",
     icon: Baby,
+  },
+  prophets: {
+    gradient: "from-amber-600 to-yellow-500",
+    emoji: "📚",
+    title: "Histoire des Prophètes",
+    subtitle: "Questions amusantes sur les prophètes du Coran",
+    icon: Landmark,
+  },
+  islam_basics: {
+    gradient: "from-teal-500 to-cyan-600",
+    emoji: "💡",
+    title: "L'Islam de base",
+    subtitle: "Piliers, croyance, adhkār, akhlaq",
+    icon: Lightbulb,
+  },
+  animals: {
+    gradient: "from-lime-500 to-green-600",
+    emoji: "🐫",
+    title: "Animaux dans le Coran",
+    subtitle: "Découvre les animaux mentionnés dans le Coran",
+    icon: Star,
   },
 };
 
@@ -245,7 +276,7 @@ export default function Quiz() {
 
   // ═══ CATEGORY SELECTION ═══
   if (!category) {
-    const categoryOrder: QuizCategory[] = ["tajweed", "memorization", "general", "adaptive", "perfect", "kids"];
+    const categoryOrder: QuizCategory[] = ["tajweed", "memorization", "general", "prophets", "islam_basics", "animals", "adaptive", "perfect", "kids"];
 
     return (
       <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>

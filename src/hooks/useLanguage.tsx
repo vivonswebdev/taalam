@@ -1943,6 +1943,8 @@ const translations = {
   "kidsStories.collection": { fr: "Ma collection de stickers", en: "My sticker collection", ar: "مجموعة ملصقاتي", nl: "Mijn stickercollectie", tr: "Çıkartma koleksiyonum", ur: "میرا اسٹیکر مجموعہ" },
   "kidsHome.prophetStories": { fr: "Histoires Prophètes", en: "Prophet Stories", ar: "قصص الأنبياء", nl: "Profeetverhalen", tr: "Peygamber Hikayeleri", ur: "انبیاء کی کہانیاں" },
   "kidsHome.prophetStoriesDesc": { fr: "10 histoires du Coran avec quiz et stickers !", en: "10 Quran stories with quiz and stickers!", ar: "10 قصص من القرآن مع اختبار وملصقات!", nl: "10 Koranverhalen met quiz en stickers!", tr: "10 Kur'an hikayesi, test ve çıkartmalarla!", ur: "10 قرآنی کہانیاں کوئز اور اسٹیکرز کے ساتھ!" },
+  "kidsHome.kidsQuiz": { fr: "Quiz Enfants", en: "Kids Quiz", ar: "اختبار الأطفال", nl: "Kinderquiz", tr: "Çocuk Testi", ur: "بچوں کا کوئز" },
+  "kidsHome.kidsQuizDesc": { fr: "Prophètes, Islam et Animaux du Coran !", en: "Prophets, Islam basics & Quran animals!", ar: "الأنبياء، أساسيات الإسلام وحيوانات القرآن!", nl: "Profeten, Islam basis & Koran dieren!", tr: "Peygamberler, İslam temelleri ve Kur'an hayvanları!", ur: "انبیاء، اسلام کی بنیادیں اور قرآنی جانور!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
