@@ -22,9 +22,9 @@ export default function KidsMemoryCoranPage() {
   const labels: Record<string, Record<string, string>> = {
     title: { fr: "Memory Coran", en: "Quran Memory", ar: "ذاكرة القرآن", nl: "Koran Memory", tr: "Kuran Hafıza", ur: "قرآن میموری" },
     selectLevel: { fr: "Choisis un niveau", en: "Choose a level", ar: "اختر مستوى", nl: "Kies een niveau", tr: "Seviye seç", ur: "سطح منتخب کریں" },
-    easy: { fr: "Facile (3 paires)", en: "Easy (3 pairs)", ar: "سهل (٣ أزواج)", nl: "Makkelijk (3 paren)", tr: "Kolay (3 çift)", ur: "آسان (3 جوڑے)" },
-    medium: { fr: "Moyen (6 paires)", en: "Medium (6 pairs)", ar: "متوسط (٦ أزواج)", nl: "Gemiddeld (6 paren)", tr: "Orta (6 çift)", ur: "درمیانہ (6 جوڑے)" },
-    hard: { fr: "Difficile (10 paires)", en: "Hard (10 pairs)", ar: "صعب (١٠ أزواج)", nl: "Moeilijk (10 paren)", tr: "Zor (10 çift)", ur: "مشکل (10 جوڑے)" },
+    easy: { fr: "Facile (4 paires)", en: "Easy (4 pairs)", ar: "سهل (٤ أزواج)", nl: "Makkelijk (4 paren)", tr: "Kolay (4 çift)", ur: "آسان (4 جوڑے)" },
+    medium: { fr: "Moyen (8 paires)", en: "Medium (8 pairs)", ar: "متوسط (٨ أزواج)", nl: "Gemiddeld (8 paren)", tr: "Orta (8 çift)", ur: "درمیانہ (8 جوڑے)" },
+    hard: { fr: "Difficile (13 paires)", en: "Hard (13 pairs)", ar: "صعب (١٣ زوجًا)", nl: "Moeilijk (13 paren)", tr: "Zor (13 çift)", ur: "مشکل (13 جوڑے)" },
     bravo: { fr: "Bravo ! MashaAllah ! 🎉", en: "Bravo! MashaAllah! 🎉", ar: "أحسنت! ماشاء الله! 🎉", nl: "Bravo! MashaAllah! 🎉", tr: "Bravo! MaşaAllah! 🎉", ur: "شاباش! ماشاء اللہ! 🎉" },
     attempts: { fr: "Tentatives", en: "Attempts", ar: "محاولات", tr: "Deneme", nl: "Pogingen", ur: "کوششیں" },
     time: { fr: "Temps", en: "Time", ar: "الوقت", nl: "Tijd", tr: "Süre", ur: "وقت" },
@@ -94,7 +94,7 @@ export default function KidsMemoryCoranPage() {
           <button onClick={() => navigate("/kids")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
             <ArrowLeft size={18} />
           </button>
-          <h1 className="text-xl font-bold">🃏 {L("title")}</h1>
+          <h1 className="text-xl font-bold">🕌 {L("title")}</h1>
         </div>
         <p className="text-sm text-muted-foreground mb-4">{L("selectLevel")}</p>
         <div className="flex flex-col gap-3">
@@ -137,7 +137,7 @@ export default function KidsMemoryCoranPage() {
         <button onClick={() => setLevel(null)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-bold flex-1">🃏 {L("title")}</h1>
+        <h1 className="text-lg font-bold flex-1">🕌 {L("title")}</h1>
         <span className="text-xs text-muted-foreground">{L("attempts")}: {attempts}</span>
       </div>
 
@@ -163,7 +163,7 @@ export default function KidsMemoryCoranPage() {
                   {card.text[lang as keyof typeof card.text] || card.text.fr}
                 </motion.span>
               ) : (
-                <span className="text-2xl">📖</span>
+                <span className="text-2xl">☪️</span>
               )}
             </motion.button>
           );
