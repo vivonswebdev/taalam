@@ -43,6 +43,7 @@ export default function HifzControl({ surah, onBack, isChildMode, t }: HifzContr
 
   // Session
   const session = useHifzSession();
+  const exploit = useShareExploit();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [currentTranscript, setCurrentTranscript] = useState("");
