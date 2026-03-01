@@ -61,6 +61,7 @@ import FaqAndTermsPage from "./pages/FaqAndTermsPage";
 import NotificationSettings from "./pages/NotificationSettings";
 import InstallAppPage from "./pages/InstallAppPage";
 import MushafPage from "./pages/MushafPage";
+import QuranHub from "./pages/QuranHub";
 import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";

@@ -557,16 +557,14 @@ export default function Quran() {
       {/* ═══ SELECTION ═══ */}
       {!selectedSurah && (
         <div className="px-6 space-y-3">
-          {/* ─── Modes grid 2×3 ─── */}
+          {/* ─── Section: Réciter & corriger ─── */}
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 pt-1">🎤 {t("tarteel.sectionRecite" as any) || "Réciter & corriger"}</p>
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-2 gap-3">
             {[
               { mode: "aya" as RecitationMode, emoji: "🎤", label: t("mode.dictVerse"), desc: t("mode.dictVerseDesc"), gradient: "from-emerald-500 to-emerald-600", nav: null },
               { mode: "dictation" as RecitationMode, emoji: "✍️", label: t("mode.dictSurah"), desc: t("mode.dictSurahDesc"), gradient: "from-sky-500 to-sky-600", nav: null },
               { mode: "fullSurah" as RecitationMode, emoji: "📚", label: t("mode.fullSurah"), desc: t("mode.fullSurahDesc"), gradient: "from-indigo-500 to-indigo-600", nav: null },
-              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500", nav: null },
-              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500", nav: null },
-              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900", nav: "/find-ayah" },
             ].map((item, i) => (
               <motion.button
                 key={item.mode}
@@ -586,9 +584,48 @@ export default function Quran() {
                     setTimeout(() => {
                       surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
                     }, 100);
-                    toast.info(t("mode.noSurahTitle" as any), {
-                      description: t("mode.noSurahDesc" as any),
-                    });
+                    toast.info(t("mode.noSurahTitle" as any), { description: t("mode.noSurahDesc" as any) });
+                  }
+                }}
+                className={`card-shimmer relative overflow-hidden rounded-2xl p-3.5 flex flex-col gap-1 text-left shadow-sm bg-gradient-to-br ${item.gradient} ${
+                  recitationMode === item.mode ? "ring-2 ring-white/40 shadow-lg" : ""
+                }`}
+              >
+                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">{item.emoji}</span>
+                <span className="text-sm font-bold text-white leading-tight mt-1">{item.label}</span>
+                <span className="text-[10px] text-white/70 leading-snug line-clamp-2">{item.desc}</span>
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* ─── Section: Réviser & tester ─── */}
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 pt-2">🏆 {t("tarteel.sectionRevise" as any) || "Réviser & tester"}</p>
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 gap-3">
+            {[
+              { mode: "tahaddi" as RecitationMode, emoji: "🏆", label: t("mode.tahaddi"), desc: t("mode.tahaddiDesc"), gradient: "from-amber-500 to-orange-500", nav: null },
+              { mode: "hifz" as RecitationMode, emoji: "📖", label: t("mode.control"), desc: t("mode.controlDesc"), gradient: "from-fuchsia-500 to-pink-500", nav: null },
+              { mode: "findAyah" as RecitationMode, emoji: "🔍", label: t("mode.findAyah"), desc: t("mode.findAyahDesc"), gradient: "from-slate-700 to-slate-900", nav: "/find-ayah" },
+            ].map((item, i) => (
+              <motion.button
+                key={item.mode}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.04 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  if (item.nav) { navigate(item.nav); return; }
+                  setRecitationMode(item.mode);
+                  if (lastUsedSurah) {
+                    handleSelectSurah(lastUsedSurah);
+                  } else {
+                    setShowDropdown(true);
+                    setHighlightSelector(true);
+                    setTimeout(() => setHighlightSelector(false), 3000);
+                    setTimeout(() => {
+                      surahSelectorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }, 100);
+                    toast.info(t("mode.noSurahTitle" as any), { description: t("mode.noSurahDesc" as any) });
                   }
                 }}
                 className={`card-shimmer relative overflow-hidden rounded-2xl p-3.5 flex flex-col gap-1 text-left shadow-sm bg-gradient-to-br ${item.gradient} ${
