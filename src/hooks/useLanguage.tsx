@@ -2106,6 +2106,19 @@ const translations = {
   "kidsHome.asmaHuntDesc": { fr: "Collecte les 99 Noms d'Allah et apprends leur sens !", en: "Collect the 99 Names of Allah and learn their meaning!", ar: "اجمع أسماء الله الحسنى وتعلم معانيها!", nl: "Verzamel de 99 Namen van Allah!", tr: "Allah'ın 99 ismini topla ve anlamlarını öğren!", ur: "اللہ کے 99 نام جمع کریں اور ان کے معنی سیکھیں!" },
   "kidsHome.prophetStoryGame": { fr: "Histoires interactives", en: "Interactive Stories", ar: "قصص تفاعلية", nl: "Interactieve verhalen", tr: "Etkileşimli Hikayeler", ur: "انٹرایکٹو کہانیاں" },
   "kidsHome.prophetStoryGameDesc": { fr: "Vis les aventures des prophètes et fais tes choix !", en: "Live the adventures of the prophets and make your choices!", ar: "عش مغامرات الأنبياء واختر طريقك!", nl: "Beleef de avonturen van de profeten!", tr: "Peygamberlerin maceralarını yaşa ve seçimlerini yap!", ur: "انبیاء کی مہم جوئی میں حصہ لیں اور اپنے فیصلے کریں!" },
+  "kidsHome.coranCrush": { fr: "Coran Crush", en: "Quran Crush", nl: "Koran Crush", ar: "كراش القرآن", tr: "Kur'an Crush", ur: "قرآن کرش" },
+  "kidsHome.coranCrushDesc": { fr: "Match-3 addictif avec les sourates !", en: "Addictive match-3 with surahs!", nl: "Verslavende match-3 met soera's!", ar: "لعبة مطابقة مع السور!", tr: "Surelerle bağımlılık yapan eşleme oyunu!", ur: "سورتوں کے ساتھ میچ-3 کھیل!" },
+
+  // ─── Coran Crush Game ───────────────────────────────────
+  "coranCrush.title": { fr: "Coran Crush", en: "Quran Crush", nl: "Koran Crush", ar: "كراش القرآن", tr: "Kur'an Crush", ur: "قرآن کرش" },
+  "coranCrush.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى", tr: "Seviye", ur: "سطح" },
+  "coranCrush.score": { fr: "Score", en: "Score", nl: "Score", ar: "النقاط", tr: "Puan", ur: "اسکور" },
+  "coranCrush.moves": { fr: "Coups", en: "Moves", nl: "Zetten", ar: "الحركات", tr: "Hamle", ur: "چالیں" },
+  "coranCrush.levelComplete": { fr: "Niveau réussi !", en: "Level Complete!", nl: "Niveau voltooid!", ar: "المستوى مكتمل!", tr: "Seviye tamamlandı!", ur: "سطح مکمل!" },
+  "coranCrush.gameOver": { fr: "Partie terminée", en: "Game Over", nl: "Spel voorbij", ar: "انتهت اللعبة", tr: "Oyun bitti", ur: "کھیل ختم" },
+  "coranCrush.nextLevel": { fr: "Niveau suivant", en: "Next Level", nl: "Volgend niveau", ar: "المستوى التالي", tr: "Sonraki seviye", ur: "اگلا سطح" },
+  "coranCrush.retry": { fr: "Réessayer", en: "Retry", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar dene", ur: "دوبارہ کوشش" },
+  "coranCrush.cleared": { fr: "éliminés", en: "cleared", nl: "verwijderd", ar: "تمت إزالتها", tr: "temizlendi", ur: "صاف" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
