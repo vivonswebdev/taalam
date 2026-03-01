@@ -67,6 +67,7 @@ import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityDetail from "./pages/CommunityDetail";
 import FavoritesNotesPage from "./pages/FavoritesNotesPage";
+import HifzTodayPage from "./pages/HifzTodayPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
