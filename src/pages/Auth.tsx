@@ -333,10 +333,11 @@ export default function Auth() {
               <label className="text-sm font-medium text-foreground mb-1.5 block">Code de vérification</label>
               <Input
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="123456"
-                maxLength={6}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 8))}
+                placeholder="12345678"
+                maxLength={8}
                 className="text-center text-lg font-mono tracking-widest"
+                inputMode="numeric"
               />
             </div>
             <div>
