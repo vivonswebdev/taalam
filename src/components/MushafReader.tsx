@@ -4,6 +4,7 @@ import {
   ArrowLeft, Bookmark, BookmarkCheck, Settings2,
   ChevronDown, Moon, Gauge, BookOpen, Palette,
   Play, Pause, SkipForward, SkipBack, ChevronsLeft, ChevronsRight, Repeat,
+  Zap,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -15,6 +16,9 @@ import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
+import { useXP } from "@/hooks/useXP";
+import { useQuranHabits } from "@/hooks/useQuranHabits";
+import { calcReadingXP } from "@/lib/xpCalculator";
 import type { Surah } from "@/data/surahs";
 
 interface MushafReaderProps {
@@ -40,7 +44,11 @@ export default function MushafReader({
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
-
+  const xp = useXP();
+  const habits = useQuranHabits();
+  const [sessionXP, setSessionXP] = useState(0);
+  const readAyahsRef = useRef<Set<number>>(new Set());
+  const ayahTimerRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
@@ -98,15 +106,25 @@ export default function MushafReader({
     globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0);
   }, []);
 
-  // Listen for surah changes from global audio (e.g. auto-advance to next surah)
+  // Listen for surah changes from global audio + award XP for listened ayahs
   useEffect(() => {
     globalAudio.onAyahChange.current = (surahNum: number, ayahIdx: number) => {
       if (surahNum !== surah.number) {
-        // Global audio switched to a different surah — request navigation
         if (surahNum > surah.number && onRequestNextSurah) {
           onRequestNextSurah();
         } else if (surahNum < surah.number && onRequestPrevSurah) {
           onRequestPrevSurah();
+        }
+      } else {
+        // Award XP for listened ayah
+        if (!readAyahsRef.current.has(ayahIdx)) {
+          readAyahsRef.current.add(ayahIdx);
+          const earned = calcReadingXP(1);
+          if (earned > 0) {
+            xp.addXP(earned);
+            setSessionXP(prev => prev + earned);
+          }
+          habits.addAyat(1);
         }
       }
     };
@@ -197,8 +215,34 @@ export default function MushafReader({
   );
 
   const setAyahRef = useCallback((index: number, el: HTMLDivElement | null) => {
-    if (el) ayahRefs.current.set(index, el); else ayahRefs.current.delete(index);
-  }, []);
+    if (el) {
+      ayahRefs.current.set(index, el);
+      // Start a 5-second timer for reading XP
+      if (!readAyahsRef.current.has(index) && !ayahTimerRef.current.has(index)) {
+        const timer = setTimeout(() => {
+          if (!readAyahsRef.current.has(index)) {
+            readAyahsRef.current.add(index);
+            const earned = calcReadingXP(1);
+            if (earned > 0) {
+              xp.addXP(earned);
+              setSessionXP(prev => prev + earned);
+            }
+            habits.addAyat(1);
+          }
+          ayahTimerRef.current.delete(index);
+        }, 5000);
+        ayahTimerRef.current.set(index, timer);
+      }
+    } else {
+      ayahRefs.current.delete(index);
+      // Cancel timer if ayah scrolled out of view
+      const timer = ayahTimerRef.current.get(index);
+      if (timer) {
+        clearTimeout(timer);
+        ayahTimerRef.current.delete(index);
+      }
+    }
+  }, [xp, habits]);
 
   const scrollToAyahIndex = useCallback((index: number) => {
     const el = ayahRefs.current.get(index);
@@ -249,6 +293,13 @@ export default function MushafReader({
         <button onClick={() => setShowSettings(!showSettings)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <Settings2 size={18} />
         </button>
+        {/* Reading XP indicator */}
+        {sessionXP > 0 && (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-primary/10 rounded-full px-2.5 py-1">
+            <Zap size={12} className="text-primary" />
+            <span className="text-xs font-bold text-primary">+{sessionXP}</span>
+          </motion.div>
+        )}
       </div>
 
       {/* Settings panel */}
