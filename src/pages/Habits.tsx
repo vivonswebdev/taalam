@@ -200,11 +200,11 @@ export default function Habits() {
           {/* Level badge */}
           <div className="bg-card border border-border rounded-2xl p-3 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-xl">
-              {xp.levelBadge.emoji}
+              {qxp.badge.emoji}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-foreground">{xp.levelBadge.title}</p>
-              <p className="text-[11px] text-muted-foreground">Niveau {xp.level} · {xp.xpTotal} XP total</p>
+              <p className="text-sm font-semibold text-foreground">{qxp.badge.title}</p>
+              <p className="text-[11px] text-muted-foreground">Niveau {qxp.level} · {qxp.xp} XP total</p>
             </div>
           </div>
 
