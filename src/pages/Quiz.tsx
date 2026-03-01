@@ -276,7 +276,7 @@ export default function Quiz() {
 
   // ═══ CATEGORY SELECTION ═══
   if (!category) {
-    const categoryOrder: QuizCategory[] = ["tajweed", "memorization", "general", "adaptive", "perfect", "kids"];
+    const categoryOrder: QuizCategory[] = ["tajweed", "memorization", "general", "prophets", "islam_basics", "animals", "adaptive", "perfect", "kids"];
 
     return (
       <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
