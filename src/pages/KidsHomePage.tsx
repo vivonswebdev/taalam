@@ -9,6 +9,14 @@ import { Badge } from "@/components/ui/badge";
 
 const KIDS_CARDS = [
   {
+    emoji: "🌙",
+    titleKey: "kidsHome.checklist",
+    descKey: "kidsHome.checklistDesc",
+    path: "/kids-checklist",
+    gradient: "from-indigo-600/30 to-violet-600/15",
+    border: "border-indigo-500/25",
+  },
+  {
     emoji: "🧒",
     titleKey: "kidsHome.kidsQuiz",
     descKey: "kidsHome.kidsQuizDesc",
@@ -55,14 +63,6 @@ const KIDS_CARDS = [
     path: "/kids-mosque-map",
     gradient: "from-cyan-600/30 to-teal-600/15",
     border: "border-cyan-500/25",
-  },
-  {
-    emoji: "🌙",
-    titleKey: "kidsHome.checklist",
-    descKey: "kidsHome.checklistDesc",
-    path: "/kids-checklist",
-    gradient: "from-indigo-600/30 to-violet-600/15",
-    border: "border-indigo-500/25",
   },
   {
     emoji: "🤲",
