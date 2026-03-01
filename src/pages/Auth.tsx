@@ -46,7 +46,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { signUpWithEmail } = useAuth();
   const { setMode: setGlobalMode, setAgeGroup: setGlobalAgeGroup } = useUserMode();
 
