@@ -15,6 +15,33 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+const COUNTRIES = [
+  { code: "FR", flag: "🇫🇷", label: "France" },
+  { code: "BE", flag: "🇧🇪", label: "Belgique" },
+  { code: "MA", flag: "🇲🇦", label: "Maroc" },
+  { code: "DZ", flag: "🇩🇿", label: "Algérie" },
+  { code: "TN", flag: "🇹🇳", label: "Tunisie" },
+  { code: "NL", flag: "🇳🇱", label: "Nederland" },
+  { code: "GB", flag: "🇬🇧", label: "UK" },
+  { code: "US", flag: "🇺🇸", label: "USA" },
+  { code: "DE", flag: "🇩🇪", label: "Deutschland" },
+  { code: "SA", flag: "🇸🇦", label: "السعودية" },
+  { code: "AE", flag: "🇦🇪", label: "الإمارات" },
+  { code: "TR", flag: "🇹🇷", label: "Türkiye" },
+  { code: "PK", flag: "🇵🇰", label: "Pakistan" },
+  { code: "EG", flag: "🇪🇬", label: "مصر" },
+  { code: "CA", flag: "🇨🇦", label: "Canada" },
+  { code: "CH", flag: "🇨🇭", label: "Suisse" },
+  { code: "SN", flag: "🇸🇳", label: "Sénégal" },
+  { code: "ML", flag: "🇲🇱", label: "Mali" },
+  { code: "CI", flag: "🇨🇮", label: "Côte d'Ivoire" },
+  { code: "ID", flag: "🇮🇩", label: "Indonesia" },
+  { code: "MY", flag: "🇲🇾", label: "Malaysia" },
+  { code: "QA", flag: "🇶🇦", label: "قطر" },
+  { code: "KW", flag: "🇰🇼", label: "الكويت" },
+  { code: "LB", flag: "🇱🇧", label: "لبنان" },
+];
+
 const AGE_GROUPS: { id: AgeGroup; icon: string; label: string; desc: string }[] = [
   { id: "child", icon: "👧", label: "Enfant / ado", desc: "Moins de 16 ans" },
   { id: "adult", icon: "🧑", label: "Adulte", desc: "16–60 ans" },
