@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Loader2, ArrowLeft, Settings2, Moon, Sun, Type, User,
-  Bookmark, ChevronRight,
+  Bookmark, ChevronRight, Star,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslationPreference } from "@/hooks/useTranslationPreference";
@@ -185,6 +185,12 @@ export default function Reading() {
             <p className="text-sm epic-text-muted mt-0.5">{t("reading.subtitle")}</p>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/favorites-notes")}
+              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"
+            >
+              <Star size={18} className="epic-text-gold" />
+            </button>
             <button
               onClick={() => navigate("/bookmarks")}
               className="w-9 h-9 rounded-full bg-black/40 backdrop-blur flex items-center justify-center"

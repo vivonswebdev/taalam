@@ -66,6 +66,7 @@ import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityDetail from "./pages/CommunityDetail";
+import FavoritesNotesPage from "./pages/FavoritesNotesPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -151,6 +152,7 @@ const App = () => (
               <Route path="/quran-hub" element={<QuranHub />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
+              <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
