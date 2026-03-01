@@ -1,11 +1,18 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, UserPlus, BookOpen, Gamepad2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, UserPlus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useChildProfiles } from "@/hooks/useChildProfiles";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import { Badge } from "@/components/ui/badge";
+
+type KidsTab = "education" | "games";
+
+const TAB_IDS: KidsTab[] = ["education", "games"];
+const TAB_EMOJIS: Record<KidsTab, string> = { education: "📚", games: "🎮" };
+const TAB_KEYS: Record<KidsTab, string> = { education: "kidsHome.educationSection", games: "kidsHome.gamesSection" };
 
 const EDUCATION_CARDS = [
   { emoji: "🌙", titleKey: "kidsHome.checklist", descKey: "kidsHome.checklistDesc", path: "/kids-checklist", gradient: "from-indigo-600/30 to-violet-600/15", border: "border-indigo-500/25" },
@@ -37,6 +44,7 @@ export default function KidsHomePage() {
   const { profiles } = useChildProfiles();
   const checklist = useKidsChecklist();
   const hasChildren = profiles.length > 0;
+  const [activeTab, setActiveTab] = useState<KidsTab>("education");
 
   // Quiz stats from localStorage
   const quizScore = (() => {
