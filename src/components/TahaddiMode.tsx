@@ -25,7 +25,7 @@ const THRESHOLDS = [85, 90, 95] as const;
 
 export default function TahaddiMode({ surah, onBack, isChildMode, t }: TahaddiModeProps) {
   const [screen, setScreen] = useState<Screen>("setup");
-  const { addXP } = useXP();
+  const { addXp } = useQuranXp();
 
   // Setup state
   const [ayahStart, setAyahStart] = useState(0);
