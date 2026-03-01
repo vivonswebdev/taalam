@@ -60,6 +60,7 @@ import KidsPillarQuizPage from "./pages/KidsPillarQuizPage";
 import KidsPrayerMazePage from "./pages/KidsPrayerMazePage";
 import KidsAsmaHuntPage from "./pages/KidsAsmaHuntPage";
 import KidsProphetStoryGamePage from "./pages/KidsProphetStoryGamePage";
+import CoranCrush from "./pages/CoranCrush";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
@@ -156,6 +157,7 @@ const App = () => (
               <Route path="/kids-prayer-maze" element={<KidsPrayerMazePage />} />
               <Route path="/kids-asma-hunt" element={<KidsAsmaHuntPage />} />
               <Route path="/kids-prophet-game" element={<KidsProphetStoryGamePage />} />
+              <Route path="/crush" element={<CoranCrush />} />
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
