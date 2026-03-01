@@ -1,10 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { getMaladieById } from "@/data/maladiesPresets";
-import { ArrowLeft, Play, BookOpen } from "lucide-react";
+import { ArrowLeft, Play, BookOpen, Headphones } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
 import { useCallback } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import type { MoodVerse } from "@/data/moodPresets";
+
+function verseLabel(v: MoodVerse): string {
+  if (v.start && v.end) return `${v.start}–${v.end}`;
+  if (v.ayahs && v.ayahs.length) {
+    if (v.ayahs.length <= 4) return v.ayahs.join(", ");
+    return `${v.ayahs[0]}–${v.ayahs[v.ayahs.length - 1]}`;
+  }
+  return "";
+}
+
+function verseCount(v: MoodVerse): number {
+  if (v.start && v.end) return v.end - v.start + 1;
+  if (v.ayahs) return v.ayahs.length;
+  return 0;
+}
 
 export default function MaladieDetail() {
   const { id } = useParams<{ id: string }>();
@@ -13,13 +29,24 @@ export default function MaladieDetail() {
   const maladie = getMaladieById(id || "");
   const { play } = useGlobalAudio();
 
-  const handleListen = useCallback(() => {
+  const handleListenAll = useCallback(() => {
     if (!maladie) return;
     const first = maladie.verses[0];
     if (!first) return;
     const startAyah = first.start ? first.start - 1 : first.ayahs ? first.ayahs[0] - 1 : 0;
     play(first.surahNumber, first.surahName, first.surahNameArabic, first.end || 286, startAyah);
   }, [maladie, play]);
+
+  const handleListenVerse = useCallback((v: MoodVerse) => {
+    const startAyah = v.start ? v.start - 1 : v.ayahs ? v.ayahs[0] - 1 : 0;
+    const endAyah = v.end || (v.ayahs ? v.ayahs[v.ayahs.length - 1] : 286);
+    play(v.surahNumber, v.surahName, v.surahNameArabic, endAyah, startAyah);
+  }, [play]);
+
+  const handleReadVerse = useCallback((v: MoodVerse) => {
+    const ayah = v.start || (v.ayahs ? v.ayahs[0] : 1);
+    navigate(`/reading?surah=${v.surahNumber}&ayah=${ayah}`);
+  }, [navigate]);
 
   if (!maladie) {
     return (
@@ -31,24 +58,22 @@ export default function MaladieDetail() {
 
   const title = t(`maladie.${maladie.id}` as any) || maladie.title;
   const subtitle = t(`maladie.${maladie.id}.sub` as any) || maladie.subtitle;
-  const versesCount = maladie.verses.reduce((acc, v) => {
-    if (v.start && v.end) return acc + (v.end - v.start + 1);
-    if (v.ayahs) return acc + v.ayahs.length;
-    return acc;
-  }, 0);
+  const totalVerses = maladie.verses.reduce((acc, v) => acc + verseCount(v), 0);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${maladie.color} relative`}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       <div className="relative z-10 flex flex-col min-h-screen pb-24">
+        {/* Header */}
         <div className="flex items-center gap-3 px-4 py-4">
           <button onClick={() => navigate("/moods")} className="p-2 rounded-full bg-white/10 text-white">
             <ArrowLeft size={20} />
           </button>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center px-6 text-center gap-6">
+        {/* Hero */}
+        <div className="flex flex-col items-center px-6 text-center gap-4 pt-2">
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -65,12 +90,13 @@ export default function MaladieDetail() {
           </div>
 
           <div className="text-white/40 text-xs">
-            {maladie.verses.length} {t("maladie.passages" as any)} · {versesCount} {t("maladie.verses" as any)}
+            {maladie.verses.length} {t("maladie.passages" as any)} · {totalVerses} {t("maladie.verses" as any)}
           </div>
 
-          <div className="flex flex-col gap-3 w-full max-w-xs mt-4">
+          {/* Action buttons */}
+          <div className="flex flex-col gap-3 w-full max-w-xs mt-2">
             <button
-              onClick={handleListen}
+              onClick={handleListenAll}
               className="flex items-center justify-center gap-3 bg-white/15 hover:bg-white/25 text-white font-semibold py-4 rounded-2xl border border-white/20 transition-colors"
             >
               <Play size={22} fill="white" />
@@ -90,24 +116,48 @@ export default function MaladieDetail() {
               📖 {t("maladie.readVerses" as any)}
             </button>
           </div>
+        </div>
 
-          {/* Verses list */}
-          <div className="w-full max-w-xs mt-6 space-y-2">
+        {/* Verses list */}
+        <div className="px-4 mt-8">
+          <h2 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 px-1">
+            📖 {t("maladie.passages" as any)}
+          </h2>
+          <div className="space-y-2">
             {maladie.verses.map((v, i) => (
-              <button
+              <motion.div
                 key={i}
-                onClick={() => {
-                  const ayah = v.start || (v.ayahs ? v.ayahs[0] : 1);
-                  navigate(`/reading?surah=${v.surahNumber}&ayah=${ayah}`);
-                }}
-                className="w-full flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-left transition-colors"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3"
               >
-                <span className="font-arabic text-white/80">{v.surahNameArabic}</span>
-                <span className="text-white/50 text-xs flex-1">{v.surahName}</span>
-                <span className="text-white/30 text-[10px]">
-                  {v.start && v.end ? `${v.start}-${v.end}` : v.ayahs?.join(", ")}
-                </span>
-              </button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">
+                    {v.surahName} <span className="text-white/40 font-normal">({v.surahNumber})</span>
+                  </p>
+                  <p className="text-[11px] text-white/50 mt-0.5">
+                    <span className="font-arabic">{v.surahNameArabic}</span>
+                    {" · "}
+                    {t("maladie.verses" as any)}: {verseLabel(v)}
+                    {" · "}
+                    {verseCount(v)} {t("maladie.verses" as any)}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => handleReadVerse(v)}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
+                >
+                  <BookOpen size={16} />
+                </button>
+                <button
+                  onClick={() => handleListenVerse(v)}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
+                >
+                  <Headphones size={16} />
+                </button>
+              </motion.div>
             ))}
           </div>
         </div>
