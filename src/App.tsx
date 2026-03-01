@@ -55,6 +55,11 @@ import KidsProphetStoriesPage from "./pages/KidsProphetStoriesPage";
 import KidsProphetStoryDetail from "./pages/KidsProphetStoryDetail";
 import KidsQuizPage from "./pages/KidsQuizPage";
 import KidsSheytanGame from "./pages/KidsSheytanGame";
+import KidsMemoryCoranPage from "./pages/KidsMemoryCoranPage";
+import KidsPillarQuizPage from "./pages/KidsPillarQuizPage";
+import KidsPrayerMazePage from "./pages/KidsPrayerMazePage";
+import KidsAsmaHuntPage from "./pages/KidsAsmaHuntPage";
+import KidsProphetStoryGamePage from "./pages/KidsProphetStoryGamePage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
@@ -145,6 +150,11 @@ const App = () => (
               <Route path="/kids-stories/:storyId" element={<KidsProphetStoryDetail />} />
               <Route path="/kids-quiz" element={<KidsQuizPage />} />
               <Route path="/kids-sheytan" element={<KidsSheytanGame />} />
+              <Route path="/kids-memory" element={<KidsMemoryCoranPage />} />
+              <Route path="/kids-pillar-quiz" element={<KidsPillarQuizPage />} />
+              <Route path="/kids-prayer-maze" element={<KidsPrayerMazePage />} />
+              <Route path="/kids-asma-hunt" element={<KidsAsmaHuntPage />} />
+              <Route path="/kids-prophet-game" element={<KidsProphetStoryGamePage />} />
               <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
               <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
               <Route path="/assignments-tutorial" element={<AssignmentsTutorial />} />
