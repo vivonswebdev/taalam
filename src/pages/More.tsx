@@ -47,12 +47,12 @@ export default function More() {
   const { t } = useLanguage();
   const { mode } = useUserMode();
 
-  // SECTION 2 – Communauté
+  // SECTION – Communauté
   const communityItems: MenuItem[] = [
     { icon: "🌍", label: t("community.title" as any), desc: t("more.communityDesc" as any), path: "/community" },
   ];
 
-  // SECTION 3 – Qur'an & pratique
+  // SECTION – Qur'an & pratique
   const quranItems: MenuItem[] = [
     { icon: "📖", label: t("more.mushaf" as any), desc: t("more.mushafDesc" as any), path: "/mushaf" },
     { icon: "📿", label: t("more.athkar" as any), desc: t("more.athkarDesc" as any), path: "/moods" },
@@ -63,13 +63,21 @@ export default function More() {
     { icon: "🎧", label: t("more.advancedListening" as any), desc: t("more.advancedListeningDesc" as any), path: "/listening" },
   ];
 
-  // SECTION 4 – Progression & gamification
+  // SECTION – Outils pédagogiques
+  const toolsItems: MenuItem[] = [
+    { icon: "🎙️", label: t("more.recitation" as any), desc: t("more.recitationDesc" as any), path: "/recitation" },
+    { icon: "📚", label: t("more.quranHub" as any), desc: t("more.quranHubDesc" as any), path: "/quran-hub" },
+    { icon: "📝", label: t("more.quranReading" as any), desc: t("more.quranReadingDesc" as any), path: "/reading" },
+    { icon: "📋", label: t("more.assignmentsTutorial" as any), desc: t("more.assignmentsTutorialDesc" as any), path: "/assignments-tutorial" },
+  ];
+
+  // SECTION – Progression & gamification
   const progressItems: MenuItem[] = [
     { icon: "🏆", label: t("more.ranking"), desc: t("more.rankingDesc"), path: "/leaderboard" },
     { icon: "🎯", label: t("more.habitsProgress"), desc: t("more.habitsDesc"), path: "/habits" },
   ];
 
-  // SECTION 5 – Compte & réglages
+  // SECTION – Compte & réglages
   const accountItems: MenuItem[] = [
     { icon: "⚙️", label: t("nav.settings"), desc: t("more.settingsDesc"), path: "/settings" },
     { icon: "👤", label: t("more.loginProfile"), path: "/auth" },
@@ -77,7 +85,7 @@ export default function More() {
     { icon: "❓", label: t("more.helpFaq" as any), desc: t("more.helpFaqDesc" as any), path: "/faq" },
   ];
 
-  // SECTION 6 – Modules d'étude
+  // SECTION – Modules d'étude
   const modulesItems: MenuItem[] = [
     { icon: "🧠", label: t("more.hifzPlan"), desc: t("more.hifzPlanDesc"), path: "/hifz-plan" },
     { icon: "🔁", label: t("more.hifzSrs" as any), desc: t("more.hifzSrsDesc" as any), path: "/hifz-today" },
@@ -87,14 +95,14 @@ export default function More() {
     { icon: "⭐", label: t("more.favoritesNotes" as any), desc: t("more.favoritesNotesDesc" as any), path: "/favorites-notes" },
   ];
 
-  // SECTION 7 – Famille & classes
+  // SECTION – Famille & classes
   const familyItems: MenuItem[] = [
     { icon: "👨‍👩‍👧", label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
     { icon: "👨‍🏫", label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
     { icon: "📊", label: t("more.teacherDashboard" as any), desc: t("more.teacherDashboardDesc" as any), path: "/teacher-dashboard" },
   ];
 
-  // SECTION 8 – Installer l'app
+  // SECTION – Installer l'app
   const installItems: MenuItem[] = [
     { icon: "📲", label: t("more.installApp" as any), desc: t("more.installAppDesc" as any), path: "/install-app" },
   ];
@@ -116,10 +124,13 @@ export default function More() {
         {/* SECTION 2 – Communauté */}
         <MenuSection title={t("more.sectionCommunity" as any)} items={communityItems} />
 
-        {/* SECTION 3 – Qur'an & pratique */}
+        {/* Qur'an & pratique */}
         <MenuSection title={t("more.sectionQuranPractice" as any)} items={quranItems} />
 
-        {/* SECTION 4 – Progression */}
+        {/* Outils pédagogiques */}
+        <MenuSection title={t("more.sectionTools" as any)} items={toolsItems} />
+
+        {/* Progression */}
         <MenuSection title={t("more.sectionProgress" as any)} items={progressItems} />
 
         {/* SECTION 5 – Compte & réglages */}
