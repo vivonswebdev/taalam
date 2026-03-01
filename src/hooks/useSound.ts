@@ -62,6 +62,45 @@ const SOUND_GENERATORS: Record<SoundName, (ctx: AudioContext) => void> = {
     const { osc } = createOscillator(ctx, 280, "triangle", 0.2, 0.1);
     osc.start(); osc.stop(ctx.currentTime + 0.2);
   },
+
+  // Quick bright "ding" for collecting dots
+  collectDing: (ctx) => {
+    const { osc } = createOscillator(ctx, 1200, "sine", 0.12, 0.1);
+    osc.start(); osc.stop(ctx.currentTime + 0.12);
+  },
+
+  // Rising triumphant chord for power-up (SubhanAllah feel)
+  powerUpSubhanAllah: (ctx) => {
+    [660, 880, 1100, 1320].forEach((freq, i) => {
+      const { osc } = createOscillator(ctx, freq, "sine", 0.5, 0.1);
+      osc.start(ctx.currentTime + i * 0.08);
+      osc.stop(ctx.currentTime + i * 0.08 + 0.5);
+    });
+    // Add a gentle shimmer
+    const { osc: shimmer } = createOscillator(ctx, 2200, "sine", 0.8, 0.04);
+    shimmer.frequency.setValueAtTime(2200, ctx.currentTime + 0.1);
+    shimmer.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.8);
+    shimmer.start(ctx.currentTime + 0.1);
+    shimmer.stop(ctx.currentTime + 0.9);
+  },
+
+  // Descending soft tone for game over (AstaghfiruLlah feel)
+  gameOverAstaghfirullah: (ctx) => {
+    [520, 440, 350, 280].forEach((freq, i) => {
+      const { osc } = createOscillator(ctx, freq, "triangle", 0.4, 0.1);
+      osc.start(ctx.currentTime + i * 0.2);
+      osc.stop(ctx.currentTime + i * 0.2 + 0.4);
+    });
+  },
+
+  // Level up fanfare
+  levelUp: (ctx) => {
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const { osc } = createOscillator(ctx, freq, "sine", 0.35, 0.12);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.35);
+    });
+  },
 };
 
 export function useSound() {
