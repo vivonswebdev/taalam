@@ -340,7 +340,7 @@ export default function Quiz() {
           {emoji}
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-2xl font-bold text-foreground">
-          Bravo pour ce quiz !
+          {t("quiz.bravoQuiz" as any)}
         </motion.h1>
 
         {/* XP and streak stats */}
