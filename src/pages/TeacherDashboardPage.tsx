@@ -130,6 +130,8 @@ export default function TeacherDashboardPage() {
             onGetAudioUrl={getAudioUrl}
           />
 
+          <TeacherMessaging classId={selectedClassId} students={students.map(s => ({ userId: s.userId, displayName: s.displayName, avatarEmoji: s.avatarEmoji }))} />
+
           <TeacherStatsSection students={students} assignments={assignmentsWithStats} />
         </div>
       )}
