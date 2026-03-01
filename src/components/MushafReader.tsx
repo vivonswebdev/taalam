@@ -44,7 +44,11 @@ export default function MushafReader({
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
-
+  const xp = useXP();
+  const habits = useQuranHabits();
+  const [sessionXP, setSessionXP] = useState(0);
+  const readAyahsRef = useRef<Set<number>>(new Set());
+  const ayahTimerRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
