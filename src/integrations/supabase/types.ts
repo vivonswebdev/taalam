@@ -1367,6 +1367,50 @@ export type Database = {
           },
         ]
       }
+      teacher_parent_messages: {
+        Row: {
+          class_id: string
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          message_type: string
+          receiver_id: string
+          sender_id: string
+          student_id: string | null
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          message_type?: string
+          receiver_id: string
+          sender_id: string
+          student_id?: string | null
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          message_type?: string
+          receiver_id?: string
+          sender_id?: string
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_parent_messages_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_progress: {
         Row: {
           created_at: string
