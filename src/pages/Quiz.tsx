@@ -356,7 +356,7 @@ export default function Quiz() {
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Flame size={14} className="text-amber-500" />
-                <span className="text-[11px] text-muted-foreground">Meilleure série</span>
+                <span className="text-[11px] text-muted-foreground">{t("quiz.bestStreak" as any)}</span>
               </div>
               <p className="text-xl font-bold text-foreground">{bestStreak}</p>
             </div>
