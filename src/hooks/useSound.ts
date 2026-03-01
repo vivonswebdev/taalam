@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-type SoundName = "qiblaFound" | "verseCorrect" | "sessionComplete" | "error";
+type SoundName = "qiblaFound" | "verseCorrect" | "sessionComplete" | "error" | "collectDing" | "powerUpSubhanAllah" | "gameOverAstaghfirullah" | "levelUp";
 
 // Synthesized sounds using Web Audio API — no external files needed
 function createOscillator(
