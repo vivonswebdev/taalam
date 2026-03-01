@@ -71,8 +71,8 @@ export function ModeSelector() {
         {primary.map(m => renderCard(m))}
       </div>
       {secondary.length > 0 && (
-        <div className="grid grid-cols-3 gap-1.5 pt-1">
-          {secondary.map(m => renderCard(m, true))}
+        <div className={`grid gap-2 pt-1 ${secondary.length === 1 ? "grid-cols-2" : "grid-cols-2"}`}>
+          {secondary.map(m => renderCard(m))}
         </div>
       )}
     </motion.div>
