@@ -146,8 +146,8 @@ export default function ReadOnlyMode({
         onRequestNextSurah={onRequestNextSurah}
       />
 
-      {/* Ayahs list */}
-      <div className="space-y-3">
+      {/* Ayahs list — extra bottom padding so mini-player doesn't cover last ayahs */}
+      <div className="space-y-3 pb-16">
         {surah.ayahs.map((ayah, i) => {
           const isActive = i === currentAyah && playing;
 
