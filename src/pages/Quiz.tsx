@@ -111,7 +111,7 @@ export default function Quiz() {
   const { immersiveEnabled, choices } = useImmersiveBg();
   const epicBg = immersiveEnabled ? getEpicBg(choices.quiz) : null;
   const { setLevel } = useProgress();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [category, setCategory] = useState<QuizCategory | null>(null);
   const [showFlashcards, setShowFlashcards] = useState(false);
   const [current, setCurrent] = useState(0);
