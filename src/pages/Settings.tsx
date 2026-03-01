@@ -9,7 +9,7 @@ import { StickerCollection } from "@/components/StickerReward";
 import { useNavigate } from "react-router-dom";
 import DedicationPopup from "@/components/DedicationPopup";
 import BackgroundPicker from "@/components/BackgroundPicker";
-import OfflineMoodDownloader from "@/components/OfflineMoodDownloader";
+import { useOfflineManager } from "@/hooks/useOfflineManager";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import { useAuth } from "@/hooks/useAuth";
