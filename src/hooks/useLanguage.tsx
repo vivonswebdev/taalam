@@ -2295,6 +2295,20 @@ const translations = {
   "family.msgPlaceholder": { fr: "Bravo pour tes efforts ! Continue...", en: "Great job! Keep going...", nl: "Goed gedaan! Ga zo door...", ar: "أحسنت! واصل...", tr: "Aferin! Devam et...", ur: "شاباش! جاری رکھیں..." },
   "family.trophyNotif": { fr: "t'a envoyé un trophée !", en: "sent you a trophy!", nl: "heeft je een trofee gestuurd!", ar: "أرسل لك جائزة!", tr: "sana bir kupa gönderdi!", ur: "نے آپ کو ٹرافی بھیجی!" },
   "family.familyWith": { fr: "Famille avec", en: "Family with", nl: "Familie met", ar: "عائلة مع", tr: "Aile ile", ur: "خاندان بمع" },
+  // Halaqa MVP - Task Submissions
+  "halaqa.submissions": { fr: "📋 Soumissions élèves", en: "📋 Student Submissions", nl: "📋 Leerling Inzendingen", ar: "📋 تقديمات الطلاب", tr: "📋 Öğrenci Gönderimleri", ur: "📋 طلباء کی جمع کردہ" },
+  "halaqa.pending": { fr: "En attente", en: "Pending", nl: "In afwachting", ar: "قيد الانتظار", tr: "Beklemede", ur: "زیر التواء" },
+  "halaqa.approved": { fr: "Validé", en: "Approved", nl: "Goedgekeurd", ar: "تمت الموافقة", tr: "Onaylandı", ur: "منظور شدہ" },
+  "halaqa.rejected": { fr: "Rejeté", en: "Rejected", nl: "Afgewezen", ar: "مرفوض", tr: "Reddedildi", ur: "مسترد" },
+  "halaqa.approve": { fr: "Valider", en: "Approve", nl: "Goedkeuren", ar: "موافقة", tr: "Onayla", ur: "منظور کریں" },
+  "halaqa.reject": { fr: "Rejeter", en: "Reject", nl: "Afwijzen", ar: "رفض", tr: "Reddet", ur: "مسترد کریں" },
+  "halaqa.note": { fr: "Note", en: "Note", nl: "Opmerking", ar: "ملاحظة", tr: "Not", ur: "نوٹ" },
+  "halaqa.addNote": { fr: "Ajouter une note pour l'élève...", en: "Add a note for the student...", nl: "Voeg een opmerking toe...", ar: "أضف ملاحظة للطالب...", tr: "Öğrenci için not ekle...", ur: "طالب کے لیے نوٹ شامل کریں..." },
+  "halaqa.noSubmissions": { fr: "Aucune soumission pour le moment", en: "No submissions yet", nl: "Nog geen inzendingen", ar: "لا توجد تقديمات بعد", tr: "Henüz gönderim yok", ur: "ابھی تک کوئی جمع نہیں" },
+  "halaqa.uploadAudio": { fr: "📤 Envoyer ma récitation", en: "📤 Upload my recitation", nl: "📤 Mijn recitatie uploaden", ar: "📤 رفع تلاوتي", tr: "📤 Tilavetimi yükle", ur: "📤 میری تلاوت اپلوڈ کریں" },
+  "halaqa.recording": { fr: "Enregistrement...", en: "Recording...", nl: "Opnemen...", ar: "جارٍ التسجيل...", tr: "Kaydediliyor...", ur: "ریکارڈنگ..." },
+  "halaqa.submitting": { fr: "Envoi en cours...", en: "Submitting...", nl: "Wordt verzonden...", ar: "جارٍ الإرسال...", tr: "Gönderiliyor...", ur: "بھیجا جا رہا ہے..." },
+  "halaqa.submitted": { fr: "Soumis avec succès !", en: "Submitted successfully!", nl: "Succesvol ingediend!", ar: "تم التقديم بنجاح!", tr: "Başarıyla gönderildi!", ur: "کامیابی سے جمع ہو گیا!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
