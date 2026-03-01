@@ -458,8 +458,8 @@ export default function Habits() {
         {/* XP Progress Bar */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <ProgressBarDuolingo
-            level={xp.level} xpInLevel={xp.xpInLevel} xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal} xpToday={xp.xpToday} streakDays={xp.streakDays} lastGain={xp.lastGain}
+            level={qxp.level} xpInLevel={qxp.levelProgress.currentInLevel} xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp} xpToday={0} streakDays={streak} lastGain={qxp.lastGain}
           />
         </motion.div>
 
