@@ -574,9 +574,27 @@ export default function HifzControl({ surah, onBack, isChildMode, t }: HifzContr
           </div>
         </div>
 
+        {/* Share exploit button */}
+        <button
+          onClick={() => exploit.shareExploit({
+            type: "hifz",
+            score: s.totalScore,
+            surahName: surah.nameArabic,
+          })}
+          disabled={exploit.sharing || exploit.shared}
+          className={`w-full flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold text-sm transition-all ${
+            exploit.shared
+              ? "bg-success/15 text-success border border-success/30"
+              : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white active:scale-[0.98]"
+          }`}
+        >
+          {exploit.sharing ? <Loader2 size={16} className="animate-spin" /> : exploit.shared ? <CheckCircle2 size={16} /> : <Share2 size={16} />}
+          {exploit.shared ? "Partagé dans tes groupes !" : "Partager mon exploit"}
+        </button>
+
         {/* Actions */}
         <div className="flex gap-3 pt-2 pb-6">
-          <button onClick={() => { session.resetSession(); setScreen("setup"); }}
+          <button onClick={() => { session.resetSession(); exploit.reset(); setScreen("setup"); }}
             className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-border text-foreground font-semibold active:scale-[0.98] transition-transform">
             <RotateCcw size={18} />
             {t("hifz.retry")}
