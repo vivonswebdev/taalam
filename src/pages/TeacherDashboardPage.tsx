@@ -13,6 +13,7 @@ import StudentsList from "@/components/teacher/StudentsList";
 import AssignmentsPanel from "@/components/teacher/AssignmentsPanel";
 import TaskKanban from "@/components/teacher/TaskKanban";
 import TeacherStatsSection from "@/components/TeacherStatsSection";
+import TeacherMessaging from "@/components/teacher/TeacherMessaging";
 
 interface TeacherClass {
   id: string;
