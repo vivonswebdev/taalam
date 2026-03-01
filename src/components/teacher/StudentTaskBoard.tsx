@@ -5,7 +5,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useStudentTasks } from "@/hooks/useStudentTasks";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { SURAHS } from "@/data/surahs";
+import { surahs as SURAHS } from "@/data/surahs";
 
 const TASK_TYPE_ICONS: Record<string, any> = {
   hifz: BookOpen,
