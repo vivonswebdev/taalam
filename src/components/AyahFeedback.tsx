@@ -34,6 +34,7 @@ export default function AyahFeedback({
   onListenAyah,
   isLastAyah,
   isChildMode,
+  onReport,
 }: AyahFeedbackProps) {
   const { t } = useLanguage();
 
