@@ -1,16 +1,15 @@
 project_id = "usgqmmfigvkmxneoegig"
 
-[functions.stt]
-verify_jwt = false
-
-[functions.stt-chunk]
-verify_jwt = false
-
-[functions.find-ayah]
-verify_jwt = false
-
-[functions.check-notifications]
-verify_jwt = false
-
-[functions.community-notify]
-verify_jwt = false
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.check-notifications]
+    verify_jwt = false
+  [functions.community-notify]
+    verify_jwt = false
+  [functions.find-ayah]
+    verify_jwt = false
+  [functions.stt]
+    verify_jwt = false
+  [functions.stt-chunk]
+    verify_jwt = false
