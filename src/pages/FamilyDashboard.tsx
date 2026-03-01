@@ -131,6 +131,7 @@ export default function FamilyDashboard() {
   const [trophyModal, setTrophyModal] = useState<{ familyId: string; toUserId: string; toName: string } | null>(null);
   const [msgModal, setMsgModal] = useState<{ familyId: string; toUserId: string; toName: string } | null>(null);
   const [msgText, setMsgText] = useState("");
+  const [shareFamily, setShareFamily] = useState<string | null>(null);
 
   if (!user) {
     return (
