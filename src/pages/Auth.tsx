@@ -132,6 +132,7 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
   const [countryCode, setCountryCode] = useState("");
+  const [countrySearch, setCountrySearch] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
