@@ -1406,7 +1406,9 @@ const translations = {
   "home.kidsMosqueDesc": { fr: "Voir les mosquées autour de toi (avec Papa/Maman)", en: "See mosques around you (with Mom/Dad)", nl: "Bekijk moskeeën bij jou (met Papa/Mama)", ar: "شاهد المساجد حولك (مع ماما/بابا)", tr: "Etrafındaki camileri gör (anne/babayla)", ur: "اپنے ارد گرد مساجد دیکھیں (ماں/باپ کے ساتھ)" },
 
   "kidsHome.title": { fr: "Espace enfants", en: "Kids Zone", nl: "Kinderhoek", ar: "ركن الأطفال", tr: "Çocuk Alanı", ur: "بچوں کا حصہ" },
-  "kidsHome.subtitle": { fr: "Tout pour apprendre le Coran et la prière en s'amusant.", en: "Everything to learn Quran and prayer while having fun.", nl: "Alles om de Koran en het gebed spelenderwijs te leren.", ar: "كل ما تحتاجه لتعلّم القرآن والصلاة بمرح.", tr: "Kuran ve namaz öğrenmenin eğlenceli yolu.", ur: "قرآن اور نماز سیکھنے کا تفریحی طریقہ۔" },
+    "kidsHome.subtitle": { fr: "Tout pour apprendre le Coran et la prière en s'amusant.", en: "Everything to learn Quran and prayer while having fun.", nl: "Alles om de Koran en het gebed spelenderwijs te leren.", ar: "كل ما تحتاجه لتعلّم القرآن والصلاة بمرح.", tr: "Kuran ve namaz öğrenmenin eğlenceli yolu.", ur: "قرآن اور نماز سیکھنے کا تفریحی طریقہ۔" },
+    "kidsHome.educationSection": { fr: "📚 Éducation", en: "📚 Education", nl: "📚 Educatie", ar: "📚 تعليم", tr: "📚 Eğitim", ur: "📚 تعلیم" },
+    "kidsHome.gamesSection": { fr: "🎮 Jeux", en: "🎮 Games", nl: "🎮 Spelletjes", ar: "🎮 ألعاب", tr: "🎮 Oyunlar", ur: "🎮 کھیل" },
   "kidsHome.noorani": { fr: "Noorani Qaida", en: "Noorani Qaida", nl: "Noorani Qaida", ar: "القاعدة النورانية", tr: "Noorani Qaida", ur: "نورانی قاعدہ" },
   "kidsHome.nooraniDesc": { fr: "Apprends les lettres arabes et la lecture pas à pas.", en: "Learn Arabic letters and reading step by step.", nl: "Leer Arabische letters en lezen stap voor stap.", ar: "تعلّم الحروف العربية والقراءة خطوة بخطوة.", tr: "Arap harflerini ve okumayı adım adım öğren.", ur: "عربی حروف اور پڑھائی قدم بہ قدم سیکھیں۔" },
   "kidsHome.prayer": { fr: "Apprendre à prier", en: "Learn to Pray", nl: "Leren bidden", ar: "تعلّم الصلاة", tr: "Namaz öğren", ur: "نماز سیکھیں" },
