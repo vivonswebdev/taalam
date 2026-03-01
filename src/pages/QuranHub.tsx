@@ -42,7 +42,7 @@ export default function QuranHub() {
           onClick={() => navigate("/reading")}
           className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg aspect-square"
         >
-          <span className="text-6xl">📚</span>
+          <span className="text-6xl">🎧</span>
           <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.readingTitle")}</p>
             <p className="text-xs font-semibold text-white/80 mt-1">{t("quranHub.readingSubtitle")}</p>
