@@ -23,8 +23,8 @@ export default function QuranHub() {
           transition={{ delay: 0.1 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/mushaf")}
-          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg aspect-square"
-        >
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg aspect-square py-[30px]">
+
           <span className="text-6xl">📖</span>
           <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.mushafTitle")}</p>
@@ -40,8 +40,8 @@ export default function QuranHub() {
           transition={{ delay: 0.2 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/reading")}
-          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg aspect-square"
-        >
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg aspect-square">
+
           <span className="text-6xl">🎧</span>
           <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.readingTitle")}</p>
@@ -61,8 +61,8 @@ export default function QuranHub() {
             transition={{ delay: 0.3 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate("/quran")}
-            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
-          >
+            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors">
+
             <Mic size={18} className="text-primary shrink-0" />
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.tarteelButton")}</p>
@@ -75,8 +75,8 @@ export default function QuranHub() {
             transition={{ delay: 0.35 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate("/live-quran")}
-            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
-          >
+            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors">
+
             <Radio size={18} className="text-green-500 shrink-0" />
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
@@ -85,6 +85,6 @@ export default function QuranHub() {
           </motion.button>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
