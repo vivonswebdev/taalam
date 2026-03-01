@@ -8,7 +8,7 @@ import {
 import type { Surah } from "@/data/surahs";
 import { useTahaddiSession, MAX_ATTEMPTS } from "@/hooks/useTahaddiSession";
 import { useVoiceRecognition, compareTexts } from "@/hooks/useVoiceRecognition";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import Confetti from "@/components/Confetti";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 
