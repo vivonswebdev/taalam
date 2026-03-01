@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { moodPresets } from "@/data/moodPresets";
 import { maladiesPresets } from "@/data/maladiesPresets";
@@ -13,6 +13,26 @@ const TAB_IDS: Tab[] = ["moods", "maladies", "athkar"];
 const TAB_EMOJIS: Record<Tab, string> = { moods: "💓", maladies: "🩺", athkar: "📿" };
 const TAB_KEYS: Record<Tab, string> = { moods: "moods.tabMoods", maladies: "moods.tabMaladies", athkar: "moods.tabAthkar" };
 
+const RECENT_MOODS_KEY = "taalam_recent_moods";
+const MAX_RECENT = 3;
+
+function getRecentMoods(): string[] {
+  try {
+    const raw = localStorage.getItem(RECENT_MOODS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.slice(0, MAX_RECENT) : [];
+  } catch { return []; }
+}
+
+export function trackMoodVisit(id: string) {
+  try {
+    const recent = getRecentMoods().filter(r => r !== id);
+    recent.unshift(id);
+    localStorage.setItem(RECENT_MOODS_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+  } catch {}
+}
+
 function MoodCard({ icon, title, desc, loop, onClick }: {
   icon: string; title: string; desc: string; loop?: boolean; onClick?: () => void;
 }) {
@@ -20,7 +40,7 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
   return (
     <button
       onClick={onClick}
-      className="w-full flex flex-col items-start gap-2 rounded-2xl px-3 py-3 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[90px]"
+      className="w-full flex flex-col items-start gap-2 rounded-2xl px-3 py-3 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[90px] relative"
     >
       <div className="flex items-center justify-between w-full">
         <span className="text-3xl leading-none">{icon}</span>
@@ -38,6 +58,49 @@ function MoodCard({ icon, title, desc, loop, onClick }: {
   );
 }
 
+function RecentMoodsSection() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const [recentIds, setRecentIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    setRecentIds(getRecentMoods());
+  }, []);
+
+  if (recentIds.length === 0) return null;
+
+  // Resolve each id to a mood, maladie, or athkar
+  const items = recentIds.map(id => {
+    const mood = moodPresets.find(m => m.id === id);
+    if (mood) return { id, emoji: mood.emoji, title: t(`mood.${id}` as any) || mood.title, path: `/moods/${id}` };
+    const mal = maladiesPresets.find(m => m.id === id);
+    if (mal) return { id, emoji: mal.emoji, title: t(`maladie.${id}` as any) || mal.title, path: `/maladies/${id}` };
+    return null;
+  }).filter(Boolean) as { id: string; emoji: string; title: string; path: string }[];
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="px-4 pt-3 pb-1">
+      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">
+        🕐 {t("moods.recentTitle" as any)}
+      </p>
+      <div className="flex gap-2 overflow-x-auto no-scrollbar">
+        {items.map(item => (
+          <button
+            key={item.id}
+            onClick={() => navigate(item.path)}
+            className="shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 bg-card/70 border border-border hover:border-primary/50 transition-colors"
+          >
+            <span className="text-base">{item.emoji}</span>
+            <span className="text-xs font-medium text-foreground whitespace-nowrap">{item.title}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Moods() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -47,6 +110,12 @@ export default function Moods() {
   const filteredAthkar = athkarFilter === "all"
     ? athkarGroups
     : athkarGroups.filter((g) => g.category === athkarFilter);
+
+  // All moods together: non-loop first, then loop
+  const allMoods = [
+    ...moodPresets.filter(m => !m.loop),
+    ...moodPresets.filter(m => m.loop),
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
@@ -80,28 +149,6 @@ export default function Moods() {
         </div>
       </div>
 
-      {/* ═══ BOUCLES CORAN (always visible at top) ═══ */}
-      {moodPresets.filter(m => m.loop).length > 0 && (
-        <div className="px-4 pt-3 pb-1">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">🔁 {t("moods.loopSection" as any) || "Boucles Coran"}</p>
-          <div className="grid grid-cols-2 gap-2">
-            {moodPresets.filter(m => m.loop).map((mood) => {
-              const titleKey = `mood.${mood.id}` as any;
-              return (
-                <button
-                  key={mood.id}
-                  onClick={() => navigate(`/moods/${mood.id}`)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 bg-primary/10 border border-primary/30 hover:border-primary/60 transition-colors"
-                >
-                  <span className="text-lg">{mood.emoji}</span>
-                  <span className="text-xs font-semibold text-foreground">{t(titleKey) || mood.title}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       <AnimatePresence mode="wait">
         {/* ═══ ÉTATS DU CŒUR ═══ */}
         {activeTab === "moods" && (
@@ -112,8 +159,19 @@ export default function Moods() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="grid grid-cols-2 gap-3 px-4 pt-3 pb-4">
-              {moodPresets.filter(m => !m.loop).map((mood, i) => {
+            {/* Recently used */}
+            <RecentMoodsSection />
+
+            {/* Section title for loops */}
+            <div className="px-4 pt-3 pb-1">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-1">
+                🔁 {t("moods.loopSection" as any)}
+              </p>
+            </div>
+
+            {/* All moods in unified grid */}
+            <div className="grid grid-cols-2 gap-3 px-4 pb-4">
+              {allMoods.map((mood, i) => {
                 const titleKey = `mood.${mood.id}` as any;
                 const subKey = `mood.${mood.id}.sub` as any;
                 return (

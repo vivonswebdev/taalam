@@ -3,9 +3,10 @@ import { getMoodById } from "@/data/moodPresets";
 import { ArrowLeft, Play, BookOpen, Headphones } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import type { MoodVerse } from "@/data/moodPresets";
+import { trackMoodVisit } from "@/pages/Moods";
 
 function verseLabel(v: MoodVerse): string {
   if (v.start && v.end) return `${v.start}–${v.end}`;
@@ -28,6 +29,8 @@ export default function MoodDetail() {
   const mood = getMoodById(id || "");
   const { play } = useGlobalAudio();
   const { t } = useLanguage();
+
+  useEffect(() => { if (id) trackMoodVisit(id); }, [id]);
 
   const titleKey = `mood.${id}` as any;
   const subKey = `mood.${id}.sub` as any;

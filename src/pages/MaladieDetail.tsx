@@ -3,9 +3,10 @@ import { getMaladieById } from "@/data/maladiesPresets";
 import { ArrowLeft, Play, BookOpen, Headphones } from "lucide-react";
 import { motion } from "framer-motion";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import type { MoodVerse } from "@/data/moodPresets";
+import { trackMoodVisit } from "@/pages/Moods";
 
 function verseLabel(v: MoodVerse): string {
   if (v.start && v.end) return `${v.start}–${v.end}`;
@@ -28,6 +29,8 @@ export default function MaladieDetail() {
   const { t } = useLanguage();
   const maladie = getMaladieById(id || "");
   const { play } = useGlobalAudio();
+
+  useEffect(() => { if (id) trackMoodVisit(id); }, [id]);
 
   const handleListenAll = useCallback(() => {
     if (!maladie) return;
