@@ -1779,7 +1779,7 @@ const translations = {
 
   // Parent stats
   "parent.stats.comingSoonTitle": { fr: "Tableau de bord parent bientôt disponible", en: "Parent dashboard coming soon", nl: "Ouder-dashboard binnenkort beschikbaar", ar: "لوحة الوالدين قريباً", tr: "Ebeveyn panosu yakında", ur: "والدین کا ڈیش بورڈ جلد آ رہا ہے" },
-  "parent.stats.comingSoonDesc": { fr: "Vous pourrez bientôt suivre le Hifz, les habitudes et la constance de vos enfants dans Taaloum.", en: "You'll soon be able to track your children's Hifz, habits and consistency in Taaloum.", nl: "Binnenkort kunt u de Hifz, gewoontes en consistentie van uw kinderen volgen in Taaloum.", ar: "ستتمكن قريباً من متابعة حفظ أطفالك وعاداتهم ومواظبتهم في تعلّم.", tr: "Yakında çocuklarınızın Hıfz, alışkanlık ve düzenliliklerini Taaloum'da takip edebileceksiniz.", ur: "آپ جلد ہی تعلّم میں اپنے بچوں کے حفظ، عادات اور استقامت کو ٹریک کر سکیں گے۔" },
+  "parent.stats.comingSoonDesc": { fr: "Vous pourrez bientôt suivre le Hifz, les habitudes et la constance de vos enfants dans Ta'alam.", en: "You'll soon be able to track your children's Hifz, habits and consistency in Ta'alam.", nl: "Binnenkort kunt u de Hifz, gewoontes en consistentie van uw kinderen volgen in Ta'alam.", ar: "ستتمكن قريباً من متابعة حفظ أطفالك وعاداتهم ومواظبتهم في تعلّم.", tr: "Yakında çocuklarınızın Hıfz, alışkanlık ve düzenliliklerini Ta'alam'da takip edebileceksiniz.", ur: "آپ جلد ہی تعلّم میں اپنے بچوں کے حفظ، عادات اور استقامت کو ٹریک کر سکیں گے۔" },
 
   // Dashboard
   "dashboard.title": { fr: "Tableau de bord Qur'an", en: "Qur'an Dashboard", nl: "Koran Dashboard", ar: "لوحة القرآن", tr: "Kur'an Panosu", ur: "قرآن ڈیش بورڈ" },
