@@ -136,6 +136,14 @@ const KIDS_CARDS = [
     gradient: "from-blue-600/30 to-indigo-600/15",
     border: "border-blue-500/25",
   },
+  {
+    emoji: "🫧",
+    titleKey: "kidsHome.popHassanates",
+    descKey: "kidsHome.popHassanatesDesc",
+    path: "/kids-pop-hassanates",
+    gradient: "from-emerald-600/30 to-teal-600/15",
+    border: "border-emerald-500/25",
+  },
 ];
 
 export default function KidsHomePage() {
