@@ -61,6 +61,7 @@ import FaqAndTermsPage from "./pages/FaqAndTermsPage";
 import NotificationSettings from "./pages/NotificationSettings";
 import InstallAppPage from "./pages/InstallAppPage";
 import MushafPage from "./pages/MushafPage";
+import QuranHub from "./pages/QuranHub";
 import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";
@@ -147,6 +148,7 @@ const App = () => (
               <Route path="/notification-settings" element={<NotificationSettings />} />
               <Route path="/install-app" element={<InstallAppPage />} />
               <Route path="/mushaf" element={<MushafPage />} />
+              <Route path="/quran-hub" element={<QuranHub />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="*" element={<NotFound />} />

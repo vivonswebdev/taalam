@@ -13,8 +13,8 @@ export default function BottomNav() {
 
   const tabs = [
     { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
-    { path: "/reading", icon: BookOpenText, label: t("nav.reading") },
-    { path: "/quran", icon: Mic, label: t("nav.quran") },
+    { path: "/quran-hub", icon: BookOpen, label: t("nav.quran") },
+    { path: "/quran", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
     { path: "/moods", icon: Heart, label: t("nav.moods") },
     { path: "/habits", icon: BarChart3, label: "Habitudes" },
     { path: "/more", icon: MoreHorizontal, label: "Plus" },
