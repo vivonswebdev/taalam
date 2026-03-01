@@ -893,11 +893,32 @@ const translations = {
   "mood.study": { fr: "Étude & concentration", en: "Study & focus", nl: "Studie & concentratie", ar: "الدراسة والتركيز", tr: "Çalışma ve odaklanma", ur: "مطالعہ اور توجہ" },
   "mood.study.sub": { fr: "Versets pour se concentrer et mémoriser", en: "Verses for focus and memorization", nl: "Verzen voor concentratie en memorisatie", ar: "آيات للتركيز والحفظ", tr: "Odaklanma ve ezberleme için ayetler", ur: "توجہ اور حفظ کے لیے آیات" },
 
-  // Offline downloader
+  // Offline downloader (legacy)
   "offline.title": { fr: "Télécharger pour hors-ligne", en: "Download for offline", nl: "Download voor offline", ar: "تحميل للاستخدام بدون اتصال", tr: "Çevrimdışı için indir", ur: "آف لائن کے لیے ڈاؤن لوڈ" },
   "offline.subtitle": { fr: "Audio des États du cœur disponible sans connexion", en: "Heart states audio available offline", nl: "Hart-audio beschikbaar offline", ar: "صوتيات أحوال القلب متاحة بدون اتصال", tr: "Kalp halleri sesi çevrimdışı kullanılabilir", ur: "دل کے احوال کی آڈیو آف لائن دستیاب" },
   "offline.download": { fr: "Télécharger", en: "Download", nl: "Downloaden", ar: "تحميل", tr: "İndir", ur: "ڈاؤن لوڈ" },
   "offline.downloading": { fr: "Téléchargement...", en: "Downloading...", nl: "Downloaden...", ar: "جاري التحميل...", tr: "İndiriliyor...", ur: "ڈاؤن لوڈ ہو رہا ہے..." },
+
+  // Offline v2
+  "offlinev2.pageTitle": { fr: "Mode Offline", en: "Offline Mode", nl: "Offlinemodus", ar: "وضع عدم الاتصال", tr: "Çevrimdışı Mod", ur: "آف لائن موڈ" },
+  "offlinev2.pageSubtitle": { fr: "Gérez vos contenus téléchargés", en: "Manage your downloaded content", nl: "Beheer je gedownloade inhoud", ar: "إدارة المحتوى المحمّل", tr: "İndirilen içeriklerinizi yönetin", ur: "اپنے ڈاؤن لوڈ مواد کا انتظام کریں" },
+  "offlinev2.globalToggle": { fr: "Mode Offline", en: "Offline Mode", nl: "Offlinemodus", ar: "وضع عدم الاتصال", tr: "Çevrimdışı Mod", ur: "آف لائن موڈ" },
+  "offlinev2.globalToggleDesc": { fr: "Audio limité aux téléchargements, texte/quiz 100% offline", en: "Audio limited to downloads, text/quiz 100% offline", nl: "Audio beperkt tot downloads, tekst/quiz 100% offline", ar: "الصوت محدود بالتحميلات، النص/الاختبار 100% بدون اتصال", tr: "Ses indirilenlerle sınırlı, metin/quiz %100 çevrimdışı", ur: "آڈیو ڈاؤن لوڈ تک محدود، متن/کوئز 100% آف لائن" },
+  "offlinev2.progressTitle": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیش رفت" },
+  "offlinev2.sectionsReady": { fr: "menus prêts", en: "sections ready", nl: "secties gereed", ar: "أقسام جاهزة", tr: "bölüm hazır", ur: "سیکشنز تیار" },
+  "offlinev2.mushaf": { fr: "Mushaf / Juz Amma", en: "Mushaf / Juz Amma", nl: "Mushaf / Juz Amma", ar: "المصحف / جزء عمّ", tr: "Mushaf / Cüz Amma", ur: "مصحف / جزء عمّ" },
+  "offlinev2.mushafDesc": { fr: "Audio des sourates 78 à 114 (Juz Amma)", en: "Audio for surahs 78–114 (Juz Amma)", nl: "Audio van soera's 78–114 (Juz Amma)", ar: "صوتيات السور 78–114 (جزء عمّ)", tr: "Sure 78–114 sesleri (Cüz Amma)", ur: "سورتوں 78–114 کی آڈیو (جزء عمّ)" },
+  "offlinev2.moods": { fr: "États du cœur", en: "Heart States", nl: "Hartstaten", ar: "أحوال القلب", tr: "Kalp Halleri", ur: "دل کے احوال" },
+  "offlinev2.moodsDesc": { fr: "Audio de tous les 14 presets (sommeil, ruqya, etc.)", en: "Audio for all 14 presets (sleep, ruqya, etc.)", nl: "Audio voor alle 14 presets (slaap, ruqya, enz.)", ar: "صوتيات جميع الأنماط الـ14 (نوم، رقية، إلخ)", tr: "Tüm 14 hazır ayarın sesleri (uyku, rukye, vb.)", ur: "تمام 14 پری سیٹس کی آڈیو (نیند، رقیہ، وغیرہ)" },
+  "offlinev2.tarteel": { fr: "Tarteel / Récitateur", en: "Tarteel / Reciter", nl: "Tarteel / Reciteerder", ar: "ترتيل / القارئ", tr: "Tartil / Okuyucu", ur: "ترتیل / قاری" },
+  "offlinev2.tarteelDesc": { fr: "Audio récitateur Mishary pour Fatiha + Juz Amma", en: "Mishary reciter audio for Fatiha + Juz Amma", nl: "Mishary reciteeraudio voor Fatiha + Juz Amma", ar: "صوتيات القارئ مشاري للفاتحة + جزء عمّ", tr: "Fatiha + Cüz Amma için Mişari okuyucu sesi", ur: "فاتحہ + جزء عمّ کے لیے مشاری قاری کی آڈیو" },
+  "offlinev2.quiz": { fr: "Quiz", en: "Quiz", nl: "Quiz", ar: "اختبار", tr: "Quiz", ur: "کوئز" },
+  "offlinev2.quizDesc": { fr: "100% offline (texte/JSON)", en: "100% offline (text/JSON)", nl: "100% offline (tekst/JSON)", ar: "100% بدون اتصال (نص/JSON)", tr: "%100 çevrimdışı (metin/JSON)", ur: "100% آف لائن (متن/JSON)" },
+  "offlinev2.preload": { fr: "Précharger", en: "Preload", nl: "Voorladen", ar: "تحميل مسبق", tr: "Önceden Yükle", ur: "پری لوڈ" },
+  "offlinev2.downloadAll": { fr: "Tout précharger (~300 Mo)", en: "Preload all (~300 MB)", nl: "Alles voorladen (~300 MB)", ar: "تحميل الكل (~300 ميجا)", tr: "Hepsini yükle (~300 MB)", ur: "سب پری لوڈ (~300 MB)" },
+  "offlinev2.manage": { fr: "Gérer le mode offline", en: "Manage offline mode", nl: "Offlinemodus beheren", ar: "إدارة وضع عدم الاتصال", tr: "Çevrimdışı modu yönet", ur: "آف لائن موڈ منظم کریں" },
+  "offlinev2.audioOnlineOnly": { fr: "Audio en ligne seulement", en: "Online audio only", nl: "Alleen online audio", ar: "صوت عبر الإنترنت فقط", tr: "Yalnızca çevrimiçi ses", ur: "صرف آن لائن آڈیو" },
+  "offlinev2.downloadFirst": { fr: "Téléchargez d'abord en Réglages > Offline", en: "Download first in Settings > Offline", nl: "Download eerst in Instellingen > Offline", ar: "حمّل أولاً من الإعدادات > بدون اتصال", tr: "Önce Ayarlar > Çevrimdışı'dan indirin", ur: "پہلے ترتیبات > آف لائن سے ڈاؤن لوڈ کریں" },
 
   // More page
   "more.title": { fr: "Plus", en: "More", nl: "Meer", ar: "المزيد", tr: "Daha Fazla", ur: "مزید" },

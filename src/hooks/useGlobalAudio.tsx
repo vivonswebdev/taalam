@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from "react";
+import { toast } from "@/hooks/use-toast";
 
 const RECITERS = [
   { id: "ar.alafasy", name: "Al-Afasy", label: "مشاري العفاسي" },
@@ -88,6 +89,33 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
 
   const fetchUrls = useCallback(async (surahNum: number): Promise<string[]> => {
     try {
+      // Check if offline mode is on and try cache first
+      const isOffline = localStorage.getItem("taaloum_offline_mode") === "true";
+      if (isOffline) {
+        try {
+          const cache = await caches.open("offline-audio-v2");
+          const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          if (cached) {
+            const data = await cached.json();
+            if (data.data?.ayahs) {
+              return data.data.ayahs.map((a: { audio: string }) => a.audio);
+            }
+          }
+          // Also check mood cache
+          const moodCache = await caches.open("mood-audio-v1");
+          const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          if (moodCached) {
+            const data = await moodCached.json();
+            if (data.data?.ayahs) {
+              return data.data.ayahs.map((a: { audio: string }) => a.audio);
+            }
+          }
+          // Offline but not cached
+          toast({ title: "Mode Offline", description: "Audio non téléchargé. Allez dans Réglages > Offline." });
+          return [];
+        } catch {}
+      }
+
       const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
       const data = await res.json();
       if (data.data?.ayahs) {
