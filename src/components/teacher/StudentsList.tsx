@@ -16,10 +16,12 @@ function MiniSparkline({ value, max }: { value: number; max: number }) {
 
 interface Props {
   students: StudentStats[];
+  classId?: string | null;
 }
 
-export default function StudentsList({ students }: Props) {
+export default function StudentsList({ students, classId }: Props) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const maxMinutes = Math.max(1, ...students.map(s => s.quranMinutes));
   const maxHifz = Math.max(1, ...students.map(s => s.hifzAyat));
 
