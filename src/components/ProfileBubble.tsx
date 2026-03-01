@@ -248,6 +248,13 @@ export default function ProfileBubble() {
                 </DropdownMenuItem>
               )}
 
+              {isModerator && (
+                <DropdownMenuItem onClick={() => navigate("/coord")} className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
+                  <Shield className="w-5 h-5 text-purple-400" />
+                  <span className="flex-1 text-sm font-medium">{t("profile.coordDashboard" as any)}</span>
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuSeparator />
             </>
           )}
