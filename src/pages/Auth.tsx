@@ -533,13 +533,6 @@ export default function Auth() {
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{t("auth.publicProfile")}</p>
-                        <p className="text-xs text-muted-foreground">{t("auth.publicProfileDesc")}</p>
-                      </div>
-                      <Switch checked={isPublic} onCheckedChange={setIsPublic} />
-                    </div>
                     <Button onClick={handleSignUp} disabled={loading} className="w-full h-12 text-base rounded-xl">
                       <Sparkles size={18} />
                       {loading ? "..." : t("auth.createAccount")}
