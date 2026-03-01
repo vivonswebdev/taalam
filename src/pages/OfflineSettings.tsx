@@ -103,7 +103,6 @@ export default function OfflineSettings() {
               }}
               className={`w-12 h-7 rounded-full transition-colors relative cursor-pointer ${offlineMode ? "bg-primary" : "bg-muted"}`}
             >
-            >
               <motion.div animate={{ x: offlineMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
           </div>
