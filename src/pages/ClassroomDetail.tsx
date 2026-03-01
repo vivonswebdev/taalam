@@ -11,6 +11,7 @@ import { useWeeklyChallenge } from "@/hooks/useWeeklyChallenge";
 import { useStudentAssignments } from "@/hooks/useStudentAssignments";
 import { supabase } from "@/integrations/supabase/client";
 import BottomNav from "@/components/BottomNav";
+import StudentTaskKanban from "@/components/StudentTaskKanban";
 import { surahs } from "@/data/surahs";
 import WeeklyChallengeCard from "@/components/WeeklyChallengeCard";
 import { formatDistanceToNow } from "date-fns";
