@@ -1953,6 +1953,21 @@ const translations = {
   "kidsHome.prophetStoriesDesc": { fr: "10 histoires du Coran avec quiz et stickers !", en: "10 Quran stories with quiz and stickers!", ar: "10 قصص من القرآن مع اختبار وملصقات!", nl: "10 Koranverhalen met quiz en stickers!", tr: "10 Kur'an hikayesi, test ve çıkartmalarla!", ur: "10 قرآنی کہانیاں کوئز اور اسٹیکرز کے ساتھ!" },
   "kidsHome.kidsQuiz": { fr: "Quiz Enfants", en: "Kids Quiz", ar: "اختبار الأطفال", nl: "Kinderquiz", tr: "Çocuk Testi", ur: "بچوں کا کوئز" },
   "kidsHome.kidsQuizDesc": { fr: "Prophètes, Islam et Animaux du Coran !", en: "Prophets, Islam basics & Quran animals!", ar: "الأنبياء، أساسيات الإسلام وحيوانات القرآن!", nl: "Profeten, Islam basis & Koran dieren!", tr: "Peygamberler, İslam temelleri ve Kur'an hayvanları!", ur: "انبیاء، اسلام کی بنیادیں اور قرآنی جانور!" },
+
+  // QuranHub
+  "quranHub.title": { fr: "Coran", en: "Qur'an", ar: "القرآن", nl: "Koran", ur: "قرآن", tr: "Kur'an" },
+  "quranHub.subtitle": { fr: "Choisissez votre façon de lire le Coran", en: "Choose how you read the Qur'an", ar: "اختر طريقة قراءتك للقرآن", nl: "Kies hoe je de Koran wilt lezen", ur: "قرآن پڑھنے کا طریقہ منتخب کریں", tr: "Kur'an'ı nasıl okumak istiyorsun?" },
+  "quranHub.mushafTitle": { fr: "Mushaf", en: "Mushaf", ar: "المصحف", nl: "Mushaf", ur: "مصحف", tr: "Mushaf" },
+  "quranHub.mushafSubtitle": { fr: "Lecture simple du Coran", en: "Simple Qur'an reading", ar: "قراءة القرآن فقط", nl: "Eenvoudige Koranlezing", ur: "سادہ قرآن کی تلاوت", tr: "Sade Kur'an okuma" },
+  "quranHub.mushafDesc": { fr: "Comme un vrai mushaf, idéal pour la lecture tranquille.", en: "Like a physical mushaf, ideal for calm reading.", ar: "مثل المصحف الورقي، مثالي لقراءة هادئة.", nl: "Net als een echt mushaf, ideaal om rustig te lezen.", ur: "بلکل مصحف کی طرح، پرسکون تلاوت کے لیے بہترین۔", tr: "Gerçek mushaf gibi, sakin okumalar için ideal." },
+  "quranHub.readingTitle": { fr: "Lecture avec audio", en: "Reading with audio", ar: "قراءة مع الصوت", nl: "Lezen met audio", ur: "آواز کے ساتھ تلاوت", tr: "Sesli okuma" },
+  "quranHub.readingSubtitle": { fr: "Texte + traduction + audio", en: "Text + translation + audio", ar: "نص + ترجمة + صوت", nl: "Tekst + vertaling + audio", ur: "متن + ترجمہ + آواز", tr: "Metin + meâl + ses" },
+  "quranHub.readingDesc": { fr: "Pour lire, écouter et utiliser les outils de mémorisation.", en: "For reading, listening, and using memorization tools.", ar: "للقراءة والاستماع واستخدام أدوات الحفظ.", nl: "Om te lezen, luisteren en geheugentools te gebruiken.", ur: "پڑھنے، سننے اور حفظ کے ٹولز استعمال کرنے کے لیے۔", tr: "Okumak, dinlemek ve ezber araçlarını kullanmak için." },
+  "quranHub.quickLinks": { fr: "Accès rapide", en: "Quick access", ar: "وصول سريع", nl: "Snelle toegang", ur: "فوری رسائی", tr: "Hızlı erişim" },
+  "quranHub.tarteelButton": { fr: "Commencer votre Tarteel", en: "Start your Tarteel", ar: "ابدأ ترتيلك", nl: "Begin je Tarteel", ur: "اپنی ترتیل شروع کریں", tr: "Tarteel'e başla" },
+  "quranHub.tarteelShort": { fr: "Réciter et corriger votre lecture", en: "Recite and correct your reading", ar: "رتّل وصحّح تلاوتك", nl: "Reciteer en verbeter je lezing", ur: "تلاوت کریں اور اپنی پڑھائی درست کریں", tr: "Tilavet et ve okumanı düzelt" },
+  "quranHub.liveTitle": { fr: "Live Coran", en: "Live Qur'an", ar: "القرآن المباشر", nl: "Koran live", ur: "لائیو قرآن", tr: "Canlı Kur'an" },
+  "quranHub.liveShort": { fr: "Écouter le Coran en direct", en: "Listen to the Qur'an live", ar: "استمع للقرآن مباشرة", nl: "Luister live naar de Koran", ur: "قرآن براہِ راست سنیں", tr: "Kur'an'ı canlı dinle" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
