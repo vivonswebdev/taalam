@@ -6,6 +6,7 @@ import { useFamily, type FamilyMember } from "@/hooks/useFamily";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import FamilyShareCard from "@/components/FamilyShareCard";
 
 const TROPHIES = [
   { type: "gold", emoji: "🏆", label: "gold" },
