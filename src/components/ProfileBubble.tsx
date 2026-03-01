@@ -44,6 +44,7 @@ export default function ProfileBubble() {
   const { mode, setMode } = useUserMode();
   const { classrooms } = useClassrooms();
   const xp = useQuranXp();
+  const { addXP } = useXP();
   const { readySections } = useOfflineManager();
   const navigate = useNavigate();
 
