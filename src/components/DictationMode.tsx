@@ -128,7 +128,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
-      xp.addXP(Math.max(1, Math.round(correctCount / 3)));
+      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     fetchSimpleExplanation(surah.number, currentAyah.number);
