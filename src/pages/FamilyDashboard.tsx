@@ -443,6 +443,17 @@ export default function FamilyDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Share Card */}
+      {families.map(f => (
+        <FamilyShareCard
+          key={`share-${f.id}`}
+          family={f}
+          members={getMembersForFamily(f.id)}
+          open={shareFamily === f.id}
+          onClose={() => setShareFamily(null)}
+        />
+      ))}
     </div>
   );
 }
