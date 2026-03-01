@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useListeningStats } from "@/hooks/useListeningStats";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useUserProfile } from "@/hooks/useUserProfile";
