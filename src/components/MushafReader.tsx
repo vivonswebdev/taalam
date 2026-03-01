@@ -205,8 +205,34 @@ export default function MushafReader({
   );
 
   const setAyahRef = useCallback((index: number, el: HTMLDivElement | null) => {
-    if (el) ayahRefs.current.set(index, el); else ayahRefs.current.delete(index);
-  }, []);
+    if (el) {
+      ayahRefs.current.set(index, el);
+      // Start a 5-second timer for reading XP
+      if (!readAyahsRef.current.has(index) && !ayahTimerRef.current.has(index)) {
+        const timer = setTimeout(() => {
+          if (!readAyahsRef.current.has(index)) {
+            readAyahsRef.current.add(index);
+            const earned = calcReadingXP(1);
+            if (earned > 0) {
+              xp.addXP(earned);
+              setSessionXP(prev => prev + earned);
+            }
+            habits.addAyat(1);
+          }
+          ayahTimerRef.current.delete(index);
+        }, 5000);
+        ayahTimerRef.current.set(index, timer);
+      }
+    } else {
+      ayahRefs.current.delete(index);
+      // Cancel timer if ayah scrolled out of view
+      const timer = ayahTimerRef.current.get(index);
+      if (timer) {
+        clearTimeout(timer);
+        ayahTimerRef.current.delete(index);
+      }
+    }
+  }, [xp, habits]);
 
   const scrollToAyahIndex = useCallback((index: number) => {
     const el = ayahRefs.current.get(index);
