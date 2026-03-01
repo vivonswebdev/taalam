@@ -134,6 +134,27 @@ const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; title: 
     subtitle: "Histoires des prophètes et bases",
     icon: Baby,
   },
+  prophets: {
+    gradient: "from-amber-600 to-yellow-500",
+    emoji: "📚",
+    title: "Histoire des Prophètes",
+    subtitle: "Questions amusantes sur les prophètes du Coran",
+    icon: Landmark,
+  },
+  islam_basics: {
+    gradient: "from-teal-500 to-cyan-600",
+    emoji: "💡",
+    title: "L'Islam de base",
+    subtitle: "Piliers, croyance, adhkār, akhlaq",
+    icon: Lightbulb,
+  },
+  animals: {
+    gradient: "from-lime-500 to-green-600",
+    emoji: "🐫",
+    title: "Animaux dans le Coran",
+    subtitle: "Découvre les animaux mentionnés dans le Coran",
+    icon: Star,
+  },
 };
 
 export default function Quiz() {
