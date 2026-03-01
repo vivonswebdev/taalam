@@ -349,7 +349,7 @@ export default function Quiz() {
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Zap size={14} className="text-primary" />
-                <span className="text-[11px] text-muted-foreground">XP gagnés</span>
+                <span className="text-[11px] text-muted-foreground">{t("quiz.xpEarned" as any)}</span>
               </div>
               <p className="text-xl font-bold text-primary">+{totalXP}</p>
             </div>
