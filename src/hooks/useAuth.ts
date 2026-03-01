@@ -29,11 +29,15 @@ export function useAuth() {
       setUser(session?.user ?? null);
       setLoading(false);
 
-      // Show welcome back toast on auto-restore (not on fresh login)
+      // Show welcome back toast only once per browser session (not per reload)
       if (event === "INITIAL_SESSION" && session?.user && !welcomeShown.current) {
         welcomeShown.current = true;
-        const name = session.user.user_metadata?.display_name || "";
-        toast.success(name ? `Bienvenue de retour, ${name} 🌙` : "Bienvenue de retour 🌙");
+        const alreadyGreeted = sessionStorage.getItem("taalam_welcomed");
+        if (!alreadyGreeted) {
+          sessionStorage.setItem("taalam_welcomed", "true");
+          const name = session.user.user_metadata?.display_name || "";
+          toast.success(name ? `Bienvenue de retour, ${name} 🌙` : "Bienvenue de retour 🌙");
+        }
       }
     });
 
