@@ -4,6 +4,7 @@ import {
   ArrowLeft, Bookmark, BookmarkCheck, Settings2,
   ChevronDown, Moon, Gauge, BookOpen, Palette,
   Play, Pause, SkipForward, SkipBack, ChevronsLeft, ChevronsRight, Repeat,
+  Zap,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -15,6 +16,9 @@ import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
+import { useXP } from "@/hooks/useXP";
+import { useQuranHabits } from "@/hooks/useQuranHabits";
+import { calcReadingXP } from "@/lib/xpCalculator";
 import type { Surah } from "@/data/surahs";
 
 interface MushafReaderProps {
