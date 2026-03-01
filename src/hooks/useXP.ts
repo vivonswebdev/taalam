@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { addXP as addXPToDb, fetchUserProgress } from "@/lib/progress";
+import { calcStreakBonusXP, getNextMilestone, getLevel, getLevelBadge, XP_PER_LEVEL } from "@/lib/xpCalculator";
 
 const XP_KEY = "quranEasyXP";
+const STREAK_BONUS_KEY = "quranStreakBonusDate";
 
 export interface XPData {
   xpTotal: number;
@@ -10,8 +12,6 @@ export interface XPData {
   streakDays: number;
   lastActiveDate: string; // YYYY-MM-DD
 }
-
-const XP_PER_LEVEL = 200;
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -43,15 +43,12 @@ function saveLocalXP(data: XPData) {
   localStorage.setItem(XP_KEY, JSON.stringify(data));
 }
 
-export function getLevel(xpTotal: number) {
-  const level = Math.floor(xpTotal / XP_PER_LEVEL) + 1;
-  const xpInLevel = xpTotal % XP_PER_LEVEL;
-  return { level, xpInLevel, xpForNext: XP_PER_LEVEL };
-}
+export { getLevel, getLevelBadge, XP_PER_LEVEL };
 
 export function useXP() {
   const [data, setData] = useState<XPData>(loadLocalXP);
   const [lastGain, setLastGain] = useState<number | null>(null);
+  const [streakBonusAwarded, setStreakBonusAwarded] = useState<number>(0);
   const [userId, setUserId] = useState<string | null>(null);
   const syncedRef = useRef(false);
 
@@ -60,7 +57,6 @@ export function useXP() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserId(session?.user?.id ?? null);
     });
-    // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUserId(session?.user?.id ?? null);
     });
@@ -81,10 +77,8 @@ export function useXP() {
           streakDays: remote.streak_days,
           lastActiveDate: remote.last_xp_date ?? t,
         };
-        // Merge: take the higher XP between local and remote
         const local = loadLocalXP();
         if (local.xpTotal > synced.xpTotal) {
-          // Local has more XP — push local to Supabase
           addXPToDb(userId, local.xpTotal - synced.xpTotal);
           setData(local);
         } else {
@@ -98,7 +92,6 @@ export function useXP() {
   const addXP = useCallback((amount: number) => {
     if (amount <= 0) return;
 
-    // Update local state immediately
     setData((prev) => {
       const t = today();
       const isNewDay = prev.lastActiveDate !== t;
@@ -120,7 +113,6 @@ export function useXP() {
       return newData;
     });
 
-    // Persist to Supabase in background (fire & forget)
     if (userId) {
       addXPToDb(userId, amount).catch(console.error);
     }
@@ -129,7 +121,25 @@ export function useXP() {
     setTimeout(() => setLastGain(null), 2000);
   }, [userId]);
 
+  // Award streak bonus once per day on first activity
+  const awardStreakBonus = useCallback(() => {
+    const t = today();
+    const lastBonusDate = localStorage.getItem(STREAK_BONUS_KEY);
+    if (lastBonusDate === t) return 0;
+
+    const streakBonus = calcStreakBonusXP(data.streakDays);
+    if (streakBonus.total > 0) {
+      localStorage.setItem(STREAK_BONUS_KEY, t);
+      addXP(streakBonus.total);
+      setStreakBonusAwarded(streakBonus.total);
+      return streakBonus.total;
+    }
+    return 0;
+  }, [data.streakDays, addXP]);
+
   const { level, xpInLevel, xpForNext } = getLevel(data.xpTotal);
+  const levelBadge = getLevelBadge(level);
+  const nextMilestone = getNextMilestone(data.streakDays);
 
   return {
     xpTotal: data.xpTotal,
@@ -140,5 +150,9 @@ export function useXP() {
     xpForNext,
     lastGain,
     addXP,
+    awardStreakBonus,
+    streakBonusAwarded,
+    levelBadge,
+    nextMilestone,
   };
 }
