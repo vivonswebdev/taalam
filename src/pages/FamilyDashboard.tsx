@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp } from "lucide-react";
+import { ArrowLeft, Plus, Users, Trophy, MessageCircle, Copy, Check, UserPlus, ChevronRight, Flame, Star, Zap, TrendingUp, Share2 } from "lucide-react";
 import { useFamily, type FamilyMember } from "@/hooks/useFamily";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import FamilyShareCard from "@/components/FamilyShareCard";
 
 const TROPHIES = [
   { type: "gold", emoji: "🏆", label: "gold" },
@@ -130,6 +131,7 @@ export default function FamilyDashboard() {
   const [trophyModal, setTrophyModal] = useState<{ familyId: string; toUserId: string; toName: string } | null>(null);
   const [msgModal, setMsgModal] = useState<{ familyId: string; toUserId: string; toName: string } | null>(null);
   const [msgText, setMsgText] = useState("");
+  const [shareFamily, setShareFamily] = useState<string | null>(null);
 
   if (!user) {
     return (
@@ -270,6 +272,13 @@ export default function FamilyDashboard() {
                     >
                       {copiedCode === family.invite_code ? <Check size={12} /> : <Copy size={12} />}
                       {copiedCode === family.invite_code ? t("family.copied") : t("family.copy")}
+                    </button>
+                    <button
+                      onClick={() => setShareFamily(family.id)}
+                      className="flex items-center gap-1 bg-emerald-500/10 text-emerald-600 rounded-lg px-3 py-1.5 text-xs font-semibold active:scale-95 transition-transform"
+                    >
+                      <Share2 size={12} />
+                      {t("share.share" as any)}
                     </button>
                   </div>
                 </motion.div>
@@ -434,6 +443,17 @@ export default function FamilyDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Share Card */}
+      {families.map(f => (
+        <FamilyShareCard
+          key={`share-${f.id}`}
+          family={f}
+          members={getMembersForFamily(f.id)}
+          open={shareFamily === f.id}
+          onClose={() => setShareFamily(null)}
+        />
+      ))}
     </div>
   );
 }
