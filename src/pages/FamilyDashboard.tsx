@@ -215,7 +215,7 @@ export default function FamilyDashboard() {
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.05 }}
-                          className="bg-card border border-border rounded-2xl p-3.5 space-y-2.5"
+                          className="bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl p-3.5 space-y-2.5 shadow-sm"
                         >
                           {/* Child header */}
                           <div className="flex items-center gap-3">
