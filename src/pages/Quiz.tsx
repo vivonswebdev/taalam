@@ -394,7 +394,7 @@ export default function Quiz() {
           <button
             onClick={() => exploit.shareExploit({
               type: "quiz",
-              category: catConfig?.title || category,
+              category: catConfig ? t(catConfig.titleKey as any) : category,
               score: Math.round((finalScore / questions.length) * 100),
               xp: totalXP,
               streak: bestStreak,
