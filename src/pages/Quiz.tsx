@@ -236,8 +236,8 @@ export default function Quiz() {
             <ArrowLeft size={20} />
             <span className="text-sm">{t("quiz.back")}</span>
           </button>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Quiz Hifz</h1>
-          <p className="text-sm text-muted-foreground">Choisis ta catégorie et progresse</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">{t("quiz.hifzTitle" as any)}</h1>
+          <p className="text-sm text-muted-foreground">{t("quiz.chooseCategoryAlt" as any)}</p>
         </div>
 
         {/* Quiz streak banner */}
