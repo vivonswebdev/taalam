@@ -21,6 +21,7 @@ interface AyahFeedbackProps {
   onListenAyah: () => void;
   isLastAyah: boolean;
   isChildMode: boolean;
+  onReport?: (reason: string) => void;
 }
 
 export default function AyahFeedback({
