@@ -9,6 +9,8 @@ import type { Surah } from "@/data/surahs";
 import { useHifzSession, type HifzMode, type ToleranceLevel, type WordStatus } from "@/hooks/useHifzSession";
 import { useVoiceRecognition } from "@/hooks/useVoiceRecognition";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
+import { useShareExploit } from "@/hooks/useShareExploit";
+import { Share2, Loader2, CheckCircle2 } from "lucide-react";
 
 interface HifzControlProps {
   surah: Surah;
