@@ -178,12 +178,16 @@ export function useCommunityActions() {
     return community;
   }, [user]);
 
-  const joinCommunity = useCallback(async (communityId: string, requiresApproval: boolean) => {
+  const joinCommunity = useCallback(async (communityId: string, requiresApproval: boolean, communityName?: string) => {
     if (!user) return;
     if (requiresApproval) {
       const { error } = await supabase.from("community_join_requests").insert({ community_id: communityId, user_id: user.id });
       if (error) { toast.error(error.message); return; }
       toast.success("Demande envoyée !");
+      // Notify admins
+      supabase.functions.invoke("community-notify", {
+        body: { type: "join_request", community_id: communityId, community_name: communityName || "" },
+      }).catch(() => {});
     } else {
       const { error } = await supabase.from("community_members").insert({ community_id: communityId, user_id: user.id });
       if (error) { toast.error(error.message); return; }
