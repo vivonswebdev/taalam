@@ -87,7 +87,7 @@ export default function KidsQuizPage() {
   if (finished && category) {
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      if (quizXP > 0) xp.addXP(quizXP);
+      if (quizXP > 0) xp.addXp(quizXP, "quiz_correct_answer");
       // Save badge progress
       const badges = loadBadges();
       badges[category] = (badges[category] || 0) + score;

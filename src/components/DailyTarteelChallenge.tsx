@@ -73,7 +73,7 @@ export default function DailyTarteelChallenge({ surah, onComplete, onDismiss }: 
   useEffect(() => {
     if (phase === "result" && !xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      xp.addXP(xpGain);
+      xp.addXp(xpGain, "tarteel_ayah_correct");
     }
   }, [phase, finalScore]);
 

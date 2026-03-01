@@ -25,7 +25,7 @@ export function usePersonalStats() {
       .reduce((s, t) => s + (t.ayah_to - t.ayah_from + 1), 0);
 
     // KPI: Streak
-    const streakDays = xp.streakDays || streak;
+    const streakDays = streak;
 
     // Chart: Quran time 30 days
     const quranTimeData = last30Days.map(d => ({

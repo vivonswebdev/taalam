@@ -63,7 +63,7 @@ export default function ListenTestQuiz() {
     if (!xpAwardedRef.current) {
       xpAwardedRef.current = true;
       const xpGain = score * 4;
-      if (xpGain > 0) xp.addXP(xpGain);
+      if (xpGain > 0) xp.addXp(xpGain, "listen_test_quiz");
     }
 
     return (
