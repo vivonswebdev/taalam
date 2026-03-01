@@ -305,6 +305,9 @@ export default function FamilyDashboard() {
                   </div>
                 </div>
 
+                {/* Family Heatmap & Charts */}
+                <FamilyHeatmap familyId={family.id} members={familyMembers} />
+
                 {/* Family Duels */}
                 <FamilyDuels familyId={family.id} isParent={myRole === "parent"} />
 
