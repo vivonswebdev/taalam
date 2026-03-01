@@ -1968,6 +1968,14 @@ const translations = {
   "quranHub.tarteelShort": { fr: "Réciter et corriger votre lecture", en: "Recite and correct your reading", ar: "رتّل وصحّح تلاوتك", nl: "Reciteer en verbeter je lezing", ur: "تلاوت کریں اور اپنی پڑھائی درست کریں", tr: "Tilavet et ve okumanı düzelt" },
   "quranHub.liveTitle": { fr: "Live Coran", en: "Live Qur'an", ar: "القرآن المباشر", nl: "Koran live", ur: "لائیو قرآن", tr: "Canlı Kur'an" },
   "quranHub.liveShort": { fr: "Écouter le Coran en direct", en: "Listen to the Qur'an live", ar: "استمع للقرآن مباشرة", nl: "Luister live naar de Koran", ur: "قرآن براہِ راست سنیں", tr: "Kur'an'ı canlı dinle" },
+
+  // Hifz SRS Widget
+  "hifzSrs.passagesToReview": { fr: "passage(s) à réviser", en: "passage(s) to review", ar: "مقطع للمراجعة", nl: "passage(s) te herhalen", ur: "مراجعے کے لیے حصے", tr: "tekrar edilecek bölüm" },
+  "hifzSrs.noneToday": { fr: "Aucune révision aujourd'hui ✅", en: "No reviews today ✅", ar: "لا مراجعة اليوم ✅", nl: "Geen herhalingen vandaag ✅", ur: "آج کوئی مراجعہ نہیں ✅", tr: "Bugün tekrar yok ✅" },
+  "hifzSrs.learning": { fr: "en cours", en: "learning", ar: "قيد التعلم", nl: "aan het leren", ur: "سیکھ رہے ہیں", tr: "öğreniliyor" },
+  "hifzSrs.reviewing": { fr: "en révision", en: "reviewing", ar: "قيد المراجعة", nl: "in herhaling", ur: "مراجعہ میں", tr: "tekrarda" },
+  "hifzSrs.mastered": { fr: "maîtrisé", en: "mastered", ar: "متقن", nl: "beheerst", ur: "مکمل", tr: "ezberlenmiş" },
+  "hifzSrs.review": { fr: "Réviser", en: "Review", ar: "راجع", nl: "Herhalen", ur: "مراجعہ", tr: "Tekrar et" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

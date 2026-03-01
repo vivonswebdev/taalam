@@ -417,14 +417,14 @@ export default function Home() {
             <div className="flex-1 min-w-0 text-left">
               <p className="text-sm font-bold text-white">
                 {srsTodayItems.length > 0
-                  ? `${srsTodayItems.length} passage${srsTodayItems.length > 1 ? "s" : ""} à réviser`
-                  : "Aucune révision aujourd'hui ✅"}
+                  ? `${srsTodayItems.length} ${t("hifzSrs.passagesToReview")}`
+                  : t("hifzSrs.noneToday")}
               </p>
               <p className="text-[11px] text-white/60">
-                {learningCount} en cours · {reviewingCount} en révision · {masteredCount} maîtrisé{masteredCount > 1 ? "s" : ""}
+                {learningCount} {t("hifzSrs.learning")} · {reviewingCount} {t("hifzSrs.reviewing")} · {masteredCount} {t("hifzSrs.mastered")}
               </p>
             </div>
-            <span className="text-xs font-bold text-primary shrink-0">Réviser →</span>
+            <span className="text-xs font-bold text-primary shrink-0">{t("hifzSrs.review")} →</span>
           </motion.button>
         </div>
       )}
