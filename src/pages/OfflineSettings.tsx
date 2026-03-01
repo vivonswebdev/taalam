@@ -87,8 +87,13 @@ export default function OfflineSettings() {
               <p className="text-[10px] text-muted-foreground">{t("offlinev2.globalToggleDesc" as any)}</p>
             </div>
             <div
-              onClick={() => setOfflineMode(!offlineMode)}
+              onClick={() => {
+                const next = !offlineMode;
+                setOfflineMode(next);
+                if (next) awardOnce("offline_toggle", 8, addXP, t("offlinev2.globalToggle" as any));
+              }}
               className={`w-12 h-7 rounded-full transition-colors relative cursor-pointer ${offlineMode ? "bg-primary" : "bg-muted"}`}
+            >
             >
               <motion.div animate={{ x: offlineMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
