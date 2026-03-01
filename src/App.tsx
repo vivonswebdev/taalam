@@ -60,6 +60,7 @@ import KidsPillarQuizPage from "./pages/KidsPillarQuizPage";
 import KidsPrayerMazePage from "./pages/KidsPrayerMazePage";
 import KidsAsmaHuntPage from "./pages/KidsAsmaHuntPage";
 import KidsProphetStoryGamePage from "./pages/KidsProphetStoryGamePage";
+import KidsBalancePage from "./pages/KidsBalancePage";
 import CoranCrush from "./pages/CoranCrush";
 import MemoryFaithPage from "./pages/MemoryFaithPage";
 import PopHassanatesPage from "./pages/PopHassanatesPage";
@@ -159,6 +160,7 @@ const App = () => (
               <Route path="/kids-prayer-maze" element={<KidsPrayerMazePage />} />
               <Route path="/kids-asma-hunt" element={<KidsAsmaHuntPage />} />
               <Route path="/kids-prophet-game" element={<KidsProphetStoryGamePage />} />
+              <Route path="/kids-balance" element={<KidsBalancePage />} />
               <Route path="/crush" element={<CoranCrush />} />
               <Route path="/kids-memory-faith" element={<MemoryFaithPage />} />
               <Route path="/kids-pop-hassanates" element={<PopHassanatesPage />} />

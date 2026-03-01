@@ -35,6 +35,7 @@ const GAMES_CARDS = [
   { emoji: "🕌", titleKey: "kidsHome.prayerMaze", descKey: "kidsHome.prayerMazeDesc", path: "/kids-prayer-maze", gradient: "from-indigo-600/30 to-blue-600/15", border: "border-indigo-500/25" },
   { emoji: "✨", titleKey: "kidsHome.asmaHunt", descKey: "kidsHome.asmaHuntDesc", path: "/kids-asma-hunt", gradient: "from-yellow-600/30 to-amber-600/15", border: "border-yellow-500/25" },
   { emoji: "📖", titleKey: "kidsHome.prophetStoryGame", descKey: "kidsHome.prophetStoryGameDesc", path: "/kids-prophet-game", gradient: "from-blue-600/30 to-indigo-600/15", border: "border-blue-500/25" },
+  { emoji: "⚖️", titleKey: "kidsHome.balanceGame", descKey: "kidsHome.balanceGameDesc", path: "/kids-balance", gradient: "from-cyan-600/30 to-teal-600/15", border: "border-cyan-500/25" },
 ];
 
 export default function KidsHomePage() {
