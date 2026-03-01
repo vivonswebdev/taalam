@@ -412,10 +412,10 @@ export default function Quiz() {
 
           <div className="flex gap-3">
             <button onClick={handleBackToCategories} className="flex-1 bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-              Autre quiz
+              {t("quiz.otherQuizAlt" as any)}
             </button>
             <button onClick={() => handleSelectCategory(category)} className="flex-1 bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-              Rejouer
+              {t("quiz.replay" as any)}
             </button>
           </div>
         </motion.div>
