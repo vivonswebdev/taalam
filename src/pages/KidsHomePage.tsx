@@ -72,6 +72,14 @@ const KIDS_CARDS = [
     gradient: "from-teal-600/30 to-emerald-600/15",
     border: "border-teal-500/25",
   },
+  {
+    emoji: "🛡️",
+    titleKey: "kidsHome.sheytanGame",
+    descKey: "kidsHome.sheytanGameDesc",
+    path: "/kids-sheytan",
+    gradient: "from-red-600/30 to-amber-600/15",
+    border: "border-red-500/25",
+  },
 ];
 
 export default function KidsHomePage() {

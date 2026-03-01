@@ -1470,6 +1470,26 @@ const translations = {
   "kidsDuas.daily5Title": { fr: "En se regardant dans le miroir", en: "Looking in the mirror", nl: "In de spiegel kijken", ar: "عند النظر في المرآة", tr: "Aynaya bakarken", ur: "آئینے میں دیکھتے وقت" },
   "kidsDuas.daily5Trans": { fr: "Ô Allah, Tu as embelli ma création, alors embellis mon caractère.", en: "O Allah, You have beautified my form, so beautify my character.", nl: "O Allah, U hebt mijn uiterlijk verfraaid, verfraai dus mijn karakter.", ar: "اللهم أنت حسّنت خلقي فحسّن خلقي", tr: "Allah'ım yaratılışımı güzelleştirdiğin gibi ahlakımı da güzelleştir.", ur: "اے اللہ تو نے میری صورت خوبصورت بنائی تو میرے اخلاق بھی خوبصورت بنا دے۔" },
 
+  // ─── Kids Sheytan Game ──────────────────────────────
+  "kidsHome.sheytanGame": { fr: "Chasse aux Sheytans", en: "Sheytan Chase", nl: "Sheytan Jacht", ar: "مطاردة الشياطين", tr: "Şeytan Avı", ur: "شیطان کا پیچھا" },
+  "kidsHome.sheytanGameDesc": { fr: "Fuis les sheytans et collecte des versets protecteurs !", en: "Flee the sheytans and collect protective verses!", nl: "Vlucht voor de sheytans en verzamel beschermende verzen!", ar: "اهرب من الشياطين واجمع الآيات الحامية!", tr: "Şeytanlardan kaç ve koruyucu ayetler topla!", ur: "شیطانوں سے بھاگیں اور حفاظتی آیات جمع کریں!" },
+  "sheytanGame.title": { fr: "Chasse aux Sheytans", en: "Sheytan Chase", nl: "Sheytan Jacht", ar: "مطاردة الشياطين", tr: "Şeytan Avı", ur: "شیطان کا پیچھا" },
+  "sheytanGame.subtitle": { fr: "Collecte les versets du Coran et fuis les sheytans !", en: "Collect Quran verses and flee the sheytans!", nl: "Verzamel Koranverzen en vlucht voor de sheytans!", ar: "اجمع آيات القرآن واهرب من الشياطين!", tr: "Kuran ayetlerini topla ve şeytanlardan kaç!", ur: "قرآنی آیات جمع کریں اور شیطانوں سے بھاگیں!" },
+  "sheytanGame.play": { fr: "Jouer", en: "Play", nl: "Spelen", ar: "العب", tr: "Oyna", ur: "کھیلیں" },
+  "sheytanGame.highScore": { fr: "Record", en: "High Score", nl: "Topscore", ar: "أعلى نتيجة", tr: "Rekor", ur: "اعلیٰ سکور" },
+  "sheytanGame.controlsHint": { fr: "Glisse ou utilise les flèches pour te déplacer", en: "Swipe or use arrows to move", nl: "Veeg of gebruik pijlen om te bewegen", ar: "اسحب أو استخدم الأسهم للتحرك", tr: "Kaydır veya okları kullan", ur: "سوائپ کریں یا تیر استعمال کریں" },
+  "sheytanGame.powerUpHint": { fr: "Trouve les boucliers pour repousser les sheytans !", en: "Find shields to repel the sheytans!", nl: "Vind schilden om sheytans af te weren!", ar: "اعثر على الدروع لصد الشياطين!", tr: "Şeytanları püskürtmek için kalkan bul!", ur: "شیطانوں کو بھگانے کے لیے ڈھال تلاش کریں!" },
+  "sheytanGame.quizTitle": { fr: "Quiz Coranique", en: "Quran Quiz", nl: "Koran Quiz", ar: "اختبار قرآني", tr: "Kuran Testi", ur: "قرآن کوئز" },
+  "sheytanGame.question": { fr: "Question", en: "Question", nl: "Vraag", ar: "سؤال", tr: "Soru", ur: "سوال" },
+  "sheytanGame.gameOver": { fr: "Fin de partie", en: "Game Over", nl: "Spel voorbij", ar: "انتهت اللعبة", tr: "Oyun bitti", ur: "کھیل ختم" },
+  "sheytanGame.victory": { fr: "Victoire ! MashaAllah !", en: "Victory! MashaAllah!", nl: "Overwinning! MashaAllah!", ar: "فوز! ماشاء الله!", tr: "Zafer! MaşaAllah!", ur: "فتح! ماشاء اللہ!" },
+  "sheytanGame.points": { fr: "points", en: "points", nl: "punten", ar: "نقاط", tr: "puan", ur: "پوائنٹس" },
+  "sheytanGame.versesCollected": { fr: "Versets collectés", en: "Verses collected", nl: "Verzamelde verzen", ar: "الآيات المجمعة", tr: "Toplanan ayetler", ur: "جمع شدہ آیات" },
+  "sheytanGame.retry": { fr: "Rejouer", en: "Retry", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar", ur: "دوبارہ" },
+  "sheytanGame.menu": { fr: "Menu", en: "Menu", nl: "Menu", ar: "القائمة", tr: "Menü", ur: "مینیو" },
+  "sheytanGame.kursiActive": { fr: "Ayatul Kursi actif !", en: "Ayatul Kursi active!", nl: "Ayatul Kursi actief!", ar: "آية الكرسي فعّالة!", tr: "Ayetel Kürsi aktif!", ur: "آیت الکرسی فعال!" },
+  "sheytanGame.lailahaActive": { fr: "La ilaha illallah !", en: "La ilaha illallah!", nl: "La ilaha illallah!", ar: "لا إله إلا الله!", tr: "La ilahe illallah!", ur: "لا الہ الا اللہ!" },
+
   // Teacher Dashboard
   "teacher.title": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
   "teacher.subtitle": { fr: "Suivez la progression de vos classes", en: "Track your classes' progress", nl: "Volg de voortgang van je klassen", ar: "تابع تقدم فصولك", tr: "Sınıflarınızın ilerlemesini takip edin", ur: "اپنی کلاسوں کی پیشرفت دیکھیں" },
