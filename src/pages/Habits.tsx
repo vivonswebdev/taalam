@@ -119,10 +119,10 @@ export default function Habits() {
 
     generateProgressReport({
       displayName: profile?.display_name || "Ta'alam User",
-      streak: xp.streakDays,
-      level: xp.level,
-      xpTotal: xp.xpTotal,
-      xpToday: xp.xpToday,
+      streak: streak,
+      level: qxp.level,
+      xpTotal: qxp.xp,
+      xpToday: 0,
       hifzPlan,
       hifzTasks,
       hifzProgress,
