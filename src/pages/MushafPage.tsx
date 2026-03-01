@@ -1021,7 +1021,7 @@ export default function MushafPage() {
         >
           <button
             onClick={goToPrevPage}
-            disabled={currentPage <= 1}
+            disabled={currentSurahForNav <= 1}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowLeft size={20} style={{ color: theme.text }} />
