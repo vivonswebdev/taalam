@@ -178,6 +178,7 @@ const App = () => (
               <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
               <Route path="/hifz-today" element={<HifzTodayPage />} />
               <Route path="/offline-settings" element={<OfflineSettings />} />
+              <Route path="/jeux" element={<JeuxKids />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
