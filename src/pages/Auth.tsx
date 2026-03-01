@@ -137,6 +137,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [rememberMe, setRememberMe] = useState(() => {
     return localStorage.getItem("taalam_remember_me") !== "false";
   });
