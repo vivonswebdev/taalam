@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Star, RotateCcw, Play, Trophy, Medal } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSound } from "@/hooks/useSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
