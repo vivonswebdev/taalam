@@ -2293,7 +2293,7 @@ const translations = {
   "family.codeCopied": { fr: "Code copié !", en: "Code copied!", nl: "Code gekopieerd!", ar: "تم نسخ الرمز!", tr: "Kod kopyalandı!", ur: "کوڈ کاپی ہو گیا!" },
   "family.addChildrenFirst": { fr: "Ajoutez des enfants d'abord !", en: "Add children first!", nl: "Voeg eerst kinderen toe!", ar: "أضف أطفالاً أولاً!", tr: "Önce çocuk ekleyin!", ur: "پہلے بچے شامل کریں!" },
   "family.days": { fr: "j", en: "d", nl: "d", ar: "ي", tr: "g", ur: "د" },
-  "family.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى", tr: "Seviye", ur: "سطح" },
+  // Share card
   // Share card
   "share.title": { fr: "Partager la famille", en: "Share family", nl: "Familie delen", ar: "مشاركة العائلة", tr: "Aileyi paylaş", ur: "خاندان شیئر کریں" },
   "share.share": { fr: "Partager", en: "Share", nl: "Delen", ar: "مشاركة", tr: "Paylaş", ur: "شیئر" },
