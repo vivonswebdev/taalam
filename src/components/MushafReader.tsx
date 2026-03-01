@@ -293,6 +293,13 @@ export default function MushafReader({
         <button onClick={() => setShowSettings(!showSettings)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <Settings2 size={18} />
         </button>
+        {/* Reading XP indicator */}
+        {sessionXP > 0 && (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1 bg-primary/10 rounded-full px-2.5 py-1">
+            <Zap size={12} className="text-primary" />
+            <span className="text-xs font-bold text-primary">+{sessionXP}</span>
+          </motion.div>
+        )}
       </div>
 
       {/* Settings panel */}
