@@ -68,13 +68,8 @@ export function ModeSelector() {
       <p className="text-sm font-semibold text-foreground">{t("more.chooseModeTitle" as any)}</p>
       <p className="text-xs text-muted-foreground">{t("more.chooseModeSubtitle" as any)}</p>
       <div className="grid grid-cols-2 gap-2 pt-1">
-        {primary.map(m => renderCard(m))}
+        {ALL_MODES.map(m => renderCard(m))}
       </div>
-      {secondary.length > 0 && (
-        <div className={`grid gap-2 pt-1 ${secondary.length === 1 ? "grid-cols-2" : "grid-cols-2"}`}>
-          {secondary.map(m => renderCard(m))}
-        </div>
-      )}
     </motion.div>
   );
 }
