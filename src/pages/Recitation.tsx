@@ -18,6 +18,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useSound } from "@/hooks/useSound";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import FloatingXpWidget from "@/components/FloatingXpWidget";
+import { useAsrLogging } from "@/hooks/useAsrLogging";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
