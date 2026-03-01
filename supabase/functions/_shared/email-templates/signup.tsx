@@ -9,6 +9,7 @@ import {
   Head,
   Heading,
   Html,
+  Img,
   Link,
   Preview,
   Text,
@@ -27,31 +28,38 @@ export const SignupEmail = ({
   recipient,
   confirmationUrl,
 }: SignupEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="fr" dir="ltr">
     <Head />
-    <Preview>Confirm your email for {siteName}</Preview>
+    <Preview>Confirmez votre email pour Ta'alam</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirm your email</Heading>
+        <Img
+          src="https://usgqmmfigvkmxneoegig.supabase.co/storage/v1/object/public/email-assets/taaloum-logo.png"
+          alt="Ta'alam"
+          width="80"
+          height="80"
+          style={logo}
+        />
+        <Heading style={h1}>Assalamou alaykoum 🌙</Heading>
         <Text style={text}>
-          Thanks for signing up for{' '}
+          Bienvenue sur{' '}
           <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
-          !
+            <strong>Ta'alam</strong>
+          </Link>{' '}
+          ! Nous sommes ravis de vous accompagner dans votre parcours coranique.
         </Text>
         <Text style={text}>
-          Please confirm your email address (
+          Veuillez confirmer votre adresse email (
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
           </Link>
-          ) by clicking the button below:
+          ) en cliquant sur le bouton ci-dessous :
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Verify Email
+          Confirmer mon email ✨
         </Button>
         <Text style={footer}>
-          If you didn't create an account, you can safely ignore this email.
+          Si vous n'avez pas créé de compte, vous pouvez ignorer cet email en toute sécurité.
         </Text>
       </Container>
     </Body>
@@ -60,27 +68,32 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Outfit', Arial, sans-serif" }
+const container = { padding: '30px 25px', maxWidth: '480px', margin: '0 auto' }
+const logo = { margin: '0 auto 20px', display: 'block' as const }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: 'hsl(150, 40%, 10%)',
   margin: '0 0 20px',
+  textAlign: 'center' as const,
 }
 const text = {
   fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  color: 'hsl(150, 10%, 46%)',
+  lineHeight: '1.6',
+  margin: '0 0 20px',
 }
-const link = { color: 'inherit', textDecoration: 'underline' }
+const link = { color: 'hsl(152, 56%, 28%)', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
+  backgroundColor: 'hsl(152, 56%, 28%)',
+  color: 'hsl(40, 40%, 97%)',
   fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontWeight: 'bold' as const,
+  borderRadius: '16px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }

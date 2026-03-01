@@ -9,6 +9,7 @@ import {
   Head,
   Heading,
   Html,
+  Img,
   Link,
   Preview,
   Text,
@@ -25,26 +26,32 @@ export const InviteEmail = ({
   siteUrl,
   confirmationUrl,
 }: InviteEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="fr" dir="ltr">
     <Head />
-    <Preview>You've been invited to join {siteName}</Preview>
+    <Preview>Vous êtes invité(e) à rejoindre Ta'alam</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>You've been invited</Heading>
+        <Img
+          src="https://usgqmmfigvkmxneoegig.supabase.co/storage/v1/object/public/email-assets/taaloum-logo.png"
+          alt="Ta'alam"
+          width="80"
+          height="80"
+          style={logo}
+        />
+        <Heading style={h1}>Vous êtes invité(e) 🤝</Heading>
+        <Text style={text}>Assalamou alaykoum,</Text>
         <Text style={text}>
-          You've been invited to join{' '}
+          Vous avez été invité(e) à rejoindre{' '}
           <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
+            <strong>Ta'alam</strong>
           </Link>
-          . Click the button below to accept the invitation and create your
-          account.
+          . Cliquez ci-dessous pour accepter l'invitation et créer votre compte.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Accept Invitation
+          Accepter l'invitation ✨
         </Button>
         <Text style={footer}>
-          If you weren't expecting this invitation, you can safely ignore this
-          email.
+          Si vous n'attendiez pas cette invitation, vous pouvez ignorer cet email.
         </Text>
       </Container>
     </Body>
@@ -53,27 +60,32 @@ export const InviteEmail = ({
 
 export default InviteEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Outfit', Arial, sans-serif" }
+const container = { padding: '30px 25px', maxWidth: '480px', margin: '0 auto' }
+const logo = { margin: '0 auto 20px', display: 'block' as const }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: 'hsl(150, 40%, 10%)',
   margin: '0 0 20px',
+  textAlign: 'center' as const,
 }
 const text = {
   fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  color: 'hsl(150, 10%, 46%)',
+  lineHeight: '1.6',
+  margin: '0 0 20px',
 }
-const link = { color: 'inherit', textDecoration: 'underline' }
+const link = { color: 'hsl(152, 56%, 28%)', textDecoration: 'underline' }
 const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
+  backgroundColor: 'hsl(152, 56%, 28%)',
+  color: 'hsl(40, 40%, 97%)',
   fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontWeight: 'bold' as const,
+  borderRadius: '16px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }

@@ -9,6 +9,7 @@ import {
   Head,
   Heading,
   Html,
+  Img,
   Preview,
   Text,
 } from 'npm:@react-email/components@0.0.22'
@@ -22,22 +23,30 @@ export const RecoveryEmail = ({
   siteName,
   confirmationUrl,
 }: RecoveryEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="fr" dir="ltr">
     <Head />
-    <Preview>Reset your password for {siteName}</Preview>
+    <Preview>Réinitialisez votre mot de passe Ta'alam</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Reset your password</Heading>
+        <Img
+          src="https://usgqmmfigvkmxneoegig.supabase.co/storage/v1/object/public/email-assets/taaloum-logo.png"
+          alt="Ta'alam"
+          width="80"
+          height="80"
+          style={logo}
+        />
+        <Heading style={h1}>Réinitialisation du mot de passe 🔐</Heading>
+        <Text style={text}>Assalamou alaykoum,</Text>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
-          the button below to choose a new password.
+          Nous avons reçu une demande de réinitialisation de votre mot de passe Ta'alam.
+          Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Reset Password
+          Réinitialiser mon mot de passe
         </Button>
         <Text style={footer}>
-          If you didn't request a password reset, you can safely ignore this
-          email. Your password will not be changed.
+          Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
+          Votre mot de passe ne sera pas modifié.
         </Text>
       </Container>
     </Body>
@@ -46,26 +55,31 @@ export const RecoveryEmail = ({
 
 export default RecoveryEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Outfit', Arial, sans-serif" }
+const container = { padding: '30px 25px', maxWidth: '480px', margin: '0 auto' }
+const logo = { margin: '0 auto 20px', display: 'block' as const }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: 'hsl(150, 40%, 10%)',
   margin: '0 0 20px',
+  textAlign: 'center' as const,
 }
 const text = {
   fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  color: 'hsl(150, 10%, 46%)',
+  lineHeight: '1.6',
+  margin: '0 0 20px',
 }
 const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
+  backgroundColor: 'hsl(152, 56%, 28%)',
+  color: 'hsl(40, 40%, 97%)',
   fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontWeight: 'bold' as const,
+  borderRadius: '16px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'block' as const,
+  textAlign: 'center' as const,
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }
