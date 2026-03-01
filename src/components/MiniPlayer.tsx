@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, ChevronsLeft, ChevronsRight, X, Headphones } from "lucide-react";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
