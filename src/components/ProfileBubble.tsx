@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Baby, GraduationCap, Users, Moon, Sun, Globe, Wifi, WifiOff,
-  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X
+  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X, Shield
 } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
@@ -54,6 +54,7 @@ export default function ProfileBubble() {
   const [showLangPicker, setShowLangPicker] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
+  const [isModerator, setIsModerator] = useState(false);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const stored = localStorage.getItem("quranEasyTheme");
@@ -67,6 +68,10 @@ export default function ProfileBubble() {
     supabase.from("profiles").select("display_name, avatar_emoji").eq("user_id", user.id).maybeSingle().then(({ data }) => {
       if (data?.display_name) setDisplayName(data.display_name);
       if (data?.avatar_emoji) setAvatarEmoji(data.avatar_emoji);
+    });
+    // Check moderator role
+    supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "moderator").maybeSingle().then(({ data }) => {
+      setIsModerator(!!data);
     });
   }, [user]);
 
@@ -240,6 +245,13 @@ export default function ProfileBubble() {
                 <DropdownMenuItem onClick={() => navigate("/family")} className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
                   <Heart className="w-5 h-5 text-rose-400" />
                   <span className="flex-1 text-sm font-medium">{t("profile.family" as any)}</span>
+                </DropdownMenuItem>
+              )}
+
+              {isModerator && (
+                <DropdownMenuItem onClick={() => navigate("/coord")} className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
+                  <Shield className="w-5 h-5 text-purple-400" />
+                  <span className="flex-1 text-sm font-medium">{t("profile.coordDashboard" as any)}</span>
                 </DropdownMenuItem>
               )}
 

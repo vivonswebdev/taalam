@@ -2213,6 +2213,7 @@ const translations = {
   "profile.sectionSecurity": { fr: "Sécurité", en: "Security", nl: "Beveiliging", ar: "الأمان", tr: "Güvenlik", ur: "سیکیورٹی" },
   "profile.password": { fr: "Mot de passe", en: "Password", nl: "Wachtwoord", ar: "كلمة المرور", tr: "Şifre", ur: "پاس ورڈ" },
   "profile.export": { fr: "Exporter données", en: "Export data", nl: "Gegevens exporteren", ar: "تصدير البيانات", tr: "Veri dışa aktar", ur: "ڈیٹا برآمد کریں" },
+  "profile.coordDashboard": { fr: "Dashboard coordinateur", en: "Coordinator Dashboard", nl: "Coördinator dashboard", ar: "لوحة المنسق", tr: "Koordinatör Paneli", ur: "کوآرڈینیٹر ڈیش بورڈ" },
   "profile.logout": { fr: "Déconnexion", en: "Log out", nl: "Uitloggen", ar: "تسجيل الخروج", tr: "Çıkış yap", ur: "لاگ آؤٹ" },
   "profile.pinTitle": { fr: "Code PIN requis", en: "PIN code required", nl: "Pincode vereist", ar: "رمز PIN مطلوب", tr: "PIN kodu gerekli", ur: "پن کوڈ درکار ہے" },
   "profile.pinDesc": { fr: "Entrez le code PIN pour accéder à ce mode.", en: "Enter PIN to access this mode.", nl: "Voer PIN in om deze modus te openen.", ar: "أدخل رمز PIN للوصول.", tr: "Bu moda erişmek için PIN girin.", ur: "اس موڈ تک رسائی کے لیے پن درج کریں۔" },
