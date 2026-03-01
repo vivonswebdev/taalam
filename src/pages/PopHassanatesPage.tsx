@@ -87,12 +87,50 @@ export default function PopHassanatesPage() {
     }
   };
 
+  // Difficulty selection screen
+  if (!difficulty) {
+    return (
+      <div className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] p-4 bg-gradient-to-b from-indigo-900 via-purple-900 to-background font-sans overflow-hidden relative">
+        <div className="flex items-center w-full mt-8 z-10 relative">
+          <button onClick={() => navigate(-1)} className="p-2 bg-white/20 backdrop-blur-md rounded-full shadow-sm text-white hover:bg-white/30 transition-colors">
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-base font-bold text-white ml-3 flex items-center gap-1.5">
+            <span>🫧</span> {t("popHassanates.title" as any)}
+          </h1>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center px-6 gap-6 pb-20">
+          <span className="text-6xl">🫧</span>
+          <h2 className="text-lg font-bold text-white">{t("popHassanates.chooseDifficulty" as any)}</h2>
+          <div className="w-full max-w-xs space-y-3">
+            {(["easy", "medium", "hard"] as const).map((d) => {
+              const emoji = d === "easy" ? "🌱" : d === "medium" ? "🌿" : "🔥";
+              const desc = d === "easy" ? t("popHassanates.easyDesc" as any) : d === "medium" ? t("popHassanates.mediumDesc" as any) : t("popHassanates.hardDesc" as any);
+              return (
+                <motion.button key={d} whileTap={{ scale: 0.96 }}
+                  onClick={() => startGame(d)}
+                  className="w-full flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-4 active:bg-white/20 transition-colors">
+                  <span className="text-2xl">{emoji}</span>
+                  <div className="text-left flex-1">
+                    <p className="text-sm font-bold text-white">{t(`popHassanates.${d}` as any)}</p>
+                    <p className="text-[10px] text-white/60">{desc}</p>
+                  </div>
+                  <span className="text-xs text-emerald-400 font-bold">×{DIFFICULTIES[d].xpMultiplier}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] p-4 bg-gradient-to-b from-indigo-900 via-purple-900 to-background font-sans overflow-hidden relative">
       {/* Header (HUD) */}
       <div className="flex justify-between items-center w-full mt-8 z-10 relative">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => { setDifficulty(null); setIsPlaying(false); setGameOver(false); }}
           className="p-2 bg-white/20 backdrop-blur-md rounded-full shadow-sm text-white hover:bg-white/30 transition-colors"
         >
           <ArrowLeft className="w-6 h-6" />
@@ -109,21 +147,6 @@ export default function PopHassanatesPage() {
 
       {/* Zone de jeu */}
       <div className="flex-1 w-full relative">
-        {!isPlaying && !gameOver && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-20">
-            <div className="text-6xl mb-4">🫧</div>
-            <h2 className="text-3xl font-black text-white mb-2">{t("popHassanates.title" as any)}</h2>
-            <p className="text-white/80 text-sm mb-8">
-              {t("popHassanates.instruction" as any)}
-            </p>
-            <button
-              onClick={startGame}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-12 rounded-full text-lg shadow-lg shadow-emerald-500/30 active:scale-95 transition-all"
-            >
-              {t("popHassanates.play" as any)}
-            </button>
-          </div>
-        )}
 
         {/* Rendu des bulles */}
         <AnimatePresence>
