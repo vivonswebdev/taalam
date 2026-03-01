@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Lang = "fr" | "en" | "nl" | "ar" | "tr" | "ur";
 
@@ -2066,6 +2067,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLang = useCallback((newLang: Lang) => {
     setLangState(newLang);
     localStorage.setItem(LANG_KEY, newLang);
+    // Sync to user_metadata for email language detection
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        supabase.auth.updateUser({ data: { language: newLang } }).catch(() => {});
+      }
+    });
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {

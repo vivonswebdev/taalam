@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check } from "lucide-react";
+import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
 import { useUserMode, type UserMode, type AgeGroup } from "@/hooks/useUserMode";
 import IslamicAvatarPicker from "@/components/IslamicAvatarPicker";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -47,7 +48,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { signUpWithEmail } = useAuth();
   const { setMode: setGlobalMode, setAgeGroup: setGlobalAgeGroup } = useUserMode();
 
@@ -96,7 +97,7 @@ export default function Auth() {
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
-        options: { data: { display_name: displayName.trim(), avatar_emoji: avatarEmoji } },
+        options: { data: { display_name: displayName.trim(), avatar_emoji: avatarEmoji, language: lang } },
       });
       if (error) throw error;
 
@@ -212,14 +213,15 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="px-6 pt-6">
-        <button onClick={handleBack} className="flex items-center gap-2 text-muted-foreground mb-6">
+      <div className="px-6 pt-6 flex items-center justify-between">
+        <button onClick={handleBack} className="flex items-center gap-2 text-muted-foreground">
           <ArrowLeft size={20} />
           <span className="text-sm">{t("join.back")}</span>
         </button>
+        <LanguageSwitcher />
       </div>
 
-      <div className="px-6 space-y-6">
+      <div className="px-6 mt-6 space-y-6">
         {/* Forgot password flow */}
         {mode === "forgot" && (
           <motion.div key="forgot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
