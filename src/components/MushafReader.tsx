@@ -16,7 +16,7 @@ import StudySheet from "@/components/StudySheet";
 import TafsirSurahView from "@/components/TafsirSurahView";
 import ActiveChildBanner from "@/components/ActiveChildBanner";
 import { useGlobalAudio } from "@/hooks/useGlobalAudio";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useQuranHabits } from "@/hooks/useQuranHabits";
 import { calcReadingXP } from "@/lib/xpCalculator";
 import type { Surah } from "@/data/surahs";
