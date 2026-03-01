@@ -13,7 +13,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ProfileBubble from "@/components/ProfileBubble";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
