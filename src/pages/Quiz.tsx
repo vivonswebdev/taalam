@@ -264,6 +264,7 @@ export default function Quiz() {
     setQuizXP(0);
     setConsecutiveCorrect(0);
     setBestStreak(0);
+    exploit.reset();
   };
 
   // Flashcards mode
