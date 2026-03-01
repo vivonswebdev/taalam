@@ -20,6 +20,7 @@ import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useHifzSRS } from "@/hooks/useHifzSRS";
 import { trackEvent } from "@/lib/trackEvent";
 
 function HomeCard({
@@ -85,6 +86,7 @@ export default function Home() {
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
   const { settings: adminSettings, loading: adminSettingsLoading } = useAdminSettings();
+  const { items: srsItems, todayItems: srsTodayItems, learningCount, reviewingCount, masteredCount } = useHifzSRS();
 
   const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
   const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
@@ -399,6 +401,33 @@ export default function Home() {
           delay={0.5}
         />
       </div>
+
+      {/* ═══ Widget Hifz SRS ═══ */}
+      {srsItems.length > 0 && (
+        <div className="px-5 mt-3">
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.52 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => { trackEvent("module_open", "hifz_srs"); navigate("/hifz-today"); }}
+            className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-r from-violet-700/40 to-purple-900/20 border border-violet-400/30 shadow-lg"
+          >
+            <span className="text-2xl">🧠</span>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-sm font-bold text-white">
+                {srsTodayItems.length > 0
+                  ? `${srsTodayItems.length} passage${srsTodayItems.length > 1 ? "s" : ""} à réviser`
+                  : "Aucune révision aujourd'hui ✅"}
+              </p>
+              <p className="text-[11px] text-white/60">
+                {learningCount} en cours · {reviewingCount} en révision · {masteredCount} maîtrisé{masteredCount > 1 ? "s" : ""}
+              </p>
+            </div>
+            <span className="text-xs font-bold text-primary shrink-0">Réviser →</span>
+          </motion.button>
+        </div>
+      )}
 
       {/* ═══ BLOC 4 – Communauté & Enseignant ═══ */}
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
