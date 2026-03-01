@@ -124,10 +124,13 @@ export default function More() {
         {/* SECTION 2 – Communauté */}
         <MenuSection title={t("more.sectionCommunity" as any)} items={communityItems} />
 
-        {/* SECTION 3 – Qur'an & pratique */}
+        {/* Qur'an & pratique */}
         <MenuSection title={t("more.sectionQuranPractice" as any)} items={quranItems} />
 
-        {/* SECTION 4 – Progression */}
+        {/* Outils pédagogiques */}
+        <MenuSection title={t("more.sectionTools" as any)} items={toolsItems} />
+
+        {/* Progression */}
         <MenuSection title={t("more.sectionProgress" as any)} items={progressItems} />
 
         {/* SECTION 5 – Compte & réglages */}
