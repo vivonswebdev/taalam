@@ -1,9 +1,31 @@
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, X, Download, Pause, Play, CloudOff, Loader2, HardDrive } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useOfflineManager, type OfflineSection } from "@/hooks/useOfflineManager";
+import { useXP } from "@/hooks/useXP";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+
+const OFFLINE_XP_KEY = "offline_xp_awarded";
+function getOfflineXpAwarded(): Record<string, boolean> {
+  try { return JSON.parse(localStorage.getItem(OFFLINE_XP_KEY) || "{}"); } catch { return {}; }
+}
+function markOfflineXpAwarded(section: string) {
+  const data = getOfflineXpAwarded();
+  data[section] = true;
+  localStorage.setItem(OFFLINE_XP_KEY, JSON.stringify(data));
+}
+
+function awardOnce(key: string, amount: number, addXP: (n: number) => void, label: string) {
+  const fullKey = "offline_xp_once_" + key;
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(fullKey) === today) return;
+  localStorage.setItem(fullKey, today);
+  addXP(amount);
+  toast.success(`+${amount} XP — ${label}`);
+}
 
 const SECTIONS: { id: OfflineSection; emoji: string; tKey: string; descKey: string; sizeHint: string }[] = [
   { id: "mushaf", emoji: "📖", tKey: "offlinev2.mushaf", descKey: "offlinev2.mushafDesc", sizeHint: "~114 Mo" },
@@ -12,15 +34,32 @@ const SECTIONS: { id: OfflineSection; emoji: string; tKey: string; descKey: stri
   { id: "quiz", emoji: "🧠", tKey: "offlinev2.quiz", descKey: "offlinev2.quizDesc", sizeHint: "—" },
 ];
 
+const XP_REWARDS: Record<string, number> = { mushaf: 10, moods: 15, tarteel: 10 };
+
 export default function OfflineSettings() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { addXP } = useXP();
+  const prevStatusRef = useRef<Record<string, boolean>>({});
   const {
     offlineMode, setOfflineMode,
     status, readySections, progress,
     downloadMushaf, downloadMoods, downloadTarteel, downloadAll,
     pauseDownload, resumeDownload, cancelDownload,
   } = useOfflineManager();
+
+  // Award XP when a section finishes downloading (once per section ever)
+  useEffect(() => {
+    const awarded = getOfflineXpAwarded();
+    (["mushaf", "moods", "tarteel"] as OfflineSection[]).forEach(sec => {
+      if (status[sec] && !prevStatusRef.current[sec] && !awarded[sec] && XP_REWARDS[sec]) {
+        addXP(XP_REWARDS[sec]);
+        markOfflineXpAwarded(sec);
+        toast.success(`+${XP_REWARDS[sec]} XP — ${t(`offlinev2.${sec}` as any)} offline !`);
+      }
+    });
+    prevStatusRef.current = { ...status };
+  }, [status, addXP, t]);
 
   const downloadFns: Record<OfflineSection, () => Promise<void>> = {
     mushaf: downloadMushaf,
@@ -57,7 +96,11 @@ export default function OfflineSettings() {
               <p className="text-[10px] text-muted-foreground">{t("offlinev2.globalToggleDesc" as any)}</p>
             </div>
             <div
-              onClick={() => setOfflineMode(!offlineMode)}
+              onClick={() => {
+                const next = !offlineMode;
+                setOfflineMode(next);
+                if (next) awardOnce("offline_toggle", 8, addXP, t("offlinev2.globalToggle" as any));
+              }}
               className={`w-12 h-7 rounded-full transition-colors relative cursor-pointer ${offlineMode ? "bg-primary" : "bg-muted"}`}
             >
               <motion.div animate={{ x: offlineMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />

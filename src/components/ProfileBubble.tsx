@@ -15,7 +15,19 @@ import { useUserMode, type UserMode } from "@/hooks/useUserMode";
 import { useOfflineManager } from "@/hooks/useOfflineManager";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useQuranXp } from "@/hooks/useQuranXp";
+import { useXP } from "@/hooks/useXP";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const PROFILE_XP_PREFIX = "profile_xp_";
+function awardOnce(key: string, amount: number, addXP: (n: number) => void, label: string) {
+  const fullKey = PROFILE_XP_PREFIX + key;
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(fullKey) === today) return;
+  localStorage.setItem(fullKey, today);
+  addXP(amount);
+  toast.success(`+${amount} XP — ${label}`);
+}
 
 const ROLE_CONFIG: Record<UserMode, { emoji: string; color: string; bg: string; border: string }> = {
   solo: { emoji: "👤", color: "text-muted-foreground", bg: "bg-muted/60", border: "border-border" },
@@ -32,6 +44,7 @@ export default function ProfileBubble() {
   const { mode, setMode } = useUserMode();
   const { classrooms } = useClassrooms();
   const xp = useQuranXp();
+  const { addXP } = useXP();
   const { readySections } = useOfflineManager();
   const navigate = useNavigate();
 
@@ -77,12 +90,14 @@ export default function ProfileBubble() {
       setPinInput("");
     } else {
       setMode(newMode);
+      awardOnce("switch", 5, addXP, t("profile.roleSolo" as any));
     }
   };
 
   const confirmPin = () => {
     if (pinInput === PIN_CODE && pendingMode) {
       setMode(pendingMode);
+      awardOnce("switch", 5, addXP, t(`profile.role${pendingMode.charAt(0).toUpperCase() + pendingMode.slice(1)}` as any));
       setShowPin(false);
       setPendingMode(null);
       setPinInput("");
@@ -326,7 +341,7 @@ export default function ProfileBubble() {
               {LANGUAGES.map(l => (
                 <button
                   key={l.code}
-                  onClick={() => { setLang(l.code); setShowLangPicker(false); }}
+                  onClick={() => { if (l.code !== lang) awardOnce("lang", 3, addXP, l.label); setLang(l.code); setShowLangPicker(false); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${lang === l.code ? "bg-primary/10 ring-1 ring-primary/30" : "hover:bg-accent/30"}`}
                 >
                   <span className="text-xl">{l.flag}</span>

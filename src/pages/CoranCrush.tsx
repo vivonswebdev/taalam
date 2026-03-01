@@ -166,12 +166,32 @@ export default function CoranCrush() {
 
   // XP & leaderboard save
   useEffect(() => {
-    if (victory && !xpAwardedRef.current) {
+    if ((victory || gameOver) && !xpAwardedRef.current) {
       xpAwardedRef.current = true;
-      addXP(Math.min(10, 2 + Math.floor(maxCombo / 2)));
-      saveScore(score, level, maxCombo, totalCleared);
+
+      // Score XP: 1 XP per 50 pts, max 50
+      const scoreXp = Math.min(50, Math.floor(score / 50));
+      if (scoreXp > 0) addXP(scoreXp);
+
+      // Combo XP: 5 per max combo, max 40
+      const comboXp = Math.min(40, maxCombo * 5);
+      if (comboXp > 0) addXP(comboXp);
+
+      // Level clear bonus
+      if (victory) {
+        addXP(25); // crush_level bonus
+
+        // Perfect: won with moves remaining >= half initial
+        if (moves >= Math.floor(BASE_MOVES / 2)) {
+          addXP(50); // crush_perfect bonus
+        }
+      }
+
+      if (victory) {
+        saveScore(score, level, maxCombo, totalCleared);
+      }
     }
-  }, [victory, addXP, maxCombo, saveScore, score, level, totalCleared]);
+  }, [victory, gameOver, addXP, maxCombo, saveScore, score, level, totalCleared, moves]);
 
   useEffect(() => { xpAwardedRef.current = false; }, [level]);
 
