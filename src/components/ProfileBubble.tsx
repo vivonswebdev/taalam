@@ -97,6 +97,7 @@ export default function ProfileBubble() {
   const confirmPin = () => {
     if (pinInput === PIN_CODE && pendingMode) {
       setMode(pendingMode);
+      awardOnce("switch", 5, addXP, t(`profile.role${pendingMode.charAt(0).toUpperCase() + pendingMode.slice(1)}` as any));
       setShowPin(false);
       setPendingMode(null);
       setPinInput("");
