@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Heart, Star, RotateCcw, Play, Trophy, Medal } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useSound } from "@/hooks/useSound";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -31,6 +32,7 @@ interface LeaderboardEntry {
 export default function KidsSheytanGame() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { play: playSound } = useSound();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [screen, setScreen] = useState<"menu" | "game" | "quiz" | "gameover" | "leaderboard" | "savescore">("menu");
@@ -41,6 +43,8 @@ export default function KidsSheytanGame() {
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
   const dirRef = useRef<Direction>("none");
+  const prevDotsRef = useRef(0);
+  const prevPhaseRef = useRef<string>("playing");
 
   // Leaderboard
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -93,6 +97,8 @@ export default function KidsSheytanGame() {
     setScreen("game");
     lastTimeRef.current = 0;
     dirRef.current = "none";
+    prevDotsRef.current = 0;
+    prevPhaseRef.current = "playing";
     setSaved(false);
   }, []);
 
@@ -116,6 +122,17 @@ export default function KidsSheytanGame() {
         const updated = updateGame(gameRef.current, CELL_SIZE, dt);
         gameRef.current = updated;
 
+        // ─── Sound effects ─────
+        if (updated.dotsCollected > prevDotsRef.current) {
+          playSound("collectDing");
+        }
+        prevDotsRef.current = updated.dotsCollected;
+
+        if (updated.phase === "powerUp" && prevPhaseRef.current !== "powerUp") {
+          playSound("powerUpSubhanAllah");
+        }
+        prevPhaseRef.current = updated.phase;
+
         const canvas = canvasRef.current;
         if (canvas) {
           const ctx = canvas.getContext("2d");
@@ -123,6 +140,7 @@ export default function KidsSheytanGame() {
         }
 
         if (updated.phase === "gameOver") {
+          playSound("gameOverAstaghfirullah");
           saveHighScore(updated.score);
           saveGameStats(updated.collectedVerses);
           setGameState(updated);
@@ -130,6 +148,7 @@ export default function KidsSheytanGame() {
           return;
         }
         if (updated.phase === "levelComplete") {
+          playSound("levelUp");
           saveHighScore(updated.score);
           setGameState(updated);
           setQuizIdx(0);
