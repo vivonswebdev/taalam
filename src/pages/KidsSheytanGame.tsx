@@ -32,6 +32,7 @@ interface LeaderboardEntry {
 export default function KidsSheytanGame() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { play: playSound } = useSound();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [screen, setScreen] = useState<"menu" | "game" | "quiz" | "gameover" | "leaderboard" | "savescore">("menu");
