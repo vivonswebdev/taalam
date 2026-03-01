@@ -69,6 +69,10 @@ export default function ProfileBubble() {
       if (data?.display_name) setDisplayName(data.display_name);
       if (data?.avatar_emoji) setAvatarEmoji(data.avatar_emoji);
     });
+    // Check moderator role
+    supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "moderator").maybeSingle().then(({ data }) => {
+      setIsModerator(!!data);
+    });
   }, [user]);
 
   const toggleTheme = useCallback(() => {
