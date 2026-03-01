@@ -2318,6 +2318,16 @@ const translations = {
   "studentStats.ayat": { fr: "ayat", en: "ayat", nl: "ayat", ar: "آيات", tr: "ayet", ur: "آیات" },
   "studentStats.surahsInHifz": { fr: "Sourates en Hifz", en: "Surahs in Hifz", nl: "Soera's in Hifz", ar: "سور في الحفظ", tr: "Hıfız'daki Sureler", ur: "حفظ میں سورتیں" },
   "studentStats.recentSubmissions": { fr: "Soumissions récentes", en: "Recent Submissions", nl: "Recente Inzendingen", ar: "التقديمات الأخيرة", tr: "Son Gönderimler", ur: "حالیہ جمع کردہ" },
+  // Messaging Prof-Parent
+  "messaging.title": { fr: "Messages", en: "Messages", nl: "Berichten", ar: "الرسائل", tr: "Mesajlar", ur: "پیغامات" },
+  "messaging.newMessage": { fr: "Nouveau", en: "New", nl: "Nieuw", ar: "جديد", tr: "Yeni", ur: "نیا" },
+  "messaging.selectStudent": { fr: "Sélectionner un élève pour envoyer un message", en: "Select a student to send a message", nl: "Selecteer een leerling om een bericht te sturen", ar: "اختر طالبًا لإرسال رسالة", tr: "Mesaj göndermek için bir öğrenci seçin", ur: "پیغام بھیجنے کے لیے ایک طالب علم منتخب کریں" },
+  "messaging.placeholder": { fr: "Écrire un message…", en: "Write a message…", nl: "Schrijf een bericht…", ar: "اكتب رسالة…", tr: "Bir mesaj yazın…", ur: "ایک پیغام لکھیں…" },
+  "messaging.noMessages": { fr: "Aucun message pour le moment", en: "No messages yet", nl: "Nog geen berichten", ar: "لا توجد رسائل بعد", tr: "Henüz mesaj yok", ur: "ابھی تک کوئی پیغام نہیں" },
+  "messaging.auto": { fr: "Automatique", en: "Automatic", nl: "Automatisch", ar: "تلقائي", tr: "Otomatik", ur: "خودکار" },
+  "messaging.report": { fr: "Rapport", en: "Report", nl: "Rapport", ar: "تقرير", tr: "Rapor", ur: "رپورٹ" },
+  "messaging.assignmentApproved": { fr: "✅ Le devoir \"{title}\" a été validé. Bravo !", en: "✅ Assignment \"{title}\" has been approved. Well done!", nl: "✅ Opdracht \"{title}\" is goedgekeurd. Goed gedaan!", ar: "✅ تمت الموافقة على الواجب \"{title}\". أحسنت!", tr: "✅ \"{title}\" ödevi onaylandı. Aferin!", ur: "✅ اسائنمنٹ \"{title}\" منظور ہو گئی۔ شاباش!" },
+  "messaging.assignmentRejected": { fr: "❌ Le devoir \"{title}\" nécessite une correction.", en: "❌ Assignment \"{title}\" needs correction.", nl: "❌ Opdracht \"{title}\" moet worden gecorrigeerd.", ar: "❌ الواجب \"{title}\" يحتاج إلى تصحيح.", tr: "❌ \"{title}\" ödevi düzeltme gerektiriyor.", ur: "❌ اسائنمنٹ \"{title}\" میں اصلاح کی ضرورت ہے۔" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
