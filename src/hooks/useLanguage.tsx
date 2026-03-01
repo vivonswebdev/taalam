@@ -1877,6 +1877,14 @@ const translations = {
   "quiz.cat.perfectDesc": { fr: "Défi hebdomadaire, zéro erreur", en: "Weekly challenge, zero errors", nl: "Wekelijkse uitdaging, nul fouten", ar: "تحدي أسبوعي، صفر أخطاء", tr: "Haftalık meydan okuma, sıfır hata", ur: "ہفتہ وار چیلنج، صفر غلطیاں" },
   "quiz.cat.kids": { fr: "Quiz Enfants", en: "Kids Quiz", nl: "Kinder Quiz", ar: "اختبار الأطفال", tr: "Çocuk Testi", ur: "بچوں کا کوئز" },
   "quiz.cat.kidsDesc": { fr: "Histoires des prophètes et bases", en: "Prophet stories and basics", nl: "Profeetverhalen en basis", ar: "قصص الأنبياء والأساسيات", tr: "Peygamber hikayeleri ve temeller", ur: "انبیاء کی کہانیاں اور بنیادی باتیں" },
+  "quiz.cat.prophets": { fr: "Histoire des Prophètes", en: "History of the Prophets", nl: "Geschiedenis van de Profeten", ar: "تاريخ الأنبياء", tr: "Peygamberler Tarihi", ur: "انبیاء کی تاریخ" },
+  "quiz.cat.prophetsDesc": { fr: "Questions amusantes sur les prophètes du Coran", en: "Fun questions about the prophets of the Quran", nl: "Leuke vragen over de profeten van de Koran", ar: "أسئلة ممتعة عن أنبياء القرآن", tr: "Kur'an peygamberleri hakkında eğlenceli sorular", ur: "قرآن کے انبیاء کے بارے میں دلچسپ سوالات" },
+  "quiz.cat.islam_basics": { fr: "L'Islam de base", en: "Islam Basics", nl: "Islam Basis", ar: "أساسيات الإسلام", tr: "İslam Temelleri", ur: "اسلام کی بنیادیں" },
+  "quiz.cat.islam_basicsDesc": { fr: "Piliers, croyance, adhkār, akhlaq", en: "Pillars, faith, dhikr, manners", nl: "Zuilen, geloof, dhikr, manieren", ar: "الأركان، العقيدة، الأذكار، الأخلاق", tr: "Rükünler, iman, zikir, ahlak", ur: "ارکان، عقیدہ، اذکار، اخلاق" },
+  "quiz.cat.animals": { fr: "Animaux dans le Coran", en: "Animals in the Quran", nl: "Dieren in de Koran", ar: "الحيوانات في القرآن", tr: "Kur'an'daki Hayvanlar", ur: "قرآن میں جانور" },
+  "quiz.cat.animalsDesc": { fr: "Découvre les animaux mentionnés dans le Coran", en: "Discover animals mentioned in the Quran", nl: "Ontdek dieren die in de Koran worden genoemd", ar: "اكتشف الحيوانات المذكورة في القرآن", tr: "Kur'an'da bahsedilen hayvanları keşfet", ur: "قرآن میں مذکور جانوروں کو دریافت کریں" },
+  "quiz.shareExploit": { fr: "Partager mon exploit", en: "Share my achievement", nl: "Mijn prestatie delen", ar: "شارك إنجازي", tr: "Başarımı paylaş", ur: "اپنی کامیابی شیئر کریں" },
+  "quiz.sharedGroups": { fr: "Partagé dans tes groupes !", en: "Shared in your groups!", nl: "Gedeeld in je groepen!", ar: "تمت المشاركة في مجموعاتك!", tr: "Gruplarında paylaşıldı!", ur: "آپ کے گروپوں میں شیئر ہو گیا!" },
 
   // Community
   "community.title": { fr: "Communauté", en: "Community", nl: "Gemeenschap", ar: "المجتمع", tr: "Topluluk", ur: "کمیونٹی" },

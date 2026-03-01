@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap, Landmark, Lightbulb } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
+import { localizeQuestion } from "@/data/quizI18n";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguage } from "@/hooks/useLanguage";
 import ProphetFlashcards from "@/components/ProphetFlashcards";
@@ -92,71 +93,17 @@ function updateQuizStreak(): QuizStreak {
 
 export { loadQuizStats, type QuizStats };
 
-// ─── Category config with colors ───
-const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; title: string; subtitle: string; icon: typeof Star }> = {
-  tajweed: {
-    gradient: "from-violet-500 to-purple-600",
-    emoji: "📖",
-    title: "Quiz Tajwid",
-    subtitle: "Règles de récitation et arrêts (waqf)",
-    icon: Sparkles,
-  },
-  memorization: {
-    gradient: "from-blue-500 to-blue-600",
-    emoji: "🔎",
-    title: "Quiz Localisation",
-    subtitle: "Retrouve la sourate, le numéro, la position",
-    icon: BookOpen,
-  },
-  general: {
-    gradient: "from-emerald-500 to-emerald-600",
-    emoji: "🌿",
-    title: "Quiz Sens & Culture",
-    subtitle: "Sens des versets et culture islamique",
-    icon: Star,
-  },
-  adaptive: {
-    gradient: "from-amber-500 to-orange-500",
-    emoji: "🧠",
-    title: "Quiz Révision Hifz",
-    subtitle: "Révise tes points faibles avec l'IA",
-    icon: Brain,
-  },
-  perfect: {
-    gradient: "from-rose-500 to-pink-600",
-    emoji: "🏆",
-    title: "Mode Parfait",
-    subtitle: "Défi hebdomadaire, zéro erreur",
-    icon: Trophy,
-  },
-  kids: {
-    gradient: "from-sky-400 to-cyan-500",
-    emoji: "🧒",
-    title: "Quiz Enfants",
-    subtitle: "Histoires des prophètes et bases",
-    icon: Baby,
-  },
-  prophets: {
-    gradient: "from-amber-600 to-yellow-500",
-    emoji: "📚",
-    title: "Histoire des Prophètes",
-    subtitle: "Questions amusantes sur les prophètes du Coran",
-    icon: Landmark,
-  },
-  islam_basics: {
-    gradient: "from-teal-500 to-cyan-600",
-    emoji: "💡",
-    title: "L'Islam de base",
-    subtitle: "Piliers, croyance, adhkār, akhlaq",
-    icon: Lightbulb,
-  },
-  animals: {
-    gradient: "from-lime-500 to-green-600",
-    emoji: "🐫",
-    title: "Animaux dans le Coran",
-    subtitle: "Découvre les animaux mentionnés dans le Coran",
-    icon: Star,
-  },
+// ─── Category config with i18n keys ───
+const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; titleKey: string; subtitleKey: string; icon: typeof Star }> = {
+  tajweed: { gradient: "from-violet-500 to-purple-600", emoji: "📖", titleKey: "quiz.cat.tajweed", subtitleKey: "quiz.cat.tajweedDesc", icon: Sparkles },
+  memorization: { gradient: "from-blue-500 to-blue-600", emoji: "🔎", titleKey: "quiz.cat.memorization", subtitleKey: "quiz.cat.memorizationDesc", icon: BookOpen },
+  general: { gradient: "from-emerald-500 to-emerald-600", emoji: "🌿", titleKey: "quiz.cat.general", subtitleKey: "quiz.cat.generalDesc", icon: Star },
+  adaptive: { gradient: "from-amber-500 to-orange-500", emoji: "🧠", titleKey: "quiz.cat.adaptive", subtitleKey: "quiz.cat.adaptiveDesc", icon: Brain },
+  perfect: { gradient: "from-rose-500 to-pink-600", emoji: "🏆", titleKey: "quiz.cat.perfect", subtitleKey: "quiz.cat.perfectDesc", icon: Trophy },
+  kids: { gradient: "from-sky-400 to-cyan-500", emoji: "🧒", titleKey: "quiz.cat.kids", subtitleKey: "quiz.cat.kidsDesc", icon: Baby },
+  prophets: { gradient: "from-amber-600 to-yellow-500", emoji: "📚", titleKey: "quiz.cat.prophets", subtitleKey: "quiz.cat.prophetsDesc", icon: Landmark },
+  islam_basics: { gradient: "from-teal-500 to-cyan-600", emoji: "💡", titleKey: "quiz.cat.islam_basics", subtitleKey: "quiz.cat.islam_basicsDesc", icon: Lightbulb },
+  animals: { gradient: "from-lime-500 to-green-600", emoji: "🐫", titleKey: "quiz.cat.animals", subtitleKey: "quiz.cat.animalsDesc", icon: Star },
 };
 
 export default function Quiz() {
@@ -164,7 +111,7 @@ export default function Quiz() {
   const { immersiveEnabled, choices } = useImmersiveBg();
   const epicBg = immersiveEnabled ? getEpicBg(choices.quiz) : null;
   const { setLevel } = useProgress();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [category, setCategory] = useState<QuizCategory | null>(null);
   const [showFlashcards, setShowFlashcards] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -289,8 +236,8 @@ export default function Quiz() {
             <ArrowLeft size={20} />
             <span className="text-sm">{t("quiz.back")}</span>
           </button>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Quiz Hifz</h1>
-          <p className="text-sm text-muted-foreground">Choisis ta catégorie et progresse</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">{t("quiz.hifzTitle" as any)}</h1>
+          <p className="text-sm text-muted-foreground">{t("quiz.chooseCategoryAlt" as any)}</p>
         </div>
 
         {/* Quiz streak banner */}
@@ -300,8 +247,8 @@ export default function Quiz() {
               <Flame size={20} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">Streak Quiz : {quizStreak.days} jour{quizStreak.days > 1 ? "s" : ""} 🔥</p>
-              <p className="text-[11px] text-muted-foreground">Continue chaque jour pour maintenir ta série</p>
+              <p className="text-sm font-bold text-foreground">{t("quiz.streakLabel" as any)} : {quizStreak.days} {t("quiz.days" as any)} 🔥</p>
+              <p className="text-[11px] text-muted-foreground">{t("quiz.streakContinue" as any)}</p>
             </div>
           </div>
         )}
@@ -327,8 +274,8 @@ export default function Quiz() {
                   <span className="drop-shadow-sm">{config.emoji}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground text-sm">{config.title}</p>
-                  <p className="text-[11px] text-muted-foreground truncate">{config.subtitle}</p>
+                  <p className="font-semibold text-foreground text-sm">{t(config.titleKey as any)}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{t(config.subtitleKey as any)}</p>
                   {successRate !== null && (
                     <div className="flex items-center gap-2 mt-1">
                       <div className="h-1.5 flex-1 max-w-[80px] bg-muted rounded-full overflow-hidden">
@@ -393,7 +340,7 @@ export default function Quiz() {
           {emoji}
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-2xl font-bold text-foreground">
-          Bravo pour ce quiz !
+          {t("quiz.bravoQuiz" as any)}
         </motion.h1>
 
         {/* XP and streak stats */}
@@ -402,14 +349,14 @@ export default function Quiz() {
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Zap size={14} className="text-primary" />
-                <span className="text-[11px] text-muted-foreground">XP gagnés</span>
+                <span className="text-[11px] text-muted-foreground">{t("quiz.xpEarned" as any)}</span>
               </div>
               <p className="text-xl font-bold text-primary">+{totalXP}</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-3 text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Flame size={14} className="text-amber-500" />
-                <span className="text-[11px] text-muted-foreground">Meilleure série</span>
+                <span className="text-[11px] text-muted-foreground">{t("quiz.bestStreak" as any)}</span>
               </div>
               <p className="text-xl font-bold text-foreground">{bestStreak}</p>
             </div>
@@ -419,8 +366,8 @@ export default function Quiz() {
           <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-3 flex items-center gap-3">
             <Flame size={18} className="text-amber-500 shrink-0" />
             <div className="text-left">
-              <p className="text-sm font-semibold text-foreground">Streak Quiz : {updatedStreak.days} jour{updatedStreak.days > 1 ? "s" : ""}</p>
-              <p className="text-[10px] text-muted-foreground">Reviens demain pour continuer ta série</p>
+              <p className="text-sm font-semibold text-foreground">{t("quiz.streakLabel" as any)} : {updatedStreak.days} {t("quiz.days" as any)}</p>
+              <p className="text-[10px] text-muted-foreground">{t("quiz.comeBackTomorrow" as any)}</p>
             </div>
           </div>
         </motion.div>
@@ -447,7 +394,7 @@ export default function Quiz() {
           <button
             onClick={() => exploit.shareExploit({
               type: "quiz",
-              category: catConfig?.title || category,
+              category: catConfig ? t(catConfig.titleKey as any) : category,
               score: Math.round((finalScore / questions.length) * 100),
               xp: totalXP,
               streak: bestStreak,
@@ -460,15 +407,15 @@ export default function Quiz() {
             }`}
           >
             {exploit.sharing ? <Loader2 size={16} className="animate-spin" /> : exploit.shared ? <CheckCircle2 size={16} /> : <Share2 size={16} />}
-            {exploit.shared ? "Partagé dans tes groupes !" : "Partager mon exploit"}
+            {exploit.shared ? t("quiz.sharedGroups" as any) : t("quiz.shareExploit" as any)}
           </button>
 
           <div className="flex gap-3">
             <button onClick={handleBackToCategories} className="flex-1 bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-              Autre quiz
+              {t("quiz.otherQuizAlt" as any)}
             </button>
             <button onClick={() => handleSelectCategory(category)} className="flex-1 bg-primary text-primary-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
-              Rejouer
+              {t("quiz.replay" as any)}
             </button>
           </div>
         </motion.div>
@@ -493,7 +440,7 @@ export default function Quiz() {
             <ArrowLeft size={18} />
           </button>
           <div className="flex-1">
-            <p className="text-sm font-bold text-foreground">{catConfig?.title || "Quiz"}</p>
+            <p className="text-sm font-bold text-foreground">{catConfig ? t(catConfig.titleKey as any) : "Quiz"}</p>
             <p className="text-[11px] text-muted-foreground">Question {current + 1}</p>
           </div>
           {/* Streak indicator */}
@@ -525,10 +472,11 @@ export default function Quiz() {
 
         <AnimatePresence mode="wait">
           <motion.div key={current} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-            <h2 className="text-xl font-bold text-foreground mb-8">{question?.question}</h2>
+            {(() => { const lq = question ? localizeQuestion(question, lang) : null; return (<>
+            <h2 className="text-xl font-bold text-foreground mb-8">{lq?.question}</h2>
 
             <div className="space-y-3">
-              {question?.options.map((option, idx) => {
+              {lq?.options.map((option, idx) => {
                 const isSelected = selected === idx;
                 const isCorrect = idx === question.correctIndex;
                 let style = "bg-card border-border text-card-foreground";
@@ -558,12 +506,14 @@ export default function Quiz() {
                   className="mt-4 text-center"
                 >
                   <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 rounded-full px-3 py-1.5 text-xs font-bold">
-                    <Flame size={14} /> Série de {consecutiveCorrect} ! +5 XP bonus
+                    <Flame size={14} /> {t("quiz.seriesOf" as any)} {consecutiveCorrect} {t("quiz.streakBonus" as any)}
                   </span>
                 </motion.div>
               )}
             </AnimatePresence>
+            </>); })()}
           </motion.div>
+
         </AnimatePresence>
       </div>
     </div>
