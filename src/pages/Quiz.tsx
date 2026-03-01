@@ -93,71 +93,17 @@ function updateQuizStreak(): QuizStreak {
 
 export { loadQuizStats, type QuizStats };
 
-// ─── Category config with colors ───
-const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; title: string; subtitle: string; icon: typeof Star }> = {
-  tajweed: {
-    gradient: "from-violet-500 to-purple-600",
-    emoji: "📖",
-    title: "Quiz Tajwid",
-    subtitle: "Règles de récitation et arrêts (waqf)",
-    icon: Sparkles,
-  },
-  memorization: {
-    gradient: "from-blue-500 to-blue-600",
-    emoji: "🔎",
-    title: "Quiz Localisation",
-    subtitle: "Retrouve la sourate, le numéro, la position",
-    icon: BookOpen,
-  },
-  general: {
-    gradient: "from-emerald-500 to-emerald-600",
-    emoji: "🌿",
-    title: "Quiz Sens & Culture",
-    subtitle: "Sens des versets et culture islamique",
-    icon: Star,
-  },
-  adaptive: {
-    gradient: "from-amber-500 to-orange-500",
-    emoji: "🧠",
-    title: "Quiz Révision Hifz",
-    subtitle: "Révise tes points faibles avec l'IA",
-    icon: Brain,
-  },
-  perfect: {
-    gradient: "from-rose-500 to-pink-600",
-    emoji: "🏆",
-    title: "Mode Parfait",
-    subtitle: "Défi hebdomadaire, zéro erreur",
-    icon: Trophy,
-  },
-  kids: {
-    gradient: "from-sky-400 to-cyan-500",
-    emoji: "🧒",
-    title: "Quiz Enfants",
-    subtitle: "Histoires des prophètes et bases",
-    icon: Baby,
-  },
-  prophets: {
-    gradient: "from-amber-600 to-yellow-500",
-    emoji: "📚",
-    title: "Histoire des Prophètes",
-    subtitle: "Questions amusantes sur les prophètes du Coran",
-    icon: Landmark,
-  },
-  islam_basics: {
-    gradient: "from-teal-500 to-cyan-600",
-    emoji: "💡",
-    title: "L'Islam de base",
-    subtitle: "Piliers, croyance, adhkār, akhlaq",
-    icon: Lightbulb,
-  },
-  animals: {
-    gradient: "from-lime-500 to-green-600",
-    emoji: "🐫",
-    title: "Animaux dans le Coran",
-    subtitle: "Découvre les animaux mentionnés dans le Coran",
-    icon: Star,
-  },
+// ─── Category config with i18n keys ───
+const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; titleKey: string; subtitleKey: string; icon: typeof Star }> = {
+  tajweed: { gradient: "from-violet-500 to-purple-600", emoji: "📖", titleKey: "quiz.cat.tajweed", subtitleKey: "quiz.cat.tajweedDesc", icon: Sparkles },
+  memorization: { gradient: "from-blue-500 to-blue-600", emoji: "🔎", titleKey: "quiz.cat.memorization", subtitleKey: "quiz.cat.memorizationDesc", icon: BookOpen },
+  general: { gradient: "from-emerald-500 to-emerald-600", emoji: "🌿", titleKey: "quiz.cat.general", subtitleKey: "quiz.cat.generalDesc", icon: Star },
+  adaptive: { gradient: "from-amber-500 to-orange-500", emoji: "🧠", titleKey: "quiz.cat.adaptive", subtitleKey: "quiz.cat.adaptiveDesc", icon: Brain },
+  perfect: { gradient: "from-rose-500 to-pink-600", emoji: "🏆", titleKey: "quiz.cat.perfect", subtitleKey: "quiz.cat.perfectDesc", icon: Trophy },
+  kids: { gradient: "from-sky-400 to-cyan-500", emoji: "🧒", titleKey: "quiz.cat.kids", subtitleKey: "quiz.cat.kidsDesc", icon: Baby },
+  prophets: { gradient: "from-amber-600 to-yellow-500", emoji: "📚", titleKey: "quiz.cat.prophets", subtitleKey: "quiz.cat.prophetsDesc", icon: Landmark },
+  islam_basics: { gradient: "from-teal-500 to-cyan-600", emoji: "💡", titleKey: "quiz.cat.islam_basics", subtitleKey: "quiz.cat.islam_basicsDesc", icon: Lightbulb },
+  animals: { gradient: "from-lime-500 to-green-600", emoji: "🐫", titleKey: "quiz.cat.animals", subtitleKey: "quiz.cat.animalsDesc", icon: Star },
 };
 
 export default function Quiz() {
