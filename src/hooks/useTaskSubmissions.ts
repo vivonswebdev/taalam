@@ -23,6 +23,7 @@ export interface TaskSubmission {
 
 export function useTaskSubmissions(classId: string | null) {
   const { user } = useAuth();
+  const { sendAutoNotification } = useTeacherParentMessages(classId);
   const [submissions, setSubmissions] = useState<TaskSubmission[]>([]);
   const [loading, setLoading] = useState(false);
 
