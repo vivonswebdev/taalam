@@ -2218,6 +2218,17 @@ const translations = {
   "profile.pinDesc": { fr: "Entrez le code PIN pour accéder à ce mode.", en: "Enter PIN to access this mode.", nl: "Voer PIN in om deze modus te openen.", ar: "أدخل رمز PIN للوصول.", tr: "Bu moda erişmek için PIN girin.", ur: "اس موڈ تک رسائی کے لیے پن درج کریں۔" },
   "profile.pinConfirm": { fr: "Confirmer", en: "Confirm", nl: "Bevestigen", ar: "تأكيد", tr: "Onayla", ur: "تصدیق کریں" },
   "profile.chooseLang": { fr: "Choisir la langue", en: "Choose language", nl: "Kies taal", ar: "اختر اللغة", tr: "Dil seçin", ur: "زبان منتخب کریں" },
+  // Kids Games
+  "nav.games": { fr: "Jeux", en: "Games", nl: "Spellen", ar: "ألعاب", tr: "Oyunlar", ur: "کھیل" },
+  "kidsGames.title": { fr: "🧸 Mes Jeux Magiques !", en: "🧸 My Magic Games!", nl: "🧸 Mijn Magische Spellen!", ar: "🧸 ألعابي السحرية!", tr: "🧸 Sihirli Oyunlarım!", ur: "🧸 میرے جادوئی کھیل!" },
+  "kidsGames.coranCrush": { fr: "Coran Crush", en: "Quran Crush", nl: "Koran Crush", ar: "كوران كراش", tr: "Kuran Crush", ur: "قرآن کرش" },
+  "kidsGames.coranCrushDesc": { fr: "Match-3 Hifz", en: "Match-3 Hifz", nl: "Match-3 Hifz", ar: "ماتش-3 حفظ", tr: "Match-3 Hifz", ur: "میچ-3 حفظ" },
+  "kidsGames.quizProphets": { fr: "Quiz Prophètes", en: "Prophets Quiz", nl: "Profeten Quiz", ar: "مسابقة الأنبياء", tr: "Peygamber Testi", ur: "انبیاء کوئز" },
+  "kidsGames.quizProphetsDesc": { fr: "100 questions", en: "100 questions", nl: "100 vragen", ar: "100 سؤال", tr: "100 soru", ur: "100 سوالات" },
+  "kidsGames.quizAnimals": { fr: "Quiz Animaux Coran", en: "Quran Animals Quiz", nl: "Koran Dieren Quiz", ar: "مسابقة حيوانات القرآن", tr: "Kuran Hayvanları Testi", ur: "قرآنی جانوروں کا کوئز" },
+  "kidsGames.quizAnimalsDesc": { fr: "100 questions", en: "100 questions", nl: "100 vragen", ar: "100 سؤال", tr: "100 soru", ur: "100 سوالات" },
+  "kidsGames.quizGoodDeeds": { fr: "Quiz Bonnes Actions", en: "Good Deeds Quiz", nl: "Goede Daden Quiz", ar: "مسابقة الحسنات", tr: "İyi Ameller Testi", ur: "نیک اعمال کوئز" },
+  "kidsGames.quizGoodDeedsDesc": { fr: "Quotidien", en: "Daily", nl: "Dagelijks", ar: "يومي", tr: "Günlük", ur: "روزانہ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
