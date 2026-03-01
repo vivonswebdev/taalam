@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "lucide-react";
@@ -16,81 +16,71 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 const COUNTRIES = [
-  // Maghreb
-  { code: "MA", flag: "🇲🇦", label: "Maroc" },
-  { code: "DZ", flag: "🇩🇿", label: "Algérie" },
-  { code: "TN", flag: "🇹🇳", label: "Tunisie" },
-  { code: "LY", flag: "🇱🇾", label: "ليبيا" },
-  { code: "MR", flag: "🇲🇷", label: "Mauritanie" },
-  // Moyen-Orient
-  { code: "SA", flag: "🇸🇦", label: "السعودية" },
-  { code: "AE", flag: "🇦🇪", label: "الإمارات" },
-  { code: "QA", flag: "🇶🇦", label: "قطر" },
-  { code: "KW", flag: "🇰🇼", label: "الكويت" },
-  { code: "BH", flag: "🇧🇭", label: "البحرين" },
-  { code: "OM", flag: "🇴🇲", label: "عُمان" },
-  { code: "YE", flag: "🇾🇪", label: "اليمن" },
-  { code: "JO", flag: "🇯🇴", label: "الأردن" },
-  { code: "PS", flag: "🇵🇸", label: "فلسطين" },
-  { code: "IQ", flag: "🇮🇶", label: "العراق" },
-  { code: "SY", flag: "🇸🇾", label: "سوريا" },
-  { code: "LB", flag: "🇱🇧", label: "لبنان" },
-  { code: "EG", flag: "🇪🇬", label: "مصر" },
-  { code: "SD", flag: "🇸🇩", label: "السودان" },
-  { code: "SO", flag: "🇸🇴", label: "الصومال" },
-  { code: "DJ", flag: "🇩🇯", label: "Djibouti" },
-  { code: "KM", flag: "🇰🇲", label: "Comores" },
-  // Turquie & Asie centrale
-  { code: "TR", flag: "🇹🇷", label: "Türkiye" },
-  { code: "AZ", flag: "🇦🇿", label: "Azərbaycan" },
-  { code: "UZ", flag: "🇺🇿", label: "Oʻzbekiston" },
-  { code: "KZ", flag: "🇰🇿", label: "Қазақстан" },
-  { code: "TM", flag: "🇹🇲", label: "Türkmenistan" },
-  { code: "KG", flag: "🇰🇬", label: "Кыргызстан" },
-  { code: "TJ", flag: "🇹🇯", label: "Тоҷикистон" },
-  // Asie du Sud
-  { code: "PK", flag: "🇵🇰", label: "Pakistan" },
-  { code: "BD", flag: "🇧🇩", label: "বাংলাদেশ" },
-  { code: "AF", flag: "🇦🇫", label: "افغانستان" },
-  { code: "MV", flag: "🇲🇻", label: "Maldives" },
-  // Asie du Sud-Est
-  { code: "ID", flag: "🇮🇩", label: "Indonesia" },
-  { code: "MY", flag: "🇲🇾", label: "Malaysia" },
-  { code: "BN", flag: "🇧🇳", label: "Brunei" },
-  // Afrique de l'Ouest
-  { code: "SN", flag: "🇸🇳", label: "Sénégal" },
-  { code: "ML", flag: "🇲🇱", label: "Mali" },
-  { code: "GN", flag: "🇬🇳", label: "Guinée" },
-  { code: "CI", flag: "🇨🇮", label: "Côte d'Ivoire" },
-  { code: "NE", flag: "🇳🇪", label: "Niger" },
-  { code: "BF", flag: "🇧🇫", label: "Burkina Faso" },
-  { code: "GM", flag: "🇬🇲", label: "Gambia" },
-  { code: "SL", flag: "🇸🇱", label: "Sierra Leone" },
-  { code: "NG", flag: "🇳🇬", label: "Nigeria" },
-  { code: "TD", flag: "🇹🇩", label: "Tchad" },
-  // Iran
-  { code: "IR", flag: "🇮🇷", label: "ایران" },
-  // Europe
-  { code: "FR", flag: "🇫🇷", label: "France" },
-  { code: "BE", flag: "🇧🇪", label: "Belgique" },
-  { code: "NL", flag: "🇳🇱", label: "Nederland" },
-  { code: "DE", flag: "🇩🇪", label: "Deutschland" },
-  { code: "GB", flag: "🇬🇧", label: "UK" },
-  { code: "CH", flag: "🇨🇭", label: "Suisse" },
-  { code: "IT", flag: "🇮🇹", label: "Italia" },
-  { code: "ES", flag: "🇪🇸", label: "España" },
-  { code: "SE", flag: "🇸🇪", label: "Sverige" },
-  { code: "AT", flag: "🇦🇹", label: "Österreich" },
-  { code: "BA", flag: "🇧🇦", label: "Bosna" },
-  { code: "XK", flag: "🇽🇰", label: "Kosovo" },
-  { code: "AL", flag: "🇦🇱", label: "Shqipëri" },
-  // Amériques
-  { code: "US", flag: "🇺🇸", label: "USA" },
-  { code: "CA", flag: "🇨🇦", label: "Canada" },
-  { code: "BR", flag: "🇧🇷", label: "Brasil" },
-  { code: "SR", flag: "🇸🇷", label: "Suriname" },
-  // Océanie
-  { code: "AU", flag: "🇦🇺", label: "Australia" },
+  { code: "MA", flag: "🇲🇦", label: "Maroc", search: "maroc morocco المغرب marokko" },
+  { code: "DZ", flag: "🇩🇿", label: "Algérie", search: "algerie algeria الجزائر algerije" },
+  { code: "TN", flag: "🇹🇳", label: "Tunisie", search: "tunisie tunisia تونس tunesie" },
+  { code: "LY", flag: "🇱🇾", label: "ليبيا", search: "libye libya ليبيا libië" },
+  { code: "MR", flag: "🇲🇷", label: "Mauritanie", search: "mauritanie mauritania موريتانيا" },
+  { code: "SA", flag: "🇸🇦", label: "السعودية", search: "arabie saoudite saudi arabia السعودية saoedi" },
+  { code: "AE", flag: "🇦🇪", label: "الإمارات", search: "emirats emirates الإمارات uae dubai" },
+  { code: "QA", flag: "🇶🇦", label: "قطر", search: "qatar قطر" },
+  { code: "KW", flag: "🇰🇼", label: "الكويت", search: "koweit kuwait الكويت koeweit" },
+  { code: "BH", flag: "🇧🇭", label: "البحرين", search: "bahrein bahrain البحرين" },
+  { code: "OM", flag: "🇴🇲", label: "عُمان", search: "oman عمان" },
+  { code: "YE", flag: "🇾🇪", label: "اليمن", search: "yemen اليمن jemen" },
+  { code: "JO", flag: "🇯🇴", label: "الأردن", search: "jordanie jordan الأردن jordanië" },
+  { code: "PS", flag: "🇵🇸", label: "فلسطين", search: "palestine فلسطين palestina" },
+  { code: "IQ", flag: "🇮🇶", label: "العراق", search: "irak iraq العراق" },
+  { code: "SY", flag: "🇸🇾", label: "سوريا", search: "syrie syria سوريا syrië" },
+  { code: "LB", flag: "🇱🇧", label: "لبنان", search: "liban lebanon لبنان libanon" },
+  { code: "EG", flag: "🇪🇬", label: "مصر", search: "egypte egypt مصر" },
+  { code: "SD", flag: "🇸🇩", label: "السودان", search: "soudan sudan السودان soedan" },
+  { code: "SO", flag: "🇸🇴", label: "الصومال", search: "somalie somalia الصومال somalië" },
+  { code: "DJ", flag: "🇩🇯", label: "Djibouti", search: "djibouti جيبوتي" },
+  { code: "KM", flag: "🇰🇲", label: "Comores", search: "comores comoros جزر القمر" },
+  { code: "TR", flag: "🇹🇷", label: "Türkiye", search: "turquie turkey türkiye turkije" },
+  { code: "AZ", flag: "🇦🇿", label: "Azərbaycan", search: "azerbaidjan azerbaijan azərbaycan" },
+  { code: "UZ", flag: "🇺🇿", label: "Oʻzbekiston", search: "ouzbekistan uzbekistan" },
+  { code: "KZ", flag: "🇰🇿", label: "Қазақстан", search: "kazakhstan kazakstan" },
+  { code: "TM", flag: "🇹🇲", label: "Türkmenistan", search: "turkmenistan" },
+  { code: "KG", flag: "🇰🇬", label: "Кыргызстан", search: "kirghizistan kyrgyzstan" },
+  { code: "TJ", flag: "🇹🇯", label: "Тоҷикистон", search: "tadjikistan tajikistan" },
+  { code: "PK", flag: "🇵🇰", label: "Pakistan", search: "pakistan پاکستان" },
+  { code: "BD", flag: "🇧🇩", label: "বাংলাদেশ", search: "bangladesh বাংলাদেশ" },
+  { code: "AF", flag: "🇦🇫", label: "افغانستان", search: "afghanistan افغانستان" },
+  { code: "MV", flag: "🇲🇻", label: "Maldives", search: "maldives" },
+  { code: "ID", flag: "🇮🇩", label: "Indonesia", search: "indonesie indonesia" },
+  { code: "MY", flag: "🇲🇾", label: "Malaysia", search: "malaisie malaysia" },
+  { code: "BN", flag: "🇧🇳", label: "Brunei", search: "brunei" },
+  { code: "SN", flag: "🇸🇳", label: "Sénégal", search: "senegal sénégal" },
+  { code: "ML", flag: "🇲🇱", label: "Mali", search: "mali" },
+  { code: "GN", flag: "🇬🇳", label: "Guinée", search: "guinee guinea" },
+  { code: "CI", flag: "🇨🇮", label: "Côte d'Ivoire", search: "cote ivoire ivory coast" },
+  { code: "NE", flag: "🇳🇪", label: "Niger", search: "niger" },
+  { code: "BF", flag: "🇧🇫", label: "Burkina Faso", search: "burkina faso" },
+  { code: "GM", flag: "🇬🇲", label: "Gambia", search: "gambie gambia" },
+  { code: "SL", flag: "🇸🇱", label: "Sierra Leone", search: "sierra leone" },
+  { code: "NG", flag: "🇳🇬", label: "Nigeria", search: "nigeria" },
+  { code: "TD", flag: "🇹🇩", label: "Tchad", search: "tchad chad تشاد" },
+  { code: "IR", flag: "🇮🇷", label: "ایران", search: "iran ایران" },
+  { code: "FR", flag: "🇫🇷", label: "France", search: "france فرنسا frankrijk" },
+  { code: "BE", flag: "🇧🇪", label: "Belgique", search: "belgique belgium belgië بلجيكا" },
+  { code: "NL", flag: "🇳🇱", label: "Nederland", search: "pays bas netherlands nederland هولندا" },
+  { code: "DE", flag: "🇩🇪", label: "Deutschland", search: "allemagne germany deutschland ألمانيا" },
+  { code: "GB", flag: "🇬🇧", label: "UK", search: "royaume uni united kingdom uk بريطانيا england angleterre" },
+  { code: "CH", flag: "🇨🇭", label: "Suisse", search: "suisse switzerland zwitserland سويسرا" },
+  { code: "IT", flag: "🇮🇹", label: "Italia", search: "italie italy italia إيطاليا italië" },
+  { code: "ES", flag: "🇪🇸", label: "España", search: "espagne spain españa إسبانيا spanje" },
+  { code: "SE", flag: "🇸🇪", label: "Sverige", search: "suede sweden sverige السويد zweden" },
+  { code: "AT", flag: "🇦🇹", label: "Österreich", search: "autriche austria österreich النمسا oostenrijk" },
+  { code: "BA", flag: "🇧🇦", label: "Bosna", search: "bosnie bosnia bosna البوسنة" },
+  { code: "XK", flag: "🇽🇰", label: "Kosovo", search: "kosovo كوسوفو" },
+  { code: "AL", flag: "🇦🇱", label: "Shqipëri", search: "albanie albania shqipëri ألبانيا albanië" },
+  { code: "US", flag: "🇺🇸", label: "USA", search: "etats unis united states usa أمريكا amerika" },
+  { code: "CA", flag: "🇨🇦", label: "Canada", search: "canada كندا" },
+  { code: "BR", flag: "🇧🇷", label: "Brasil", search: "bresil brazil brasil البرازيل brazilië" },
+  { code: "SR", flag: "🇸🇷", label: "Suriname", search: "suriname سورينام" },
+  { code: "AU", flag: "🇦🇺", label: "Australia", search: "australie australia أستراليا australië" },
 ];
 
 const AGE_GROUPS: { id: AgeGroup; icon: string; label: string; desc: string }[] = [
@@ -142,6 +132,7 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
   const [countryCode, setCountryCode] = useState("");
+  const [countrySearch, setCountrySearch] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -149,6 +140,16 @@ export default function Auth() {
   const [rememberMe, setRememberMe] = useState(() => {
     return localStorage.getItem("taalam_remember_me") !== "false";
   });
+
+  const filteredCountries = React.useMemo(() => {
+    if (!countrySearch.trim()) return COUNTRIES;
+    const q = countrySearch.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return COUNTRIES.filter(c =>
+      c.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q) ||
+      c.code.toLowerCase().includes(q) ||
+      c.search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q)
+    );
+  }, [countrySearch]);
 
   const handleAgeNext = () => {
     // Pre-select recommended mode
@@ -476,22 +477,38 @@ export default function Auth() {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country")}</label>
-                      <div className="flex flex-wrap gap-2">
-                        {COUNTRIES.map(c => (
+                      <Input
+                        value={countrySearch}
+                        onChange={(e) => setCountrySearch(e.target.value)}
+                        placeholder={t("auth.countrySearch")}
+                        className="mb-2"
+                      />
+                      {countryCode && (
+                        <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                          <span className="text-lg">{COUNTRIES.find(c => c.code === countryCode)?.flag}</span>
+                          <span>{COUNTRIES.find(c => c.code === countryCode)?.label}</span>
+                          <button type="button" onClick={() => setCountryCode("")} className="ml-auto text-xs text-destructive hover:underline">✕</button>
+                        </div>
+                      )}
+                      <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto rounded-lg">
+                        {filteredCountries.map(c => (
                           <button
                             key={c.code}
                             type="button"
-                            onClick={() => setCountryCode(c.code)}
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm transition-all ${
+                            onClick={() => { setCountryCode(c.code); setCountrySearch(""); }}
+                            className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-xs transition-all ${
                               countryCode === c.code
                                 ? "border-primary ring-1 ring-primary/30 bg-primary/5"
                                 : "border-border bg-card hover:border-muted-foreground/30"
                             }`}
                           >
-                            <span className="text-lg leading-none">{c.flag}</span>
-                            <span className="text-xs">{c.label}</span>
+                            <span className="text-base leading-none">{c.flag}</span>
+                            <span>{c.label}</span>
                           </button>
                         ))}
+                        {filteredCountries.length === 0 && (
+                          <p className="text-xs text-muted-foreground py-2">{t("auth.noCountryFound")}</p>
+                        )}
                       </div>
                     </div>
                     <div>
