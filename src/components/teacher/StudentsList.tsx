@@ -42,7 +42,8 @@ export default function StudentsList({ students, classId }: Props) {
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.03 }}
-            className="bg-card border border-border rounded-xl p-3 hover:shadow-sm transition-shadow"
+            className="bg-card border border-border rounded-xl p-3 hover:shadow-sm transition-shadow cursor-pointer"
+            onClick={() => classId && navigate(`/student-stats/${classId}/${s.userId}`)}
           >
             <div className="flex items-center gap-3">
               <div className="relative">
