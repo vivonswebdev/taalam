@@ -15,6 +15,33 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+const COUNTRIES = [
+  { code: "FR", flag: "🇫🇷", label: "France" },
+  { code: "BE", flag: "🇧🇪", label: "Belgique" },
+  { code: "MA", flag: "🇲🇦", label: "Maroc" },
+  { code: "DZ", flag: "🇩🇿", label: "Algérie" },
+  { code: "TN", flag: "🇹🇳", label: "Tunisie" },
+  { code: "NL", flag: "🇳🇱", label: "Nederland" },
+  { code: "GB", flag: "🇬🇧", label: "UK" },
+  { code: "US", flag: "🇺🇸", label: "USA" },
+  { code: "DE", flag: "🇩🇪", label: "Deutschland" },
+  { code: "SA", flag: "🇸🇦", label: "السعودية" },
+  { code: "AE", flag: "🇦🇪", label: "الإمارات" },
+  { code: "TR", flag: "🇹🇷", label: "Türkiye" },
+  { code: "PK", flag: "🇵🇰", label: "Pakistan" },
+  { code: "EG", flag: "🇪🇬", label: "مصر" },
+  { code: "CA", flag: "🇨🇦", label: "Canada" },
+  { code: "CH", flag: "🇨🇭", label: "Suisse" },
+  { code: "SN", flag: "🇸🇳", label: "Sénégal" },
+  { code: "ML", flag: "🇲🇱", label: "Mali" },
+  { code: "CI", flag: "🇨🇮", label: "Côte d'Ivoire" },
+  { code: "ID", flag: "🇮🇩", label: "Indonesia" },
+  { code: "MY", flag: "🇲🇾", label: "Malaysia" },
+  { code: "QA", flag: "🇶🇦", label: "قطر" },
+  { code: "KW", flag: "🇰🇼", label: "الكويت" },
+  { code: "LB", flag: "🇱🇧", label: "لبنان" },
+];
+
 const AGE_GROUPS: { id: AgeGroup; icon: string; label: string; desc: string }[] = [
   { id: "child", icon: "👧", label: "Enfant / ado", desc: "Moins de 16 ans" },
   { id: "adult", icon: "🧑", label: "Adulte", desc: "16–60 ans" },
@@ -63,6 +90,7 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
+  const [countryCode, setCountryCode] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -109,6 +137,7 @@ export default function Auth() {
           is_public: isPublic,
           preferred_mode: selectedUserMode,
           age_group: selectedAge,
+          country_code: countryCode || null,
         } as any);
         if (profileError) console.error("Profile creation error:", profileError);
       }
@@ -393,6 +422,26 @@ export default function Auth() {
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.chooseAvatar")}</label>
                       <IslamicAvatarPicker selected={avatarEmoji} onSelect={setAvatarEmoji} />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country")}</label>
+                      <div className="flex flex-wrap gap-2">
+                        {COUNTRIES.map(c => (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => setCountryCode(c.code)}
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm transition-all ${
+                              countryCode === c.code
+                                ? "border-primary ring-1 ring-primary/30 bg-primary/5"
+                                : "border-border bg-card hover:border-muted-foreground/30"
+                            }`}
+                          >
+                            <span className="text-lg leading-none">{c.flag}</span>
+                            <span className="text-xs">{c.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1.5 block">{t("auth.displayName")}</label>

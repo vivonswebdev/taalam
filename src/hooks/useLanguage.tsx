@@ -686,6 +686,7 @@ const translations = {
   "auth.signup": { fr: "Inscription", en: "Sign up", nl: "Registreren", ar: "تسجيل", tr: "Kayıt ol", ur: "رجسٹریشن" },
   "auth.login": { fr: "Connexion", en: "Sign in", nl: "Inloggen", ar: "دخول", tr: "Giriş", ur: "لاگ ان" },
   "auth.chooseAvatar": { fr: "Choisis ton avatar", en: "Choose your avatar", nl: "Kies je avatar", ar: "اختر صورتك الرمزية", tr: "Avatarını seç", ur: "اپنا اوتار چنیں" },
+  "auth.country": { fr: "Ton pays / drapeau 🏳️", en: "Your country / flag 🏳️", nl: "Je land / vlag 🏳️", ar: "بلدك / علمك 🏳️", tr: "Ülken / bayrağın 🏳️", ur: "آپ کا ملک / جھنڈا 🏳️" },
   "auth.displayName": { fr: "Ton nom / pseudo", en: "Your name", nl: "Je naam", ar: "اسمك", tr: "Adın", ur: "آپ کا نام" },
   "auth.email": { fr: "Email", en: "Email", nl: "E-mail", ar: "البريد الإلكتروني", tr: "E-posta", ur: "ای میل" },
   "auth.publicProfile": { fr: "Profil public", en: "Public profile", nl: "Openbaar profiel", ar: "ملف عام", tr: "Herkese açık profil", ur: "عوامی پروفائل" },
