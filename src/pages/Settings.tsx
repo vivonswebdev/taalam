@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
@@ -25,6 +25,24 @@ export default function Settings() {
   const [showDedication, setShowDedication] = useState(false);
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
   const dailyChallenge = useDailyTarteelChallenge();
+  const { user } = useAuth();
+
+  // Profile visibility
+  const [isPublic, setIsPublic] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("is_public").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      if (data) setIsPublic(data.is_public);
+    });
+  }, [user]);
+
+  const togglePublic = useCallback(async (val: boolean) => {
+    setIsPublic(val);
+    if (user) {
+      await supabase.from("profiles").update({ is_public: val } as any).eq("user_id", user.id);
+    }
+  }, [user]);
 
   // Theme state: "light" | "dark" | "system"
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
@@ -156,6 +174,25 @@ export default function Settings() {
             </div>
           </div>
         </motion.div>
+
+        {/* Profile visibility toggle */}
+        {user && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.055 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+            <div className="flex items-center gap-4 p-4">
+              <Shield size={20} className="text-primary" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-card-foreground">{t("settings.publicProfile")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.publicProfileDesc")}</p>
+              </div>
+              <div
+                onClick={() => togglePublic(!isPublic)}
+                className={`w-12 h-7 rounded-full transition-colors relative cursor-pointer ${isPublic ? "bg-success" : "bg-muted"}`}
+              >
+                <motion.div animate={{ x: isPublic ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
 
         {/* Translation preference */}

@@ -151,6 +151,8 @@ const translations = {
   "settings.title": { fr: "Réglages", en: "Settings", nl: "Instellingen", ar: "الإعدادات", tr: "Ayarlar", ur: "ترتیبات" },
   "settings.childMode": { fr: "Mode Enfant", en: "Child Mode", nl: "Kindermodus", ar: "وضع الأطفال", tr: "Çocuk Modu", ur: "بچوں کا موڈ" },
   "settings.childModeDesc": { fr: "Texte plus gros, stickers et confettis", en: "Bigger text, stickers and confetti", nl: "Grotere tekst, stickers en confetti", ar: "نص أكبر، ملصقات وقصاصات ورقية", tr: "Büyük yazı, çıkartma ve konfeti", ur: "بڑا متن، اسٹیکرز اور کنفیٹی" },
+  "settings.publicProfile": { fr: "Profil public", en: "Public profile", nl: "Openbaar profiel", ar: "ملف شخصي عام", tr: "Herkese açık profil", ur: "عوامی پروفائل" },
+  "settings.publicProfileDesc": { fr: "Visible dans le classement", en: "Visible in leaderboard", nl: "Zichtbaar in ranglijst", ar: "مرئي في لوحة المتصدرين", tr: "Sıralamada görünür", ur: "لیڈر بورڈ میں نظر آئے" },
   "settings.language": { fr: "Langue", en: "Language", nl: "Taal", ar: "اللغة", tr: "Dil", ur: "زبان" },
   "settings.reset": { fr: "Réinitialiser la progression", en: "Reset progress", nl: "Voortgang resetten", ar: "إعادة تعيين التقدم", tr: "İlerlemeyi sıfırla", ur: "پیشرفت ری سیٹ کریں" },
   "settings.resetDesc": { fr: "Remet tout à zéro", en: "Reset everything", nl: "Alles resetten", ar: "إعادة تعيين كل شيء", tr: "Her şeyi sıfırla", ur: "سب کچھ ری سیٹ کریں" },

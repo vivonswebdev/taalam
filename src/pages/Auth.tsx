@@ -5,7 +5,7 @@ import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -133,7 +133,7 @@ export default function Auth() {
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
   const [countryCode, setCountryCode] = useState("");
   const [countrySearch, setCountrySearch] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
@@ -532,13 +532,6 @@ export default function Auth() {
                           {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between bg-card border border-border rounded-xl p-4">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{t("auth.publicProfile")}</p>
-                        <p className="text-xs text-muted-foreground">{t("auth.publicProfileDesc")}</p>
-                      </div>
-                      <Switch checked={isPublic} onCheckedChange={setIsPublic} />
                     </div>
                     <Button onClick={handleSignUp} disabled={loading} className="w-full h-12 text-base rounded-xl">
                       <Sparkles size={18} />
