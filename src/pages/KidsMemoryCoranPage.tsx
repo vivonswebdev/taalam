@@ -137,7 +137,7 @@ export default function KidsMemoryCoranPage() {
         <button onClick={() => setLevel(null)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-bold flex-1">🃏 {L("title")}</h1>
+        <h1 className="text-lg font-bold flex-1">🕌 {L("title")}</h1>
         <span className="text-xs text-muted-foreground">{L("attempts")}: {attempts}</span>
       </div>
 
