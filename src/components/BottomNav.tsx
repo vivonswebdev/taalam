@@ -1,23 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, BookOpen, Mic, Heart, BarChart3, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useLanguage();
   const { totalNewMembers } = useClassrooms();
   const currentPath = location.pathname;
 
   const tabs = [
-    { path: "/", icon: Home, label: t("nav.home"), badge: totalNewMembers },
-    { path: "/quran-hub", icon: BookOpen, label: t("nav.quran") },
-    { path: "/quran", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
-    { path: "/moods", icon: Heart, label: t("nav.moods") },
-    { path: "/habits", icon: BarChart3, label: t("nav.habits" as any) || "Habitudes" },
-    { path: "/more", icon: MoreHorizontal, label: t("nav.more" as any) || "Plus" },
+    { path: "/", icon: Home, label: "Accueil", badge: totalNewMembers },
+    { path: "/quran-hub", icon: BookOpen, label: "Coran" },
+    { path: "/quran", icon: Mic, label: "Tarteel" },
+    { path: "/moods", icon: Heart, label: "Cœur" },
+    { path: "/habits", icon: BarChart3, label: "Habitudes" },
+    { path: "/more", icon: MoreHorizontal, label: "Plus" },
   ];
 
   if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods") || currentPath.startsWith("/maladies/") || currentPath.startsWith("/athkar/")) return null;
