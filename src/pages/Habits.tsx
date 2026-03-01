@@ -179,6 +179,76 @@ export default function Habits() {
       </div>
 
       <div className="px-6 space-y-4">
+        {/* ───── SECTION: XP Qur'an & Niveau ───── */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">XP Qur'an</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <ProgressBarDuolingo
+            level={xp.level}
+            xpInLevel={xp.xpInLevel}
+            xpForNext={xp.xpForNext}
+            xpTotal={xp.xpTotal}
+            xpToday={xp.xpToday}
+            streakDays={xp.streakDays}
+            lastGain={xp.lastGain}
+          />
+
+          {/* Level badge */}
+          <div className="bg-card border border-border rounded-2xl p-3 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-xl">
+              {xp.levelBadge.emoji}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">{xp.levelBadge.title}</p>
+              <p className="text-[11px] text-muted-foreground">Niveau {xp.level} · {xp.xpTotal} XP total</p>
+            </div>
+          </div>
+
+          {/* Streak bonus info */}
+          <div className="bg-gradient-to-r from-secondary/10 to-secondary/5 border border-secondary/20 rounded-2xl p-3 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center">
+              <Gift size={18} className="text-secondary" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">
+                Streak : {xp.streakDays} jour{xp.streakDays > 1 ? "s" : ""} 🔥
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                {xp.streakDays >= 2 ? "+5 XP/jour de bonus · " : ""}
+                Prochain bonus 🎁 dans {xp.nextMilestone.daysRemaining} jour{xp.nextMilestone.daysRemaining > 1 ? "s" : ""} (+{xp.nextMilestone.bonus} XP)
+              </p>
+            </div>
+          </div>
+
+          {/* XP sources */}
+          <div className="grid grid-cols-4 gap-2">
+            <div className="bg-card border border-border rounded-xl p-2 text-center">
+              <span className="text-lg">📖</span>
+              <p className="text-[9px] text-muted-foreground mt-0.5">Lire</p>
+              <p className="text-[9px] text-primary font-bold">+1/ayah</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-2 text-center">
+              <span className="text-lg">🎧</span>
+              <p className="text-[9px] text-muted-foreground mt-0.5">Écouter</p>
+              <p className="text-[9px] text-primary font-bold">+1/ayah</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-2 text-center">
+              <span className="text-lg">🎤</span>
+              <p className="text-[9px] text-muted-foreground mt-0.5">Réciter</p>
+              <p className="text-[9px] text-primary font-bold">+2/ayah</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-2 text-center">
+              <span className="text-lg">❓</span>
+              <p className="text-[9px] text-muted-foreground mt-0.5">Quiz</p>
+              <p className="text-[9px] text-primary font-bold">+10/bonne</p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* ───── SECTION: Stats avancées (mode-aware) ───── */}
         {mode === "parent" ? (
           <ParentStatsPlaceholder />
