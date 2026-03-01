@@ -81,7 +81,7 @@ const KIDS_CARDS = [
     border: "border-red-500/25",
   },
   {
-    emoji: "🃏",
+    emoji: "🕌",
     titleKey: "kidsHome.memoryCoran",
     descKey: "kidsHome.memoryCoranDesc",
     path: "/kids-memory",
