@@ -4,7 +4,6 @@ import * as React from 'npm:react@18.3.1'
 
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
@@ -12,19 +11,20 @@ import {
   Img,
   Preview,
   Text,
+  Section,
 } from 'npm:@react-email/components@0.0.22'
 
 import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
 
 interface RecoveryEmailProps {
   siteName: string
-  confirmationUrl: string
+  token: string
   lang?: EmailLang
 }
 
 export const RecoveryEmail = ({
   siteName,
-  confirmationUrl,
+  token,
   lang = DEFAULT_LANG,
 }: RecoveryEmailProps) => (
   <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
@@ -42,9 +42,10 @@ export const RecoveryEmail = ({
         <Heading style={h1}>{tr('recovery.heading', lang)}</Heading>
         <Text style={text}>{tr('common.salam', lang)}</Text>
         <Text style={text}>{tr('recovery.text', lang)}</Text>
-        <Button style={button} href={confirmationUrl}>
-          {tr('recovery.button', lang)}
-        </Button>
+        <Text style={codeLabel}>{tr('recovery.codeLabel', lang)}</Text>
+        <Section style={codeBox}>
+          <Text style={codeText}>{token}</Text>
+        </Section>
         <Text style={footer}>{tr('recovery.footer', lang)}</Text>
       </Container>
     </Body>
@@ -69,15 +70,27 @@ const text = {
   lineHeight: '1.6',
   margin: '0 0 20px',
 }
-const button = {
-  backgroundColor: 'hsl(152, 56%, 28%)',
-  color: 'hsl(40, 40%, 97%)',
+const codeLabel = {
   fontSize: '14px',
-  fontWeight: 'bold' as const,
-  borderRadius: '16px',
-  padding: '14px 28px',
-  textDecoration: 'none',
-  display: 'block' as const,
+  color: 'hsl(150, 10%, 46%)',
+  lineHeight: '1.6',
+  margin: '0 0 8px',
   textAlign: 'center' as const,
+}
+const codeBox = {
+  backgroundColor: 'hsl(150, 30%, 96%)',
+  border: '2px dashed hsl(152, 56%, 28%)',
+  borderRadius: '16px',
+  padding: '20px',
+  margin: '0 0 24px',
+  textAlign: 'center' as const,
+}
+const codeText = {
+  fontSize: '36px',
+  fontWeight: 'bold' as const,
+  letterSpacing: '8px',
+  color: 'hsl(152, 56%, 28%)',
+  margin: '0',
+  fontFamily: "'Courier New', monospace",
 }
 const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0', textAlign: 'center' as const }
