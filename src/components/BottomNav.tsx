@@ -1,22 +1,32 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Heart, BarChart3, Menu } from "lucide-react";
+import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useUserMode } from "@/hooks/useUserMode";
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { mode } = useUserMode();
   const currentPath = location.pathname;
+  const isKidMode = mode === "child";
 
-  const tabs = [
+  const baseTabs = [
     { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil" },
     { path: "/quran-hub", icon: BookOpen, label: t("nav.quran" as any) || "Coran" },
     { path: "/tarteel", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
     { path: "/moods", icon: Heart, label: t("nav.heart" as any) || "Cœur" },
+  ];
+
+  const gameTab = { path: "/jeux", icon: Gamepad2, label: t("nav.games" as any) || "Jeux" };
+
+  const endTabs = [
     { path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" },
     { path: "/more", icon: Menu, label: t("nav.more" as any) || "Plus" },
   ];
+
+  const tabs = isKidMode ? [...baseTabs, gameTab, ...endTabs] : [...baseTabs, ...endTabs];
 
   if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods") || currentPath.startsWith("/maladies/") || currentPath.startsWith("/athkar/")) return null;
 
