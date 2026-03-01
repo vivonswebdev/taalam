@@ -335,6 +335,7 @@ export default function Recitation() {
 
   return (
     <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+      <FloatingXpWidget />
       <Confetti active={showConfetti} emoji={isChildMode} />
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
 

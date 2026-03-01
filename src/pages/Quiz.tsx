@@ -232,6 +232,7 @@ export default function Quiz() {
 
     return (
       <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+        <FloatingXpWidget />
         <div className="px-6 pt-14 pb-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-4">
             <ArrowLeft size={20} />
