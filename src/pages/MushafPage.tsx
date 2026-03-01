@@ -697,8 +697,16 @@ export default function MushafPage() {
     }
   }, [currentPage, pageSoundEnabled]);
 
-  const goToPrevPage = useCallback(() => { goTo(currentPage - 1); }, [goTo, currentPage]);
-  const goToNextPage = useCallback(() => { goTo(currentPage + 1); }, [goTo, currentPage]);
+  // Navigate by SURAH: ← = previous surah start, → = next surah start
+  const currentSurahForNav = getSurahForPage(currentPage);
+  const goToPrevPage = useCallback(() => {
+    if (currentSurahForNav <= 1) return;
+    goTo(surahStartPage[currentSurahForNav - 1]);
+  }, [goTo, currentSurahForNav]);
+  const goToNextPage = useCallback(() => {
+    if (currentSurahForNav >= 114) return;
+    goTo(surahStartPage[currentSurahForNav + 1]);
+  }, [goTo, currentSurahForNav]);
 
   const changeStyle = (style: ReadingStyle) => {
     setReadingStyle(style);
@@ -725,8 +733,8 @@ export default function MushafPage() {
         onBack={() => changeStyle("cards")}
         onPrev={goToPrevPage}
         onNext={goToNextPage}
-        hasPrev={currentPage > 1}
-        hasNext={currentPage < TOTAL_MUSHAF_PAGES}
+        hasPrev={currentSurahForNav > 1}
+        hasNext={currentSurahForNav < 114}
         t={t}
         onBookmarkHizb={bookmarkHizb}
         onBookmarkSajda={bookmarkSajda}
@@ -1013,7 +1021,7 @@ export default function MushafPage() {
         >
           <button
             onClick={goToPrevPage}
-            disabled={currentPage <= 1}
+            disabled={currentSurahForNav <= 1}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowLeft size={20} style={{ color: theme.text }} />
@@ -1034,7 +1042,7 @@ export default function MushafPage() {
 
           <button
             onClick={goToNextPage}
-            disabled={currentPage >= TOTAL_MUSHAF_PAGES}
+            disabled={currentSurahForNav >= 114}
             className="p-1.5 disabled:opacity-30"
           >
             <ArrowRight size={20} style={{ color: theme.text }} />
