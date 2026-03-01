@@ -209,8 +209,17 @@ export default function Recitation() {
     setAyahResults((prev) => [...prev, result]);
     setLastAyahResult(result);
     setCompletedAyahs((prev) => new Set([...prev, recitingAyah]));
+    asrLog.logResult({
+      mode: "tarteel",
+      surahNumber: selectedSurah.number,
+      ayahNumber: ayah.number,
+      expectedText: ayah.arabic,
+      recognizedText: currentTranscript,
+      confidenceScore: score / 100,
+      isCorrect: score >= 70,
+    });
     setTimeout(() => setShowAyahResult(true), 500);
-  }, [selectedSurah, recitingAyah, currentTranscript, voice]);
+  }, [selectedSurah, recitingAyah, currentTranscript, voice, asrLog]);
 
   const skipAyah = useCallback(() => {
     if (!selectedSurah) return;
