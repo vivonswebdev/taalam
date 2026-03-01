@@ -162,12 +162,6 @@ export default function Moods() {
             {/* Recently used */}
             <RecentMoodsSection />
 
-            {/* Section title for loops */}
-            <div className="px-4 pt-3 pb-1">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-1">
-                🔁 {t("moods.loopSection" as any)}
-              </p>
-            </div>
 
             {/* All moods in unified grid */}
             <div className="grid grid-cols-2 gap-3 px-4 pb-4">
