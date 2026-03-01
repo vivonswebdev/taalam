@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check } from "lucide-react";
+import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
 import { useUserMode, type UserMode, type AgeGroup } from "@/hooks/useUserMode";
 import IslamicAvatarPicker from "@/components/IslamicAvatarPicker";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 const AGE_GROUPS: { id: AgeGroup; icon: string; label: string; desc: string }[] = [
   { id: "child", icon: "👧", label: "Enfant / ado", desc: "Moins de 16 ans" },
   { id: "adult", icon: "🧑", label: "Adulte", desc: "16–60 ans" },
