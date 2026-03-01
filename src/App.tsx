@@ -154,6 +154,7 @@ const App = () => (
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
+              <Route path="/hifz-today" element={<HifzTodayPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
