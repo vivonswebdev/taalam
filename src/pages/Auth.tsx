@@ -467,22 +467,38 @@ export default function Auth() {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country")}</label>
-                      <div className="flex flex-wrap gap-2">
-                        {COUNTRIES.map(c => (
+                      <Input
+                        value={countrySearch}
+                        onChange={(e) => setCountrySearch(e.target.value)}
+                        placeholder={t("auth.countrySearch")}
+                        className="mb-2"
+                      />
+                      {countryCode && (
+                        <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                          <span className="text-lg">{COUNTRIES.find(c => c.code === countryCode)?.flag}</span>
+                          <span>{COUNTRIES.find(c => c.code === countryCode)?.label}</span>
+                          <button type="button" onClick={() => setCountryCode("")} className="ml-auto text-xs text-destructive hover:underline">✕</button>
+                        </div>
+                      )}
+                      <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto rounded-lg">
+                        {filteredCountries.map(c => (
                           <button
                             key={c.code}
                             type="button"
-                            onClick={() => setCountryCode(c.code)}
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm transition-all ${
+                            onClick={() => { setCountryCode(c.code); setCountrySearch(""); }}
+                            className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-xs transition-all ${
                               countryCode === c.code
                                 ? "border-primary ring-1 ring-primary/30 bg-primary/5"
                                 : "border-border bg-card hover:border-muted-foreground/30"
                             }`}
                           >
-                            <span className="text-lg leading-none">{c.flag}</span>
-                            <span className="text-xs">{c.label}</span>
+                            <span className="text-base leading-none">{c.flag}</span>
+                            <span>{c.label}</span>
                           </button>
                         ))}
+                        {filteredCountries.length === 0 && (
+                          <p className="text-xs text-muted-foreground py-2">{t("auth.noCountryFound")}</p>
+                        )}
                       </div>
                     </div>
                     <div>
