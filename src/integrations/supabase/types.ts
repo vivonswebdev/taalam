@@ -636,6 +636,45 @@ export type Database = {
           },
         ]
       }
+      crush_scores: {
+        Row: {
+          avatar_emoji: string
+          created_at: string
+          display_name: string
+          high_score: number
+          id: string
+          level: number
+          max_combo: number
+          total_cleared: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_emoji?: string
+          created_at?: string
+          display_name?: string
+          high_score?: number
+          id?: string
+          level?: number
+          max_combo?: number
+          total_cleared?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_emoji?: string
+          created_at?: string
+          display_name?: string
+          high_score?: number
+          id?: string
+          level?: number
+          max_combo?: number
+          total_cleared?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       families: {
         Row: {
           created_at: string

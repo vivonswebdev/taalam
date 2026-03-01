@@ -2119,6 +2119,12 @@ const translations = {
   "coranCrush.nextLevel": { fr: "Niveau suivant", en: "Next Level", nl: "Volgend niveau", ar: "المستوى التالي", tr: "Sonraki seviye", ur: "اگلا سطح" },
   "coranCrush.retry": { fr: "Réessayer", en: "Retry", nl: "Opnieuw", ar: "إعادة", tr: "Tekrar dene", ur: "دوبارہ کوشش" },
   "coranCrush.cleared": { fr: "éliminés", en: "cleared", nl: "verwijderd", ar: "تمت إزالتها", tr: "temizlendi", ur: "صاف" },
+  "coranCrush.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "لوحة المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
+  "coranCrush.rank": { fr: "Rang", en: "Rank", nl: "Rang", ar: "المرتبة", tr: "Sıra", ur: "درجہ" },
+  "coranCrush.yourRank": { fr: "Ton rang", en: "Your rank", nl: "Jouw rang", ar: "مرتبتك", tr: "Sıran", ur: "آپ کی درجہ" },
+  "coranCrush.noScores": { fr: "Aucun score encore", en: "No scores yet", nl: "Nog geen scores", ar: "لا نتائج بعد", tr: "Henüz skor yok", ur: "ابھی کوئی سکور نہیں" },
+  "coranCrush.loginToSave": { fr: "Connecte-toi pour sauvegarder ton score !", en: "Log in to save your score!", nl: "Log in om je score op te slaan!", ar: "سجل دخولك لحفظ نتيجتك!", tr: "Skorunu kaydetmek için giriş yap!", ur: "اپنا سکور محفوظ کرنے کے لیے لاگ ان کریں!" },
+  "coranCrush.newHighScore": { fr: "Nouveau record !", en: "New high score!", nl: "Nieuw record!", ar: "رقم قياسي جديد!", tr: "Yeni rekor!", ur: "نیا ریکارڈ!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
