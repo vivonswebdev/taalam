@@ -274,8 +274,8 @@ export default function Quiz() {
                   <span className="drop-shadow-sm">{config.emoji}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground text-sm">{config.title}</p>
-                  <p className="text-[11px] text-muted-foreground truncate">{config.subtitle}</p>
+                  <p className="font-semibold text-foreground text-sm">{t(config.titleKey as any)}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{t(config.subtitleKey as any)}</p>
                   {successRate !== null && (
                     <div className="flex items-center gap-2 mt-1">
                       <div className="h-1.5 flex-1 max-w-[80px] bg-muted rounded-full overflow-hidden">
