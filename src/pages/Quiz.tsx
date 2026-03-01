@@ -25,6 +25,9 @@ interface QuizStats {
   kids: { completed: number; totalCorrect: number; totalQuestions: number };
   perfect: { completed: number; totalCorrect: number; totalQuestions: number };
   adaptive: { completed: number; totalCorrect: number; totalQuestions: number };
+  prophets: { completed: number; totalCorrect: number; totalQuestions: number };
+  islam_basics: { completed: number; totalCorrect: number; totalQuestions: number };
+  animals: { completed: number; totalCorrect: number; totalQuestions: number };
 }
 
 interface QuizStreak {
@@ -37,8 +40,12 @@ function loadQuizStats(): QuizStats {
     const stored = localStorage.getItem(QUIZ_STATS_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (!parsed.perfect) parsed.perfect = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
-      if (!parsed.adaptive) parsed.adaptive = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      const defaults = { completed: 0, totalCorrect: 0, totalQuestions: 0 };
+      if (!parsed.perfect) parsed.perfect = { ...defaults };
+      if (!parsed.adaptive) parsed.adaptive = { ...defaults };
+      if (!parsed.prophets) parsed.prophets = { ...defaults };
+      if (!parsed.islam_basics) parsed.islam_basics = { ...defaults };
+      if (!parsed.animals) parsed.animals = { ...defaults };
       return parsed;
     }
   } catch {}
@@ -49,6 +56,9 @@ function loadQuizStats(): QuizStats {
     kids: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     perfect: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
     adaptive: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    prophets: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    islam_basics: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
+    animals: { completed: 0, totalCorrect: 0, totalQuestions: 0 },
   };
 }
 
