@@ -247,8 +247,8 @@ export default function Quiz() {
               <Flame size={20} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-bold text-foreground">Streak Quiz : {quizStreak.days} jour{quizStreak.days > 1 ? "s" : ""} 🔥</p>
-              <p className="text-[11px] text-muted-foreground">Continue chaque jour pour maintenir ta série</p>
+              <p className="text-sm font-bold text-foreground">{t("quiz.streakLabel" as any)} : {quizStreak.days} {t("quiz.days" as any)} 🔥</p>
+              <p className="text-[11px] text-muted-foreground">{t("quiz.streakContinue" as any)}</p>
             </div>
           </div>
         )}
