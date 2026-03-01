@@ -60,6 +60,7 @@ import KidsPillarQuizPage from "./pages/KidsPillarQuizPage";
 import KidsPrayerMazePage from "./pages/KidsPrayerMazePage";
 import KidsAsmaHuntPage from "./pages/KidsAsmaHuntPage";
 import KidsProphetStoryGamePage from "./pages/KidsProphetStoryGamePage";
+import KidsBalancePage from "./pages/KidsBalancePage";
 import CoranCrush from "./pages/CoranCrush";
 import MemoryFaithPage from "./pages/MemoryFaithPage";
 import PopHassanatesPage from "./pages/PopHassanatesPage";
