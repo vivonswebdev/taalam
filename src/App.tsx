@@ -182,6 +182,7 @@ const App = () => (
               <Route path="/offline-settings" element={<OfflineSettings />} />
               <Route path="/jeux" element={<JeuxKids />} />
               <Route path="/coord" element={<CoordinatorDashboard />} />
+              <Route path="/student-stats/:classId/:studentId" element={<StudentStatsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

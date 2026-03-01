@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
-import { SURAHS } from "@/data/surahs";
+import { surahs as SURAHS } from "@/data/surahs";
 
 interface HifzSnapshot {
   date: string;
