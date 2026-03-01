@@ -1,9 +1,22 @@
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, X, Download, Pause, Play, CloudOff, Loader2, HardDrive } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useOfflineManager, type OfflineSection } from "@/hooks/useOfflineManager";
+import { useXP } from "@/hooks/useXP";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+
+const OFFLINE_XP_KEY = "offline_xp_awarded";
+function getOfflineXpAwarded(): Record<string, boolean> {
+  try { return JSON.parse(localStorage.getItem(OFFLINE_XP_KEY) || "{}"); } catch { return {}; }
+}
+function markOfflineXpAwarded(section: string) {
+  const data = getOfflineXpAwarded();
+  data[section] = true;
+  localStorage.setItem(OFFLINE_XP_KEY, JSON.stringify(data));
+}
 
 const SECTIONS: { id: OfflineSection; emoji: string; tKey: string; descKey: string; sizeHint: string }[] = [
   { id: "mushaf", emoji: "📖", tKey: "offlinev2.mushaf", descKey: "offlinev2.mushafDesc", sizeHint: "~114 Mo" },
