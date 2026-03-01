@@ -2125,6 +2125,16 @@ const translations = {
   "coranCrush.noScores": { fr: "Aucun score encore", en: "No scores yet", nl: "Nog geen scores", ar: "لا نتائج بعد", tr: "Henüz skor yok", ur: "ابھی کوئی سکور نہیں" },
   "coranCrush.loginToSave": { fr: "Connecte-toi pour sauvegarder ton score !", en: "Log in to save your score!", nl: "Log in om je score op te slaan!", ar: "سجل دخولك لحفظ نتيجتك!", tr: "Skorunu kaydetmek için giriş yap!", ur: "اپنا سکور محفوظ کرنے کے لیے لاگ ان کریں!" },
   "coranCrush.newHighScore": { fr: "Nouveau record !", en: "New high score!", nl: "Nieuw record!", ar: "رقم قياسي جديد!", tr: "Yeni rekor!", ur: "نیا ریکارڈ!" },
+
+  // ─── Memory de la Foi ───────────────────────────────────
+  "memoryFaith.title": { fr: "Memory de la Foi", en: "Faith Memory", nl: "Geloofs Memory", ar: "ذاكرة الإيمان", tr: "İman Hafıza", ur: "ایمان میموری" },
+  "memoryFaith.subtitle": { fr: "Retrouve toutes les paires !", en: "Find all the pairs!", nl: "Vind alle paren!", ar: "اعثر على جميع الأزواج!", tr: "Tüm çiftleri bul!", ur: "تمام جوڑے تلاش کرو!" },
+  "memoryFaith.moves": { fr: "Essais", en: "Moves", nl: "Zetten", ar: "المحاولات", tr: "Hamle", ur: "کوششیں" },
+  "memoryFaith.movesLabel": { fr: "essais", en: "moves", nl: "zetten", ar: "محاولات", tr: "hamle", ur: "کوششیں" },
+  "memoryFaith.victory": { fr: "Maasha'Allah !", en: "Masha'Allah!", nl: "Masha'Allah!", ar: "ماشاء الله!", tr: "Maşallah!", ur: "ماشاءاللہ!" },
+  "memoryFaith.replay": { fr: "Rejouer", en: "Play again", nl: "Opnieuw spelen", ar: "إعادة اللعب", tr: "Tekrar oyna", ur: "دوبارہ کھیلیں" },
+  "kidsHome.memoryFaith": { fr: "Memory Foi", en: "Faith Memory", nl: "Geloof Memory", ar: "ذاكرة الإيمان", tr: "İman Hafıza", ur: "ایمان میموری" },
+  "kidsHome.memoryFaithDesc": { fr: "Retrouve les paires", en: "Find the pairs", nl: "Vind de paren", ar: "اعثر على الأزواج", tr: "Çiftleri bul", ur: "جوڑے تلاش کرو" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

@@ -97,6 +97,14 @@ const KIDS_CARDS = [
     border: "border-emerald-500/25",
   },
   {
+    emoji: "🧠",
+    titleKey: "kidsHome.memoryFaith",
+    descKey: "kidsHome.memoryFaithDesc",
+    path: "/kids-memory-faith",
+    gradient: "from-violet-600/30 to-purple-600/15",
+    border: "border-violet-500/25",
+  },
+  {
     emoji: "🕋",
     titleKey: "kidsHome.pillarQuiz",
     descKey: "kidsHome.pillarQuizDesc",
