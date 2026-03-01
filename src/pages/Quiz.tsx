@@ -15,6 +15,7 @@ import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
 import WeakCardsPanel from "@/components/WeakCardsPanel";
 import { useShareExploit } from "@/hooks/useShareExploit";
+import FloatingXpWidget from "@/components/FloatingXpWidget";
 import { Share2, Loader2 } from "lucide-react";
 
 // Persist quiz stats in localStorage
