@@ -11,9 +11,9 @@ export interface MemoryLevel {
 }
 
 export const MEMORY_LEVELS: MemoryLevel[] = [
-  { pairs: 3, labelKey: "easy" },
-  { pairs: 6, labelKey: "medium" },
-  { pairs: 10, labelKey: "hard" },
+  { pairs: 4, labelKey: "easy" },
+  { pairs: 8, labelKey: "medium" },
+  { pairs: 13, labelKey: "hard" },
 ];
 
 interface PairData {
