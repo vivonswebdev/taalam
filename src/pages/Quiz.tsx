@@ -13,6 +13,8 @@ import ProgressBarDuolingo from "@/components/ProgressBarDuolingo";
 import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
 import WeakCardsPanel from "@/components/WeakCardsPanel";
+import { useShareExploit } from "@/hooks/useShareExploit";
+import { Share2, Loader2 } from "lucide-react";
 
 // Persist quiz stats in localStorage
 const QUIZ_STATS_KEY = "quranEasyQuizStats";
@@ -176,6 +178,7 @@ export default function Quiz() {
   const perfectChallenge = usePerfectChallenge();
   const questionStats = useQuestionStats();
   const xpAwardedRef = useRef(false);
+  const exploit = useShareExploit();
   const answersRef = useRef<{ question: QuizQuestion; selectedIndex: number }[]>([]);
 
   const [session, setSession] = useState<QuizQuestion[]>([]);
@@ -261,6 +264,7 @@ export default function Quiz() {
     setQuizXP(0);
     setConsecutiveCorrect(0);
     setBestStreak(0);
+    exploit.reset();
   };
 
   // Flashcards mode
@@ -439,6 +443,26 @@ export default function Quiz() {
               <Trophy size={16} /> Classement de la semaine
             </button>
           )}
+          {/* Share exploit button */}
+          <button
+            onClick={() => exploit.shareExploit({
+              type: "quiz",
+              category: catConfig?.title || category,
+              score: Math.round((finalScore / questions.length) * 100),
+              xp: totalXP,
+              streak: bestStreak,
+            })}
+            disabled={exploit.sharing || exploit.shared}
+            className={`w-full flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold text-sm transition-all ${
+              exploit.shared
+                ? "bg-success/15 text-success border border-success/30"
+                : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white active:scale-[0.98]"
+            }`}
+          >
+            {exploit.sharing ? <Loader2 size={16} className="animate-spin" /> : exploit.shared ? <CheckCircle2 size={16} /> : <Share2 size={16} />}
+            {exploit.shared ? "Partagé dans tes groupes !" : "Partager mon exploit"}
+          </button>
+
           <div className="flex gap-3">
             <button onClick={handleBackToCategories} className="flex-1 bg-muted text-foreground rounded-2xl px-6 py-3 font-semibold text-sm">
               Autre quiz
