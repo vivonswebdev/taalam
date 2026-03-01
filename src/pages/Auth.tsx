@@ -95,7 +95,7 @@ export default function Auth() {
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
-        options: { data: { display_name: displayName.trim(), avatar_emoji: avatarEmoji } },
+        options: { data: { display_name: displayName.trim(), avatar_emoji: avatarEmoji, language: lang } },
       });
       if (error) throw error;
 
