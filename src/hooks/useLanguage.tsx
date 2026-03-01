@@ -2229,6 +2229,21 @@ const translations = {
   "kidsGames.quizAnimalsDesc": { fr: "100 questions", en: "100 questions", nl: "100 vragen", ar: "100 سؤال", tr: "100 soru", ur: "100 سوالات" },
   "kidsGames.quizGoodDeeds": { fr: "Quiz Bonnes Actions", en: "Good Deeds Quiz", nl: "Goede Daden Quiz", ar: "مسابقة الحسنات", tr: "İyi Ameller Testi", ur: "نیک اعمال کوئز" },
   "kidsGames.quizGoodDeedsDesc": { fr: "Quotidien", en: "Daily", nl: "Dagelijks", ar: "يومي", tr: "Günlük", ur: "روزانہ" },
+  // Coordinator Dashboard
+  "coord.title": { fr: "🕌 Tableau de bord Coordinateur", en: "🕌 Coordinator Dashboard", nl: "🕌 Coördinator Dashboard", ar: "🕌 لوحة تحكم المنسق", tr: "🕌 Koordinatör Paneli", ur: "🕌 کوآرڈینیٹر ڈیش بورڈ" },
+  "coord.halaqas": { fr: "halaqas actives", en: "active halaqas", nl: "actieve halaqas", ar: "حلقات نشطة", tr: "aktif halkalar", ur: "فعال حلقے" },
+  "coord.totalStudents": { fr: "Élèves total", en: "Total students", nl: "Totaal leerlingen", ar: "إجمالي الطلاب", tr: "Toplam öğrenci", ur: "کل طلباء" },
+  "coord.totalXp": { fr: "XP global", en: "Global XP", nl: "Globale XP", ar: "XP الإجمالي", tr: "Toplam XP", ur: "کل XP" },
+  "coord.avgStreak": { fr: "Streak moyen", en: "Avg streak", nl: "Gem. streak", ar: "متوسط السلسلة", tr: "Ort. seri", ur: "اوسط سلسلہ" },
+  "coord.activeAssignments": { fr: "Devoirs actifs", en: "Active assignments", nl: "Actieve opdrachten", ar: "واجبات نشطة", tr: "Aktif ödevler", ur: "فعال اسائنمنٹس" },
+  "coord.halaqasList": { fr: "Mes Halaqas", en: "My Halaqas", nl: "Mijn Halaqas", ar: "حلقاتي", tr: "Halkalarım", ur: "میرے حلقے" },
+  "coord.newHalaqa": { fr: "Nouvelle Halaqa", en: "New Halaqa", nl: "Nieuwe Halaqa", ar: "حلقة جديدة", tr: "Yeni Halka", ur: "نیا حلقہ" },
+  "coord.noHalaqas": { fr: "Aucune halaqa créée", en: "No halaqas created", nl: "Geen halaqas aangemaakt", ar: "لا توجد حلقات", tr: "Halka oluşturulmadı", ur: "کوئی حلقہ نہیں بنایا گیا" },
+  "coord.teacher": { fr: "Prof", en: "Teacher", nl: "Leraar", ar: "المعلم", tr: "Öğretmen", ur: "استاد" },
+  "coord.students": { fr: "élèves", en: "students", nl: "leerlingen", ar: "طلاب", tr: "öğrenci", ur: "طلباء" },
+  "coord.loginRequired": { fr: "Connexion requise", en: "Login required", nl: "Inloggen vereist", ar: "تسجيل الدخول مطلوب", tr: "Giriş gerekli", ur: "لاگ ان ضروری ہے" },
+  "coord.accessDenied": { fr: "Accès réservé aux coordinateurs", en: "Coordinator access only", nl: "Alleen voor coördinatoren", ar: "وصول المنسقين فقط", tr: "Sadece koordinatörler", ur: "صرف کوآرڈینیٹرز کے لیے" },
+  "coord.accessDeniedDesc": { fr: "Contactez l'administrateur pour obtenir le rôle coordinateur.", en: "Contact the admin to get coordinator role.", nl: "Neem contact op met de beheerder voor de coördinatorrol.", ar: "تواصل مع المسؤول للحصول على دور المنسق.", tr: "Koordinatör rolü için yöneticiyle iletişime geçin.", ur: "کوآرڈینیٹر کا کردار حاصل کرنے کے لیے ایڈمن سے رابطہ کریں۔" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
