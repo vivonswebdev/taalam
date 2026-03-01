@@ -61,6 +61,7 @@ import KidsPrayerMazePage from "./pages/KidsPrayerMazePage";
 import KidsAsmaHuntPage from "./pages/KidsAsmaHuntPage";
 import KidsProphetStoryGamePage from "./pages/KidsProphetStoryGamePage";
 import CoranCrush from "./pages/CoranCrush";
+import MemoryFaithPage from "./pages/MemoryFaithPage";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AssignmentsTutorial from "./pages/AssignmentsTutorial";
