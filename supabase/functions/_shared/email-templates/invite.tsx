@@ -15,20 +15,24 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface InviteEmailProps {
   siteName: string
   siteUrl: string
   confirmationUrl: string
+  lang?: EmailLang
 }
 
 export const InviteEmail = ({
   siteName,
   siteUrl,
   confirmationUrl,
+  lang = DEFAULT_LANG,
 }: InviteEmailProps) => (
-  <Html lang="fr" dir="ltr">
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Vous êtes invité(e) à rejoindre Ta'alam</Preview>
+    <Preview>{tr('invite.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -38,21 +42,19 @@ export const InviteEmail = ({
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Vous êtes invité(e) 🤝</Heading>
-        <Text style={text}>Assalamou alaykoum,</Text>
+        <Heading style={h1}>{tr('invite.heading', lang)}</Heading>
+        <Text style={text}>{tr('common.salam', lang)}</Text>
         <Text style={text}>
-          Vous avez été invité(e) à rejoindre{' '}
+          {tr('invite.text', lang)}{' '}
           <Link href={siteUrl} style={link}>
             <strong>Ta'alam</strong>
           </Link>
-          . Cliquez ci-dessous pour accepter l'invitation et créer votre compte.
+          {tr('invite.textSuffix', lang)}
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Accepter l'invitation ✨
+          {tr('invite.button', lang)}
         </Button>
-        <Text style={footer}>
-          Si vous n'attendiez pas cette invitation, vous pouvez ignorer cet email.
-        </Text>
+        <Text style={footer}>{tr('invite.footer', lang)}</Text>
       </Container>
     </Body>
   </Html>

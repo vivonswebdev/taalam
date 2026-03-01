@@ -15,11 +15,14 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface SignupEmailProps {
   siteName: string
   siteUrl: string
   recipient: string
   confirmationUrl: string
+  lang?: EmailLang
 }
 
 export const SignupEmail = ({
@@ -27,10 +30,11 @@ export const SignupEmail = ({
   siteUrl,
   recipient,
   confirmationUrl,
+  lang = DEFAULT_LANG,
 }: SignupEmailProps) => (
-  <Html lang="fr" dir="ltr">
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Confirmez votre email pour Ta'alam</Preview>
+    <Preview>{tr('signup.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -40,26 +44,26 @@ export const SignupEmail = ({
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Assalamou alaykoum 🌙</Heading>
+        <Heading style={h1}>{tr('signup.heading', lang)}</Heading>
         <Text style={text}>
-          Bienvenue sur{' '}
+          {tr('signup.welcome', lang)}{' '}
           <Link href={siteUrl} style={link}>
             <strong>Ta'alam</strong>
-          </Link>{' '}
-          ! Nous sommes ravis de vous accompagner dans votre parcours coranique.
+          </Link>
+          {tr('signup.welcomeSuffix', lang)}
         </Text>
         <Text style={text}>
-          Veuillez confirmer votre adresse email (
+          {tr('signup.confirmText', lang)}
           <Link href={`mailto:${recipient}`} style={link}>
             {recipient}
           </Link>
-          ) en cliquant sur le bouton ci-dessous :
+          {tr('signup.confirmTextSuffix', lang)}
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Confirmer mon email ✨
+          {tr('signup.button', lang)}
         </Button>
         <Text style={footer}>
-          Si vous n'avez pas créé de compte, vous pouvez ignorer cet email en toute sécurité.
+          {tr('signup.footer', lang)}
         </Text>
       </Container>
     </Body>

@@ -14,18 +14,22 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface MagicLinkEmailProps {
   siteName: string
   confirmationUrl: string
+  lang?: EmailLang
 }
 
 export const MagicLinkEmail = ({
   siteName,
   confirmationUrl,
+  lang = DEFAULT_LANG,
 }: MagicLinkEmailProps) => (
-  <Html lang="fr" dir="ltr">
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Votre lien de connexion Ta'alam</Preview>
+    <Preview>{tr('magiclink.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -35,18 +39,13 @@ export const MagicLinkEmail = ({
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Votre lien de connexion 🌙</Heading>
-        <Text style={text}>Assalamou alaykoum,</Text>
-        <Text style={text}>
-          Cliquez sur le bouton ci-dessous pour vous connecter à Ta'alam.
-          Ce lien expirera dans quelques minutes.
-        </Text>
+        <Heading style={h1}>{tr('magiclink.heading', lang)}</Heading>
+        <Text style={text}>{tr('common.salam', lang)}</Text>
+        <Text style={text}>{tr('magiclink.text', lang)}</Text>
         <Button style={button} href={confirmationUrl}>
-          Se connecter
+          {tr('magiclink.button', lang)}
         </Button>
-        <Text style={footer}>
-          Si vous n'avez pas demandé ce lien, vous pouvez ignorer cet email en toute sécurité.
-        </Text>
+        <Text style={footer}>{tr('magiclink.footer', lang)}</Text>
       </Container>
     </Body>
   </Html>

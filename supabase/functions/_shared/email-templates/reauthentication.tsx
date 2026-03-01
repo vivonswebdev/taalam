@@ -13,14 +13,17 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface ReauthenticationEmailProps {
   token: string
+  lang?: EmailLang
 }
 
-export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
-  <Html lang="fr" dir="ltr">
+export const ReauthenticationEmail = ({ token, lang = DEFAULT_LANG }: ReauthenticationEmailProps) => (
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Votre code de vérification Ta'alam</Preview>
+    <Preview>{tr('reauth.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -30,16 +33,12 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Code de vérification 🔐</Heading>
-        <Text style={text}>Assalamou alaykoum,</Text>
-        <Text style={text}>
-          Voici votre code pour confirmer votre identité :
-        </Text>
+        <Heading style={h1}>{tr('reauth.heading', lang)}</Heading>
+        <Text style={text}>{tr('common.salam', lang)}</Text>
+        <Text style={text}>{tr('reauth.text', lang)}</Text>
         <Text style={codeStyle}>{token}</Text>
-        <Text style={text}>Ce code expirera dans quelques minutes.</Text>
-        <Text style={footer}>
-          Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
-        </Text>
+        <Text style={text}>{tr('reauth.expiry', lang)}</Text>
+        <Text style={footer}>{tr('reauth.footer', lang)}</Text>
       </Container>
     </Body>
   </Html>

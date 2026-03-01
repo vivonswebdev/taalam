@@ -15,11 +15,14 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface EmailChangeEmailProps {
   siteName: string
   email: string
   newEmail: string
   confirmationUrl: string
+  lang?: EmailLang
 }
 
 export const EmailChangeEmail = ({
@@ -27,10 +30,11 @@ export const EmailChangeEmail = ({
   email,
   newEmail,
   confirmationUrl,
+  lang = DEFAULT_LANG,
 }: EmailChangeEmailProps) => (
-  <Html lang="fr" dir="ltr">
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Confirmez votre changement d'email Ta'alam</Preview>
+    <Preview>{tr('emailChange.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -40,23 +44,19 @@ export const EmailChangeEmail = ({
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Changement d'email 📧</Heading>
-        <Text style={text}>Assalamou alaykoum,</Text>
+        <Heading style={h1}>{tr('emailChange.heading', lang)}</Heading>
+        <Text style={text}>{tr('common.salam', lang)}</Text>
         <Text style={text}>
-          Vous avez demandé à changer votre adresse email de{' '}
+          {tr('emailChange.text', lang)}{' '}
           <Link href={`mailto:${email}`} style={link}>{email}</Link>{' '}
-          vers{' '}
+          {tr('emailChange.to', lang)}{' '}
           <Link href={`mailto:${newEmail}`} style={link}>{newEmail}</Link>.
         </Text>
-        <Text style={text}>
-          Cliquez ci-dessous pour confirmer ce changement :
-        </Text>
+        <Text style={text}>{tr('emailChange.confirmText', lang)}</Text>
         <Button style={button} href={confirmationUrl}>
-          Confirmer le changement
+          {tr('emailChange.button', lang)}
         </Button>
-        <Text style={footer}>
-          Si vous n'êtes pas à l'origine de cette demande, sécurisez votre compte immédiatement.
-        </Text>
+        <Text style={footer}>{tr('emailChange.footer', lang)}</Text>
       </Container>
     </Body>
   </Html>
