@@ -111,12 +111,14 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setMicError(null);
     setPendingStop(false);
     setAyahPhase("recording");
+    recordingStartRef.current = Date.now();
     voice.start();
   }, [voice]);
 
   const finalizeRecording = useCallback(() => {
     if (!currentAyah) return;
 
+    const durationMs = Date.now() - recordingStartRef.current;
     const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
     const words: FeedbackWord[] = result.wordResults.map(wr => ({
       word: wr.word,
@@ -134,13 +136,25 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     setFeedbackScore(score);
     setAyahPhase("feedback");
 
+    // ASR logging
+    asrLog.logResult({
+      mode: "dictation_ayah",
+      surahNumber: surah.number,
+      ayahNumber: currentAyah.number,
+      expectedText: currentAyah.arabic,
+      recognizedText: liveTranscript,
+      confidenceScore: score / 100,
+      isCorrect: score >= 70,
+      durationMs,
+    });
+
     if (!xpAwardedRef.current.has(currentAyahIdx) && score >= 50) {
       xpAwardedRef.current.add(currentAyahIdx);
       xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     fetchSimpleExplanation(surah.number, currentAyah.number);
-  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp]);
+  }, [currentAyah, liveTranscript, currentAyahIdx, surah.number, xp, asrLog]);
 
   // ─── Stop recording and compute feedback ───
   const stopRecording = useCallback(() => {
