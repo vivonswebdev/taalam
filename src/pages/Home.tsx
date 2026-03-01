@@ -174,6 +174,24 @@ export default function Home() {
         </motion.div>
       )}
 
+      {/* Senior welcome banner */}
+      {ageGroup === "senior" && userMode === "solo" && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-5 mt-2 flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 rounded-xl px-3 py-2.5"
+        >
+          <span className="text-lg">📖</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground">Pour simplement lire le Coran</p>
+            <p className="text-[10px] text-muted-foreground">Appuyez sur l'onglet 📖 Coran en bas pour commencer la lecture.</p>
+          </div>
+          <button onClick={() => navigate("/quran-hub")} className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg">
+            Lire
+          </button>
+        </motion.div>
+      )}
+
       {/* ═══ HEADER ═══ */}
       <div className="relative overflow-visible">
         {/* Animated glow orbs */}
