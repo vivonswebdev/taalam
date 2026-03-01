@@ -9,6 +9,14 @@ import { Badge } from "@/components/ui/badge";
 
 const KIDS_CARDS = [
   {
+    emoji: "🌙",
+    titleKey: "kidsHome.checklist",
+    descKey: "kidsHome.checklistDesc",
+    path: "/kids-checklist",
+    gradient: "from-indigo-600/30 to-violet-600/15",
+    border: "border-indigo-500/25",
+  },
+  {
     emoji: "🧒",
     titleKey: "kidsHome.kidsQuiz",
     descKey: "kidsHome.kidsQuizDesc",
@@ -55,14 +63,6 @@ const KIDS_CARDS = [
     path: "/kids-mosque-map",
     gradient: "from-cyan-600/30 to-teal-600/15",
     border: "border-cyan-500/25",
-  },
-  {
-    emoji: "🌙",
-    titleKey: "kidsHome.checklist",
-    descKey: "kidsHome.checklistDesc",
-    path: "/kids-checklist",
-    gradient: "from-indigo-600/30 to-violet-600/15",
-    border: "border-indigo-500/25",
   },
   {
     emoji: "🤲",
@@ -200,38 +200,29 @@ export default function KidsHomePage() {
         </div>
       )}
 
-      {/* Cards grid */}
-      <div className="px-5 grid grid-cols-2 gap-3">
+      {/* Cards grid — 3 columns compact */}
+      <div className="px-5 grid grid-cols-3 gap-2.5">
         {KIDS_CARDS.map((card, i) => (
           <motion.button
             key={card.path}
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06 }}
+            transition={{ delay: i * 0.04 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate(card.path)}
-            className={`flex flex-col gap-2 rounded-2xl p-4 text-left bg-gradient-to-br ${card.gradient} border ${card.border} shadow-lg`}
+            className={`flex flex-col items-center gap-1 rounded-2xl p-3 text-center bg-gradient-to-br ${card.gradient} border ${card.border} shadow-md min-h-[90px] relative`}
           >
-            <div className="flex items-start justify-between w-full">
-              <span className="text-3xl">{card.emoji}</span>
-              {badgeForCard(card.path) && (
-                <Badge variant="secondary" className="text-[9px] px-1.5 py-0.5 shrink-0">
-                  {badgeForCard(card.path)}
-                </Badge>
-              )}
-            </div>
-            <p className="text-sm font-bold text-foreground leading-tight">
+            {badgeForCard(card.path) && (
+              <Badge variant="secondary" className="absolute top-1.5 right-1.5 text-[8px] px-1 py-0 shrink-0">
+                {badgeForCard(card.path)}
+              </Badge>
+            )}
+            <span className="text-2xl">{card.emoji}</span>
+            <p className="text-xs font-bold text-foreground leading-tight line-clamp-2">
               {t(card.titleKey as any)}
             </p>
-            <p className="text-[10px] text-muted-foreground line-clamp-2">
-              {t(card.descKey as any)}
-            </p>
-            {/* Noorani progress indicator */}
             {card.path === "/noorani" && noorani.completedLessonsCount > 0 && (
-              <div className="mt-1">
-                <p className="text-[9px] text-muted-foreground mb-0.5">
-                  {noorani.completedLessonsCount}/{noorani.totalLessons}
-                </p>
+              <div className="w-full mt-0.5">
                 <div className="h-1 rounded-full bg-muted/40 overflow-hidden">
                   <div
                     className="h-full rounded-full bg-primary transition-all"
@@ -240,9 +231,6 @@ export default function KidsHomePage() {
                 </div>
               </div>
             )}
-            <span className="mt-auto pt-1 text-[10px] font-semibold text-primary">
-              {t("home.open" as any)} →
-            </span>
           </motion.button>
         ))}
       </div>
