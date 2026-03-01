@@ -55,7 +55,7 @@ export default function CommunityDetail() {
 
   const handleSend = async () => {
     if (!msg.trim() || !id) return;
-    await sendMessage(id, msg.trim(), authorName);
+    await sendMessage(id, msg.trim(), authorName, "text", community?.name);
     setMsg("");
   };
 
