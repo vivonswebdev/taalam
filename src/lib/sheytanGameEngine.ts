@@ -1,6 +1,6 @@
 /**
- * Chasse aux Sheytans – Canvas Game Engine
- * A Pac-Man inspired educational Islamic game for kids
+ * Chasse aux Sheytans – Canvas Game Engine v2
+ * Grid-based Pac-Man movement, multiple maps, leaderboard support
  */
 
 // ─── Types ──────────────────────────────────────────
@@ -13,57 +13,56 @@ export interface GameState {
   score: number;
   lives: number;
   level: number;
-  phase: "menu" | "playing" | "paused" | "powerUp" | "levelComplete" | "gameOver" | "quiz";
+  phase: "playing" | "powerUp" | "levelComplete" | "gameOver";
   powerUpTimer: number;
   powerUpType: string | null;
   collectedVerses: string[];
   totalDots: number;
   dotsCollected: number;
+  modeTimer: number;
+  modePhase: "scatter" | "chase";
 }
 
 export interface Player {
-  x: number;
-  y: number;
-  targetX: number;
-  targetY: number;
+  gx: number; gy: number;       // current grid cell
+  px: number; py: number;       // pixel position (center)
   direction: Direction;
   nextDirection: Direction;
   speed: number;
   mouthOpen: number;
   mouthDir: number;
+  moving: boolean;
 }
 
 export interface Enemy {
-  x: number;
-  y: number;
-  targetX: number;
-  targetY: number;
+  gx: number; gy: number;
+  px: number; py: number;
+  prevDir: Direction;
   color: string;
   speed: number;
-  mode: "chase" | "scatter" | "frightened";
+  mode: "chase" | "scatter" | "frightened" | "eaten";
   scatterTarget: { x: number; y: number };
-  homeX: number;
-  homeY: number;
+  homeX: number; homeY: number;
+  moveTimer: number;
 }
 
 export interface Collectible {
-  x: number;
-  y: number;
+  x: number; y: number;
   collected: boolean;
   type: "dot" | "verse";
   verseKey?: string;
 }
 
 export interface PowerUp {
-  x: number;
-  y: number;
+  x: number; y: number;
   collected: boolean;
   type: "ayatul_kursi" | "la_ilaha";
 }
 
 export type Direction = "up" | "down" | "left" | "right" | "none";
 
-// ─── Maze Definitions (1=wall, 0=path, 2=enemy home) ─────
+// ─── Multiple Maze Definitions (1=wall, 0=path, 2=ghost house) ─────
+
 const MAZE_L1: number[][] = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
   [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
@@ -88,14 +87,88 @@ const MAZE_L1: number[][] = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
-const LEVEL_CONFIGS = [
-  { speed: 1.8, enemySpeed: 1.2, maze: MAZE_L1 },
-  { speed: 2.0, enemySpeed: 1.6, maze: MAZE_L1 },
-  { speed: 2.2, enemySpeed: 2.0, maze: MAZE_L1 },
-  { speed: 2.5, enemySpeed: 2.3, maze: MAZE_L1 },
+const MAZE_L2: number[][] = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
+  [1,0,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,0,1],
+  [1,0,0,0,0,1,0,1,1,2,1,1,0,1,0,0,0,0,1],
+  [0,0,1,1,0,0,0,1,2,2,2,1,0,0,0,1,1,0,0],
+  [1,0,0,0,0,1,0,1,1,1,1,1,0,1,0,0,0,0,1],
+  [1,0,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,0,1],
+  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
+  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
+  [1,0,1,0,1,1,1,1,0,0,0,1,1,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
-// ─── Quranic Verses for collectibles ─────
+const MAZE_L3: number[][] = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,0,1,0,0,1,0,0,1,0,0,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,0,1,1,1,0,1,0,1,1,1,0,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,0,1,0,1,1,2,1,1,0,1,0,1,0,0,1],
+  [0,0,0,0,0,0,0,1,2,2,2,1,0,0,0,0,0,0,0],
+  [1,0,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,0,1,1,1,0,1,0,1,1,1,0,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,0,0,1,0,0,0,0,0,1,0,0,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,1,1,0,1,0,0,0,1,0,1,1,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+const MAZE_L4: number[][] = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1],
+  [1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,0,1,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,0,0,0,1,1,0,1,1,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1],
+  [0,0,1,0,1,0,0,1,1,2,1,1,0,0,1,0,1,0,0],
+  [1,0,0,0,0,0,0,1,2,2,2,1,0,0,0,0,0,0,1],
+  [0,0,1,0,1,0,0,1,1,1,1,1,0,0,1,0,1,0,0],
+  [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,0,0,0,1,1,0,1,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,1,0,1,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,1],
+  [1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1],
+  [1,0,1,0,0,0,1,0,1,1,1,0,1,0,0,0,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+const ALL_MAZES = [MAZE_L1, MAZE_L2, MAZE_L3, MAZE_L4];
+
+const LEVEL_CONFIGS = [
+  { speed: 5, enemySpeed: 3.5, enemyCount: 2 },
+  { speed: 5.5, enemySpeed: 4, enemyCount: 3 },
+  { speed: 6, enemySpeed: 5, enemyCount: 4 },
+  { speed: 6.5, enemySpeed: 5.5, enemyCount: 4 },
+];
+
+// ─── Quranic Data ─────
 export const QURAN_VERSES = [
   { key: "falaq", ar: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ", fr: "Dis: Je cherche protection auprès du Seigneur de l'aube naissante" },
   { key: "nas", ar: "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ", fr: "Dis: Je cherche protection auprès du Seigneur des hommes" },
@@ -131,84 +204,93 @@ export const QUIZ_QUESTIONS = [
   },
 ];
 
-// ─── Colors ──────────────────────────────────────────
+// ─── Constants ──────────────────────────────────────────
+export const MAZE_COLS = 19;
+export const MAZE_ROWS = 21;
+
 const WALL_COLOR = "#1e5631";
 const PATH_COLOR = "#0a1a0f";
 const PLAYER_COLOR = "#fbbf24";
 const DOT_COLOR = "#e5e7eb";
 const VERSE_COLOR = "#22d3ee";
-const POWERUP_COLORS = { ayatul_kursi: "#60a5fa", la_ilaha: "#34d399" };
+const POWERUP_COLORS: Record<string, string> = { ayatul_kursi: "#60a5fa", la_ilaha: "#34d399" };
 const ENEMY_COLORS = ["#ef4444", "#8b5cf6", "#f97316", "#ec4899"];
 const FRIGHTENED_COLOR = "#3b82f6";
 
 // ─── Helpers ──────────────────────────────────────────
 function isWall(maze: number[][], gx: number, gy: number): boolean {
-  if (gy < 0 || gy >= maze.length || gx < 0 || gx >= maze[0].length) return true;
+  if (gy < 0 || gy >= maze.length || gx < 0 || gx >= maze[0].length) {
+    // Allow tunnel (row 9 has open sides)
+    if (gy === 9 && (gx === -1 || gx === maze[0].length)) return false;
+    return true;
+  }
   return maze[gy][gx] === 1;
 }
 
-function gridToPixel(g: number, cellSize: number): number {
-  return g * cellSize + cellSize / 2;
+function isWalkable(maze: number[][], gx: number, gy: number): boolean {
+  return !isWall(maze, gx, gy);
 }
 
-function pixelToGrid(p: number, cellSize: number): number {
-  return Math.floor(p / cellSize);
+function canMoveDir(maze: number[][], gx: number, gy: number, dir: Direction): boolean {
+  const [nx, ny] = nextCell(gx, gy, dir);
+  return isWalkable(maze, nx, ny);
 }
 
-function canMove(maze: number[][], px: number, py: number, dir: Direction, cellSize: number): boolean {
-  const gx = pixelToGrid(px, cellSize);
-  const gy = pixelToGrid(py, cellSize);
+function nextCell(gx: number, gy: number, dir: Direction): [number, number] {
   switch (dir) {
-    case "up": return !isWall(maze, gx, gy - 1);
-    case "down": return !isWall(maze, gx, gy + 1);
-    case "left": return !isWall(maze, gx - 1, gy);
-    case "right": return !isWall(maze, gx + 1, gy);
-    default: return false;
+    case "up": return [gx, gy - 1];
+    case "down": return [gx, gy + 1];
+    case "left": return [gx - 1, gy];
+    case "right": return [gx + 1, gy];
+    default: return [gx, gy];
   }
 }
 
-function isAtCenter(pos: number, cellSize: number): boolean {
-  const center = pixelToGrid(pos, cellSize) * cellSize + cellSize / 2;
-  return Math.abs(pos - center) < 2;
-}
-
-function moveInDirection(x: number, y: number, dir: Direction, speed: number): { x: number; y: number } {
+function oppositeDir(dir: Direction): Direction {
   switch (dir) {
-    case "up": return { x, y: y - speed };
-    case "down": return { x, y: y + speed };
-    case "left": return { x: x - speed, y };
-    case "right": return { x: x + speed, y };
-    default: return { x, y };
+    case "up": return "down";
+    case "down": return "up";
+    case "left": return "right";
+    case "right": return "left";
+    default: return "none";
   }
-}
-
-function snapToGrid(pos: number, cellSize: number): number {
-  return pixelToGrid(pos, cellSize) * cellSize + cellSize / 2;
 }
 
 function dist(ax: number, ay: number, bx: number, by: number): number {
-  return Math.abs(ax - bx) + Math.abs(ay - by);
+  return (ax - bx) ** 2 + (ay - by) ** 2;
+}
+
+function g2p(g: number, cellSize: number): number {
+  return g * cellSize + cellSize / 2;
 }
 
 // ─── Init ──────────────────────────────────────────
-export function createInitialState(level: number): GameState {
+export function createInitialState(level: number, carryScore = 0, carryVerses: string[] = [], carryLives = 3): GameState {
   const cfg = LEVEL_CONFIGS[Math.min(level, LEVEL_CONFIGS.length - 1)];
-  const maze = cfg.maze.map(r => [...r]);
+  const maze = ALL_MAZES[Math.min(level, ALL_MAZES.length - 1)].map(r => [...r]);
   const cols = maze[0].length;
   const rows = maze.length;
 
-  // Place collectibles on all path cells
   const collectibles: Collectible[] = [];
   const powerUps: PowerUp[] = [];
   let verseIdx = 0;
+  // Find player start (first open cell near bottom-center)
+  let startX = 9, startY = 15;
+  if (isWall(maze, startX, startY)) {
+    // fallback: find any open cell near center
+    for (let y = rows - 3; y > 0; y--) {
+      for (let x = Math.floor(cols / 2) - 2; x < Math.floor(cols / 2) + 3; x++) {
+        if (!isWall(maze, x, y) && maze[y][x] !== 2) { startX = x; startY = y; break; }
+      }
+      if (!isWall(maze, startX, startY)) break;
+    }
+  }
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (maze[y][x] === 0) {
-        // Skip player start position
-        if (y === 15 && x === 9) continue;
-        // Some cells are verses
-        if ((x + y) % 7 === 0 && verseIdx < QURAN_VERSES.length) {
+        if (y === startY && x === startX) continue;
+        if ((x * 7 + y * 13) % 11 === 0 && verseIdx < QURAN_VERSES.length) {
           collectibles.push({ x, y, collected: false, type: "verse", verseKey: QURAN_VERSES[verseIdx].key });
           verseIdx++;
         } else {
@@ -218,88 +300,124 @@ export function createInitialState(level: number): GameState {
     }
   }
 
-  // Place 2 power-ups
-  const puPositions = [{ x: 1, y: 1 }, { x: cols - 2, y: rows - 2 }];
-  puPositions.forEach((p, i) => {
-    if (maze[p.y][p.x] === 0) {
-      powerUps.push({ x: p.x, y: p.y, collected: false, type: i === 0 ? "ayatul_kursi" : "la_ilaha" });
+  // Power-ups at corners
+  const corners = [
+    { x: 1, y: 1 }, { x: cols - 2, y: 1 },
+    { x: 1, y: rows - 2 }, { x: cols - 2, y: rows - 2 }
+  ];
+  let puCount = 0;
+  for (const c of corners) {
+    if (!isWall(maze, c.x, c.y) && puCount < 2) {
+      powerUps.push({ x: c.x, y: c.y, collected: false, type: puCount === 0 ? "ayatul_kursi" : "la_ilaha" });
+      puCount++;
     }
-  });
+  }
 
-  // Enemies start in ghost house
-  const enemies: Enemy[] = ENEMY_COLORS.slice(0, Math.min(2 + level, 4)).map((color, i) => ({
-    x: 8 + i,
-    y: 9,
-    targetX: 8 + i,
-    targetY: 9,
-    color,
-    speed: cfg.enemySpeed,
+  const enemies: Enemy[] = ENEMY_COLORS.slice(0, cfg.enemyCount).map((color, i) => ({
+    gx: 8 + i, gy: 9,
+    px: g2p(8 + i, 1), py: g2p(9, 1), // normalized; will be scaled
+    prevDir: "up" as Direction,
+    color, speed: cfg.enemySpeed,
     mode: "scatter" as const,
     scatterTarget: { x: i < 2 ? 1 : cols - 2, y: i % 2 === 0 ? 1 : rows - 2 },
-    homeX: 8 + i,
-    homeY: 9,
+    homeX: 8 + i, homeY: 9,
+    moveTimer: 0,
   }));
 
   return {
     player: {
-      x: 9, y: 15,
-      targetX: 9, targetY: 15,
-      direction: "none",
-      nextDirection: "none",
+      gx: startX, gy: startY,
+      px: 0, py: 0, // will be set from gx/gy
+      direction: "none", nextDirection: "none",
       speed: cfg.speed,
-      mouthOpen: 0.3,
-      mouthDir: 1,
+      mouthOpen: 0.3, mouthDir: 1,
+      moving: false,
     },
-    enemies,
-    collectibles,
-    powerUps,
-    maze,
-    score: 0,
-    lives: 3,
-    level,
+    enemies, collectibles, powerUps, maze,
+    score: carryScore, lives: carryLives, level,
     phase: "playing",
-    powerUpTimer: 0,
-    powerUpType: null,
-    collectedVerses: [],
+    powerUpTimer: 0, powerUpType: null,
+    collectedVerses: [...carryVerses],
     totalDots: collectibles.length,
     dotsCollected: 0,
+    modeTimer: 0,
+    modePhase: "scatter",
   };
 }
 
-// ─── Enemy AI ─────────────────────────────────────
-function chooseEnemyDirection(enemy: Enemy, maze: number[][], targetX: number, targetY: number, cellSize: number): Direction {
-  const gx = pixelToGrid(gridToPixel(enemy.x, cellSize), cellSize);
-  const gy = pixelToGrid(gridToPixel(enemy.y, cellSize), cellSize);
-  
-  const dirs: Direction[] = ["up", "down", "left", "right"];
-  let bestDir: Direction = "up";
-  let bestDist = Infinity;
-
-  for (const d of dirs) {
-    let nx = gx, ny = gy;
-    if (d === "up") ny--;
-    else if (d === "down") ny++;
-    else if (d === "left") nx--;
-    else if (d === "right") nx++;
-
-    if (isWall(maze, nx, ny) || maze[ny]?.[nx] === 2) continue;
-
-    const dd = dist(nx, ny, targetX, targetY);
-    if (enemy.mode === "frightened") {
-      // Run away
-      if (dd > bestDist) { bestDist = dd; bestDir = d; }
-    } else {
-      if (dd < bestDist) { bestDist = dd; bestDir = d; }
-    }
-  }
-  return bestDir;
-}
-
-// ─── Update ──────────────────────────────────────────
+// ─── Update (grid-based smooth movement) ──────────────────────
 export function updateGame(state: GameState, cellSize: number, dt: number): GameState {
   if (state.phase !== "playing" && state.phase !== "powerUp") return state;
 
-  const s = { ...state, player: { ...state.player }, enemies: state.enemies.map(e => ({ ...e })) };
+  const s: GameState = {
+    ...state,
+    player: { ...state.player },
+    enemies: state.enemies.map(e => ({ ...e })),
+    collectibles: [...state.collectibles],
+    powerUps: [...state.powerUps],
+    collectedVerses: [...state.collectedVerses],
+  };
+
+  const cols = s.maze[0].length;
+  const p = s.player;
+  const pixelSpeed = p.speed * cellSize * dt;
+
+  // Init pixel pos from grid if needed
+  if (p.px === 0 && p.py === 0) {
+    p.px = g2p(p.gx, cellSize);
+    p.py = g2p(p.gy, cellSize);
+  }
+
+  const targetPx = g2p(p.gx, cellSize);
+  const targetPy = g2p(p.gy, cellSize);
+  const atCenter = Math.abs(p.px - targetPx) < 1.5 && Math.abs(p.py - targetPy) < 1.5;
+
+  if (atCenter) {
+    // Snap to center
+    p.px = targetPx;
+    p.py = targetPy;
+
+    // Try nextDirection first (buffered input)
+    if (p.nextDirection !== "none" && canMoveDir(s.maze, p.gx, p.gy, p.nextDirection)) {
+      p.direction = p.nextDirection;
+      p.nextDirection = "none";
+    }
+
+    // Can we continue current direction?
+    if (p.direction !== "none" && canMoveDir(s.maze, p.gx, p.gy, p.direction)) {
+      const [nx, ny] = nextCell(p.gx, p.gy, p.direction);
+      p.gx = nx; p.gy = ny;
+      p.moving = true;
+    } else {
+      p.moving = false;
+    }
+  }
+
+  // Move pixel position toward current grid target
+  if (p.moving || !atCenter) {
+    const tpx = g2p(p.gx, cellSize);
+    const tpy = g2p(p.gy, cellSize);
+    const dx = tpx - p.px;
+    const dy = tpy - p.py;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d > 1) {
+      const step = Math.min(pixelSpeed, d);
+      p.px += (dx / d) * step;
+      p.py += (dy / d) * step;
+    } else {
+      p.px = tpx;
+      p.py = tpy;
+    }
+  }
+
+  // Tunnel wrap
+  if (p.gx < 0) { p.gx = cols - 1; p.px = g2p(cols - 1, cellSize); }
+  if (p.gx >= cols) { p.gx = 0; p.px = g2p(0, cellSize); }
+
+  // Mouth animation
+  p.mouthOpen += p.mouthDir * dt * 8;
+  if (p.mouthOpen > 0.4) p.mouthDir = -1;
+  if (p.mouthOpen < 0.05) p.mouthDir = 1;
 
   // Power-up timer
   if (s.powerUpTimer > 0) {
@@ -308,47 +426,25 @@ export function updateGame(state: GameState, cellSize: number, dt: number): Game
       s.powerUpTimer = 0;
       s.powerUpType = null;
       s.phase = "playing";
-      s.enemies.forEach(e => { e.mode = "chase"; });
+      s.enemies.forEach(e => { if (e.mode === "frightened") e.mode = "chase"; });
     }
   }
 
-  // Player movement
-  const p = s.player;
-  const px = gridToPixel(p.x, cellSize);
-  const py = gridToPixel(p.y, cellSize);
-
-  // Try next direction first
-  if (p.nextDirection !== "none" && canMove(s.maze, px, py, p.nextDirection, cellSize)) {
-    p.direction = p.nextDirection;
-    p.nextDirection = "none";
+  // Mode switching (scatter/chase cycle)
+  s.modeTimer += dt;
+  if (s.modePhase === "scatter" && s.modeTimer > 7) {
+    s.modePhase = "chase";
+    s.modeTimer = 0;
+    s.enemies.forEach(e => { if (e.mode === "scatter") e.mode = "chase"; });
+  } else if (s.modePhase === "chase" && s.modeTimer > 20) {
+    s.modePhase = "scatter";
+    s.modeTimer = 0;
+    s.enemies.forEach(e => { if (e.mode === "chase") e.mode = "scatter"; });
   }
-
-  if (p.direction !== "none" && canMove(s.maze, px, py, p.direction, cellSize)) {
-    const moved = moveInDirection(p.x, p.y, p.direction, p.speed * dt * 8);
-    const newGx = pixelToGrid(gridToPixel(moved.x, cellSize), cellSize);
-    const newGy = pixelToGrid(gridToPixel(moved.y, cellSize), cellSize);
-    if (!isWall(s.maze, newGx, newGy)) {
-      p.x = moved.x;
-      p.y = moved.y;
-    }
-  }
-
-  // Wrap around tunnel
-  const cols = s.maze[0].length;
-  if (p.x < -0.5) p.x = cols - 0.5;
-  if (p.x > cols - 0.5) p.x = -0.5;
-
-  // Mouth animation
-  p.mouthOpen += p.mouthDir * dt * 8;
-  if (p.mouthOpen > 0.4) p.mouthDir = -1;
-  if (p.mouthOpen < 0.05) p.mouthDir = 1;
 
   // Collect dots/verses
-  const pgx = Math.round(p.x);
-  const pgy = Math.round(p.y);
-
   s.collectibles = s.collectibles.map(c => {
-    if (!c.collected && c.x === pgx && c.y === pgy) {
+    if (!c.collected && c.x === p.gx && c.y === p.gy) {
       s.score += c.type === "verse" ? 50 : 10;
       s.dotsCollected++;
       if (c.type === "verse" && c.verseKey) {
@@ -361,67 +457,123 @@ export function updateGame(state: GameState, cellSize: number, dt: number): Game
 
   // Collect power-ups
   s.powerUps = s.powerUps.map(pu => {
-    if (!pu.collected && pu.x === pgx && pu.y === pgy) {
+    if (!pu.collected && pu.x === p.gx && pu.y === p.gy) {
       s.score += 100;
       s.powerUpTimer = pu.type === "ayatul_kursi" ? 10 : 7;
       s.powerUpType = pu.type;
       s.phase = "powerUp";
-      s.enemies.forEach(e => { e.mode = "frightened"; });
+      s.enemies.forEach(e => { e.mode = "frightened"; e.prevDir = oppositeDir(e.prevDir); });
       return { ...pu, collected: true };
     }
     return pu;
   });
 
-  // Move enemies
-  const modeTimer = Date.now() % 20000;
+  // Move enemies (grid-based)
   s.enemies.forEach(e => {
-    if (e.mode !== "frightened") {
-      e.mode = modeTimer < 7000 ? "scatter" : "chase";
+    if (e.px === 0 && e.py === 0) {
+      e.px = g2p(e.gx, cellSize);
+      e.py = g2p(e.gy, cellSize);
     }
 
-    const tx = e.mode === "chase" ? pgx : e.mode === "frightened" ? e.scatterTarget.x : e.scatterTarget.x;
-    const ty = e.mode === "chase" ? pgy : e.mode === "frightened" ? e.scatterTarget.y : e.scatterTarget.y;
+    const etpx = g2p(e.gx, cellSize);
+    const etpy = g2p(e.gy, cellSize);
+    const eAtCenter = Math.abs(e.px - etpx) < 1.5 && Math.abs(e.py - etpy) < 1.5;
 
-    const dir = chooseEnemyDirection(e, s.maze, tx, ty, cellSize);
-    const espeed = e.mode === "frightened" ? e.speed * 0.5 : e.speed;
-    const moved = moveInDirection(e.x, e.y, dir, espeed * dt * 8);
-    const newGx = pixelToGrid(gridToPixel(moved.x, cellSize), cellSize);
-    const newGy = pixelToGrid(gridToPixel(moved.y, cellSize), cellSize);
-    if (!isWall(s.maze, newGx, newGy)) {
-      e.x = moved.x;
-      e.y = moved.y;
+    if (eAtCenter) {
+      e.px = etpx;
+      e.py = etpy;
+
+      // Choose next direction
+      let tx: number, ty: number;
+      if (e.mode === "chase") { tx = p.gx; ty = p.gy; }
+      else if (e.mode === "frightened") { tx = e.scatterTarget.x; ty = e.scatterTarget.y; }
+      else { tx = e.scatterTarget.x; ty = e.scatterTarget.y; }
+
+      const dirs: Direction[] = ["up", "down", "left", "right"];
+      const opp = oppositeDir(e.prevDir);
+      let bestDir: Direction = e.prevDir;
+      let bestDist = e.mode === "frightened" ? -Infinity : Infinity;
+
+      for (const d of dirs) {
+        if (d === opp) continue; // no reversing
+        const [nx, ny] = nextCell(e.gx, e.gy, d);
+        if (!isWalkable(s.maze, nx, ny)) continue;
+        // Don't enter ghost house unless eaten
+        if (s.maze[ny]?.[nx] === 2 && e.mode !== "eaten") continue;
+
+        const dd = dist(nx, ny, tx, ty);
+        if (e.mode === "frightened") {
+          if (dd > bestDist) { bestDist = dd; bestDir = d; }
+        } else {
+          if (dd < bestDist) { bestDist = dd; bestDir = d; }
+        }
+      }
+
+      // If no valid dir, allow reverse
+      if (bestDist === (e.mode === "frightened" ? -Infinity : Infinity)) {
+        bestDir = opp;
+      }
+
+      const [nx, ny] = nextCell(e.gx, e.gy, bestDir);
+      if (isWalkable(s.maze, nx, ny) || s.maze[ny]?.[nx] === 2) {
+        e.gx = nx; e.gy = ny;
+        e.prevDir = bestDir;
+      }
     }
 
-    // Wrap tunnel
-    if (e.x < -0.5) e.x = cols - 0.5;
-    if (e.x > cols - 0.5) e.x = -0.5;
+    // Move pixel toward grid target
+    const enpx = g2p(e.gx, cellSize);
+    const enpy = g2p(e.gy, cellSize);
+    const edx = enpx - e.px;
+    const edy = enpy - e.py;
+    const ed = Math.sqrt(edx * edx + edy * edy);
+    const espeed = (e.mode === "frightened" ? e.speed * 0.5 : e.speed) * cellSize * dt;
+    if (ed > 1) {
+      const step = Math.min(espeed, ed);
+      e.px += (edx / ed) * step;
+      e.py += (edy / ed) * step;
+    } else {
+      e.px = enpx;
+      e.py = enpy;
+    }
+
+    // Tunnel wrap
+    if (e.gx < 0) { e.gx = cols - 1; e.px = g2p(cols - 1, cellSize); }
+    if (e.gx >= cols) { e.gx = 0; e.px = g2p(0, cellSize); }
   });
 
-  // Collision detection
+  // Collision detection (pixel-based for smoothness)
   s.enemies.forEach(e => {
-    const d = Math.hypot(e.x - p.x, e.y - p.y);
-    if (d < 0.7) {
+    const d = Math.hypot(e.px - p.px, e.py - p.py);
+    if (d < cellSize * 0.7) {
       if (e.mode === "frightened") {
-        // Eat enemy
         s.score += 200;
-        e.x = e.homeX;
-        e.y = e.homeY;
+        e.gx = e.homeX; e.gy = e.homeY;
+        e.px = g2p(e.homeX, cellSize); e.py = g2p(e.homeY, cellSize);
         e.mode = "scatter";
-      } else {
-        // Lose a life
+      } else if (e.mode !== "eaten") {
         s.lives--;
         if (s.lives <= 0) {
           s.phase = "gameOver";
         } else {
-          // Reset positions
-          p.x = 9; p.y = 15;
-          p.direction = "none";
+          // Reset player
+          const startX = 9, startY = 15;
+          p.gx = startX; p.gy = startY;
+          p.px = g2p(startX, cellSize); p.py = g2p(startY, cellSize);
+          p.direction = "none"; p.nextDirection = "none";
+          p.moving = false;
+          // Reset enemies
+          s.enemies.forEach(en => {
+            en.gx = en.homeX; en.gy = en.homeY;
+            en.px = g2p(en.homeX, cellSize); en.py = g2p(en.homeY, cellSize);
+            en.mode = "scatter";
+          });
         }
       }
     }
   });
 
-  // Check level complete
+  // Level complete
   if (s.dotsCollected >= s.totalDots) {
     s.phase = "levelComplete";
   }
@@ -435,29 +587,30 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
   const rows = maze.length;
   const cols = maze[0].length;
 
-  // Clear
   ctx.fillStyle = PATH_COLOR;
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  // Draw maze
+  // Draw maze with rounded wall style
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (maze[y][x] === 1) {
         ctx.fillStyle = WALL_COLOR;
         ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        // Border effect
         ctx.strokeStyle = "#2d8a4e";
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 0.5;
         ctx.strokeRect(x * cellSize + 0.5, y * cellSize + 0.5, cellSize - 1, cellSize - 1);
+      } else if (maze[y][x] === 2) {
+        ctx.fillStyle = "#0d2818";
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
       }
     }
   }
 
-  // Draw collectibles
+  // Collectibles
   state.collectibles.forEach(c => {
     if (c.collected) return;
-    const cx = gridToPixel(c.x, cellSize);
-    const cy = gridToPixel(c.y, cellSize);
+    const cx = g2p(c.x, cellSize);
+    const cy = g2p(c.y, cellSize);
     if (c.type === "verse") {
       ctx.fillStyle = VERSE_COLOR;
       ctx.beginPath();
@@ -471,16 +624,16 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
     } else {
       ctx.fillStyle = DOT_COLOR;
       ctx.beginPath();
-      ctx.arc(cx, cy, cellSize * 0.12, 0, Math.PI * 2);
+      ctx.arc(cx, cy, cellSize * 0.1, 0, Math.PI * 2);
       ctx.fill();
     }
   });
 
-  // Draw power-ups
+  // Power-ups
   state.powerUps.forEach(pu => {
     if (pu.collected) return;
-    const cx = gridToPixel(pu.x, cellSize);
-    const cy = gridToPixel(pu.y, cellSize);
+    const cx = g2p(pu.x, cellSize);
+    const cy = g2p(pu.y, cellSize);
     const pulse = 0.3 + Math.sin(Date.now() / 200) * 0.1;
     ctx.fillStyle = POWERUP_COLORS[pu.type];
     ctx.beginPath();
@@ -493,18 +646,16 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
     ctx.fillText("🛡️", cx, cy);
   });
 
-  // Draw enemies
+  // Enemies
   state.enemies.forEach(e => {
-    const ex = gridToPixel(e.x, cellSize);
-    const ey = gridToPixel(e.y, cellSize);
+    const ex = e.px;
+    const ey = e.py;
     const r = cellSize * 0.4;
 
     ctx.fillStyle = e.mode === "frightened" ? FRIGHTENED_COLOR : e.color;
-    // Ghost shape
     ctx.beginPath();
     ctx.arc(ex, ey - r * 0.2, r, Math.PI, 0);
     ctx.lineTo(ex + r, ey + r * 0.6);
-    // Wavy bottom
     for (let i = 0; i < 3; i++) {
       const wx = ex + r - (i + 1) * (2 * r / 3);
       ctx.quadraticCurveTo(wx + r / 3, ey + r * (i % 2 === 0 ? 0.2 : 1), wx, ey + r * 0.6);
@@ -525,10 +676,10 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
     ctx.fill();
   });
 
-  // Draw player (Pac-Man style)
+  // Player
   const p = state.player;
-  const ppx = gridToPixel(p.x, cellSize);
-  const ppy = gridToPixel(p.y, cellSize);
+  const ppx = p.px;
+  const ppy = p.py;
   const pr = cellSize * 0.42;
   const mouth = p.mouthOpen;
 
@@ -538,7 +689,6 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
   else if (p.direction === "up") startAngle = -Math.PI / 2 + mouth;
   else if (p.direction === "down") startAngle = Math.PI / 2 + mouth;
 
-  // Glow during power-up
   if (state.phase === "powerUp") {
     ctx.shadowColor = state.powerUpType === "ayatul_kursi" ? "#60a5fa" : "#34d399";
     ctx.shadowBlur = 15;
@@ -550,17 +700,16 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: GameState, cell
   ctx.lineTo(ppx, ppy);
   ctx.closePath();
   ctx.fill();
-
   ctx.shadowBlur = 0;
 
-  // Small kufi cap on player
+  // Kufi cap
   ctx.fillStyle = "#fff";
   ctx.beginPath();
   ctx.ellipse(ppx, ppy - pr * 0.6, pr * 0.5, pr * 0.2, 0, 0, Math.PI * 2);
   ctx.fill();
 }
 
-// ─── Score persistence ──────────────────────────────
+// ─── Score persistence (localStorage) ──────────────────────────────
 const HIGHSCORE_KEY = "sheytanGame_highscore";
 const STATS_KEY = "sheytanGame_stats";
 
@@ -584,3 +733,5 @@ export function saveGameStats(versesCollected: string[]) {
   stats.versesLearned = uniqueVerses;
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
 }
+
+export const MAX_LEVEL = ALL_MAZES.length;

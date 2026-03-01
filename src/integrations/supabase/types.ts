@@ -1238,6 +1238,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sheytan_game_scores: {
+        Row: {
+          created_at: string
+          id: string
+          level: number
+          player_name: string
+          score: number
+          user_id: string | null
+          verses_collected: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          level?: number
+          player_name?: string
+          score?: number
+          user_id?: string | null
+          verses_collected?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          level?: number
+          player_name?: string
+          score?: number
+          user_id?: string | null
+          verses_collected?: string[] | null
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           created_at: string

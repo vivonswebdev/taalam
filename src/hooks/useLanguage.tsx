@@ -1489,6 +1489,14 @@ const translations = {
   "sheytanGame.menu": { fr: "Menu", en: "Menu", nl: "Menu", ar: "القائمة", tr: "Menü", ur: "مینیو" },
   "sheytanGame.kursiActive": { fr: "Ayatul Kursi actif !", en: "Ayatul Kursi active!", nl: "Ayatul Kursi actief!", ar: "آية الكرسي فعّالة!", tr: "Ayetel Kürsi aktif!", ur: "آیت الکرسی فعال!" },
   "sheytanGame.lailahaActive": { fr: "La ilaha illallah !", en: "La ilaha illallah!", nl: "La ilaha illallah!", ar: "لا إله إلا الله!", tr: "La ilahe illallah!", ur: "لا الہ الا اللہ!" },
+  "sheytanGame.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "لوحة المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
+  "sheytanGame.loading": { fr: "Chargement...", en: "Loading...", nl: "Laden...", ar: "جاري التحميل...", tr: "Yükleniyor...", ur: "لوڈ ہو رہا ہے..." },
+  "sheytanGame.noScores": { fr: "Aucun score enregistré", en: "No scores yet", nl: "Nog geen scores", ar: "لا توجد نتائج بعد", tr: "Henüz skor yok", ur: "ابھی تک کوئی سکور نہیں" },
+  "sheytanGame.enterName": { fr: "Entre ton prénom pour le classement :", en: "Enter your name for the leaderboard:", nl: "Voer je naam in voor de ranglijst:", ar: "أدخل اسمك للوحة المتصدرين:", tr: "Sıralama için adını gir:", ur: "لیڈر بورڈ کے لیے اپنا نام درج کریں:" },
+  "sheytanGame.namePlaceholder": { fr: "Ton prénom...", en: "Your name...", nl: "Je naam...", ar: "اسمك...", tr: "Adın...", ur: "آپ کا نام..." },
+  "sheytanGame.saveScore": { fr: "Enregistrer mon score", en: "Save my score", nl: "Sla mijn score op", ar: "حفظ نتيجتي", tr: "Skorumu kaydet", ur: "میرا سکور محفوظ کریں" },
+  "sheytanGame.scoreSaved": { fr: "Score enregistré !", en: "Score saved!", nl: "Score opgeslagen!", ar: "تم حفظ النتيجة!", tr: "Skor kaydedildi!", ur: "سکور محفوظ ہو گیا!" },
+  "sheytanGame.levelsHint": { fr: "4 niveaux avec des labyrinthes différents !", en: "4 levels with different mazes!", nl: "4 niveaus met verschillende doolhoven!", ar: "4 مستويات بمتاهات مختلفة!", tr: "Farklı labirentlerle 4 seviye!", ur: "مختلف بھول بھلیوں کے ساتھ 4 سطحیں!" },
 
   // Teacher Dashboard
   "teacher.title": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Docent Dashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "ٹیچر ڈیش بورڈ" },
