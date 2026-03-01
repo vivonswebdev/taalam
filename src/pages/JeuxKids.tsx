@@ -10,7 +10,7 @@ const GAMES = [
   { key: "quizAnimals", emoji: "🦁", path: "/kids-quiz", color: "from-amber-400 to-orange-500" },
   { key: "quizGoodDeeds", emoji: "⭐", path: "/kids-checklist", color: "from-emerald-400 to-green-500" },
   { key: "sheytanGame", emoji: "👹", path: "/kids-sheytan", color: "from-red-400 to-red-600" },
-  { key: "memoryCoran", emoji: "🃏", path: "/kids-memory", color: "from-cyan-400 to-blue-500" },
+  { key: "memoryCoran", emoji: "📿", path: "/kids-memory", color: "from-cyan-400 to-blue-500" },
   { key: "pillarQuiz", emoji: "🕌", path: "/kids-pillar-quiz", color: "from-teal-400 to-emerald-500" },
   { key: "balance", emoji: "⚖️", path: "/kids-balance", color: "from-indigo-400 to-violet-500" },
   { key: "memoryFaith", emoji: "💎", path: "/kids-memory-faith", color: "from-sky-400 to-blue-500" },
