@@ -178,6 +178,7 @@ export default function Quiz() {
   const perfectChallenge = usePerfectChallenge();
   const questionStats = useQuestionStats();
   const xpAwardedRef = useRef(false);
+  const exploit = useShareExploit();
   const answersRef = useRef<{ question: QuizQuestion; selectedIndex: number }[]>([]);
 
   const [session, setSession] = useState<QuizQuestion[]>([]);
