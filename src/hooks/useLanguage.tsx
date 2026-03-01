@@ -1694,7 +1694,7 @@ const translations = {
 
   // Mode Selector
   "more.chooseModeTitle": { fr: "Choisissez votre mode", en: "Choose your mode", nl: "Kies je modus", ar: "اختر وضعك", tr: "Modunuzu seçin", ur: "اپنا موڈ منتخب کریں" },
-  "more.chooseModeSubtitle": { fr: "Taaloum s'adapte à votre rôle.", en: "Taaloum adapts to your role.", nl: "Taaloum past zich aan je rol aan.", ar: "تعلّم يتكيّف مع دورك.", tr: "Taaloum rolünüze uyum sağlar.", ur: "تعلّم آپ کے کردار کے مطابق ڈھلتا ہے۔" },
+  "more.chooseModeSubtitle": { fr: "Ta'alam s'adapte à votre rôle.", en: "Ta'alam adapts to your role.", nl: "Ta'alam past zich aan je rol aan.", ar: "تعلّم يتكيّف مع دورك.", tr: "Ta'alam rolünüze uyum sağlar.", ur: "تعلّم آپ کے کردار کے مطابق ڈھلتا ہے۔" },
   "more.modeChild.title": { fr: "Mode enfant", en: "Kids mode", nl: "Kindermodus", ar: "وضع الأطفال", tr: "Çocuk modu", ur: "بچوں کا موڈ" },
   "more.modeChild.desc": { fr: "Interface simplifiée, contenus adaptés.", en: "Simplified interface, adapted content.", nl: "Vereenvoudigd, aangepaste inhoud.", ar: "واجهة مبسطة، محتوى ملائم.", tr: "Basitleştirilmiş arayüz, uyarlanmış içerik.", ur: "آسان انٹرفیس، موزوں مواد۔" },
   "more.modeTeacher.title": { fr: "Mode professeur", en: "Teacher mode", nl: "Lerarenmodus", ar: "وضع المعلم", tr: "Öğretmen modu", ur: "استاد موڈ" },
