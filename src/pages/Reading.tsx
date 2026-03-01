@@ -17,6 +17,7 @@ import { useImmersiveBg, BG_OPTIONS, type BgTheme } from "@/hooks/useImmersiveBg
 import { getEpicBg } from "@/lib/epicBg";
 
 import readingBg from "@/assets/reading-bg.jpg";
+import FloatingXpWidget from "@/components/FloatingXpWidget";
 import tarteelBg from "@/assets/tarteel-bg.jpg";
 import quizBg from "@/assets/quiz-bg.jpg";
 import galaxyBg from "@/assets/bg-galaxy.jpg";
