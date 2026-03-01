@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Flame, Zap, Star } from "lucide-react";
 import { getQuizByCategory, buildQuizSession, type QuizCategory, type QuizQuestion } from "@/data/quizQuestions";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getChildSuccessMessage, getChildEncourageMessage } from "@/lib/childMessages";
 
