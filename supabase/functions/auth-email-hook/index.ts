@@ -8,6 +8,7 @@ import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
 import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
+import { EMAIL_SUBJECTS_I18N, type EmailLang, DEFAULT_LANG } from '../_shared/email-templates/translations.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,13 +16,13 @@ const corsHeaders = {
     'authorization, x-client-info, apikey, content-type, x-lovable-signature, x-lovable-timestamp, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 }
 
-const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: 'Confirm your email',
-  invite: "You've been invited",
-  magiclink: 'Your login link',
-  recovery: 'Reset your password',
-  email_change: 'Confirm your new email',
-  reauthentication: 'Your verification code',
+const VALID_LANGS: EmailLang[] = ['fr', 'en', 'ar', 'nl', 'tr', 'ur']
+
+function detectLang(payload: any): EmailLang {
+  // Try user_metadata.language first, then raw_user_meta_data
+  const meta = payload?.data?.user_metadata ?? payload?.data?.raw_user_meta_data ?? {}
+  const raw = (meta.language ?? meta.lang ?? meta.locale ?? '').toString().toLowerCase().slice(0, 2)
+  return VALID_LANGS.includes(raw as EmailLang) ? (raw as EmailLang) : DEFAULT_LANG
 }
 
 // Template mapping
@@ -38,13 +39,8 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 const SITE_NAME = "taaloum"
 const SENDER_DOMAIN = "notify.app.taalam.eu"
 const ROOT_DOMAIN = "app.taalam.eu"
-const FROM_DOMAIN = "app.taalam.eu" // Domain shown in From address (may be root or sender subdomain)
+const FROM_DOMAIN = "app.taalam.eu"
 
-// Sample data for preview mode ONLY (not used in actual email sending).
-// URLs are baked in at scaffold time from the project's real data.
-// The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
-// can always find-and-replace it with the actual recipient when sending test emails,
-// even if the project's domain has changed since the template was scaffolded.
 const SAMPLE_PROJECT_URL = "https://taaloum.lovable.app"
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
@@ -78,7 +74,7 @@ const SAMPLE_DATA: Record<string, object> = {
   },
 }
 
-// Preview endpoint handler - returns rendered HTML without sending email
+// Preview endpoint handler
 async function handlePreview(req: Request): Promise<Response> {
   const previewCorsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -128,7 +124,7 @@ async function handlePreview(req: Request): Promise<Response> {
   })
 }
 
-// Webhook handler - verifies signature and sends email
+// Webhook handler
 async function handleWebhook(req: Request): Promise<Response> {
   const apiKey = Deno.env.get('LOVABLE_API_KEY')
 
@@ -140,7 +136,6 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
-  // Verify signature + timestamp, then parse payload.
   let payload: any
   let run_id = ''
   try {
@@ -184,10 +179,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Webhook payload missing run_id')
     return new Response(
       JSON.stringify({ error: 'Invalid webhook payload' }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 
@@ -195,17 +187,13 @@ async function handleWebhook(req: Request): Promise<Response> {
     console.error('Unsupported payload version', { version: payload.version, run_id })
     return new Response(
       JSON.stringify({ error: `Unsupported payload version: ${payload.version}` }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 
-  // The email action type is in payload.data.action_type (e.g., "signup", "recovery")
-  // payload.type is the hook event type ("auth")
   const emailType = payload.data.action_type
-  console.log('Received auth event', { emailType, email: payload.data.email, run_id })
+  const lang = detectLang(payload)
+  console.log('Received auth event', { emailType, email: payload.data.email, lang, run_id })
 
   const EmailTemplate = EMAIL_TEMPLATES[emailType]
   if (!EmailTemplate) {
@@ -216,7 +204,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
-  // Build template props from payload.data (HookData structure)
+  // Build template props with language
   const templateProps = {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
@@ -225,17 +213,17 @@ async function handleWebhook(req: Request): Promise<Response> {
     token: payload.data.token,
     email: payload.data.email,
     newEmail: payload.data.new_email,
+    lang,
   }
 
-  // Render React Email to HTML and plain text
   const html = await renderAsync(React.createElement(EmailTemplate, templateProps))
   const text = await renderAsync(React.createElement(EmailTemplate, templateProps), {
     plainText: true,
   })
 
-  // Send email via Lovable Email API
-  // The callback URL is provided in the payload by Lovable, ensuring correct routing
-  // for both production and local development
+  // Get translated subject
+  const subject = EMAIL_SUBJECTS_I18N[emailType]?.[lang] ?? EMAIL_SUBJECTS_I18N[emailType]?.fr ?? 'Notification'
+
   const callbackUrl = payload.data.callback_url
   if (!callbackUrl) {
     console.error('No callback_url in payload', { run_id })
@@ -253,7 +241,7 @@ async function handleWebhook(req: Request): Promise<Response> {
         to: payload.data.email,
         from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
         sender_domain: SENDER_DOMAIN,
-        subject: EMAIL_SUBJECTS[emailType] || 'Notification',
+        subject,
         html,
         text,
         purpose: 'transactional',
@@ -280,17 +268,14 @@ async function handleWebhook(req: Request): Promise<Response> {
 Deno.serve(async (req) => {
   const url = new URL(req.url)
 
-  // Handle CORS preflight for main endpoint
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
 
-  // Route to preview handler for /preview path
   if (url.pathname.endsWith('/preview')) {
     return handlePreview(req)
   }
 
-  // Main webhook handler
   try {
     return await handleWebhook(req)
   } catch (error) {
