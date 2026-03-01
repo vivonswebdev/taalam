@@ -5,11 +5,13 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useTeacherDashboard } from "@/hooks/useTeacherDashboard";
 import { useAssignmentCompletion } from "@/hooks/useAssignmentCompletion";
+import { useTaskSubmissions } from "@/hooks/useTaskSubmissions";
 import { supabase } from "@/integrations/supabase/client";
 import TeacherHeader from "@/components/teacher/TeacherHeader";
 import TeacherSummaryCards from "@/components/teacher/TeacherSummaryCards";
 import StudentsList from "@/components/teacher/StudentsList";
 import AssignmentsPanel from "@/components/teacher/AssignmentsPanel";
+import TaskKanban from "@/components/teacher/TaskKanban";
 import TeacherStatsSection from "@/components/TeacherStatsSection";
 
 interface TeacherClass {
@@ -27,6 +29,7 @@ export default function TeacherDashboardPage() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const { students, assignments, loading, summary, createAssignment, toggleAssignment, deleteAssignment } = useTeacherDashboard(selectedClassId);
   const { assignmentsWithStats } = useAssignmentCompletion(assignments, selectedClassId);
+  const { submissions, reviewSubmission, getAudioUrl } = useTaskSubmissions(selectedClassId);
 
   useEffect(() => {
     if (!user) return;
@@ -118,6 +121,12 @@ export default function TeacherDashboardPage() {
             createAssignment={createAssignment}
             toggleAssignment={toggleAssignment}
             deleteAssignment={deleteAssignment}
+          />
+
+          <TaskKanban
+            submissions={submissions}
+            onReview={reviewSubmission}
+            onGetAudioUrl={getAudioUrl}
           />
 
           <TeacherStatsSection students={students} assignments={assignmentsWithStats} />

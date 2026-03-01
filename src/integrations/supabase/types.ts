@@ -1307,6 +1307,66 @@ export type Database = {
         }
         Relationships: []
       }
+      task_submissions: {
+        Row: {
+          assignment_id: string
+          audio_url: string | null
+          class_id: string
+          created_at: string
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          score_tajwid: number | null
+          status: string
+          student_id: string
+          teacher_note: string | null
+          updated_at: string
+        }
+        Insert: {
+          assignment_id: string
+          audio_url?: string | null
+          class_id: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          score_tajwid?: number | null
+          status?: string
+          student_id: string
+          teacher_note?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assignment_id?: string
+          audio_url?: string | null
+          class_id?: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          score_tajwid?: number | null
+          status?: string
+          student_id?: string
+          teacher_note?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "class_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_submissions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_progress: {
         Row: {
           created_at: string
