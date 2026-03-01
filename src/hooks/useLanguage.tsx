@@ -2023,6 +2023,18 @@ const translations = {
   "hifzSrs.reviewing": { fr: "en révision", en: "reviewing", ar: "قيد المراجعة", nl: "in herhaling", ur: "مراجعہ میں", tr: "tekrarda" },
   "hifzSrs.mastered": { fr: "maîtrisé", en: "mastered", ar: "متقن", nl: "beheerst", ur: "مکمل", tr: "ezberlenmiş" },
   "hifzSrs.review": { fr: "Réviser", en: "Review", ar: "راجع", nl: "Herhalen", ur: "مراجعہ", tr: "Tekrar et" },
+
+  // Kids Mini-Games
+  "kidsHome.memoryCoran": { fr: "Memory Coran", en: "Quran Memory", ar: "ذاكرة القرآن", nl: "Koran Memory", tr: "Kuran Hafıza", ur: "قرآن میموری" },
+  "kidsHome.memoryCoranDesc": { fr: "Retrouve les paires de sourates et versets !", en: "Find the pairs of surahs and verses!", ar: "اعثر على أزواج السور والآيات!", nl: "Vind de paren van soera's en verzen!", tr: "Sure ve ayet çiftlerini bul!", ur: "سورتوں اور آیات کے جوڑے تلاش کریں!" },
+  "kidsHome.pillarQuiz": { fr: "Quiz des 5 Piliers", en: "5 Pillars Quiz", ar: "اختبار أركان الإسلام", nl: "5 Zuilen Quiz", tr: "5 Şart Testi", ur: "5 ارکان کوئز" },
+  "kidsHome.pillarQuizDesc": { fr: "Teste tes connaissances sur les piliers de l'Islam !", en: "Test your knowledge of the pillars of Islam!", ar: "اختبر معلوماتك عن أركان الإسلام!", nl: "Test je kennis over de zuilen!", tr: "İslam'ın şartlarını test et!", ur: "اسلام کے ارکان کے بارے میں اپنا علم آزمائیں!" },
+  "kidsHome.prayerMaze": { fr: "Labyrinthe de la Prière", en: "Prayer Maze", ar: "متاهة الصلاة", nl: "Gebedsdoolhof", tr: "Namaz Labirenti", ur: "نماز بھول بھلیاں" },
+  "kidsHome.prayerMazeDesc": { fr: "Traverse le labyrinthe en suivant les étapes de la prière !", en: "Navigate the maze following the prayer steps!", ar: "اجتز المتاهة باتباع خطوات الصلاة!", nl: "Doorloop het doolhof met de gebedsstappen!", tr: "Namaz adımlarını takip ederek labirentten geç!", ur: "نماز کے مراحل کی پیروی کرتے ہوئے بھول بھلیاں سے گزریں!" },
+  "kidsHome.asmaHunt": { fr: "Noms d'Allah", en: "Names of Allah", ar: "أسماء الله الحسنى", nl: "Namen van Allah", tr: "Allah'ın İsimleri", ur: "اللہ کے نام" },
+  "kidsHome.asmaHuntDesc": { fr: "Collecte les 99 Noms d'Allah et apprends leur sens !", en: "Collect the 99 Names of Allah and learn their meaning!", ar: "اجمع أسماء الله الحسنى وتعلم معانيها!", nl: "Verzamel de 99 Namen van Allah!", tr: "Allah'ın 99 ismini topla ve anlamlarını öğren!", ur: "اللہ کے 99 نام جمع کریں اور ان کے معنی سیکھیں!" },
+  "kidsHome.prophetStoryGame": { fr: "Histoires interactives", en: "Interactive Stories", ar: "قصص تفاعلية", nl: "Interactieve verhalen", tr: "Etkileşimli Hikayeler", ur: "انٹرایکٹو کہانیاں" },
+  "kidsHome.prophetStoryGameDesc": { fr: "Vis les aventures des prophètes et fais tes choix !", en: "Live the adventures of the prophets and make your choices!", ar: "عش مغامرات الأنبياء واختر طريقك!", nl: "Beleef de avonturen van de profeten!", tr: "Peygamberlerin maceralarını yaşa ve seçimlerini yap!", ur: "انبیاء کی مہم جوئی میں حصہ لیں اور اپنے فیصلے کریں!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
