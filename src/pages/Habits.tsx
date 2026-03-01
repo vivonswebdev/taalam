@@ -188,13 +188,13 @@ export default function Habits() {
           </div>
 
           <ProgressBarDuolingo
-            level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
-            lastGain={xp.lastGain}
+            level={qxp.level}
+            xpInLevel={qxp.levelProgress.currentInLevel}
+            xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp}
+            xpToday={0}
+            streakDays={streak}
+            lastGain={qxp.lastGain}
           />
 
           {/* Level badge */}
