@@ -5,7 +5,7 @@ import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
