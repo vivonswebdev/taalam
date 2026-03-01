@@ -81,6 +81,7 @@ import HifzTodayPage from "./pages/HifzTodayPage";
 import JeuxKids from "./pages/JeuxKids";
 import OfflineSettings from "./pages/OfflineSettings";
 import CoordinatorDashboard from "./pages/CoordinatorDashboard";
+import StudentStatsPage from "./pages/StudentStatsPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
