@@ -8,6 +8,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
 import FamilyShareCard from "@/components/FamilyShareCard";
 import FamilyDuels from "@/components/FamilyDuels";
+import FamilyHeatmap from "@/components/FamilyHeatmap";
 
 const TROPHIES = [
   { type: "gold", emoji: "🏆", label: "gold" },
@@ -303,6 +304,9 @@ export default function FamilyDashboard() {
                     ))}
                   </div>
                 </div>
+
+                {/* Family Heatmap & Charts */}
+                <FamilyHeatmap familyId={family.id} members={familyMembers} />
 
                 {/* Family Duels */}
                 <FamilyDuels familyId={family.id} isParent={myRole === "parent"} />

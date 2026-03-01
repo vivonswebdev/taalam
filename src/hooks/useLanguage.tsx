@@ -2384,6 +2384,18 @@ const translations = {
   "duels.you": { fr: "toi", en: "you", nl: "jij", ar: "أنت", tr: "sen", ur: "آپ" },
   "duels.past": { fr: "Défis terminés", en: "Past challenges", nl: "Afgelopen uitdagingen", ar: "تحديات سابقة", tr: "Geçmiş meydan okumalar", ur: "ماضی کے چیلنجز" },
   "duels.ended": { fr: "Terminé", en: "Ended", nl: "Beëindigd", ar: "انتهى", tr: "Bitti", ur: "ختم" },
+  // Family Heatmap
+  "familyHeatmap.title": { fr: "📅 Activité 30 jours", en: "📅 30-day Activity", nl: "📅 30-dagen Activiteit", ar: "📅 نشاط 30 يوماً", tr: "📅 30 Günlük Etkinlik", ur: "📅 30 دن کی سرگرمی" },
+  "familyHeatmap.xpPerDay": { fr: "XP par jour / enfant", en: "XP per day / child", nl: "XP per dag / kind", ar: "XP يومياً / طفل", tr: "Günlük XP / çocuk", ur: "روزانہ XP / بچہ" },
+  "familyHeatmap.monthSummary": { fr: "📊 Résumé mensuel", en: "📊 Monthly Summary", nl: "📊 Maandelijks Overzicht", ar: "📊 ملخص شهري", tr: "📊 Aylık Özet", ur: "📊 ماہانہ خلاصہ" },
+  "familyHeatmap.child": { fr: "Enfant", en: "Child", nl: "Kind", ar: "طفل", tr: "Çocuk", ur: "بچہ" },
+  "familyHeatmap.minutes": { fr: "Minutes", en: "Minutes", nl: "Minuten", ar: "دقائق", tr: "Dakika", ur: "منٹ" },
+  "familyHeatmap.ayat": { fr: "Ayat", en: "Ayat", nl: "Ayat", ar: "آيات", tr: "Ayet", ur: "آیات" },
+  "familyHeatmap.activeDays": { fr: "jours actifs", en: "active days", nl: "actieve dagen", ar: "أيام نشطة", tr: "aktif gün", ur: "فعال دن" },
+  "familyHeatmap.less": { fr: "Moins", en: "Less", nl: "Minder", ar: "أقل", tr: "Az", ur: "کم" },
+  "familyHeatmap.more": { fr: "Plus", en: "More", nl: "Meer", ar: "أكثر", tr: "Çok", ur: "زیادہ" },
+  "familyHeatmap.pdfTitle": { fr: "Rapport Famille Mensuel", en: "Monthly Family Report", nl: "Maandelijks Familierapport", ar: "تقرير العائلة الشهري", tr: "Aylık Aile Raporu", ur: "ماہانہ خاندانی رپورٹ" },
+  "familyHeatmap.pdfDownloaded": { fr: "Rapport PDF téléchargé !", en: "PDF report downloaded!", nl: "PDF-rapport gedownload!", ar: "تم تنزيل التقرير!", tr: "PDF raporu indirildi!", ur: "PDF رپورٹ ڈاؤن لوڈ ہوئی!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
