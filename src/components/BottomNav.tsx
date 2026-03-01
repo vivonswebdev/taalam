@@ -1,34 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Heart, BarChart3, MoreHorizontal, Gamepad2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useClassrooms } from "@/hooks/useClassrooms";
-import { useUserMode } from "@/hooks/useUserMode";
+import { Home, BookOpen, Mic, Heart, BarChart3, Menu } from "lucide-react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { totalNewMembers } = useClassrooms();
-  const { mode } = useUserMode();
   const { t } = useLanguage();
   const currentPath = location.pathname;
-  const isKidMode = mode === "child";
 
-  const baseTabs = [
-    { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil", badge: totalNewMembers },
+  const tabs = [
+    { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil" },
     { path: "/quran-hub", icon: BookOpen, label: t("nav.quran" as any) || "Coran" },
-    { path: "/quran", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
-    { path: "/moods", icon: Heart, label: t("nav.moods" as any) || "Cœur" },
+    { path: "/tarteel", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
+    { path: "/moods", icon: Heart, label: t("nav.heart" as any) || "Cœur" },
+    { path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" },
+    { path: "/more", icon: Menu, label: t("nav.more" as any) || "Plus" },
   ];
-
-  const gameTab = { path: "/jeux", icon: Gamepad2, label: t("nav.games" as any) || "Jeux" };
-
-  const endTabs = [
-    { path: "/habits", icon: BarChart3, label: t("nav.habits" as any) || "Habitudes" },
-    { path: "/more", icon: MoreHorizontal, label: t("nav.more" as any) || "Plus" },
-  ];
-
-  const tabs = isKidMode ? [...baseTabs, gameTab, ...endTabs] : [...baseTabs, ...endTabs];
 
   if (currentPath.startsWith("/quiz") || /^\/learn\/\d+/.test(currentPath) || currentPath.startsWith("/recitation/") || (currentPath.startsWith("/moods/") && currentPath !== "/moods") || currentPath.startsWith("/maladies/") || currentPath.startsWith("/athkar/")) return null;
 
