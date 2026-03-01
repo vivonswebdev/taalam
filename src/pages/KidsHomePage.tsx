@@ -103,26 +103,43 @@ export default function KidsHomePage() {
     </motion.button>
   );
 
+  const currentCards = activeTab === "education" ? EDUCATION_CARDS : GAMES_CARDS;
+
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
       {/* Header */}
-      <div className="px-6 pt-14 pb-2">
-        <div className="flex items-center gap-3 mb-3">
-          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
-            <ArrowLeft size={18} className="text-foreground" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
-              <span>🧸</span> {t("kidsHome.title" as any)}
-            </h1>
-            <p className="text-xs text-muted-foreground">{t("kidsHome.subtitle" as any)}</p>
-          </div>
+      <div className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50 px-4 py-3 flex items-center gap-3">
+        <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-muted">
+          <ArrowLeft size={20} />
+        </button>
+        <div>
+          <h1 className="text-lg font-semibold">🧸 {t("kidsHome.title" as any)}</h1>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{t("kidsHome.subtitle" as any)}</p>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="flex bg-muted/60 rounded-2xl p-1 gap-1">
+          {TAB_IDS.map((tabId) => (
+            <button
+              key={tabId}
+              onClick={() => setActiveTab(tabId)}
+              className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+                activeTab === tabId
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {TAB_EMOJIS[tabId]} {t(TAB_KEYS[tabId] as any)}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Discovery banner when no child profile */}
       {!hasChildren && (
-        <div className="px-5 mb-3">
+        <div className="px-4 mb-2">
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,27 +165,19 @@ export default function KidsHomePage() {
         </div>
       )}
 
-      {/* Section: Éducation */}
-      <div className="px-5 mb-5">
-        <div className="flex items-center gap-2 mb-2.5">
-          <BookOpen size={16} className="text-primary" />
-          <h2 className="text-sm font-bold text-foreground">{t("kidsHome.educationSection" as any)}</h2>
-        </div>
-        <div className="grid grid-cols-3 gap-2.5">
-          {EDUCATION_CARDS.map((card, i) => renderCard(card, i))}
-        </div>
-      </div>
-
-      {/* Section: Jeux */}
-      <div className="px-5">
-        <div className="flex items-center gap-2 mb-2.5">
-          <Gamepad2 size={16} className="text-primary" />
-          <h2 className="text-sm font-bold text-foreground">{t("kidsHome.gamesSection" as any)}</h2>
-        </div>
-        <div className="grid grid-cols-3 gap-2.5">
-          {GAMES_CARDS.map((card, i) => renderCard(card, i))}
-        </div>
-      </div>
+      {/* Tab content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+          transition={{ duration: 0.2 }}
+          className="grid grid-cols-3 gap-2.5 px-4 pb-4"
+        >
+          {currentCards.map((card, i) => renderCard(card, i))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
