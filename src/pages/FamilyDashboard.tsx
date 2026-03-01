@@ -167,7 +167,7 @@ export default function FamilyDashboard() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-card border border-border rounded-2xl p-4 space-y-3"
+                  className="bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl p-4 space-y-3 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
