@@ -11,6 +11,7 @@ import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useAdminSettings } from "@/hooks/useAdminSettings";
+import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
@@ -77,6 +78,7 @@ export default function Home() {
   const { classrooms } = useClassrooms();
   const { user, signOut } = useAuth();
   const { isChildMode } = useChildMode();
+  const { mode: userMode, ageGroup } = useUserMode();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
   const dailyChallenge = useDailyTarteelChallenge();
@@ -169,6 +171,24 @@ export default function Home() {
             <p className="text-xs font-bold text-foreground">{t("child.modeBanner" as any)}</p>
             <p className="text-[10px] text-muted-foreground">{t("child.modeBannerDesc" as any)}</p>
           </div>
+        </motion.div>
+      )}
+
+      {/* Senior welcome banner */}
+      {ageGroup === "senior" && userMode === "solo" && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-5 mt-2 flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 rounded-xl px-3 py-2.5"
+        >
+          <span className="text-lg">📖</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-foreground">Pour simplement lire le Coran</p>
+            <p className="text-[10px] text-muted-foreground">Appuyez sur l'onglet 📖 Coran en bas pour commencer la lecture.</p>
+          </div>
+          <button onClick={() => navigate("/quran-hub")} className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg">
+            Lire
+          </button>
         </motion.div>
       )}
 

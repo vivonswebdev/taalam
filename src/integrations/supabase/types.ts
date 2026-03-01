@@ -1060,6 +1060,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age_group: string
           avatar_emoji: string
           country_code: string | null
           created_at: string
@@ -1074,6 +1075,7 @@ export type Database = {
           xp_total: number
         }
         Insert: {
+          age_group?: string
           avatar_emoji?: string
           country_code?: string | null
           created_at?: string
@@ -1088,6 +1090,7 @@ export type Database = {
           xp_total?: number
         }
         Update: {
+          age_group?: string
           avatar_emoji?: string
           country_code?: string | null
           created_at?: string
