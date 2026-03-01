@@ -374,13 +374,13 @@ export default function Quiz() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="w-full max-w-xs mt-4">
           <ProgressBarDuolingo
-            level={xp.level}
-            xpInLevel={xp.xpInLevel}
-            xpForNext={xp.xpForNext}
-            xpTotal={xp.xpTotal}
-            xpToday={xp.xpToday}
-            streakDays={xp.streakDays}
-            lastGain={xp.lastGain}
+            level={qxp.level}
+            xpInLevel={qxp.levelProgress.currentInLevel}
+            xpForNext={qxp.LEVEL_XP_STEP}
+            xpTotal={qxp.xp}
+            xpToday={0}
+            streakDays={0}
+            lastGain={qxp.lastGain}
           />
         </motion.div>
 
