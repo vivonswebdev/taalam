@@ -1438,6 +1438,26 @@ const translations = {
   "kidsChecklist.helpParents": { fr: "Aider papa/maman", en: "Help mom/dad", nl: "Help mama/papa", ar: "ساعد ماما/بابا", tr: "Anne/babana yardım et", ur: "ماں/باپ کی مدد کریں" },
   "kidsChecklist.dhikr": { fr: "Faire du dhikr", en: "Do dhikr", nl: "Doe dhikr", ar: "اذكر الله", tr: "Zikir yap", ur: "ذکر کریں" },
 
+  // ─── Good Deeds Gamification ─────────────────────────────
+  "goodDeeds.mashallah": { fr: "Mashallah !", en: "Mashallah!", nl: "Mashallah!", ar: "ما شاء الله!", tr: "Maşallah!", ur: "ماشاءاللہ!" },
+  "goodDeeds.reward3": { fr: "+2 XP Hifz ! Continue !", en: "+2 Hifz XP! Keep going!", nl: "+2 Hifz XP! Ga zo door!", ar: "+2 XP حفظ! واصل!", tr: "+2 Hifz XP! Devam et!", ur: "+2 حفظ XP! جاری رکھیں!" },
+  "goodDeeds.superDay": { fr: "Super Jour !", en: "Super Day!", nl: "Super Dag!", ar: "يوم رائع!", tr: "Süper Gün!", ur: "زبردست دن!" },
+  "goodDeeds.reward5": { fr: "+3 XP ! Badge Super Jour 🌟", en: "+3 XP! Super Day badge 🌟", nl: "+3 XP! Super Dag badge 🌟", ar: "+3 XP! شارة يوم رائع 🌟", tr: "+3 XP! Süper Gün rozeti 🌟", ur: "+3 XP! زبردست دن بیج 🌟" },
+  "goodDeeds.perfect": { fr: "Parfait ! 6/6 !", en: "Perfect! 6/6!", nl: "Perfect! 6/6!", ar: "مثالي! 6/6!", tr: "Mükemmel! 6/6!", ur: "کامل! 6/6!" },
+  "goodDeeds.boostActivated": { fr: "🔥 Hifz Boost 24h activé ! Double XP Tarteel", en: "🔥 24h Hifz Boost activated! Double Tarteel XP", nl: "🔥 24u Hifz Boost actief! Dubbel Tarteel XP", ar: "🔥 تفعيل تعزيز الحفظ 24 ساعة! ضعف XP الترتيل", tr: "🔥 24 saat Hifz Boost aktif! Çift Tartil XP", ur: "🔥 24 گھنٹے حفظ بوسٹ! دوگنا ترتیل XP" },
+  "goodDeeds.newBadge": { fr: "Nouveau badge !", en: "New badge!", nl: "Nieuwe badge!", ar: "شارة جديدة!", tr: "Yeni rozet!", ur: "نیا بیج!" },
+  "goodDeeds.badgeSuperDay": { fr: "Super Jour", en: "Super Day", nl: "Super Dag", ar: "يوم رائع", tr: "Süper Gün", ur: "زبردست دن" },
+  "goodDeeds.badgeWarrior3": { fr: "Guerrier 3 jours", en: "3-Day Warrior", nl: "3-Dagen Strijder", ar: "محارب 3 أيام", tr: "3 Günlük Savaşçı", ur: "3 دن کا جنگجو" },
+  "goodDeeds.badgeChampion7": { fr: "Champion 7 jours", en: "7-Day Champion", nl: "7-Dagen Kampioen", ar: "بطل 7 أيام", tr: "7 Günlük Şampiyon", ur: "7 دن کا چیمپیئن" },
+  "goodDeeds.badgeLegend14": { fr: "Légende 14 jours", en: "14-Day Legend", nl: "14-Dagen Legende", ar: "أسطورة 14 يوم", tr: "14 Günlük Efsane", ur: "14 دن کا لیجنڈ" },
+  "goodDeeds.badgeMaster30": { fr: "Maître 30 jours", en: "30-Day Master", nl: "30-Dagen Meester", ar: "سيد 30 يوم", tr: "30 Günlük Usta", ur: "30 دن کا ماسٹر" },
+  "goodDeeds.badges": { fr: "Badges", en: "Badges", nl: "Badges", ar: "شارات", tr: "Rozetler", ur: "بیجز" },
+  "goodDeeds.boostActive": { fr: "Hifz Boost actif !", en: "Hifz Boost active!", nl: "Hifz Boost actief!", ar: "تعزيز الحفظ مفعّل!", tr: "Hifz Boost aktif!", ur: "حفظ بوسٹ فعال!" },
+  "goodDeeds.weekStats": { fr: "Cette semaine", en: "This week", nl: "Deze week", ar: "هذا الأسبوع", tr: "Bu hafta", ur: "اس ہفتے" },
+  "goodDeeds.perfectDays": { fr: "jours parfaits", en: "perfect days", nl: "perfecte dagen", ar: "أيام مثالية", tr: "mükemmel gün", ur: "کامل دن" },
+  "goodDeeds.nextBadge": { fr: "Prochain badge", en: "Next badge", nl: "Volgende badge", ar: "الشارة التالية", tr: "Sonraki rozet", ur: "اگلا بیج" },
+  "goodDeeds.daysLeft": { fr: "jours restants", en: "days left", nl: "dagen over", ar: "أيام متبقية", tr: "gün kaldı", ur: "دن باقی" },
+
   // ─── Kids Duas ──────────────────────────────────────────
   "kidsHome.duas": { fr: "Dou'a & Adhkâr", en: "Du'a & Adhkar", nl: "Doe'a & Adhkar", ar: "أدعية وأذكار", tr: "Dua ve Zikirler", ur: "دعائیں اور اذکار" },
   "kidsHome.duasDesc": { fr: "Apprends les invocations du quotidien.", en: "Learn daily invocations.", nl: "Leer dagelijkse smeekbeden.", ar: "تعلّم أدعية يومية.", tr: "Günlük duaları öğren.", ur: "روزمرہ دعائیں سیکھیں۔" },
