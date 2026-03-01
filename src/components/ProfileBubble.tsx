@@ -54,6 +54,7 @@ export default function ProfileBubble() {
   const [showLangPicker, setShowLangPicker] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("🌙");
+  const [isModerator, setIsModerator] = useState(false);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const stored = localStorage.getItem("quranEasyTheme");
