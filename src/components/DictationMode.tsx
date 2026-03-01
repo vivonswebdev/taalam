@@ -509,6 +509,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
           }}
           isLastAyah={currentAyahIdx + 1 >= totalAyahs}
           isChildMode={isChildMode}
+          onReport={(reason) => {
+            asrLog.reportResult(lastLogId || "", reason);
+          }}
         />
       )}
 
