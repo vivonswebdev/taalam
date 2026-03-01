@@ -5,7 +5,7 @@ import { type Surah } from "@/data/surahs";
 import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
 import { useLiveWordFeedback, type LiveWordStatus } from "@/hooks/useLiveWordFeedback";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useSound } from "@/hooks/useSound";
 import Confetti from "@/components/Confetti";
 
