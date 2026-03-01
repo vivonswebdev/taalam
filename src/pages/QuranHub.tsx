@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Mic, Radio } from "lucide-react";
+import { Mic, Radio } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export default function QuranHub() {
@@ -11,8 +11,8 @@ export default function QuranHub() {
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
-        <h1 className="text-xl font-bold text-foreground">📖 {t("nav.quran" as any)}</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">{t("quranHub.subtitle" as any) || "Choisissez votre mode de lecture"}</p>
+        <h1 className="text-xl font-bold text-foreground">📖 {t("quranHub.title")}</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("quranHub.subtitle")}</p>
       </div>
 
       <div className="px-5 space-y-3">
@@ -27,12 +27,13 @@ export default function QuranHub() {
         >
           <span className="w-14 h-14 rounded-2xl bg-amber-500/20 flex items-center justify-center text-3xl shrink-0">📖</span>
           <div className="flex-1 min-w-0">
-            <p className="text-base font-bold text-white">{t("quranHub.mushafTitle" as any) || "Mushaf"}</p>
-            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.mushafDesc" as any) || "Lecture simple du Coran, comme un vrai mushaf. Idéal pour la lecture quotidienne."}</p>
+            <p className="text-base font-bold text-white">{t("quranHub.mushafTitle")}</p>
+            <p className="text-sm font-semibold text-white/80 mt-0.5">{t("quranHub.mushafSubtitle")}</p>
+            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.mushafDesc")}</p>
           </div>
         </motion.button>
 
-        {/* Lecture avancée */}
+        {/* Lecture avec audio */}
         <motion.button
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,14 +44,15 @@ export default function QuranHub() {
         >
           <span className="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-3xl shrink-0">📚</span>
           <div className="flex-1 min-w-0">
-            <p className="text-base font-bold text-white">{t("quranHub.readingTitle" as any) || "Lecture avancée"}</p>
-            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.readingDesc" as any) || "Lecture avec traduction, audio, fond immersif et quiz de fin."}</p>
+            <p className="text-base font-bold text-white">{t("quranHub.readingTitle")}</p>
+            <p className="text-sm font-semibold text-white/80 mt-0.5">{t("quranHub.readingSubtitle")}</p>
+            <p className="text-xs text-white/60 mt-1 line-clamp-2">{t("quranHub.readingDesc")}</p>
           </div>
         </motion.button>
 
         {/* Raccourcis rapides */}
         <div className="pt-3">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">{t("quranHub.quickLinks" as any) || "Accès rapide"}</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">{t("quranHub.quickLinks")}</p>
           <div className="grid grid-cols-2 gap-2">
             <motion.button
               initial={{ opacity: 0, y: 8 }}
@@ -62,8 +64,8 @@ export default function QuranHub() {
             >
               <Mic size={18} className="text-primary shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground truncate">{t("home.tarteelButton" as any) || "Tarteel"}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.tarteelShort" as any) || "Récitation & dictée"}</p>
+                <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.tarteelButton")}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.tarteelShort")}</p>
               </div>
             </motion.button>
             <motion.button
@@ -76,8 +78,8 @@ export default function QuranHub() {
             >
               <Radio size={18} className="text-green-500 shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground truncate">{t("more.liveQuran" as any) || "Live Coran"}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort" as any) || "Écoute en direct"}</p>
+                <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort")}</p>
               </div>
             </motion.button>
           </div>
