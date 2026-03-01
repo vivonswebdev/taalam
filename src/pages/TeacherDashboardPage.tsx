@@ -125,6 +125,8 @@ export default function TeacherDashboardPage() {
             deleteAssignment={deleteAssignment}
           />
 
+          <StudentTaskBoard classId={selectedClassId} students={students.map(s => ({ userId: s.userId, displayName: s.displayName, avatarEmoji: s.avatarEmoji }))} />
+
           <TaskKanban
             submissions={submissions}
             onReview={reviewSubmission}
