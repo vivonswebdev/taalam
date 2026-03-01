@@ -846,6 +846,7 @@ const translations = {
   "lb.you": { fr: "← toi", en: "← you", nl: "← jij", ar: "← أنت", tr: "← sen", ur: "← آپ" },
 
   // Moods (États du cœur)
+  "nav.quranRecit": { fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن", tr: "Kuran", ur: "قرآن" },
   "nav.heart": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
   "nav.stats": { fr: "Stats", en: "Stats", nl: "Stats", ar: "الإحصائيات", tr: "İstatistikler", ur: "اعداد و شمار" },
   "nav.moods": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
