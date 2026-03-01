@@ -424,6 +424,26 @@ export default function Auth() {
                       <IslamicAvatarPicker selected={avatarEmoji} onSelect={setAvatarEmoji} />
                     </div>
                     <div>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country") || "Pays / Drapeau"}</label>
+                      <div className="flex flex-wrap gap-2">
+                        {COUNTRIES.map(c => (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => setCountryCode(c.code)}
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-sm transition-all ${
+                              countryCode === c.code
+                                ? "border-primary ring-1 ring-primary/30 bg-primary/5"
+                                : "border-border bg-card hover:border-muted-foreground/30"
+                            }`}
+                          >
+                            <span className="text-lg leading-none">{c.flag}</span>
+                            <span className="text-xs">{c.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
                       <label className="text-sm font-medium text-foreground mb-1.5 block">{t("auth.displayName")}</label>
                       <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Ahmed, Fatima..." maxLength={50} />
                     </div>
