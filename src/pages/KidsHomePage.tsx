@@ -17,6 +17,14 @@ const KIDS_CARDS = [
     border: "border-indigo-500/25",
   },
   {
+    emoji: "🎮",
+    titleKey: "kidsHome.coranCrush",
+    descKey: "kidsHome.coranCrushDesc",
+    path: "/crush",
+    gradient: "from-pink-600/30 to-rose-600/15",
+    border: "border-pink-500/25",
+  },
+  {
     emoji: "🧒",
     titleKey: "kidsHome.kidsQuiz",
     descKey: "kidsHome.kidsQuizDesc",
