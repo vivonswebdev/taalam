@@ -13,7 +13,7 @@ import { useChildMode } from "@/hooks/useChildMode";
 import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ProfileBubble from "@/components/ProfileBubble";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
@@ -232,12 +232,7 @@ export default function Home() {
         <div className="relative px-6 pt-12 pb-4 text-center">
           {/* Top bar */}
           <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
-            {user && (
-              <button onClick={signOut} className="text-muted-foreground hover:text-foreground" title={t("auth.logout")}>
-                <LogOut size={18} />
-              </button>
-            )}
-            <LanguageSwitcher />
+            <ProfileBubble />
           </div>
 
           {/* Basmala with glow entrance */}
