@@ -51,39 +51,38 @@ export default function QuranHub() {
         </motion.button>
       </div>
 
-        {/* Raccourcis rapides */}
-        <div className="pt-3">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">{t("quranHub.quickLinks")}</p>
-          <div className="grid grid-cols-2 gap-2">
-            <motion.button
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => navigate("/quran")}
-              className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
-            >
-              <Mic size={18} className="text-primary shrink-0" />
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.tarteelButton")}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.tarteelShort")}</p>
-              </div>
-            </motion.button>
-            <motion.button
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => navigate("/live-quran")}
-              className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
-            >
-              <Radio size={18} className="text-green-500 shrink-0" />
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
-                <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort")}</p>
-              </div>
-            </motion.button>
-          </div>
+      {/* Raccourcis rapides */}
+      <div className="px-5 pt-3">
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">{t("quranHub.quickLinks")}</p>
+        <div className="grid grid-cols-2 gap-2">
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => navigate("/quran")}
+            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
+          >
+            <Mic size={18} className="text-primary shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.tarteelButton")}</p>
+              <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.tarteelShort")}</p>
+            </div>
+          </motion.button>
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => navigate("/live-quran")}
+            className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors"
+          >
+            <Radio size={18} className="text-green-500 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
+              <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort")}</p>
+            </div>
+          </motion.button>
         </div>
       </div>
     </div>
