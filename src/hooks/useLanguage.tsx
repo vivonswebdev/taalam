@@ -1767,6 +1767,8 @@ const translations = {
   "moods.tabMoods": { fr: "États du cœur", en: "Heart states", nl: "Hartstoestanden", ar: "أحوال القلب", tr: "Kalp halleri", ur: "دل کے احوال" },
   "moods.tabMaladies": { fr: "Maladies", en: "Ailments", nl: "Ziekten", ar: "الأمراض", tr: "Hastalıklar", ur: "بیماریاں" },
   "moods.tabAthkar": { fr: "Athkâr", en: "Adhkar", nl: "Adhkar", ar: "الأذكار", tr: "Zikirler", ur: "اذکار" },
+  "moods.loopSection": { fr: "Boucles récurrentes", en: "Recurring loops", nl: "Terugkerende lussen", ar: "حلقات متكررة", tr: "Tekrarlayan döngüler", ur: "بار بار دہرائے جانے والے لوپ" },
+  "moods.recentTitle": { fr: "Récemment utilisés", en: "Recently used", nl: "Recent gebruikt", ar: "المستخدمة مؤخرًا", tr: "Son kullanılanlar", ur: "حال ہی میں استعمال شدہ" },
 
   // ═══ Athkâr Filters ═══
   "athkar.filterAll": { fr: "Tous", en: "All", nl: "Alle", ar: "الكل", tr: "Tümü", ur: "سب" },
