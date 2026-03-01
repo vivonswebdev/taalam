@@ -44,7 +44,7 @@ export default function MushafReader({
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
   const habits = useQuranHabits();
   const [sessionXP, setSessionXP] = useState(0);
   const readAyahsRef = useRef<Set<number>>(new Set());

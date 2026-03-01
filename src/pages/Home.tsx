@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
-import { useXP } from "@/hooks/useXP";
+import { useQuranXp } from "@/hooks/useQuranXp";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
 import { useChildMode } from "@/hooks/useChildMode";

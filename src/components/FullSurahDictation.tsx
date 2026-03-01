@@ -57,7 +57,7 @@ function hasWaqfMarker(text: string): string | null {
 export default function FullSurahDictation({ surah, onBack, isChildMode, onRequestNextSurah }: FullSurahDictationProps) {
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   // Blocks
   const blocks: BlockDef[] = useMemo(() => {

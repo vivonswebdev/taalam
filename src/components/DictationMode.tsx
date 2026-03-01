@@ -31,7 +31,7 @@ type AyahPhase = "listen" | "recite" | "recording" | "feedback" | "complete";
 export default function DictationMode({ surah, onBack, isChildMode, onRequestNextSurah }: DictationModeProps) {
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
-  const xp = useXP();
+  const xp = useQuranXp();
 
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0);
   const [ayahPhase, setAyahPhase] = useState<AyahPhase>("listen");
