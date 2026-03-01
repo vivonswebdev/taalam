@@ -97,6 +97,8 @@ export default function KidsSheytanGame() {
     setScreen("game");
     lastTimeRef.current = 0;
     dirRef.current = "none";
+    prevDotsRef.current = 0;
+    prevPhaseRef.current = "playing";
     setSaved(false);
   }, []);
 
