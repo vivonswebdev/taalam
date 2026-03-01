@@ -121,7 +121,7 @@ export default function MushafReader({
           readAyahsRef.current.add(ayahIdx);
           const earned = calcReadingXP(1);
           if (earned > 0) {
-            xp.addXP(earned);
+            xp.addXp(earned, "reading_ayah");
             setSessionXP(prev => prev + earned);
           }
           habits.addAyat(1);
