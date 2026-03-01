@@ -17,6 +17,7 @@ import { useStreak } from "@/hooks/useStreak";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useSound } from "@/hooks/useSound";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
+import FloatingXpWidget from "@/components/FloatingXpWidget";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
@@ -334,6 +335,7 @@ export default function Recitation() {
 
   return (
     <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+      <FloatingXpWidget />
       <Confetti active={showConfetti} emoji={isChildMode} />
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
 

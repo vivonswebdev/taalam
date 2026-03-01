@@ -17,6 +17,7 @@ import { useImmersiveBg, BG_OPTIONS, type BgTheme } from "@/hooks/useImmersiveBg
 import { getEpicBg } from "@/lib/epicBg";
 
 import readingBg from "@/assets/reading-bg.jpg";
+import FloatingXpWidget from "@/components/FloatingXpWidget";
 import tarteelBg from "@/assets/tarteel-bg.jpg";
 import quizBg from "@/assets/quiz-bg.jpg";
 import galaxyBg from "@/assets/bg-galaxy.jpg";
@@ -175,6 +176,7 @@ export default function Reading() {
   // ─── Surah List View ──────────────────────────────────────
   return (
     <div className={`${epicBg ? epicBg.className : "min-h-screen"} pb-28`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+      <FloatingXpWidget />
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">

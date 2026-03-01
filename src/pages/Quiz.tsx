@@ -15,6 +15,7 @@ import { usePerfectChallenge } from "@/hooks/usePerfectChallenge";
 import { useQuestionStats, getQuestionId, buildAdaptiveSession } from "@/hooks/useQuestionStats";
 import WeakCardsPanel from "@/components/WeakCardsPanel";
 import { useShareExploit } from "@/hooks/useShareExploit";
+import FloatingXpWidget from "@/components/FloatingXpWidget";
 import { Share2, Loader2 } from "lucide-react";
 
 // Persist quiz stats in localStorage
@@ -231,6 +232,7 @@ export default function Quiz() {
 
     return (
       <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+        <FloatingXpWidget />
         <div className="px-6 pt-14 pb-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-4">
             <ArrowLeft size={20} />
