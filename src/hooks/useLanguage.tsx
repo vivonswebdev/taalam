@@ -846,6 +846,8 @@ const translations = {
   "lb.you": { fr: "← toi", en: "← you", nl: "← jij", ar: "← أنت", tr: "← sen", ur: "← آپ" },
 
   // Moods (États du cœur)
+  "nav.heart": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
+  "nav.stats": { fr: "Stats", en: "Stats", nl: "Stats", ar: "الإحصائيات", tr: "İstatistikler", ur: "اعداد و شمار" },
   "nav.moods": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
   "moods.title": { fr: "États du cœur", en: "States of the Heart", nl: "Staten van het hart", ar: "أحوال القلب", tr: "Kalp Halleri", ur: "دل کے احوال" },
   "moods.subtitle": { fr: "Trouve le verset qui parle à ton état", en: "Find the verse that speaks to your state", nl: "Vind het vers dat past bij je gevoel", ar: "اعثر على الآية التي تخاطب حالتك", tr: "Haline uygun ayeti bul", ur: "اپنی حالت سے بات کرنے والی آیت تلاش کریں" },
