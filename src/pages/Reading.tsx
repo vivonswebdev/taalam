@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Loader2, ArrowLeft, Settings2, Moon, Sun, Type, User,
-  Bookmark, ChevronRight,
+  Bookmark, ChevronRight, Star,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslationPreference } from "@/hooks/useTranslationPreference";
