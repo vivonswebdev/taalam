@@ -1676,6 +1676,23 @@ const translations = {
   "more.installApp": { fr: "Installer l'app", en: "Install the app", nl: "App installeren", ar: "تثبيت التطبيق", tr: "Uygulamayı yükle", ur: "ایپ انسٹال کریں" },
   "more.installAppDesc": { fr: "Guide pour ajouter Taaloum à l'écran d'accueil.", en: "Guide to add Taaloum to your home screen.", nl: "Handleiding om Taaloum aan je startscherm toe te voegen.", ar: "دليل لإضافة تعلّم إلى شاشتك الرئيسية.", tr: "Taaloum'u ana ekranına ekleme rehberi.", ur: "تعلّم کو ہوم اسکرین میں شامل کرنے کا گائیڈ۔" },
 
+  // More page - section titles & missing items
+  "more.sectionRole": { fr: "Choisissez votre mode", en: "Choose your mode", nl: "Kies je modus", ar: "اختر وضعك", tr: "Modunuzu seçin", ur: "اپنا موڈ منتخب کریں" },
+  "more.sectionCommunity": { fr: "🌍 Communauté", en: "🌍 Community", nl: "🌍 Gemeenschap", ar: "🌍 المجتمع", tr: "🌍 Topluluk", ur: "🌍 کمیونٹی" },
+  "more.communityDesc": { fr: "Rejoins des musulmans près de toi pour partager et t'encourager.", en: "Join Muslims near you to share and encourage each other.", nl: "Sluit je aan bij moslims bij jou in de buurt.", ar: "انضم لمسلمين بالقرب منك للمشاركة والتشجيع.", tr: "Yakınındaki Müslümanlarla paylaş ve destekleş.", ur: "اپنے قریب مسلمانوں سے جڑیں اور حوصلہ افزائی کریں۔" },
+  "more.sectionQuranPractice": { fr: "Qur'an & pratique", en: "Qur'an & practice", nl: "Koran & oefening", ar: "القرآن والتدريب", tr: "Kur'an & uygulama", ur: "قرآن اور مشق" },
+  "more.sectionProgress": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
+  "more.sectionAccountSettings": { fr: "Compte & réglages", en: "Account & settings", nl: "Account & instellingen", ar: "الحساب والإعدادات", tr: "Hesap & ayarlar", ur: "اکاؤنٹ اور ترتیبات" },
+  "more.sectionStudyModules": { fr: "Modules", en: "Modules", nl: "Modules", ar: "الوحدات", tr: "Modüller", ur: "ماڈیولز" },
+  "more.sectionFamily": { fr: "Famille & classes", en: "Family & classes", nl: "Familie & klassen", ar: "العائلة والفصول", tr: "Aile & sınıflar", ur: "فیملی اور کلاسیں" },
+  "more.sectionInstall": { fr: "📲 Installer l'app", en: "📲 Install the app", nl: "📲 App installeren", ar: "📲 تثبيت التطبيق", tr: "📲 Uygulamayı yükle", ur: "📲 ایپ انسٹال کریں" },
+  "more.hifzSrs": { fr: "Hifz SRS", en: "Hifz SRS", nl: "Hifz SRS", ar: "حفظ SRS", tr: "Hıfz SRS", ur: "حفظ SRS" },
+  "more.hifzSrsDesc": { fr: "Répétition espacée intelligente", en: "Smart spaced repetition", nl: "Slimme gespreide herhaling", ar: "التكرار المتباعد الذكي", tr: "Akıllı aralıklı tekrar", ur: "ذہین وقفے سے دہرائی" },
+  "more.favoritesNotes": { fr: "Favoris & Notes", en: "Favorites & Notes", nl: "Favorieten & Notities", ar: "المفضلة والملاحظات", tr: "Favoriler & Notlar", ur: "پسندیدہ اور نوٹس" },
+  "more.favoritesNotesDesc": { fr: "Vos versets préférés et annotations", en: "Your favorite verses and annotations", nl: "Je favoriete verzen en aantekeningen", ar: "آياتك المفضلة وملاحظاتك", tr: "Favori ayetleriniz ve notlarınız", ur: "آپ کی پسندیدہ آیات اور تشریحات" },
+  "more.teacherDashboard": { fr: "Dashboard Professeur", en: "Teacher Dashboard", nl: "Leerkrachtdashboard", ar: "لوحة المعلم", tr: "Öğretmen Paneli", ur: "استاد ڈیش بورڈ" },
+  "more.teacherDashboardDesc": { fr: "Stats & devoirs de vos classes", en: "Stats & assignments for your classes", nl: "Statistieken & opdrachten van je klassen", ar: "إحصائيات وواجبات فصولك", tr: "Sınıf istatistikleri ve ödevler", ur: "کلاس کے اعدادوشمار اور اسائنمنٹس" },
+
   // Stats Dashboard
   "stats.quranWeek": { fr: "Qur'an cette semaine", en: "Qur'an this week", nl: "Koran deze week", ar: "القرآن هذا الأسبوع", tr: "Bu hafta Kur'an", ur: "اس ہفتے قرآن" },
   "stats.hifzMonth": { fr: "Āyāt mémorisées", en: "Āyāt memorized", nl: "Āyāt gememoriseerd", ar: "آيات محفوظة", tr: "Ezberlenen ayet", ur: "حفظ شدہ آیات" },
