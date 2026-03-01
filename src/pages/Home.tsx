@@ -236,8 +236,8 @@ export default function Home() {
             className="mt-3 flex items-center justify-center gap-3"
           >
             {[
-              { icon: "🔥", label: `${xp.streakDays} ${t("home.days")}`, delay: 0.5 },
-              { icon: "⭐", label: `${xp.xpToday} XP ${t("home.today")}`, delay: 0.65 },
+              { icon: "🔥", label: `0 ${t("home.days")}`, delay: 0.5 },
+              { icon: "⭐", label: `${xp.xp} XP`, delay: 0.65 },
               { icon: "🏅", label: `${t("home.level.label")} ${xp.level}`, delay: 0.8 },
             ].map((stat) => (
               <motion.div

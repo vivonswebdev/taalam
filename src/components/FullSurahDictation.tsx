@@ -234,7 +234,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
     if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
       xpAwardedRef.current.add(xpKey);
-      xp.addXP(Math.max(1, Math.round(correctCount / 3)));
+      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
     }
 
     setPhase("feedback");
