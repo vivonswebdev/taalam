@@ -511,7 +511,9 @@ export default function Quiz() {
                 </motion.div>
               )}
             </AnimatePresence>
+            </>); })()}
           </motion.div>
+
         </AnimatePresence>
       </div>
     </div>
