@@ -94,7 +94,7 @@ export default function Moods() {
                   className="flex items-center gap-2 rounded-xl px-3 py-2.5 bg-primary/10 border border-primary/30 hover:border-primary/60 transition-colors"
                 >
                   <span className="text-lg">{mood.emoji}</span>
-                  <span className="text-xs font-semibold text-foreground whitespace-nowrap">{t(titleKey) || mood.title}</span>
+                  <span className="text-xs font-semibold text-foreground">{t(titleKey) || mood.title}</span>
                 </button>
               );
             })}
