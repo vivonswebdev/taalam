@@ -407,7 +407,7 @@ export default function Quiz() {
             }`}
           >
             {exploit.sharing ? <Loader2 size={16} className="animate-spin" /> : exploit.shared ? <CheckCircle2 size={16} /> : <Share2 size={16} />}
-            {exploit.shared ? "Partagé dans tes groupes !" : "Partager mon exploit"}
+            {exploit.shared ? t("quiz.sharedGroups" as any) : t("quiz.shareExploit" as any)}
           </button>
 
           <div className="flex gap-3">
