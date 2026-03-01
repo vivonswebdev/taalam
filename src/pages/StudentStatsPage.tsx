@@ -201,7 +201,7 @@ export default function StudentStatsPage() {
                 const items = hifzItems.filter(i => i.surah_number === sn);
                 const totalAyat = items.reduce((s, i) => s + (i.ayah_to - i.ayah_from + 1), 0);
                 const mastered = items.filter(i => i.status === "mastered").reduce((s, i) => s + (i.ayah_to - i.ayah_from + 1), 0);
-                const pct = surah ? Math.round((totalAyat / surah.ayahs) * 100) : 0;
+                const pct = surah ? Math.round((totalAyat / surah.versesCount) * 100) : 0;
                 return (
                   <Badge
                     key={sn}
