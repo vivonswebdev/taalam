@@ -1601,7 +1601,7 @@ const translations = {
 
   // Help & FAQ page
   "help.title": { fr: "Aide & FAQ", en: "Help & FAQ", nl: "Help & FAQ", ar: "المساعدة والأسئلة", tr: "Yardım & SSS", ur: "مدد اور سوالات" },
-  "help.subtitle": { fr: "Tout savoir sur Taaloum", en: "Everything about Taaloum", nl: "Alles over Taaloum", ar: "كل شيء عن تعلّم", tr: "Taaloum hakkında her şey", ur: "تعلّم کے بارے میں سب کچھ" },
+  "help.subtitle": { fr: "Tout savoir sur Ta'alam", en: "Everything about Ta'alam", nl: "Alles over Ta'alam", ar: "كل شيء عن تعلّم", tr: "Ta'alam hakkında her şey", ur: "تعلّم کے بارے میں سب کچھ" },
   "help.sectionGeneral": { fr: "Utilisation générale", en: "General usage", nl: "Algemeen gebruik", ar: "الاستخدام العام", tr: "Genel kullanım", ur: "عمومی استعمال" },
   "help.sectionClasses": { fr: "Classes & devoirs", en: "Classes & assignments", nl: "Klassen & huiswerk", ar: "الفصول والواجبات", tr: "Sınıflar ve ödevler", ur: "کلاسز اور اسائنمنٹس" },
   "help.sectionHabits": { fr: "Habitudes, prières, Hifz", en: "Habits, prayers, Hifz", nl: "Gewoonten, gebed, Hifz", ar: "العادات والصلاة والحفظ", tr: "Alışkanlıklar, namaz, Hıfz", ur: "عادات، نماز، حفظ" },
