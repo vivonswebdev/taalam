@@ -2309,6 +2309,15 @@ const translations = {
   "halaqa.recording": { fr: "Enregistrement...", en: "Recording...", nl: "Opnemen...", ar: "جارٍ التسجيل...", tr: "Kaydediliyor...", ur: "ریکارڈنگ..." },
   "halaqa.submitting": { fr: "Envoi en cours...", en: "Submitting...", nl: "Wordt verzonden...", ar: "جارٍ الإرسال...", tr: "Gönderiliyor...", ur: "بھیجا جا رہا ہے..." },
   "halaqa.submitted": { fr: "Soumis avec succès !", en: "Submitted successfully!", nl: "Succesvol ingediend!", ar: "تم التقديم بنجاح!", tr: "Başarıyla gönderildi!", ur: "کامیابی سے جمع ہو گیا!" },
+  // Student Stats Page
+  "studentStats.totalAyat": { fr: "Ayat total", en: "Total Ayat", nl: "Totaal Ayat", ar: "إجمالي الآيات", tr: "Toplam Ayet", ur: "کل آیات" },
+  "studentStats.mastered": { fr: "Maîtrisé", en: "Mastered", nl: "Beheerst", ar: "متقن", tr: "Ustalaşmış", ur: "مہارت حاصل" },
+  "studentStats.learning": { fr: "En cours", en: "Learning", nl: "Aan het leren", ar: "قيد التعلم", tr: "Öğreniyor", ur: "سیکھ رہا ہے" },
+  "studentStats.surahs": { fr: "Sourates", en: "Surahs", nl: "Soera's", ar: "سور", tr: "Sureler", ur: "سورتیں" },
+  "studentStats.hifzProgression": { fr: "📈 Progression Hifz", en: "📈 Hifz Progression", nl: "📈 Hifz Voortgang", ar: "📈 تقدم الحفظ", tr: "📈 Hıfız İlerlemesi", ur: "📈 حفظ کی پیشرفت" },
+  "studentStats.ayat": { fr: "ayat", en: "ayat", nl: "ayat", ar: "آيات", tr: "ayet", ur: "آیات" },
+  "studentStats.surahsInHifz": { fr: "Sourates en Hifz", en: "Surahs in Hifz", nl: "Soera's in Hifz", ar: "سور في الحفظ", tr: "Hıfız'daki Sureler", ur: "حفظ میں سورتیں" },
+  "studentStats.recentSubmissions": { fr: "Soumissions récentes", en: "Recent Submissions", nl: "Recente Inzendingen", ar: "التقديمات الأخيرة", tr: "Son Gönderimler", ur: "حالیہ جمع کردہ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

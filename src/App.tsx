@@ -81,6 +81,7 @@ import HifzTodayPage from "./pages/HifzTodayPage";
 import JeuxKids from "./pages/JeuxKids";
 import OfflineSettings from "./pages/OfflineSettings";
 import CoordinatorDashboard from "./pages/CoordinatorDashboard";
+import StudentStatsPage from "./pages/StudentStatsPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -181,6 +182,7 @@ const App = () => (
               <Route path="/offline-settings" element={<OfflineSettings />} />
               <Route path="/jeux" element={<JeuxKids />} />
               <Route path="/coord" element={<CoordinatorDashboard />} />
+              <Route path="/student-stats/:classId/:studentId" element={<StudentStatsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Badge } from "@/components/ui/badge";
 import type { StudentStats } from "@/hooks/useTeacherDashboard";
@@ -15,10 +16,12 @@ function MiniSparkline({ value, max }: { value: number; max: number }) {
 
 interface Props {
   students: StudentStats[];
+  classId?: string | null;
 }
 
-export default function StudentsList({ students }: Props) {
+export default function StudentsList({ students, classId }: Props) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const maxMinutes = Math.max(1, ...students.map(s => s.quranMinutes));
   const maxHifz = Math.max(1, ...students.map(s => s.hifzAyat));
 
@@ -39,7 +42,8 @@ export default function StudentsList({ students }: Props) {
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.03 }}
-            className="bg-card border border-border rounded-xl p-3 hover:shadow-sm transition-shadow"
+            className="bg-card border border-border rounded-xl p-3 hover:shadow-sm transition-shadow cursor-pointer"
+            onClick={() => classId && navigate(`/student-stats/${classId}/${s.userId}`)}
           >
             <div className="flex items-center gap-3">
               <div className="relative">

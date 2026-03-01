@@ -114,7 +114,7 @@ export default function TeacherDashboardPage() {
             totalQuizzes={summary.totalQuizzes}
           />
 
-          <StudentsList students={students} />
+          <StudentsList students={students} classId={selectedClassId} />
 
           <AssignmentsPanel
             assignments={assignmentsWithStats}
