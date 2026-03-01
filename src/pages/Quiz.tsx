@@ -366,8 +366,8 @@ export default function Quiz() {
           <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-3 flex items-center gap-3">
             <Flame size={18} className="text-amber-500 shrink-0" />
             <div className="text-left">
-              <p className="text-sm font-semibold text-foreground">Streak Quiz : {updatedStreak.days} jour{updatedStreak.days > 1 ? "s" : ""}</p>
-              <p className="text-[10px] text-muted-foreground">Reviens demain pour continuer ta série</p>
+              <p className="text-sm font-semibold text-foreground">{t("quiz.streakLabel" as any)} : {updatedStreak.days} {t("quiz.days" as any)}</p>
+              <p className="text-[10px] text-muted-foreground">{t("quiz.comeBackTomorrow" as any)}</p>
             </div>
           </div>
         </motion.div>
