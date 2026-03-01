@@ -35,6 +35,7 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const { t } = useLanguage();
   const { playSafely: safePlay } = useAntiDoubleAudio();
   const xp = useQuranXp();
+  const asrLog = useAsrLogging();
 
   const [currentAyahIdx, setCurrentAyahIdx] = useState(0);
   const [ayahPhase, setAyahPhase] = useState<AyahPhase>("listen");
@@ -50,6 +51,10 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const [forceServerSTT, setForceServerSTT] = useState(() => {
     try { return localStorage.getItem("dictation_force_server") === "true"; } catch { return false; }
   });
+  const [showMicTutorial, setShowMicTutorial] = useState(() => shouldShowMicTutorial());
+  const [showVoiceProfile, setShowVoiceProfile] = useState(false);
+  const [lastLogId, setLastLogId] = useState<string | null>(null);
+  const recordingStartRef = useRef<number>(0);
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<number>>(new Set());
 
