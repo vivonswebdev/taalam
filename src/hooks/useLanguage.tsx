@@ -2133,6 +2133,12 @@ const translations = {
   "memoryFaith.movesLabel": { fr: "essais", en: "moves", nl: "zetten", ar: "محاولات", tr: "hamle", ur: "کوششیں" },
   "memoryFaith.victory": { fr: "Maasha'Allah !", en: "Masha'Allah!", nl: "Masha'Allah!", ar: "ماشاء الله!", tr: "Maşallah!", ur: "ماشاءاللہ!" },
   "memoryFaith.replay": { fr: "Rejouer", en: "Play again", nl: "Opnieuw spelen", ar: "إعادة اللعب", tr: "Tekrar oyna", ur: "دوبارہ کھیلیں" },
+  "memoryFaith.chooseDifficulty": { fr: "Choisis ton niveau", en: "Choose difficulty", nl: "Kies moeilijkheid", ar: "اختر المستوى", tr: "Zorluk seç", ur: "مشکل منتخب کریں" },
+  "memoryFaith.easy": { fr: "Facile 🌱", en: "Easy 🌱", nl: "Makkelijk 🌱", ar: "سهل 🌱", tr: "Kolay 🌱", ur: "آسان 🌱" },
+  "memoryFaith.medium": { fr: "Moyen 🌿", en: "Medium 🌿", nl: "Gemiddeld 🌿", ar: "متوسط 🌿", tr: "Orta 🌿", ur: "درمیانہ 🌿" },
+  "memoryFaith.hard": { fr: "Difficile 🔥", en: "Hard 🔥", nl: "Moeilijk 🔥", ar: "صعب 🔥", tr: "Zor 🔥", ur: "مشکل 🔥" },
+  "memoryFaith.pairs": { fr: "paires", en: "pairs", nl: "paren", ar: "أزواج", tr: "çift", ur: "جوڑے" },
+  "memoryFaith.changeDifficulty": { fr: "Changer niveau", en: "Change level", nl: "Niveau wijzigen", ar: "تغيير المستوى", tr: "Seviye değiştir", ur: "سطح تبدیل کریں" },
   "kidsHome.memoryFaith": { fr: "Memory Foi", en: "Faith Memory", nl: "Geloof Memory", ar: "ذاكرة الإيمان", tr: "İman Hafıza", ur: "ایمان میموری" },
   "kidsHome.memoryFaithDesc": { fr: "Retrouve les paires", en: "Find the pairs", nl: "Vind de paren", ar: "اعثر على الأزواج", tr: "Çiftleri bul", ur: "جوڑے تلاش کرو" },
 } as const;
