@@ -81,7 +81,7 @@ export default function Habits() {
   // Progress data
   const { progress, getMasteredCount } = useProgress();
   const { isChildMode, stickers } = useChildMode();
-  const xp = useXP();
+  const qxp = useQuranXp();
   const { profile } = useUserProfile();
   const { mode } = useUserMode();
   const mastered = getMasteredCount();
