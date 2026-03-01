@@ -20,6 +20,7 @@ import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
+import { useHifzSRS } from "@/hooks/useHifzSRS";
 import { trackEvent } from "@/lib/trackEvent";
 
 function HomeCard({
