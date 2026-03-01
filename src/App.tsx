@@ -78,6 +78,7 @@ import CommunityPage from "./pages/CommunityPage";
 import CommunityDetail from "./pages/CommunityDetail";
 import FavoritesNotesPage from "./pages/FavoritesNotesPage";
 import HifzTodayPage from "./pages/HifzTodayPage";
+import JeuxKids from "./pages/JeuxKids";
 import OfflineSettings from "./pages/OfflineSettings";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
@@ -177,6 +178,7 @@ const App = () => (
               <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
               <Route path="/hifz-today" element={<HifzTodayPage />} />
               <Route path="/offline-settings" element={<OfflineSettings />} />
+              <Route path="/jeux" element={<JeuxKids />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
