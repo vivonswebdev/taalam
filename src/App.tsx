@@ -152,6 +152,7 @@ const App = () => (
               <Route path="/quran-hub" element={<QuranHub />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
+              <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

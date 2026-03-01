@@ -79,6 +79,7 @@ export default function More() {
     { icon: <BookOpen size={20} className="text-emerald-500" />, label: t("more.studyMode"), desc: t("more.studyModeDesc"), path: "/study?surah=1" },
     { icon: <BookOpen size={20} className="text-amber-500" />, label: t("more.noorani" as any), desc: t("more.nooraniDesc" as any), path: "/noorani" },
     { icon: <Star size={20} className="text-yellow-500" />, label: t("more.bookmarks"), desc: t("more.bookmarksDesc"), path: "/bookmarks" },
+    { icon: "⭐", label: "Favoris & Notes", desc: "Vos versets préférés et annotations", path: "/favorites-notes" },
     { icon: <Users size={20} className="text-pink-500" />, label: t("more.familyClass"), desc: t("more.familyClassDesc"), path: "/family" },
     { icon: <Users size={20} className="text-indigo-500" />, label: t("more.teacherClass"), desc: t("more.teacherClassDesc"), path: "/classrooms" },
     { icon: <GraduationCap size={20} className="text-emerald-600" />, label: t("teacher.dashboard" as any), desc: t("teacher.dashboardDesc" as any), path: "/teacher-dashboard" },
