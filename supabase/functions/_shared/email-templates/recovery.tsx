@@ -14,18 +14,22 @@ import {
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
+import { type EmailLang, DEFAULT_LANG, isRtl, tr } from './translations.ts'
+
 interface RecoveryEmailProps {
   siteName: string
   confirmationUrl: string
+  lang?: EmailLang
 }
 
 export const RecoveryEmail = ({
   siteName,
   confirmationUrl,
+  lang = DEFAULT_LANG,
 }: RecoveryEmailProps) => (
-  <Html lang="fr" dir="ltr">
+  <Html lang={lang} dir={isRtl(lang) ? 'rtl' : 'ltr'}>
     <Head />
-    <Preview>Réinitialisez votre mot de passe Ta'alam</Preview>
+    <Preview>{tr('recovery.preview', lang)}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -35,19 +39,13 @@ export const RecoveryEmail = ({
           height="80"
           style={logo}
         />
-        <Heading style={h1}>Réinitialisation du mot de passe 🔐</Heading>
-        <Text style={text}>Assalamou alaykoum,</Text>
-        <Text style={text}>
-          Nous avons reçu une demande de réinitialisation de votre mot de passe Ta'alam.
-          Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.
-        </Text>
+        <Heading style={h1}>{tr('recovery.heading', lang)}</Heading>
+        <Text style={text}>{tr('common.salam', lang)}</Text>
+        <Text style={text}>{tr('recovery.text', lang)}</Text>
         <Button style={button} href={confirmationUrl}>
-          Réinitialiser mon mot de passe
+          {tr('recovery.button', lang)}
         </Button>
-        <Text style={footer}>
-          Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
-          Votre mot de passe ne sera pas modifié.
-        </Text>
+        <Text style={footer}>{tr('recovery.footer', lang)}</Text>
       </Container>
     </Body>
   </Html>
