@@ -147,7 +147,27 @@ export default function Settings() {
         </motion.div>
 
         <BackgroundPicker />
-        <OfflineMoodDownloader />
+
+        {/* Offline v2 */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-4 p-4">
+            <CloudOff size={20} className="text-primary" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-card-foreground">{t("offlinev2.globalToggle" as any)}</p>
+              <p className="text-xs text-muted-foreground">{readySections}/4 {t("offlinev2.sectionsReady" as any)}</p>
+            </div>
+            <div
+              onClick={() => setOfflineMode(!offlineMode)}
+              className={`w-12 h-7 rounded-full transition-colors relative cursor-pointer ${offlineMode ? "bg-primary" : "bg-muted"}`}
+            >
+              <motion.div animate={{ x: offlineMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
+            </div>
+          </div>
+          <button onClick={() => navigate("/offline-settings")} className="w-full text-center py-2 border-t border-border text-xs font-medium text-primary hover:bg-primary/5 transition-colors">
+            {t("offlinev2.manage" as any)} →
+          </button>
+        </motion.div>
+
         {isChildMode && stickers.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-4">
             <p className="text-sm font-semibold text-card-foreground mb-3">{t("progress.stickers")}</p>
