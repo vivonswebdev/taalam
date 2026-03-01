@@ -90,6 +90,7 @@ export default function ProfileBubble() {
       setPinInput("");
     } else {
       setMode(newMode);
+      awardOnce("switch", 5, addXP, t("profile.roleSolo" as any));
     }
   };
 
