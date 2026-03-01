@@ -424,7 +424,7 @@ export default function Auth() {
                       <IslamicAvatarPicker selected={avatarEmoji} onSelect={setAvatarEmoji} />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country") || "Pays / Drapeau"}</label>
+                      <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.country")}</label>
                       <div className="flex flex-wrap gap-2">
                         {COUNTRIES.map(c => (
                           <button
