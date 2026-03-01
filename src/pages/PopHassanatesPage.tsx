@@ -7,16 +7,36 @@ import { useLanguage } from '@/hooks/useLanguage';
 const GOOD_ITEMS = ['🕋', '📖', '🕌', '🌙', '📿', '🤲', '⭐'];
 const BAD_ITEMS = ['👾', '😡', '🔥'];
 
+interface DifficultyConfig {
+  badChance: number;
+  spawnInterval: number;
+  minDuration: number;
+  maxDuration: number;
+  xpMultiplier: number;
+}
+
+const DIFFICULTIES: Record<string, DifficultyConfig> = {
+  easy:   { badChance: 0.15, spawnInterval: 1600, minDuration: 4.5, maxDuration: 6.5, xpMultiplier: 1 },
+  medium: { badChance: 0.25, spawnInterval: 1200, minDuration: 3.5, maxDuration: 6.0, xpMultiplier: 1.5 },
+  hard:   { badChance: 0.40, spawnInterval: 800,  minDuration: 2.5, maxDuration: 4.5, xpMultiplier: 2 },
+};
+
 export default function PopHassanatesPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [bubbles, setBubbles] = useState<Array<{ id: number; emoji: string; isGood: boolean; x: number; duration: number }>>([]);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const startGame = () => {
+  const config = difficulty ? DIFFICULTIES[difficulty] : null;
+
+  const startGame = (diff?: string) => {
+    const d = diff || difficulty;
+    if (!d) return;
+    setDifficulty(d);
     setScore(0);
     setLives(3);
     setGameOver(false);
@@ -25,9 +45,9 @@ export default function PopHassanatesPage() {
   };
 
   useEffect(() => {
-    if (!isPlaying || gameOver) return;
+    if (!isPlaying || gameOver || !config) return;
     const interval = setInterval(() => {
-      const isGood = Math.random() > 0.25;
+      const isGood = Math.random() > config.badChance;
       const emoji = isGood
         ? GOOD_ITEMS[Math.floor(Math.random() * GOOD_ITEMS.length)]
         : BAD_ITEMS[Math.floor(Math.random() * BAD_ITEMS.length)];
@@ -36,12 +56,12 @@ export default function PopHassanatesPage() {
         emoji,
         isGood,
         x: Math.random() * 70 + 15,
-        duration: Math.random() * 2.5 + 3.5,
+        duration: Math.random() * (config.maxDuration - config.minDuration) + config.minDuration,
       };
       setBubbles(prev => [...prev, newBubble]);
-    }, 1200);
+    }, config.spawnInterval);
     return () => clearInterval(interval);
-  }, [isPlaying, gameOver]);
+  }, [isPlaying, gameOver, config]);
 
   useEffect(() => {
     if (lives <= 0) {
