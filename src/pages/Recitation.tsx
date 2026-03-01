@@ -61,6 +61,7 @@ export default function Recitation() {
   const { streak, recordSession, hasPracticedToday } = useStreak();
   const { t } = useLanguage();
   const { play, vibrate } = useSound();
+  const asrLog = useAsrLogging();
 
   // Selection state
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard" | "favorites">("easy");
