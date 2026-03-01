@@ -29,6 +29,7 @@ export default function TeacherDashboardPage() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const { students, assignments, loading, summary, createAssignment, toggleAssignment, deleteAssignment } = useTeacherDashboard(selectedClassId);
   const { assignmentsWithStats } = useAssignmentCompletion(assignments, selectedClassId);
+  const { submissions, reviewSubmission, getAudioUrl } = useTaskSubmissions(selectedClassId);
 
   useEffect(() => {
     if (!user) return;
