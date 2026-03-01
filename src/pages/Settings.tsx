@@ -25,6 +25,24 @@ export default function Settings() {
   const [showDedication, setShowDedication] = useState(false);
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
   const dailyChallenge = useDailyTarteelChallenge();
+  const { user } = useAuth();
+
+  // Profile visibility
+  const [isPublic, setIsPublic] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("is_public").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      if (data) setIsPublic(data.is_public);
+    });
+  }, [user]);
+
+  const togglePublic = useCallback(async (val: boolean) => {
+    setIsPublic(val);
+    if (user) {
+      await supabase.from("profiles").update({ is_public: val } as any).eq("user_id", user.id);
+    }
+  }, [user]);
 
   // Theme state: "light" | "dark" | "system"
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
