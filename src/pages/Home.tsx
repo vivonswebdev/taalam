@@ -232,12 +232,7 @@ export default function Home() {
         <div className="relative px-6 pt-12 pb-4 text-center">
           {/* Top bar */}
           <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
-            {user && (
-              <button onClick={signOut} className="text-muted-foreground hover:text-foreground" title={t("auth.logout")}>
-                <LogOut size={18} />
-              </button>
-            )}
-            <LanguageSwitcher />
+            <ProfileBubble />
           </div>
 
           {/* Basmala with glow entrance */}
