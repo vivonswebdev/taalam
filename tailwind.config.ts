@@ -15,6 +15,13 @@ export default {
         sans: ["Outfit", "sans-serif"],
         arabic: ["Amiri", "serif"],
       },
+      fontSize: {
+        "h1-xl": ["1.75rem", { lineHeight: "1.25" }],
+        "h2-xl": ["1.5rem", { lineHeight: "1.3" }],
+        "h3-xl": ["1.25rem", { lineHeight: "1.35" }],
+        "hero": ["2.25rem", { lineHeight: "1.15", letterSpacing: "-0.025em" }],
+        "hero-md": ["2.75rem", { lineHeight: "1.15", letterSpacing: "-0.025em" }],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
