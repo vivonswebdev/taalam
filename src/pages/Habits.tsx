@@ -322,7 +322,7 @@ export default function Habits() {
           </p>
           {showGoalPicker && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="mt-4 pt-3 border-t border-border">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Choisis ton objectif :</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">{t("habits.chooseGoal" as any)}</p>
               <div className="grid grid-cols-3 gap-2">
                 {GOAL_PRESETS.map((preset) => (
                   <button key={`${preset.type}-${preset.target}`}
