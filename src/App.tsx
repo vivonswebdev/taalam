@@ -177,6 +177,7 @@ const App = () => (
               <Route path="/install-app" element={<InstallAppPage />} />
               <Route path="/mushaf" element={<MushafPage />} />
               <Route path="/quran-hub" element={<QuranHub />} />
+              <Route path="/groups" element={<CommunityGroups />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
