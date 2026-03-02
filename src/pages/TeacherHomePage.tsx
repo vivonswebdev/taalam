@@ -186,11 +186,11 @@ export default function TeacherHomePage() {
   ];
 
   const QUICK_ACTIONS = [
-    { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/prof-dashboard", badge: pendingSubmissions },
+    { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/teacher-dashboard", badge: pendingSubmissions },
     { emoji: "➕", label: t("teacherHome.newClass" as any), href: "/classrooms", badge: 0 },
     { emoji: "📣", label: t("teacherHome.announce" as any), href: "/announcements", badge: 0 },
-    { emoji: "💬", label: t("teacherHome.messages" as any), href: "/prof-dashboard", badge: unreadMessages },
-    { emoji: "📊", label: t("teacherHome.studentStats" as any), href: "/prof-dashboard", badge: 0 },
+    { emoji: "💬", label: t("teacherHome.messages" as any), href: "/teacher-dashboard", badge: unreadMessages },
+    { emoji: "📊", label: t("teacherHome.studentStats" as any), href: "/teacher-dashboard", badge: 0 },
     { emoji: "🏆", label: t("teacherHome.leaderboard" as any), href: "/leaderboard", badge: 0 },
   ];
 
