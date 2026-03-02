@@ -127,9 +127,9 @@ function RecognitionExercise({
             }`}
           >
             {feedback === "correct" ? (
-              <><CheckCircle2 size={18} /> Bravo ! 🎉</>
+              <><CheckCircle2 size={18} /> {t("common.bravo" as any)}</>
             ) : (
-              <><XCircle size={18} /> Essaie encore 😊</>
+              <><XCircle size={18} /> {t("common.tryAgain" as any)}</>
             )}
           </motion.div>
         )}
