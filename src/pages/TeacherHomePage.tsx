@@ -247,7 +247,7 @@ export default function TeacherHomePage() {
               {alerts.map(alert => (
                 <button
                   key={alert.id}
-                  onClick={() => navigate("/prof-dashboard")}
+                  onClick={() => navigate("/teacher-dashboard")}
                   className="w-full flex items-center justify-between p-2.5 bg-card rounded-xl text-left"
                 >
                   <span className="text-xs text-foreground">{alert.message}</span>
