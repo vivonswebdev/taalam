@@ -192,6 +192,7 @@ const App = () => (
               <Route path="/coord" element={<CoordinatorDashboard />} />
               <Route path="/student-stats/:classId/:studentId" element={<StudentStatsPage />} />
               <Route path="/athan-settings" element={<AthanSettings />} />
+              <Route path="/qibla" element={<QiblaPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

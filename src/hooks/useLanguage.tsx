@@ -2783,6 +2783,19 @@ const translations = {
   "leaderboard.familyClassRank": { fr: "Ton classement famille/classe", en: "Your family/class ranking", nl: "Je familie/klas ranglijst", ar: "ترتيبك في العائلة/الفصل", tr: "Aile/sınıf sıralamanız", ur: "آپ کی فیملی/کلاس درجہ بندی" },
   "leaderboard.friendPassed": { fr: "{name} t'a dépassé ! 💪", en: "{name} passed you! 💪", nl: "{name} heeft je ingehaald! 💪", ar: "{name} تجاوزك! 💪", tr: "{name} seni geçti! 💪", ur: "{name} نے آپ کو پیچھے چھوڑ دیا! 💪" },
   "prayer.next": { fr: "Prochaine prière", en: "Next prayer", nl: "Volgend gebed", ar: "الصلاة التالية", tr: "Sonraki namaz", ur: "اگلی نماز" },
+  // ═══ QIBLA PAGE ═══
+  "qibla.title": { fr: "Boussole Qibla", en: "Qibla Compass", nl: "Qibla Kompas", ar: "بوصلة القبلة", tr: "Kıble Pusulası", ur: "قبلہ کمپاس" },
+  "qibla.permissionMsg": { fr: "Autorisez l'accès à la boussole pour trouver la direction de la Qibla", en: "Allow compass access to find the Qibla direction", nl: "Geef toegang tot het kompas om de Qibla-richting te vinden", ar: "اسمح بالوصول إلى البوصلة للعثور على اتجاه القبلة", tr: "Kıble yönünü bulmak için pusula erişimine izin verin", ur: "قبلہ کی سمت معلوم کرنے کے لیے کمپاس تک رسائی دیں" },
+  "qibla.enableCompass": { fr: "Activer la boussole", en: "Enable compass", nl: "Kompas inschakelen", ar: "تفعيل البوصلة", tr: "Pusulayı etkinleştir", ur: "کمپاس فعال کریں" },
+  "qibla.error": { fr: "Erreur d'accès à la boussole", en: "Compass access error", nl: "Kompas toegangsfout", ar: "خطأ في الوصول إلى البوصلة", tr: "Pusula erişim hatası", ur: "کمپاس رسائی میں خرابی" },
+  "qibla.aligned": { fr: "Qibla trouvée !", en: "Qibla found!", nl: "Qibla gevonden!", ar: "تم العثور على القبلة!", tr: "Kıble bulundu!", ur: "قبلہ مل گیا!" },
+  "qibla.facingMecca": { fr: "Vous faites face à La Mecque", en: "You are facing Mecca", nl: "Je kijkt richting Mekka", ar: "أنت تواجه مكة المكرمة", tr: "Mekke'ye dönüyorsunuz", ur: "آپ مکہ کی طرف رخ کر رہے ہیں" },
+  "qibla.away": { fr: "de la Qibla", en: "from Qibla", nl: "van Qibla", ar: "عن القبلة", tr: "Kıble'den", ur: "قبلہ سے" },
+  "qibla.turnDevice": { fr: "Tournez votre appareil vers la Qibla", en: "Turn your device towards the Qibla", nl: "Draai je apparaat naar de Qibla", ar: "أدر جهازك نحو القبلة", tr: "Cihazınızı Kıble'ye doğru çevirin", ur: "اپنا آلہ قبلہ کی طرف گھمائیں" },
+  "qibla.heading": { fr: "Cap", en: "Heading", nl: "Koers", ar: "الاتجاه", tr: "Yön", ur: "سمت" },
+  "qibla.qiblaDir": { fr: "Qibla", en: "Qibla", nl: "Qibla", ar: "القبلة", tr: "Kıble", ur: "قبلہ" },
+  "qibla.calibrateHint": { fr: "Faites un 8 avec votre téléphone pour calibrer", en: "Move your phone in a figure-8 to calibrate", nl: "Maak een 8-beweging met je telefoon om te kalibreren", ar: "حرّك هاتفك على شكل 8 للمعايرة", tr: "Kalibre etmek için telefonunuzla 8 hareketi yapın", ur: "کیلیبریٹ کرنے کے لیے اپنا فون 8 کی شکل میں گھمائیں" },
+  "qibla.meccaInfo": { fr: "Masjid Al-Haram, La Mecque", en: "Masjid Al-Haram, Mecca", nl: "Masjid Al-Haram, Mekka", ar: "المسجد الحرام، مكة المكرمة", tr: "Mescid-i Haram, Mekke", ur: "مسجد الحرام، مکہ مکرمہ" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
