@@ -2986,6 +2986,23 @@ const translations = {
   "kidsRamadan.fastingValidated": { fr: "Jeûne validé !", en: "Fast validated!", nl: "Vasten bevestigd!", ar: "تم تأكيد الصيام!", tr: "Oruç onaylandı!", ur: "روزہ تصدیق!" },
   "kidsRamadan.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
   "kidsRamadan.points": { fr: "Points", en: "Points", nl: "Punten", ar: "نقاط", tr: "Puan", ur: "پوائنٹس" },
+
+  // ═══ TEACHER HOME ═══
+  "teacherHome.greeting": { fr: "Bonjour Prof !", en: "Hello Teacher!", nl: "Hallo Leraar!", ar: "مرحباً أستاذ!", tr: "Merhaba Öğretmen!", ur: "السلام علیکم استاد!" },
+  "teacherHome.studentsTotal": { fr: "élèves au total", en: "students total", nl: "leerlingen totaal", ar: "طالب إجمالاً", tr: "toplam öğrenci", ur: "کل طلباء" },
+  "teacherHome.classes": { fr: "classes", en: "classes", nl: "klassen", ar: "فصول", tr: "sınıflar", ur: "کلاسیں" },
+  "teacherHome.students": { fr: "élèves", en: "students", nl: "leerlingen", ar: "طلاب", tr: "öğrenciler", ur: "طلباء" },
+  "teacherHome.toCorrect": { fr: "à corriger", en: "to correct", nl: "te corrigeren", ar: "للتصحيح", tr: "düzeltilecek", ur: "درست کرنا" },
+  "teacherHome.urgentActions": { fr: "actions urgentes", en: "urgent actions", nl: "urgente acties", ar: "إجراءات عاجلة", tr: "acil işlemler", ur: "فوری کارروائیاں" },
+  "teacherHome.act": { fr: "Agir", en: "Act", nl: "Actie", ar: "تصرّف", tr: "Yap", ur: "عمل" },
+  "teacherHome.topStudents": { fr: "Top élèves", en: "Top students", nl: "Top leerlingen", ar: "أفضل الطلاب", tr: "En iyi öğrenciler", ur: "بہترین طلباء" },
+  "teacherHome.myClasses": { fr: "Mes classes", en: "My classes", nl: "Mijn klassen", ar: "فصولي", tr: "Sınıflarım", ur: "میری کلاسیں" },
+  "teacherHome.quickActions": { fr: "Actions rapides", en: "Quick actions", nl: "Snelle acties", ar: "إجراءات سريعة", tr: "Hızlı işlemler", ur: "فوری اقدامات" },
+  "teacherHome.correctHomework": { fr: "Corriger", en: "Correct", nl: "Corrigeren", ar: "تصحيح", tr: "Düzelt", ur: "درست کریں" },
+  "teacherHome.newClass": { fr: "Nouvelle classe", en: "New class", nl: "Nieuwe klas", ar: "فصل جديد", tr: "Yeni sınıf", ur: "نئی کلاس" },
+  "teacherHome.announce": { fr: "Annoncer", en: "Announce", nl: "Aankondigen", ar: "إعلان", tr: "Duyur", ur: "اعلان" },
+  "teacherHome.submissionsToReview": { fr: "devoirs à corriger", en: "submissions to review", nl: "opdrachten te beoordelen", ar: "واجبات للمراجعة", tr: "incelenecek ödev", ur: "جائزے کے لیے" },
+  "teacherHome.studentsLostStreak": { fr: "élèves ont perdu leur streak", en: "students lost their streak", nl: "leerlingen verloren hun streak", ar: "طلاب فقدوا سلسلتهم", tr: "öğrenci serisini kaybetti", ur: "طلباء نے اپنا سلسلہ کھو دیا" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
