@@ -49,6 +49,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const nativeNoEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
   const nativeRetryCountRef = useRef(0);
+  const sessionHadResultsRef = useRef(false); // Track if ANY result was received during the whole session
 
   const hasNativeSR = useRef(false);
   const forceServerRef = useRef(false);
