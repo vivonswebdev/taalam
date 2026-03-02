@@ -437,6 +437,60 @@ export type Database = {
           },
         ]
       }
+      class_invitations: {
+        Row: {
+          child_profile_id: string | null
+          classroom_id: string
+          created_at: string
+          created_by: string
+          id: string
+          invite_code: string
+          parent_email: string | null
+          parent_user_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          child_profile_id?: string | null
+          classroom_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          invite_code?: string
+          parent_email?: string | null
+          parent_user_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          child_profile_id?: string | null
+          classroom_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          invite_code?: string
+          parent_email?: string | null
+          parent_user_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_invitations_child_profile_id_fkey"
+            columns: ["child_profile_id"]
+            isOneToOne: false
+            referencedRelation: "children_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_invitations_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_messages: {
         Row: {
           author_id: string
@@ -1801,6 +1855,19 @@ export type Database = {
           id: string
           invite_code: string
           name: string
+        }[]
+      }
+      lookup_invitation_by_code: {
+        Args: { _invite_code: string }
+        Returns: {
+          child_profile_id: string
+          classroom_id: string
+          created_by: string
+          id: string
+          invite_code: string
+          parent_email: string
+          parent_user_id: string
+          status: string
         }[]
       }
     }
