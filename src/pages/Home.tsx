@@ -49,11 +49,18 @@ function HomeCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
+      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      className={`flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left shadow-lg ${gradient}`}
+      className={`relative flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left overflow-hidden ${gradient}`}
+      style={{
+        backdropFilter: "blur(20px)",
+        boxShadow: "0 8px 32px rgba(31,38,135,0.15)",
+      }}
     >
-      <div className="flex items-start gap-3">
+      {/* Shimmer effect on hover */}
+      <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+      <div className="flex items-start gap-3 relative z-10">
         <motion.span
           className="text-2xl shrink-0"
           whileHover={{ scale: 1.3, rotate: 10 }}
@@ -67,7 +74,7 @@ function HomeCard({
         </div>
       </div>
       {children}
-      <span className="mt-auto pt-2 text-[11px] font-semibold text-primary flex items-center gap-1">
+      <span className="mt-auto pt-2 text-[11px] font-semibold text-primary flex items-center gap-1 relative z-10">
         {cta} →
       </span>
     </motion.button>
