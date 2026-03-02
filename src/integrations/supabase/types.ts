@@ -274,6 +274,50 @@ export type Database = {
           },
         ]
       }
+      child_achievements: {
+        Row: {
+          achievement_type: string
+          child_id: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          points_required: number | null
+          rarity: string
+          unlocked_at: string
+        }
+        Insert: {
+          achievement_type: string
+          child_id: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          points_required?: number | null
+          rarity?: string
+          unlocked_at?: string
+        }
+        Update: {
+          achievement_type?: string
+          child_id?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          points_required?: number | null
+          rarity?: string
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "child_achievements_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       children_points: {
         Row: {
           activity_type: string
