@@ -994,6 +994,8 @@ const translations = {
   "hifz.next": { fr: "Suivant →", en: "Next →", nl: "Volgende →", ar: "→ التالي", tr: "Sonraki →", ur: "→ اگلا" },
   "hifz.back": { fr: "← Retour", en: "← Back", nl: "← Terug", ar: "← رجوع", tr: "← Geri", ur: "← واپس" },
   "hifz.chooseSurahs": { fr: "Choisis tes sourates", en: "Choose your surahs", nl: "Kies je soera's", ar: "اختر سورك", tr: "Surelerini seç", ur: "اپنی سورتیں چنیں" },
+  "hifz.searchSurah": { fr: "Rechercher une sourate…", en: "Search a surah…", nl: "Zoek een soera…", ar: "…ابحث عن سورة", tr: "Sure ara…", ur: "…سورت تلاش کریں" },
+  "hifz.selected": { fr: "sélectionnée(s)", en: "selected", nl: "geselecteerd", ar: "مختارة", tr: "seçildi", ur: "منتخب" },
   "hifz.chooseJuz": { fr: "Choisis tes Juz", en: "Choose your Juz", nl: "Kies je Juz", ar: "اختر أجزاءك", tr: "Cüzlerini seç", ur: "اپنے جز چنیں" },
   "hifz.memorizationPace": { fr: "Rythme de mémorisation", en: "Memorization pace", nl: "Memorisatietempo", ar: "وتيرة الحفظ", tr: "Ezberleme hızı", ur: "حفظ کی رفتار" },
   "hifz.ayatPerDay": { fr: "Ayat par jour :", en: "Ayat per day:", nl: "Ayat per dag:", ar: "آيات في اليوم:", tr: "Günlük ayet:", ur: "روزانہ آیات:" },

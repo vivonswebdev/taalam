@@ -1,22 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles } from "lucide-react";
+import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles, Search } from "lucide-react";
 import { trackEvent } from "@/lib/trackEvent";
 import { useHifzPlan, type HifzPlan } from "@/hooks/useHifzPlan";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { surahs } from "@/data/surahs";
-
-const POPULAR_SURAHS = [
-  { number: 114, label: "An-Nās" }, { number: 113, label: "Al-Falaq" },
-  { number: 112, label: "Al-Ikhlāṣ" }, { number: 111, label: "Al-Masad" },
-  { number: 110, label: "An-Naṣr" }, { number: 109, label: "Al-Kāfirūn" },
-  { number: 108, label: "Al-Kawthar" }, { number: 107, label: "Al-Mā'ūn" },
-  { number: 106, label: "Quraysh" }, { number: 105, label: "Al-Fīl" },
-  { number: 36, label: "Yā-Sīn" }, { number: 67, label: "Al-Mulk" },
-  { number: 55, label: "Ar-Raḥmān" }, { number: 56, label: "Al-Wāqi'a" },
-  { number: 18, label: "Al-Kahf" }, { number: 2, label: "Al-Baqarah" },
-];
 
 function WizardStep({ step, children }: { step: number; children: React.ReactNode }) {
   return (
@@ -39,6 +28,18 @@ function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t:
   const [selectedJuz, setSelectedJuz] = useState<number[]>([]);
   const [dailyAyat, setDailyAyat] = useState(5);
   const [durationDays, setDurationDays] = useState(90);
+  const [surahSearch, setSurahSearch] = useState("");
+
+  const filteredSurahs = useMemo(() => {
+    const q = surahSearch.toLowerCase().trim();
+    if (!q) return surahs;
+    return surahs.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.nameArabic.includes(q) ||
+        String(s.number).includes(q)
+    );
+  }, [surahSearch]);
 
   const toggleSurah = (n: number) => {
     setSelectedSurahs((prev) => prev.includes(n) ? prev.filter((x) => x !== n) : [...prev, n]);
@@ -100,20 +101,35 @@ function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t:
             </h3>
 
             {targetType === "surahs" ? (
-              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                {POPULAR_SURAHS.map((s) => {
-                  const surah = surahs.find((x) => x.number === s.number);
-                  const selected = selectedSurahs.includes(s.number);
-                  return (
-                    <button key={s.number} onClick={() => toggleSurah(s.number)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 transition-colors text-left ${selected ? "border-primary bg-primary/10" : "border-border"}`}>
-                      {selected ? <CheckCircle2 size={18} className="text-primary shrink-0" /> : <Circle size={18} className="text-muted-foreground shrink-0" />}
-                      <span className="font-arabic text-sm text-primary">{surah?.nameArabic}</span>
-                      <span className="text-xs text-muted-foreground flex-1">{s.label}</span>
-                      <span className="text-[10px] text-muted-foreground">{surah?.versesCount} ayat</span>
-                    </button>
-                  );
-                })}
+              <div className="space-y-2">
+                <div className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={surahSearch}
+                    onChange={(e) => setSurahSearch(e.target.value)}
+                    placeholder={t("hifz.searchSurah" as any)}
+                    className="w-full pl-8 pr-3 py-2 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+                {selectedSurahs.length > 0 && (
+                  <p className="text-[10px] text-primary font-semibold">{selectedSurahs.length} {t("hifz.selected" as any)}</p>
+                )}
+                <div className="max-h-[280px] overflow-y-auto space-y-1.5 pr-1">
+                  {filteredSurahs.map((surah) => {
+                    const selected = selectedSurahs.includes(surah.number);
+                    return (
+                      <button key={surah.number} onClick={() => toggleSurah(surah.number)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl border transition-colors text-left ${selected ? "border-primary bg-primary/10" : "border-border"}`}>
+                        {selected ? <CheckCircle2 size={16} className="text-primary shrink-0" /> : <Circle size={16} className="text-muted-foreground shrink-0" />}
+                        <span className="text-[11px] font-bold text-muted-foreground w-6 shrink-0">{surah.number}</span>
+                        <span className="font-arabic text-sm text-primary">{surah.nameArabic}</span>
+                        <span className="text-xs text-muted-foreground flex-1 truncate">{surah.name}</span>
+                        <span className="text-[10px] text-muted-foreground shrink-0">{surah.versesCount} ayat</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-5 gap-2">
