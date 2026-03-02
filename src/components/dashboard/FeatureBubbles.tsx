@@ -71,11 +71,16 @@ const CATEGORIES: Category[] = [
     titleKey: "home.cat.pratique",
     emoji: "🕌",
     features: [
-      { id: "prayers", nameKey: "dashboard.prayers", emoji: "🕌", path: "/prayers", gradient: "from-primary/30 to-accent/20" },
       { id: "moods", nameKey: "dashboard.moods", emoji: "💎", path: "/moods", gradient: "from-accent/30 to-primary/20" },
       { id: "habits", nameKey: "dashboard.habits", emoji: "✅", path: "/habits", gradient: "from-secondary/30 to-primary/20" },
       { id: "athkar", nameKey: "home.cat.athkar", emoji: "🤲", path: "/athkar/morning", gradient: "from-primary/20 to-secondary/20" },
       { id: "qibla", nameKey: "dashboard.qibla", emoji: "🧭", path: "/qibla", gradient: "from-accent/20 to-primary/20" },
+      { id: "zakat", nameKey: "dashboard.zakat", emoji: "💰", path: "/zakat", gradient: "from-primary/30 to-secondary/20" },
+      { id: "tasbih", nameKey: "dashboard.tasbih", emoji: "📿", path: "/tasbih", gradient: "from-accent/20 to-secondary/20" },
+      { id: "calendar", nameKey: "dashboard.calendar", emoji: "🌙", path: "/islamic-calendar", gradient: "from-secondary/20 to-accent/20" },
+      { id: "stories", nameKey: "dashboard.stories", emoji: "📜", path: "/kids-stories", gradient: "from-primary/20 to-accent/20" },
+      { id: "mosques", nameKey: "dashboard.mosques", emoji: "🕌", path: "/kids-mosque-map", gradient: "from-accent/30 to-primary/20" },
+      { id: "liveHaramain", nameKey: "dashboard.liveHaramain", emoji: "🕋", path: "/live-haramain", gradient: "from-primary/30 to-accent/30" },
     ],
   },
   {
