@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GraduationCap, Users, BookOpen, ClipboardCheck, ChevronRight, Plus } from "lucide-react";
+import { GraduationCap, Users, BookOpen, ChevronRight, MessageSquare, Trophy, BarChart3, CalendarCheck, Mail, Flame } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,13 +21,13 @@ interface StudentQuick {
   xpTotal: number;
   pendingTasks: number;
   streakDays: number;
+  quranMinutes: number;
 }
 
 interface Alert {
   id: string;
   type: "homework" | "streak" | "halaqa";
   message: string;
-  action?: string;
 }
 
 export default function TeacherHomePage() {
@@ -38,6 +38,9 @@ export default function TeacherHomePage() {
   const [classes, setClasses] = useState<TeacherClass[]>([]);
   const [topStudents, setTopStudents] = useState<StudentQuick[]>([]);
   const [pendingSubmissions, setPendingSubmissions] = useState(0);
+  const [activeAssignments, setActiveAssignments] = useState(0);
+  const [pendingInvitations, setPendingInvitations] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,74 +48,72 @@ export default function TeacherHomePage() {
     const load = async () => {
       setLoading(true);
       try {
-        // Fetch classes
         const { data: classData } = await supabase
           .from("classrooms")
           .select("id, name, join_code")
           .eq("teacher_id", user.id);
         const classList = (classData || []) as TeacherClass[];
 
-        // Fetch member counts
         if (classList.length > 0) {
           const classIds = classList.map(c => c.id);
-          const { data: members } = await supabase
-            .from("classroom_members")
-            .select("classroom_id, user_id")
-            .in("classroom_id", classIds);
 
+          // Parallel fetches
+          const [membersRes, submissionsRes, assignmentsRes, invitationsRes, messagesRes] = await Promise.all([
+            supabase.from("classroom_members").select("classroom_id, user_id").in("classroom_id", classIds),
+            supabase.from("task_submissions").select("*", { count: "exact", head: true }).in("class_id", classIds).eq("status", "pending"),
+            supabase.from("class_assignments").select("*", { count: "exact", head: true }).in("class_id", classIds).eq("is_active", true),
+            supabase.from("class_invitations").select("*", { count: "exact", head: true }).in("classroom_id", classIds).eq("status", "pending"),
+            supabase.from("teacher_parent_messages").select("*", { count: "exact", head: true }).eq("receiver_id", user.id).eq("is_read", false),
+          ]);
+
+          setPendingSubmissions(submissionsRes.count || 0);
+          setActiveAssignments(assignmentsRes.count || 0);
+          setPendingInvitations(invitationsRes.count || 0);
+          setUnreadMessages(messagesRes.count || 0);
+
+          const members = membersRes.data || [];
           const countMap = new Map<string, number>();
-          (members || []).forEach(m => {
+          members.forEach(m => {
             countMap.set(m.classroom_id, (countMap.get(m.classroom_id) || 0) + 1);
           });
           classList.forEach(c => { c.memberCount = countMap.get(c.id) || 0; });
 
-          // Fetch top students across all classes
-          const allMemberIds = [...new Set((members || []).map(m => m.user_id))];
+          const allMemberIds = [...new Set(members.map(m => m.user_id))];
           if (allMemberIds.length > 0) {
-            const { data: profiles } = await supabase
-              .from("profiles")
-              .select("user_id, display_name, avatar_emoji, xp_total")
-              .in("user_id", allMemberIds)
-              .order("xp_total", { ascending: false })
-              .limit(5);
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            const dateStr = sevenDaysAgo.toISOString().split("T")[0];
 
-            // Count pending tasks per student
-            const { data: tasks } = await supabase
-              .from("student_tasks")
-              .select("student_id")
-              .in("class_id", classIds)
-              .eq("status", "pending");
+            const [profilesRes, tasksRes, progressRes, activityRes] = await Promise.all([
+              supabase.from("profiles").select("user_id, display_name, avatar_emoji, xp_total").in("user_id", allMemberIds).order("xp_total", { ascending: false }).limit(5),
+              supabase.from("student_tasks").select("student_id").in("class_id", classIds).eq("status", "pending"),
+              supabase.from("user_progress").select("user_id, streak_days").in("user_id", allMemberIds),
+              supabase.from("quran_daily_activity").select("user_id, minutes_quran").in("user_id", allMemberIds).gte("activity_date", dateStr),
+            ]);
 
             const taskCountMap = new Map<string, number>();
-            (tasks || []).forEach(t => {
+            (tasksRes.data || []).forEach(t => {
               taskCountMap.set(t.student_id, (taskCountMap.get(t.student_id) || 0) + 1);
             });
 
-            // Get streaks
-            const { data: progress } = await supabase
-              .from("user_progress")
-              .select("user_id, streak_days")
-              .in("user_id", allMemberIds);
             const streakMap = new Map<string, number>();
-            (progress || []).forEach(p => { streakMap.set(p.user_id, p.streak_days); });
+            (progressRes.data || []).forEach(p => { streakMap.set(p.user_id, p.streak_days); });
 
-            setTopStudents((profiles || []).map(p => ({
+            const minutesMap = new Map<string, number>();
+            (activityRes.data || []).forEach(a => {
+              minutesMap.set(a.user_id, (minutesMap.get(a.user_id) || 0) + a.minutes_quran);
+            });
+
+            setTopStudents((profilesRes.data || []).map(p => ({
               userId: p.user_id,
               displayName: p.display_name,
               avatarEmoji: p.avatar_emoji,
               xpTotal: p.xp_total,
               pendingTasks: taskCountMap.get(p.user_id) || 0,
               streakDays: streakMap.get(p.user_id) || 0,
+              quranMinutes: minutesMap.get(p.user_id) || 0,
             })));
           }
-
-          // Pending submissions count
-          const { count } = await supabase
-            .from("task_submissions")
-            .select("*", { count: "exact", head: true })
-            .in("class_id", classIds)
-            .eq("status", "pending");
-          setPendingSubmissions(count || 0);
         }
 
         setClasses(classList);
@@ -126,6 +127,9 @@ export default function TeacherHomePage() {
   }, [user]);
 
   const totalStudents = useMemo(() => classes.reduce((s, c) => s + (c.memberCount || 0), 0), [classes]);
+  const avgXp = useMemo(() => topStudents.length ? Math.round(topStudents.reduce((s, st) => s + st.xpTotal, 0) / topStudents.length) : 0, [topStudents]);
+  const activeStreaks = useMemo(() => topStudents.filter(s => s.streakDays > 0).length, [topStudents]);
+  const avgQuranMin = useMemo(() => topStudents.length ? Math.round(topStudents.reduce((s, st) => s + st.quranMinutes, 0) / topStudents.length) : 0, [topStudents]);
 
   const alerts = useMemo<Alert[]>(() => {
     const a: Alert[] = [];
@@ -136,8 +140,11 @@ export default function TeacherHomePage() {
     if (lostStreak.length > 0) {
       a.push({ id: "streak", type: "streak", message: `${lostStreak.length} ${t("teacherHome.studentsLostStreak" as any)}` });
     }
+    if (unreadMessages > 0) {
+      a.push({ id: "msg", type: "halaqa", message: `${unreadMessages} ${t("teacherHome.messages" as any)}` });
+    }
     return a;
-  }, [pendingSubmissions, topStudents, t]);
+  }, [pendingSubmissions, topStudents, unreadMessages, t]);
 
   if (authLoading || loading) {
     return (
@@ -169,6 +176,30 @@ export default function TeacherHomePage() {
     "from-amber-600 to-orange-500",
   ];
 
+  const STATS = [
+    { emoji: "👨‍🎓", value: totalStudents, label: t("teacherHome.students" as any) },
+    { emoji: "📝", value: pendingSubmissions, label: t("teacherHome.toCorrect" as any) },
+    { emoji: "📚", value: classes.length, label: t("teacherHome.classes" as any) },
+    { emoji: "⭐", value: avgXp, label: t("teacherHome.avgXp" as any) },
+    { emoji: "🔥", value: activeStreaks, label: t("teacherHome.activeStreaks" as any) },
+    { emoji: "🕌", value: `${avgQuranMin}m`, label: t("teacherHome.quranMinutes7d" as any) },
+  ];
+
+  const QUICK_ACTIONS = [
+    { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/prof-dashboard", badge: pendingSubmissions },
+    { emoji: "➕", label: t("teacherHome.newClass" as any), href: "/classrooms", badge: 0 },
+    { emoji: "📣", label: t("teacherHome.announce" as any), href: "/announcements", badge: 0 },
+    { emoji: "💬", label: t("teacherHome.messages" as any), href: "/prof-dashboard", badge: unreadMessages },
+    { emoji: "📊", label: t("teacherHome.studentStats" as any), href: "/prof-dashboard", badge: 0 },
+    { emoji: "🏆", label: t("teacherHome.leaderboard" as any), href: "/leaderboard", badge: 0 },
+  ];
+
+  const TOOLS = [
+    { emoji: "✉️", label: t("teacherHome.invitations" as any), href: "/prof-dashboard", badge: pendingInvitations },
+    { emoji: "📋", label: t("teacherHome.assignments" as any), href: "/prof-dashboard", badge: activeAssignments },
+    { emoji: "🎯", label: t("teacherHome.weeklyChallenge" as any), href: "/prof-dashboard", badge: 0 },
+  ];
+
   return (
     <PageBackground intensity="immersive">
       <div className="min-h-screen pb-24">
@@ -185,23 +216,19 @@ export default function TeacherHomePage() {
           </motion.div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-3 px-4 mb-4">
-          {[
-            { emoji: "👨‍🎓", value: totalStudents, label: t("teacherHome.students" as any) },
-            { emoji: "📝", value: pendingSubmissions, label: t("teacherHome.toCorrect" as any) },
-            { emoji: "📚", value: classes.length, label: t("teacherHome.classes" as any) },
-          ].map((stat, i) => (
+        {/* Stats Grid - 3x2 */}
+        <div className="grid grid-cols-3 gap-2.5 px-4 mb-4">
+          {STATS.map((stat, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-3 text-center shadow-sm"
+              transition={{ delay: i * 0.05 }}
+              className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-2.5 text-center shadow-sm"
             >
-              <span className="text-2xl">{stat.emoji}</span>
-              <p className="text-lg font-bold text-foreground mt-1">{stat.value}</p>
-              <p className="text-[10px] text-muted-foreground font-medium">{stat.label}</p>
+              <span className="text-xl">{stat.emoji}</span>
+              <p className="text-base font-bold text-foreground mt-0.5">{stat.value}</p>
+              <p className="text-[9px] text-muted-foreground font-medium leading-tight">{stat.label}</p>
             </motion.div>
           ))}
         </div>
@@ -236,9 +263,14 @@ export default function TeacherHomePage() {
         {/* Top Students */}
         {topStudents.length > 0 && (
           <div className="mx-4 mb-4 bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm">
-            <h2 className="text-sm font-bold text-foreground flex items-center gap-2 mb-3">
-              🏆 {t("teacherHome.topStudents" as any)}
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+                🏆 {t("teacherHome.topStudents" as any)}
+              </h2>
+              <button onClick={() => navigate("/prof-dashboard")} className="text-[10px] text-primary font-semibold">
+                {t("teacherHome.viewAll" as any)} →
+              </button>
+            </div>
             <div className="space-y-2">
               {topStudents.slice(0, 3).map((student, i) => (
                 <motion.div
@@ -256,9 +288,10 @@ export default function TeacherHomePage() {
                       <span className="text-sm font-semibold text-foreground">
                         {student.avatarEmoji} {student.displayName}
                       </span>
-                      {student.streakDays > 0 && (
-                        <span className="text-[10px] text-muted-foreground ml-1">🔥{student.streakDays}j</span>
-                      )}
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                        {student.streakDays > 0 && <span>🔥{student.streakDays}j</span>}
+                        {student.quranMinutes > 0 && <span>🕌{student.quranMinutes}m</span>}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -312,28 +345,57 @@ export default function TeacherHomePage() {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions - 3x2 */}
         <div className="mx-4 mb-4">
           <h2 className="text-sm font-bold text-foreground flex items-center gap-2 mb-3">
             ✨ {t("teacherHome.quickActions" as any)}
           </h2>
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/prof-dashboard" },
-              { emoji: "➕", label: t("teacherHome.newClass" as any), href: "/classrooms" },
-              { emoji: "📣", label: t("teacherHome.announce" as any), href: "/announcements" },
-            ].map((action, i) => (
+          <div className="grid grid-cols-3 gap-2.5">
+            {QUICK_ACTIONS.map((action, i) => (
               <motion.button
                 key={i}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
+                transition={{ delay: 0.4 + i * 0.06 }}
                 whileTap={{ scale: 0.92 }}
                 onClick={() => navigate(action.href)}
-                className="flex flex-col items-center gap-2 p-4 bg-primary/10 border border-primary/20 rounded-2xl hover:bg-primary/15 transition-colors"
+                className="relative flex flex-col items-center gap-1.5 p-3 bg-primary/10 border border-primary/20 rounded-2xl hover:bg-primary/15 transition-colors"
               >
-                <span className="text-2xl">{action.emoji}</span>
-                <span className="text-[10px] font-bold text-foreground text-center leading-tight">{action.label}</span>
+                {action.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full px-1">
+                    {action.badge}
+                  </span>
+                )}
+                <span className="text-xl">{action.emoji}</span>
+                <span className="text-[9px] font-bold text-foreground text-center leading-tight">{action.label}</span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Teacher Tools */}
+        <div className="mx-4 mb-4">
+          <h2 className="text-sm font-bold text-foreground flex items-center gap-2 mb-3">
+            🛠️ {t("teacherHome.toolsTitle" as any)}
+          </h2>
+          <div className="grid grid-cols-3 gap-2.5">
+            {TOOLS.map((tool, i) => (
+              <motion.button
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.06 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={() => navigate(tool.href)}
+                className="relative flex flex-col items-center gap-1.5 p-3 bg-accent/30 border border-accent/40 rounded-2xl hover:bg-accent/40 transition-colors"
+              >
+                {tool.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center bg-primary text-primary-foreground text-[9px] font-bold rounded-full px-1">
+                    {tool.badge}
+                  </span>
+                )}
+                <span className="text-xl">{tool.emoji}</span>
+                <span className="text-[9px] font-bold text-foreground text-center leading-tight">{tool.label}</span>
               </motion.button>
             ))}
           </div>

@@ -3003,6 +3003,17 @@ const translations = {
   "teacherHome.announce": { fr: "Annoncer", en: "Announce", nl: "Aankondigen", ar: "إعلان", tr: "Duyur", ur: "اعلان" },
   "teacherHome.submissionsToReview": { fr: "devoirs à corriger", en: "submissions to review", nl: "opdrachten te beoordelen", ar: "واجبات للمراجعة", tr: "incelenecek ödev", ur: "جائزے کے لیے" },
   "teacherHome.studentsLostStreak": { fr: "élèves ont perdu leur streak", en: "students lost their streak", nl: "leerlingen verloren hun streak", ar: "طلاب فقدوا سلسلتهم", tr: "öğrenci serisini kaybetti", ur: "طلباء نے اپنا سلسلہ کھو دیا" },
+  "teacherHome.avgXp": { fr: "XP moyen", en: "Avg XP", nl: "Gem. XP", ar: "متوسط XP", tr: "Ort. XP", ur: "اوسط XP" },
+  "teacherHome.activeStreaks": { fr: "Streaks actifs", en: "Active streaks", nl: "Actieve streaks", ar: "سلاسل نشطة", tr: "Aktif seriler", ur: "فعال سلسلے" },
+  "teacherHome.assignments": { fr: "Devoirs actifs", en: "Active tasks", nl: "Actieve taken", ar: "واجبات نشطة", tr: "Aktif ödevler", ur: "فعال کام" },
+  "teacherHome.invitations": { fr: "Invitations", en: "Invitations", nl: "Uitnodigingen", ar: "دعوات", tr: "Davetiyeler", ur: "دعوتیں" },
+  "teacherHome.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "لوحة المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
+  "teacherHome.messages": { fr: "Messages", en: "Messages", nl: "Berichten", ar: "رسائل", tr: "Mesajlar", ur: "پیغامات" },
+  "teacherHome.weeklyChallenge": { fr: "Défi semaine", en: "Weekly challenge", nl: "Weekuitdaging", ar: "تحدي الأسبوع", tr: "Haftalık görev", ur: "ہفتہ وار چیلنج" },
+  "teacherHome.studentStats": { fr: "Stats élèves", en: "Student stats", nl: "Leerling stats", ar: "إحصائيات الطلاب", tr: "Öğrenci istatistikleri", ur: "طلباء کے اعدادوشمار" },
+  "teacherHome.toolsTitle": { fr: "Outils Prof", en: "Teacher Tools", nl: "Leraar Tools", ar: "أدوات المعلم", tr: "Öğretmen Araçları", ur: "استاد ٹولز" },
+  "teacherHome.quranMinutes7d": { fr: "min Coran/7j", en: "Quran min/7d", nl: "Koran min/7d", ar: "دقائق قرآن/7أ", tr: "Kuran dk/7g", ur: "قرآن منٹ/7د" },
+  "teacherHome.viewAll": { fr: "Voir tout", en: "View all", nl: "Alles zien", ar: "عرض الكل", tr: "Tümünü gör", ur: "سب دیکھیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
