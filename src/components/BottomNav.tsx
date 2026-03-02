@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2 } from "lucide-react";
+import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2, School } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
@@ -11,6 +11,7 @@ export default function BottomNav() {
   const { mode } = useUserMode();
   const currentPath = location.pathname;
   const isKidMode = mode === "child";
+  const isTeacherMode = mode === "teacher" || localStorage.getItem("teacherMode") === "true";
 
   const baseTabs = [
     { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil" },
@@ -21,8 +22,12 @@ export default function BottomNav() {
 
   const gameTab = { path: "/jeux", icon: Gamepad2, label: t("nav.games" as any) || "Jeux" };
 
+  const statsOrClassesTab = isTeacherMode
+    ? { path: "/teacher-dashboard", icon: School, label: t("nav.classes" as any) || "Classes" }
+    : { path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" };
+
   const endTabs = [
-    ...(!isKidMode ? [{ path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" }] : []),
+    ...(!isKidMode ? [statsOrClassesTab] : []),
     { path: "/more", icon: Menu, label: t("nav.more" as any) || "Plus" },
   ];
 
