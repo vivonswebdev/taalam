@@ -428,7 +428,7 @@ export default function TetrisIslamPage() {
   // ═══ MENU ════════════════════════════════════════════
   if (gameState === "menu") {
     return (
-      <div className="min-h-screen bg-background pb-24">
+      <div className="min-h-screen bg-background">
         <div className="flex items-center gap-3 p-4">
           <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
             <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -666,21 +666,21 @@ export default function TetrisIslamPage() {
         </div>
       </div>
 
-      {/* Touch controls */}
-      <div className="grid grid-cols-5 gap-1.5 px-3 pb-3">
-        <button onTouchStart={moveLeft} onClick={moveLeft} className="col-span-1 py-4 bg-card border border-border rounded-xl text-lg font-bold text-foreground active:bg-muted">
+      {/* Touch controls - compact, safe from edges */}
+      <div className="grid grid-cols-5 gap-1 px-2 pb-2 pt-1">
+        <button onTouchStart={moveLeft} onClick={moveLeft} className="col-span-1 py-3 bg-card border border-border rounded-xl text-base font-bold text-foreground active:bg-muted">
           ◀
         </button>
-        <button onTouchStart={moveDown} onClick={moveDown} className="col-span-1 py-4 bg-card border border-border rounded-xl text-lg font-bold text-foreground active:bg-muted">
+        <button onTouchStart={moveDown} onClick={moveDown} className="col-span-1 py-3 bg-card border border-border rounded-xl text-base font-bold text-foreground active:bg-muted">
           ▼
         </button>
-        <button onTouchStart={hardDrop} onClick={hardDrop} className="col-span-1 py-4 bg-primary/20 border border-primary/30 rounded-xl text-lg font-bold text-primary active:bg-primary/30">
+        <button onTouchStart={hardDrop} onClick={hardDrop} className="col-span-1 py-3 bg-primary/20 border border-primary/30 rounded-xl text-base font-bold text-primary active:bg-primary/30">
           ⏬
         </button>
-        <button onTouchStart={rotate} onClick={rotate} className="col-span-1 py-4 bg-card border border-border rounded-xl text-lg font-bold text-foreground active:bg-muted">
-          <RotateCw size={18} className="mx-auto" />
+        <button onTouchStart={rotate} onClick={rotate} className="col-span-1 py-3 bg-card border border-border rounded-xl text-base font-bold text-foreground active:bg-muted">
+          <RotateCw size={16} className="mx-auto" />
         </button>
-        <button onTouchStart={moveRight} onClick={moveRight} className="col-span-1 py-4 bg-card border border-border rounded-xl text-lg font-bold text-foreground active:bg-muted">
+        <button onTouchStart={moveRight} onClick={moveRight} className="col-span-1 py-3 bg-card border border-border rounded-xl text-base font-bold text-foreground active:bg-muted">
           ▶
         </button>
       </div>
