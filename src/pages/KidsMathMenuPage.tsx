@@ -15,7 +15,7 @@ const GAME_ROUTES: Record<string, string> = {
   quick_calc: "/kids-quick-calc",
   calc_merge: "/kids-calc-merge",
   number_runner: "/kids-number-runner",
-  math_shooter: "",
+  math_shooter: "/kids-math-shooter",
 };
 
 export default function KidsMathMenuPage() {
