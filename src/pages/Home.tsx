@@ -15,6 +15,8 @@ import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
 import ProfileBubble from "@/components/ProfileBubble";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
+import GoodDeedsWidget from "@/components/GoodDeedsWidget";
+import ShareProgressCard from "@/components/ShareProgressCard";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
