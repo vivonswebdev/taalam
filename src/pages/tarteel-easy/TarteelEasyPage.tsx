@@ -62,5 +62,6 @@ export default function TarteelEasyPage() {
         )}
       </div>
     </div>
+    </PageBackground>
   );
 }

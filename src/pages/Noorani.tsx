@@ -80,5 +80,6 @@ export default function Noorani() {
         })}
       </div>
     </div>
+    </PageBackground>
   );
 }

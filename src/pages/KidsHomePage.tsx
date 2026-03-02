@@ -116,5 +116,6 @@ export default function KidsHomePage() {
         ))}
       </div>
     </div>
+    </PageBackground>
   );
 }

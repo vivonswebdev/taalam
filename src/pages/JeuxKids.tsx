@@ -89,5 +89,6 @@ export default function JeuxKids() {
         ))}
       </div>
     </div>
+    </PageBackground>
   );
 }
