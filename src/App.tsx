@@ -198,6 +198,9 @@ const App = () => (
               <Route path="/athan-settings" element={<AthanSettings />} />
               <Route path="/qibla" element={<QiblaPage />} />
               <Route path="/islamic-calendar" element={<IslamicCalendarPage />} />
+              <Route path="/mekkah-live" element={<MekkahLivePage />} />
+              <Route path="/medina-live" element={<MedinaLivePage />} />
+              <Route path="/zakat" element={<ZakatPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
