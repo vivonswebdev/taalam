@@ -16,7 +16,7 @@ export default function MyProfilePage() {
   const { user } = useAuth();
   const { profile, loading, updateProfile } = useUserProfile();
   const xp = useQuranXp();
-  const { currentStreak } = useStreak();
+  const { streak } = useStreak();
 
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
