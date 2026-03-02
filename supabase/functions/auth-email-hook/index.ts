@@ -41,7 +41,7 @@ const SENDER_DOMAIN = "notify.app.taalam.eu"
 const ROOT_DOMAIN = "app.taalam.eu"
 const FROM_DOMAIN = "app.taalam.eu"
 
-const SAMPLE_PROJECT_URL = "https://taaloum.lovable.app"
+const SAMPLE_PROJECT_URL = "https://app.taalam.eu"
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
   signup: {

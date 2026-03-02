@@ -423,8 +423,8 @@ export default function Auth() {
                 {signupStep === 0 && (
                   <motion.div key="step-age" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="space-y-4">
                     <div className="text-center">
-                      <p className="text-sm font-semibold text-foreground">Quelle est votre tranche d'âge ?</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Taaloum adaptera l'interface à vos besoins.</p>
+                      <p className="text-sm font-semibold text-foreground">{t("auth.ageQuestion" as any)}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{t("auth.ageHint" as any)}</p>
                     </div>
                     <div className="space-y-2">
                       {AGE_GROUPS.map(ag => (

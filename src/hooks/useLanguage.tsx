@@ -2377,7 +2377,7 @@ const translations = {
   "share.familyReport": { fr: "Rapport familial Qur'an", en: "Family Qur'an Report", nl: "Gezins Koran Rapport", ar: "تقرير القرآن العائلي", tr: "Aile Kur'an Raporu", ur: "خاندانی قرآن رپورٹ" },
   "share.scanToJoin": { fr: "Scanne pour rejoindre la famille", en: "Scan to join the family", nl: "Scan om lid te worden", ar: "امسح للانضمام إلى العائلة", tr: "Aileye katılmak için tara", ur: "خاندان میں شامل ہونے کے لیے اسکین کریں" },
   "share.code": { fr: "Code", en: "Code", nl: "Code", ar: "الرمز", tr: "Kod", ur: "کوڈ" },
-  "share.shareText": { fr: "Rejoins ma famille Taaloum", en: "Join my Taaloum family", nl: "Word lid van mijn Taaloum familie", ar: "انضم لعائلتي في تعلّم", tr: "Taaloum aileme katıl", ur: "میرے تعلّم خاندان میں شامل ہوں" },
+  "share.shareText": { fr: "Rejoins ma famille Ta'alam", en: "Join my Ta'alam family", nl: "Word lid van mijn Ta'alam familie", ar: "انضم لعائلتي في تعلّم", tr: "Ta'alam aileme katıl", ur: "میرے تعلّم خاندان میں شامل ہوں" },
   "share.download": { fr: "Télécharger", en: "Download", nl: "Downloaden", ar: "تحميل", tr: "İndir", ur: "ڈاؤن لوڈ" },
   "share.more": { fr: "Plus…", en: "More…", nl: "Meer…", ar: "المزيد…", tr: "Daha…", ur: "مزید…" },
   "share.generating": { fr: "Génération de la carte…", en: "Generating card…", nl: "Kaart genereren…", ar: "جاري إنشاء البطاقة…", tr: "Kart oluşturuluyor…", ur: "کارڈ بنایا جا رہا ہے…" },

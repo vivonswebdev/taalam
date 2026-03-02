@@ -350,9 +350,9 @@ export default function Leaderboard() {
     : board;
 
   const handleShare = () => {
-    const text = `🏆 Classement Iqraa – Rejoins-moi sur https://iqraacoran.lovable.app !`;
+    const text = `🏆 Classement Ta'alam – Rejoins-moi sur https://app.taalam.eu !`;
     if (navigator.share) {
-      navigator.share({ title: "Classement Iqraa", text }).catch(() => {});
+      navigator.share({ title: "Classement Ta'alam", text }).catch(() => {});
     } else {
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
     }

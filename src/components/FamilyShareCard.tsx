@@ -189,7 +189,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
       const blob = await drawCard();
       if (!blob) throw new Error("Canvas error");
 
-      const file = new File([blob], `taaloum-${family.name.replace(/\s/g, "-")}.png`, { type: "image/png" });
+      const file = new File([blob], `taalam-${family.name.replace(/\s/g, "-")}.png`, { type: "image/png" });
       const shareText = `🕌 ${t("share.shareText" as any)} "${family.name}"!\n⚡ ${totalXP} XP · 🔥 ${maxStreak}j streak\n📎 ${t("share.code" as any)}: ${family.invite_code}\n🔗 ${joinUrl}`;
 
       if (platform === "native" && navigator.share) {
