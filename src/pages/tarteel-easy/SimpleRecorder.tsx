@@ -258,6 +258,11 @@ export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript,
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (timerRef.current) clearInterval(timerRef.current);
+      keepListeningRef.current = false;
+      if (speechRecRef.current) {
+        try { speechRecRef.current.stop(); } catch {}
+        speechRecRef.current = null;
+      }
     };
   }, []);
 
