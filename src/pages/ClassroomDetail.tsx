@@ -384,7 +384,7 @@ export default function ClassroomDetail() {
               {t("common.scanQR" as any)}
             </p>
             <button
-              onClick={() => shareClassroom(effectiveClassroom)}
+              onClick={() => classroom && shareClassroom(classroom)}
               className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
             >
               <Share2 size={14} /> {t("common.shareLink" as any)}
