@@ -318,7 +318,7 @@ export default function TeacherHomePage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.08 }}
-                onClick={() => navigate("/prof-dashboard")}
+                onClick={() => navigate(`/classrooms/${c.id}`)}
                 className="w-full flex items-center justify-between p-4 bg-card/80 backdrop-blur-sm border border-border rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
               >
                 <div className="flex items-center gap-3">
