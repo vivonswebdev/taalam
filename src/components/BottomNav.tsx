@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2, School } from "lucide-react";
+import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2, School, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
