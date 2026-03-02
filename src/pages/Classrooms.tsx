@@ -117,7 +117,7 @@ export default function Classrooms() {
       localStorage.setItem("quranEasyClassrooms", JSON.stringify([...current, localClass]));
       window.location.reload();
     } catch (err: any) {
-      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+      toast({ title: t("common.error" as any), description: err.message, variant: "destructive" });
     }
     setNewName("");
     setTeacherName("");
