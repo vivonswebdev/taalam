@@ -121,7 +121,7 @@ export default function ShareProgressCard() {
         a.download = "taalam-progress.png";
         a.click();
         URL.revokeObjectURL(url);
-        toast.success(t("share.downloaded" as any));
+        toast.success(t("shareProgress.downloaded" as any));
       }
     } catch (e) {
       console.warn("Share failed:", e);
