@@ -195,9 +195,9 @@ export default function TeacherHomePage() {
   ];
 
   const TOOLS = [
-    { emoji: "✉️", label: t("teacherHome.invitations" as any), href: "/prof-dashboard", badge: pendingInvitations },
-    { emoji: "📋", label: t("teacherHome.assignments" as any), href: "/prof-dashboard", badge: activeAssignments },
-    { emoji: "🎯", label: t("teacherHome.weeklyChallenge" as any), href: "/prof-dashboard", badge: 0 },
+    { emoji: "✉️", label: t("teacherHome.invitations" as any), href: "/teacher-dashboard", badge: pendingInvitations },
+    { emoji: "📋", label: t("teacherHome.assignments" as any), href: "/teacher-dashboard", badge: activeAssignments },
+    { emoji: "🎯", label: t("teacherHome.weeklyChallenge" as any), href: "/teacher-dashboard", badge: 0 },
   ];
 
   return (
