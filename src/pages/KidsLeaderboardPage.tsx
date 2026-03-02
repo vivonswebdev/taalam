@@ -45,7 +45,25 @@ export default function KidsLeaderboardPage() {
         .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
         .order("total_points", { ascending: false })
         .limit(100);
-      setEntries((data as LeaderboardEntry[]) || []);
+      const profiles = (data as LeaderboardEntry[]) || [];
+
+      // Fetch badges for all children
+      const childIds = profiles.map(p => p.id);
+      if (childIds.length > 0) {
+        const { data: badges } = await supabase
+          .from("child_achievements" as any)
+          .select("child_id, icon, rarity")
+          .in("child_id", childIds);
+        const badgeMap = new Map<string, { icon: string; rarity: string }[]>();
+        ((badges as any[]) || []).forEach((b: any) => {
+          const arr = badgeMap.get(b.child_id) || [];
+          arr.push({ icon: b.icon, rarity: b.rarity });
+          badgeMap.set(b.child_id, arr);
+        });
+        profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
+      }
+
+      setEntries(profiles);
       setLoading(false);
     })();
   }, []);
