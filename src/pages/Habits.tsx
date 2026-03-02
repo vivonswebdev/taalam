@@ -442,8 +442,8 @@ export default function Habits() {
         {/* Cloud sync hint */}
         {!isAuthenticated && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
-            <p className="text-xs text-muted-foreground">📱 Connecte-toi pour synchroniser tes habitudes entre appareils</p>
-            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">Se connecter →</button>
+            <p className="text-xs text-muted-foreground">{t("habits.syncHint" as any)}</p>
+            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">{t("habits.signIn" as any)}</button>
           </motion.div>
         )}
 
