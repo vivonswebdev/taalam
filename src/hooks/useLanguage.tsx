@@ -2709,6 +2709,12 @@ const translations = {
   "leaderboard.score": { fr: "Score", en: "Score", nl: "Score", ar: "النتيجة", tr: "Puan", ur: "نمبر" },
   "leaderboard.friends": { fr: "Amis", en: "Friends", nl: "Vrienden", ar: "الأصدقاء", tr: "Arkadaşlar", ur: "دوست" },
   "leaderboard.local": { fr: "Local", en: "Local", nl: "Lokaal", ar: "محلي", tr: "Yerel", ur: "مقامی" },
+  // ═══ TARTEEL LIVE TRANSCRIPTION ═══
+  "tarteel.liveTranscription": { fr: "Transcription en direct", en: "Live transcription", nl: "Live transcriptie", ar: "النسخ المباشر", tr: "Canlı transkripsiyon", ur: "براہ راست نقل" },
+  "tarteel.liveListening": { fr: "Écoute en cours", en: "Listening", nl: "Luistert", ar: "جارٍ الاستماع", tr: "Dinleniyor", ur: "سن رہا ہے" },
+  "tarteel.expectedVerse": { fr: "Verset attendu :", en: "Expected verse:", nl: "Verwacht vers:", ar: "الآية المتوقعة:", tr: "Beklenen ayet:", ur: "متوقع آیت:" },
+  "tarteel.versesRecited": { fr: "versets récités", en: "verses recited", nl: "verzen gereciteerd", ar: "آيات تُليت", tr: "ayet okundu", ur: "آیات پڑھی گئیں" },
+  "tarteel.tapToStartRecite": { fr: "Appuyez pour commencer à réciter", en: "Tap to start reciting", nl: "Tik om te beginnen", ar: "اضغط لبدء التلاوة", tr: "Okumaya başlamak için dokunun", ur: "تلاوت شروع کرنے کے لیے دبائیں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
