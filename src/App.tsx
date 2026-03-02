@@ -76,6 +76,7 @@ import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityDetail from "./pages/CommunityDetail";
+import CommunityGroups from "./pages/CommunityGroups";
 import FavoritesNotesPage from "./pages/FavoritesNotesPage";
 import HifzTodayPage from "./pages/HifzTodayPage";
 import JeuxKids from "./pages/JeuxKids";
