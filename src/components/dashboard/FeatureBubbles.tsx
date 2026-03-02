@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useQuranXp } from "@/hooks/useQuranXp";
@@ -11,6 +12,7 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
 import ReciterSelector from "@/components/home/ReciterSelector";
+import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
 
@@ -21,7 +23,7 @@ interface Feature {
   nameKey: string;
   emoji: string;
   path?: string;
-  action?: "theme" | "language" | "donate";
+  action?: "theme" | "language" | "donate" | "reciter";
   gradient: string;
 }
 
@@ -102,7 +104,7 @@ const CATEGORIES: Category[] = [
     emoji: "⚙️",
     features: [
       { id: "theme", nameKey: "dashboard.theme", emoji: "🎨", action: "theme", gradient: "from-accent/30 to-secondary/20" },
-      { id: "reciter", nameKey: "dashboard.reciter", emoji: "🔊", path: "/tarteel", gradient: "from-secondary/20 to-primary/20" },
+      { id: "reciter", nameKey: "dashboard.reciter", emoji: "🔊", action: "reciter", gradient: "from-secondary/20 to-primary/20" },
       { id: "athan", nameKey: "dashboard.athan", emoji: "⏰", path: "/athan-settings", gradient: "from-primary/20 to-accent/20" },
       { id: "notifs", nameKey: "dashboard.notifs", emoji: "🔔", path: "/notification-settings", gradient: "from-accent/20 to-secondary/20" },
       { id: "languages", nameKey: "dashboard.languages", emoji: "🌍", action: "language", gradient: "from-primary/30 to-accent/20" },
@@ -217,6 +219,7 @@ export function HomeDashboard() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { items: srsItems, todayItems: srsTodayItems, learningCount, reviewingCount, masteredCount } = useHifzSRS();
   const navigate = useNavigate();
+  const [showReciterPicker, setShowReciterPicker] = useState(false);
 
   const handleAction = (action: string) => {
     switch (action) {
@@ -225,6 +228,9 @@ export function HomeDashboard() {
         break;
       case "language":
         navigate("/settings");
+        break;
+      case "reciter":
+        setShowReciterPicker(true);
         break;
       case "donate":
         window.open("https://buy.stripe.com/9AQ5mR6SldWrdQ84GI", "_blank");
@@ -300,6 +306,9 @@ export function HomeDashboard() {
           </a>
         </p>
       </div>
+
+      {/* Reciter Picker Sheet */}
+      <ReciterPickerSheet open={showReciterPicker} onOpenChange={setShowReciterPicker} />
     </PageBackground>
   );
 }
