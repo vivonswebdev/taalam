@@ -135,6 +135,9 @@ export default function StudentStatsPage() {
       </div>
 
       <div className="px-4 py-4 space-y-5">
+        {/* 30-Day Activity Heatmap */}
+        <ActivityHeatmap activity={activity} />
+
         {/* Hifz Summary Cards */}
         <div className="grid grid-cols-2 gap-2">
           {[
