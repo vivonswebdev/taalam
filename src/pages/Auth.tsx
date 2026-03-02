@@ -117,8 +117,13 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const { t, lang } = useLanguage();
-  const { signUpWithEmail } = useAuth();
+  const { signUpWithEmail, user } = useAuth();
   const { setMode: setGlobalMode, setAgeGroup: setGlobalAgeGroup } = useUserMode();
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (user) navigate(redirectTo, { replace: true });
+  }, [user, navigate, redirectTo]);
 
   const [mode, setMode] = useState<"signup" | "login" | "forgot" | "reset">("signup");
   // Signup steps: 0=age, 1=mode, 2=form
