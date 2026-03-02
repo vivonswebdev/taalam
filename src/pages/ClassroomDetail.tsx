@@ -368,7 +368,7 @@ export default function ClassroomDetail() {
               </p>
             </div>
             <p className="text-[10px] text-muted-foreground">
-              Scannez ce QR code pour rejoindre la classe
+              {t("common.scanQR" as any)}
             </p>
             <button
               onClick={() => shareClassroom(classroom)}
