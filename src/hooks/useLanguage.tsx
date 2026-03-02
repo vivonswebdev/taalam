@@ -3069,6 +3069,8 @@ const translations = {
   "mathGames.bestScore": { fr: "Meilleur", en: "Best", nl: "Beste", ar: "الأفضل", tr: "En İyi", ur: "بہترین" },
   "mathGames.target": { fr: "Objectif", en: "Target", nl: "Doel", ar: "الهدف", tr: "Hedef", ur: "ہدف" },
   "mathGames.swipeHint": { fr: "⬆️⬇️⬅️➡️ Glisse pour fusionner !", en: "⬆️⬇️⬅️➡️ Swipe to merge!", nl: "⬆️⬇️⬅️➡️ Veeg om te combineren!", ar: "⬆️⬇️⬅️➡️ اسحب للدمج!", tr: "⬆️⬇️⬅️➡️ Birleştirmek için kaydır!", ur: "⬆️⬇️⬅️➡️ ملانے کے لیے سوائپ کریں!" },
+  "mathGames.numberRunnerDesc": { fr: "Choisis le bon chemin ! Résous le calcul et place-toi sur la bonne réponse.", en: "Pick the right lane! Solve the equation and stand on the correct answer.", nl: "Kies het juiste pad! Los de som op en sta op het juiste antwoord.", ar: "اختر المسار الصحيح! حل المعادلة وقف على الإجابة الصحيحة.", tr: "Doğru yolu seç! Denklemi çöz ve doğru cevabın üzerinde dur.", ur: "صحیح راستہ چنیں! مساوات حل کریں اور صحیح جواب پر کھڑے ہوں." },
+  "mathGames.lanes": { fr: "Chemins", en: "Lanes", nl: "Paden", ar: "مسارات", tr: "Yollar", ur: "راستے" },
   "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
 } as const;
 

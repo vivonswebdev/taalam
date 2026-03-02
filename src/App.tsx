@@ -103,6 +103,7 @@ import ChildGalleryPage from "./pages/ChildGalleryPage";
 import KidsMathMenuPage from "./pages/KidsMathMenuPage";
 import QuickCalcPage from "./pages/QuickCalcPage";
 import CalcMergePage from "./pages/CalcMergePage";
+import NumberRunnerPage from "./pages/NumberRunnerPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -223,6 +224,7 @@ const App = () => (
               <Route path="/kids-math" element={<KidsMathMenuPage />} />
               <Route path="/kids-quick-calc" element={<QuickCalcPage />} />
               <Route path="/kids-calc-merge" element={<CalcMergePage />} />
+              <Route path="/kids-number-runner" element={<NumberRunnerPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />
