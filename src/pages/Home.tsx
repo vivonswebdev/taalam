@@ -115,6 +115,7 @@ function AdultHome() {
       href: "/habits",
       gradient: "from-indigo-500/20 to-purple-500/20",
       emoji: "📊",
+      progress: xp.level > 0 ? (xp.xp % 100) / 100 : undefined,
     },
     {
       icon: Calendar,
