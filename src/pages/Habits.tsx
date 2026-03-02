@@ -416,11 +416,11 @@ export default function Habits() {
           </div>
           {(() => {
             const last7 = last30Days.slice(-7);
-            const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+            const dayNames = [t("habits.daySun" as any), t("habits.dayMon" as any), t("habits.dayTue" as any), t("habits.dayWed" as any), t("habits.dayThu" as any), t("habits.dayFri" as any), t("habits.daySat" as any)];
             const weekData = last7.map((d) => {
               const dt = new Date(d.date + "T12:00:00");
               const listenMin = listeningStats.dailyListening[d.date]?.minutes || 0;
-              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, écoute: listenMin };
+              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, listen: listenMin };
             });
             return (
               <ResponsiveContainer width="100%" height={120}>
