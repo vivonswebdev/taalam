@@ -31,7 +31,7 @@ const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: strin
   { type: "ayat", target: 50, label: "50 ayat", icon: "📖" },
 ];
 
-function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }> }) {
+function HeatmapGrid({ days, listeningByDay, t }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }>; t: (key: any) => string }) {
   const getIntensity = (d: typeof days[0]) => {
     const listenMin = listeningByDay[d.date]?.minutes || 0;
     const score = d.minutes_quran + d.ayat_recited + listenMin;
@@ -41,7 +41,10 @@ function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_q
     if (score < 30) return "bg-primary/60";
     return "bg-primary";
   };
-  const dayLabels = ["L", "M", "M", "J", "V", "S", "D"];
+  const dayLabels = [
+    t("habits.heatL" as any), t("habits.heatM1" as any), t("habits.heatM2" as any),
+    t("habits.heatJ" as any), t("habits.heatV" as any), t("habits.heatS" as any), t("habits.heatD" as any)
+  ];
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-7 gap-1">
@@ -51,22 +54,20 @@ function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_q
       </div>
       <div className="grid grid-cols-7 gap-1">
         {days.map((d, i) => {
-          const listenMin = listeningByDay[d.date]?.minutes || 0;
           return (
             <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
-              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
-              title={`${d.date}: ${d.minutes_quran}min lecture, ${listenMin}min écoute, ${d.ayat_recited} ayat`} />
+              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`} />
           );
         })}
       </div>
       <div className="flex items-center justify-end gap-1 text-[9px] text-muted-foreground">
-        <span>Moins</span>
+        <span>{t("habits.less" as any)}</span>
         <div className="w-3 h-3 rounded-sm bg-muted" />
         <div className="w-3 h-3 rounded-sm bg-primary/20" />
         <div className="w-3 h-3 rounded-sm bg-primary/40" />
         <div className="w-3 h-3 rounded-sm bg-primary/60" />
         <div className="w-3 h-3 rounded-sm bg-primary" />
-        <span>Plus</span>
+        <span>{t("habits.more" as any)}</span>
       </div>
     </div>
   );
