@@ -87,6 +87,7 @@ import TarteelSelector from "./pages/TarteelSelector";
 import AthanSettings from "./pages/AthanSettings";
 import TarteelEasyPage from "./pages/tarteel-easy/TarteelEasyPage";
 import QiblaPage from "./pages/QiblaPage";
+import IslamicCalendarPage from "./pages/IslamicCalendarPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
