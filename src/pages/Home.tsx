@@ -133,6 +133,13 @@ function AdultHome() {
       href: "/prayers",
       gradient: "from-sky-500/20 to-blue-500/20",
       emoji: "🕐",
+      progress: (() => {
+        try {
+          const today = new Date().toISOString().split("T")[0];
+          const stored = localStorage.getItem(`prayers_${today}`);
+          return stored ? JSON.parse(stored).length / 5 : undefined;
+        } catch { return undefined; }
+      })(),
     },
   ];
 
