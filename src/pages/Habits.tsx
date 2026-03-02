@@ -278,7 +278,7 @@ export default function Habits() {
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Headphones size={18} className="mx-auto text-secondary mb-1" />
             <p className="text-xl font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
-            <p className="text-[9px] text-muted-foreground">min écoute</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.minListening" as any)}</p>
           </div>
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <BookOpen size={18} className="mx-auto text-primary mb-1" />
