@@ -223,7 +223,7 @@ export default function CoordinatorDashboard() {
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.06 }}
-              onClick={() => navigate(`/classrooms/${h.id}`)}
+              onClick={() => navigate(`/classrooms/${h.id}`, { state: { from: "coord" } })}
               className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 border border-border/40 cursor-pointer hover:border-primary/30 transition-all active:scale-[0.98]"
             >
               <div className="flex items-center justify-between mb-2">
