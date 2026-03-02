@@ -128,7 +128,7 @@ export default function More() {
         { emoji: "🔔", labelKey: "more.notifications", descKey: "more.notificationsDesc", path: "/notification-settings", adultsOnly: true },
         { emoji: "📥", labelKey: "more.offline", descKey: "more.offlineDesc", path: "/offline-settings" },
         { emoji: "📲", labelKey: "more.installApp", descKey: "more.installAppDesc", path: "/install-app" },
-        { emoji: "👤", labelKey: "more.loginProfile", path: "/auth" },
+        { emoji: "👤", labelKey: "more.loginProfile", descKey: "more.profileDesc", path: "/profile" },
         { emoji: "❓", labelKey: "more.helpFaq", descKey: "more.helpFaqDesc", path: "/faq" },
       ],
     },

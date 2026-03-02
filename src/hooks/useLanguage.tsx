@@ -2887,6 +2887,22 @@ const translations = {
   "zakat.aboveNisab": { fr: "Au-dessus du Nisab ?", en: "Above Nisab?", nl: "Boven Nisab?", ar: "فوق النصاب؟", tr: "Nisab üstünde?", ur: "نصاب سے اوپر؟" },
   "zakat.zakatDue": { fr: "Zakat à payer", en: "Zakat due", nl: "Te betalen Zakat", ar: "الزكاة المستحقة", tr: "Ödenecek zekat", ur: "واجب الادا زکوٰۃ" },
   "zakat.exportPdf": { fr: "Exporter en PDF", en: "Export as PDF", nl: "Exporteer als PDF", ar: "تصدير كـ PDF", tr: "PDF olarak dışa aktar", ur: "PDF کے طور پر ایکسپورٹ کریں" },
+
+  // ═══ Profile Page ═══
+  "profile.title": { fr: "Mon Profil", en: "My Profile", nl: "Mijn Profiel", ar: "ملفي الشخصي", tr: "Profilim", ur: "میری پروفائل" },
+  "profile.loginRequired": { fr: "Connectez-vous pour voir votre profil", en: "Log in to view your profile", nl: "Log in om je profiel te bekijken", ar: "سجّل الدخول لعرض ملفك", tr: "Profilinizi görmek için giriş yapın", ur: "اپنا پروفائل دیکھنے کے لیے لاگ ان کریں" },
+  "profile.login": { fr: "Se connecter", en: "Log in", nl: "Inloggen", ar: "تسجيل الدخول", tr: "Giriş yap", ur: "لاگ ان" },
+  "profile.totalXp": { fr: "XP Total", en: "Total XP", nl: "Totaal XP", ar: "إجمالي XP", tr: "Toplam XP", ur: "کل XP" },
+  "profile.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "المستوى", tr: "Seviye", ur: "سطح" },
+  "profile.streak": { fr: "Série", en: "Streak", nl: "Reeks", ar: "السلسلة", tr: "Seri", ur: "سلسلہ" },
+  "profile.days": { fr: "jours", en: "days", nl: "dagen", ar: "يوم", tr: "gün", ur: "دن" },
+  "profile.sessions": { fr: "Sessions", en: "Sessions", nl: "Sessies", ar: "الجلسات", tr: "Oturumlar", ur: "سیشنز" },
+  "profile.memberSince": { fr: "Membre depuis", en: "Member since", nl: "Lid sinds", ar: "عضو منذ", tr: "Üye olma tarihi", ur: "ممبر بنے" },
+  "profile.namePlaceholder": { fr: "Votre nom", en: "Your name", nl: "Uw naam", ar: "اسمك", tr: "Adınız", ur: "آپ کا نام" },
+  "profile.cancel": { fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء", tr: "İptal", ur: "منسوخ" },
+  "profile.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
+  "profile.settingsDesc": { fr: "Langue, thème, traduction", en: "Language, theme, translation", nl: "Taal, thema, vertaling", ar: "اللغة، المظهر، الترجمة", tr: "Dil, tema, çeviri", ur: "زبان، تھیم، ترجمہ" },
+  "more.profileDesc": { fr: "Voir et modifier votre profil", en: "View and edit your profile", nl: "Bekijk en bewerk je profiel", ar: "عرض وتعديل ملفك", tr: "Profilinizi görüntüleyin ve düzenleyin", ur: "اپنا پروفائل دیکھیں اور ترمیم کریں" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
