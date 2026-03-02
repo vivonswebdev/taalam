@@ -46,20 +46,20 @@ export default function TranscriptionView({
           <span>📖</span>
           <p className="text-xs font-semibold">{t("tarteel.fullText" as any)}</p>
         </div>
-        <div className="flex flex-wrap gap-2 justify-center" dir="rtl">
+        <div className="flex flex-wrap gap-x-3 gap-y-2 justify-center" dir="rtl">
           {transcription.matches.map((match, i) => (
             <motion.span
               key={i}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-arabic ${
+              transition={{ delay: i * 0.05 }}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-base font-arabic ${
                 match.correct
                   ? "bg-green-500/10 text-green-700 dark:text-green-400"
                   : "bg-destructive/10 text-destructive"
               }`}
             >
-              {match.word}
+              <span>{match.word}</span>
               {match.correct ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
             </motion.span>
           ))}

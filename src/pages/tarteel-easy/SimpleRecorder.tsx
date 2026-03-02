@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useXP } from "@/hooks/useXP";
 import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
+import { getSurahText, normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
 import MicPermissionHelp from "./MicPermissionHelp";
 
 export interface TranscriptionData {
@@ -135,15 +135,18 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
     // TODO: replace with real API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const mockExpected = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌ";
-    const mockDetected = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ";
+    // Utiliser la sourate sélectionnée (pas hardcodé)
+    const mockExpected = getSurahText(surahNumber);
+    const allWords = splitArabicText(mockExpected);
+    const detectedWordCount = Math.floor(allWords.length * (0.6 + Math.random() * 0.2));
+    const mockDetected = allWords.slice(0, detectedWordCount).join(" ");
 
     const expectedWords = splitArabicText(mockExpected);
     const detectedWords = splitArabicText(mockDetected);
 
     const matches = expectedWords.map((word, i) => ({
       word,
-      correct: detectedWords[i]
+      correct: i < detectedWords.length
         ? normalizeArabic(word) === normalizeArabic(detectedWords[i])
         : false,
     }));
