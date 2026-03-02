@@ -1286,6 +1286,7 @@ export type Database = {
           id: string
           is_public: boolean
           mastery_score: number
+          mode_password: string | null
           preferred_mode: string
           sessions_count: number
           updated_at: string
@@ -1301,6 +1302,7 @@ export type Database = {
           id?: string
           is_public?: boolean
           mastery_score?: number
+          mode_password?: string | null
           preferred_mode?: string
           sessions_count?: number
           updated_at?: string
@@ -1316,6 +1318,7 @@ export type Database = {
           id?: string
           is_public?: boolean
           mastery_score?: number
+          mode_password?: string | null
           preferred_mode?: string
           sessions_count?: number
           updated_at?: string
