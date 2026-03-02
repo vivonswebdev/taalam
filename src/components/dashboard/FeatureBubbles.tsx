@@ -277,6 +277,32 @@ export function HomeDashboard() {
           ))}
         </div>
 
+        {/* Nouveautés Famille & Compétition */}
+        <div className="px-5 mt-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔥</span>
+            <h2 className="text-sm font-bold text-foreground">{t("home.newFeatures.title" as any)}</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { emoji: "🏆🏠", key: "home.newFeatures.familyLeaderboard", desc: "home.newFeatures.familyDesc", path: "/family-dashboard" },
+              { emoji: "📚👥", key: "home.newFeatures.classLeaderboard", desc: "home.newFeatures.classDesc", path: "/classrooms" },
+              { emoji: "👨‍👩‍👧‍👦", key: "home.newFeatures.kidsQuiz", desc: "home.newFeatures.kidsQuizDesc", path: "/kids-quiz" },
+              { emoji: "💬🌍", key: "home.newFeatures.community", desc: "home.newFeatures.communityDesc", path: "/community" },
+            ].map((card) => (
+              <button
+                key={card.key}
+                onClick={() => navigate(user ? card.path : "/auth")}
+                className="group rounded-2xl p-4 bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 shadow-sm hover:shadow-md active:scale-[0.98] transition-all text-left"
+              >
+                <span className="text-2xl block mb-1">{card.emoji}</span>
+                <p className="text-xs font-bold text-foreground">{t(card.key as any)}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{t(card.desc as any)}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Social 2x2 Block */}
         <div className="mt-5">
           <SocialActionsBlock t={t} user={user} navigate={navigate} />
