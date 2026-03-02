@@ -2573,6 +2573,22 @@ const translations = {
   "familyHeatmap.more": { fr: "Plus", en: "More", nl: "Meer", ar: "أكثر", tr: "Çok", ur: "زیادہ" },
   "familyHeatmap.pdfTitle": { fr: "Rapport Famille Mensuel", en: "Monthly Family Report", nl: "Maandelijks Familierapport", ar: "تقرير العائلة الشهري", tr: "Aylık Aile Raporu", ur: "ماہانہ خاندانی رپورٹ" },
   "familyHeatmap.pdfDownloaded": { fr: "Rapport PDF téléchargé !", en: "PDF report downloaded!", nl: "PDF-rapport gedownload!", ar: "تم تنزيل التقرير!", tr: "PDF raporu indirildi!", ur: "PDF رپورٹ ڈاؤن لوڈ ہوئی!" },
+  // Athan Settings
+  "athan.title": { fr: "Paramètres Athan", en: "Athan Settings", nl: "Athan Instellingen", ar: "إعدادات الأذان", tr: "Ezan Ayarları", ur: "اذان کی ترتیبات" },
+  "athan.subtitle": { fr: "Choisissez votre récitateur préféré", en: "Choose your favorite reciter", nl: "Kies je favoriete recitator", ar: "اختر مؤذنك المفضل", tr: "Favori müezzininizi seçin", ur: "اپنا پسندیدہ مؤذن منتخب کریں" },
+  "athan.volume": { fr: "Volume", en: "Volume", nl: "Volume", ar: "مستوى الصوت", tr: "Ses", ur: "آواز" },
+  "athan.chooseReciter": { fr: "Choisir un récitateur", en: "Choose a reciter", nl: "Kies een recitator", ar: "اختر مؤذنًا", tr: "Bir müezzin seçin", ur: "ایک مؤذن منتخب کریں" },
+  "athan.saved": { fr: "Athan sauvegardé !", en: "Athan saved!", nl: "Athan opgeslagen!", ar: "تم حفظ الأذان!", tr: "Ezan kaydedildi!", ur: "اذان محفوظ ہو گئی!" },
+  "athan.audioError": { fr: "Impossible de lire l'audio", en: "Cannot play audio", nl: "Kan audio niet afspelen", ar: "تعذر تشغيل الصوت", tr: "Ses oynatılamıyor", ur: "آڈیو نہیں چل سکا" },
+  "athan.info": { fr: "Information", en: "Information", nl: "Informatie", ar: "معلومات", tr: "Bilgi", ur: "معلومات" },
+  "athan.infoDesc": { fr: "L'Athan sera joué automatiquement aux heures de prière si les notifications sont activées.", en: "The Athan will play automatically at prayer times if notifications are enabled.", nl: "De Athan wordt automatisch afgespeeld op gebedstijden als meldingen zijn ingeschakeld.", ar: "سيتم تشغيل الأذان تلقائيًا في أوقات الصلاة إذا كانت الإشعارات مفعّلة.", tr: "Bildirimler etkinse ezan namaz vakitlerinde otomatik olarak çalınacaktır.", ur: "اگر اطلاعات فعال ہیں تو نماز کے اوقات میں اذان خودکار طور پر بجے گی۔" },
+  "athan.popular": { fr: "Populaire", en: "Popular", nl: "Populair", ar: "شائع", tr: "Popüler", ur: "مقبول" },
+  "athan.descAlafasy": { fr: "Voix puissante et émouvante, très populaire", en: "Powerful and emotional voice, very popular", nl: "Krachtige en emotionele stem, zeer populair", ar: "صوت قوي ومؤثر، شائع جداً", tr: "Güçlü ve duygusal ses, çok popüler", ur: "طاقتور اور جذباتی آواز، بہت مقبول" },
+  "athan.descAbdulbasit": { fr: "Style classique égyptien, voix légendaire", en: "Classic Egyptian style, legendary voice", nl: "Klassieke Egyptische stijl, legendarische stem", ar: "أسلوب مصري كلاسيكي، صوت أسطوري", tr: "Klasik Mısır tarzı, efsanevi ses", ur: "کلاسیکی مصری انداز، افسانوی آواز" },
+  "athan.descAliMullah": { fr: "Mouadhin Masjid al-Haram (Makkah)", en: "Muadhin of Masjid al-Haram (Makkah)", nl: "Muadhin van Masjid al-Haram (Mekka)", ar: "مؤذن المسجد الحرام (مكة)", tr: "Mescid-i Haram müezzini (Mekke)", ur: "مسجد الحرام کے مؤذن (مکہ)" },
+  "athan.descHudhaify": { fr: "Imam Masjid an-Nabawi (Médine)", en: "Imam of Masjid an-Nabawi (Madinah)", nl: "Imam van Masjid an-Nabawi (Medina)", ar: "إمام المسجد النبوي (المدينة)", tr: "Mescid-i Nebevi imamı (Medine)", ur: "مسجد نبوی کے امام (مدینہ)" },
+  "athan.descMinshawi": { fr: "Récitateur légendaire, style mujawwad", en: "Legendary reciter, mujawwad style", nl: "Legendarische recitator, mujawwad stijl", ar: "قارئ أسطوري، أسلوب مجوّد", tr: "Efsanevi okuyucu, mücevved tarzı", ur: "افسانوی قاری، مجود انداز" },
+  "athan.descDefault": { fr: "Son de notification court (pas d'Athan)", en: "Short notification sound (no Athan)", nl: "Kort meldingsgeluid (geen Athan)", ar: "صوت إشعار قصير (بدون أذان)", tr: "Kısa bildirim sesi (ezan yok)", ur: "مختصر اطلاع کی آواز (اذان نہیں)" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
