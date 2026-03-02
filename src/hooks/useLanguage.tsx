@@ -2648,12 +2648,10 @@ const translations = {
   "time.minutes": { fr: "minutes", en: "minutes", nl: "minuten", ar: "دقائق", tr: "dakika", ur: "منٹ" },
   "time.hours": { fr: "heures", en: "hours", nl: "uur", ar: "ساعات", tr: "saat", ur: "گھنٹے" },
   "time.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
-  // ═══ LEADERBOARD ═══
-  "leaderboard.title": { fr: "Classement", en: "Leaderboard", nl: "Klassement", ar: "لوحة المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
+  // ═══ LEADERBOARD (extras) ═══
   "leaderboard.rank": { fr: "Rang", en: "Rank", nl: "Rang", ar: "المرتبة", tr: "Sıra", ur: "درجہ" },
   "leaderboard.player": { fr: "Joueur", en: "Player", nl: "Speler", ar: "اللاعب", tr: "Oyuncu", ur: "کھلاڑی" },
   "leaderboard.score": { fr: "Score", en: "Score", nl: "Score", ar: "النتيجة", tr: "Puan", ur: "نمبر" },
-  "leaderboard.global": { fr: "Global", en: "Global", nl: "Globaal", ar: "عالمي", tr: "Global", ur: "عالمی" },
   "leaderboard.friends": { fr: "Amis", en: "Friends", nl: "Vrienden", ar: "الأصدقاء", tr: "Arkadaşlar", ur: "دوست" },
   "leaderboard.local": { fr: "Local", en: "Local", nl: "Lokaal", ar: "محلي", tr: "Yerel", ur: "مقامی" },
 } as const;
