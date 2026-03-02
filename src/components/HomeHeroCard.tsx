@@ -69,7 +69,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
       </p>
 
       {/* Description */}
-      <p className="text-[10px] text-white/55 mt-0.5 line-clamp-2 relative z-10">
+      <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2 relative z-10">
         {t(card.descKey as any)}
       </p>
 
