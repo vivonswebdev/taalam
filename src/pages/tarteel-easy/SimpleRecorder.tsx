@@ -132,12 +132,89 @@ export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript,
     }
   };
 
+  const startLiveSpeechRecognition = useCallback(() => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+
+    const rec: SpeechRecognition = new SR();
+    rec.lang = "ar-SA";
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 1;
+    keepListeningRef.current = true;
+
+    const expectedText = getSurahText(surahNumber);
+    const expectedWords = splitArabicText(expectedText);
+
+    rec.onresult = (event: SpeechRecognitionEvent) => {
+      let interim = "";
+      let finalText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalText += result[0].transcript + " ";
+        } else {
+          interim += result[0].transcript;
+        }
+      }
+
+      if (interim) {
+        onLiveTranscript?.(interim.trim());
+      }
+
+      if (finalText.trim()) {
+        onLiveTranscript?.("");
+        // Check similarity with expected words
+        const spokenWords = splitArabicText(finalText.trim());
+        const matchCount = spokenWords.filter((w, i) => {
+          const exp = expectedWords[i] || "";
+          return normalizeArabic(w) === normalizeArabic(exp);
+        }).length;
+        const similarity = spokenWords.length > 0 ? matchCount / Math.max(spokenWords.length, 1) : 0;
+        onVerseVerified?.({ text: finalText.trim(), correct: similarity >= 0.6 });
+      }
+    };
+
+    rec.onerror = (event: any) => {
+      const err = event?.error || "unknown";
+      if (err === "no-speech" || err === "audio-capture") {
+        // Auto-restart on silence
+        if (keepListeningRef.current) {
+          setTimeout(() => {
+            try { rec.start(); } catch {}
+          }, 300);
+        }
+        return;
+      }
+      console.log("[LiveSTT] error:", err);
+    };
+
+    rec.onend = () => {
+      if (keepListeningRef.current) {
+        try { rec.start(); } catch {}
+      }
+    };
+
+    try {
+      rec.start();
+      speechRecRef.current = rec;
+    } catch {}
+  }, [surahNumber, onLiveTranscript, onVerseVerified]);
+
   const stopRecording = () => {
+    // Stop speech recognition
+    keepListeningRef.current = false;
+    if (speechRecRef.current) {
+      try { speechRecRef.current.stop(); } catch {}
+      speechRecRef.current = null;
+    }
+
     if (mediaRecorderRef.current?.state === "recording") {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
     setIsAnalyzing(true);
+    onRecordingStop?.();
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     if (timerRef.current) clearInterval(timerRef.current);
   };
