@@ -307,7 +307,19 @@ export default function ClassroomDetail() {
     }
   };
 
-  if (!classroom && !resolvedClassId) {
+  // Fetch classroom from DB if not found locally (e.g. coordinator viewing another teacher's class)
+  const [dbClassroom, setDbClassroom] = useState<{ name: string; joinCode: string; teacherId: string } | null>(null);
+  useEffect(() => {
+    if (classroom || !classId) return;
+    supabase.from("classrooms").select("name, join_code, teacher_id").eq("id", classId).maybeSingle()
+      .then(({ data }) => {
+        if (data) setDbClassroom({ name: data.name, joinCode: data.join_code, teacherId: data.teacher_id });
+      });
+  }, [classroom, classId]);
+
+  const effectiveClassroom = classroom || (dbClassroom ? { ...dbClassroom, id: classId! } : null);
+
+  if (!effectiveClassroom) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Chargement...</p>
