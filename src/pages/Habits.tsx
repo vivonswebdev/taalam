@@ -31,7 +31,7 @@ const GOAL_PRESETS: { type: GoalType; target: number; label: string; icon: strin
   { type: "ayat", target: 50, label: "50 ayat", icon: "📖" },
 ];
 
-function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }> }) {
+function HeatmapGrid({ days, listeningByDay, t }: { days: { date: string; minutes_quran: number; ayat_recited: number }[]; listeningByDay: Record<string, { minutes: number }>; t: (key: any) => string }) {
   const getIntensity = (d: typeof days[0]) => {
     const listenMin = listeningByDay[d.date]?.minutes || 0;
     const score = d.minutes_quran + d.ayat_recited + listenMin;
@@ -41,7 +41,10 @@ function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_q
     if (score < 30) return "bg-primary/60";
     return "bg-primary";
   };
-  const dayLabels = ["L", "M", "M", "J", "V", "S", "D"];
+  const dayLabels = [
+    t("habits.heatL" as any), t("habits.heatM1" as any), t("habits.heatM2" as any),
+    t("habits.heatJ" as any), t("habits.heatV" as any), t("habits.heatS" as any), t("habits.heatD" as any)
+  ];
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-7 gap-1">
@@ -51,22 +54,20 @@ function HeatmapGrid({ days, listeningByDay }: { days: { date: string; minutes_q
       </div>
       <div className="grid grid-cols-7 gap-1">
         {days.map((d, i) => {
-          const listenMin = listeningByDay[d.date]?.minutes || 0;
           return (
             <motion.div key={d.date} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.015 }}
-              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`}
-              title={`${d.date}: ${d.minutes_quran}min lecture, ${listenMin}min écoute, ${d.ayat_recited} ayat`} />
+              className={`aspect-square rounded-md ${getIntensity(d)} transition-colors`} />
           );
         })}
       </div>
       <div className="flex items-center justify-end gap-1 text-[9px] text-muted-foreground">
-        <span>Moins</span>
+        <span>{t("habits.less" as any)}</span>
         <div className="w-3 h-3 rounded-sm bg-muted" />
         <div className="w-3 h-3 rounded-sm bg-primary/20" />
         <div className="w-3 h-3 rounded-sm bg-primary/40" />
         <div className="w-3 h-3 rounded-sm bg-primary/60" />
         <div className="w-3 h-3 rounded-sm bg-primary" />
-        <span>Plus</span>
+        <span>{t("habits.more" as any)}</span>
       </div>
     </div>
   );
@@ -185,7 +186,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">XP Qur'an</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("habits.xpQuran" as any)}</span>
             <div className="h-px flex-1 bg-border" />
           </div>
 
@@ -206,7 +207,7 @@ export default function Habits() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">{qxp.badge.title}</p>
-              <p className="text-[11px] text-muted-foreground">Niveau {qxp.level} · {qxp.xp} XP total</p>
+              <p className="text-[11px] text-muted-foreground">{t("habits.level" as any)} {qxp.level} · {qxp.xp} {t("habits.xpTotal" as any)}</p>
             </div>
           </div>
 
@@ -217,11 +218,11 @@ export default function Habits() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">
-                Streak : {streak} jour{streak > 1 ? "s" : ""} 🔥
+                {t("habits.streak" as any)} : {streak} {streak > 1 ? t("habits.streakDaysPlural" as any) : t("habits.streakDays" as any)} 🔥
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {streak >= 2 ? "+5 XP/jour de bonus · " : ""}
-                Prochain bonus 🎁 dans {10 - (streak % 10)} jour{(10 - (streak % 10)) > 1 ? "s" : ""} (+50 XP)
+                {streak >= 2 ? `${t("habits.streakBonus" as any)} · ` : ""}
+                {t("habits.nextBonus" as any)} {10 - (streak % 10)} {(10 - (streak % 10)) > 1 ? t("habits.streakDaysPlural" as any) : t("habits.streakDays" as any)} (+50 XP)
               </p>
             </div>
           </div>
@@ -230,23 +231,23 @@ export default function Habits() {
           <div className="grid grid-cols-4 gap-2">
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">📖</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Lire</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpRead" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+1/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">🎧</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Écouter</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpListen" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+1/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">🎤</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Réciter</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpRecite" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+2/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">❓</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Quiz</p>
-              <p className="text-[9px] text-primary font-bold">+10/bonne</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpQuiz" as any)}</p>
+              <p className="text-[9px] text-primary font-bold">+10</p>
             </div>
           </div>
         </motion.div>
@@ -272,22 +273,22 @@ export default function Habits() {
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Clock size={18} className="mx-auto text-primary mb-1" />
             <p className="text-xl font-bold text-foreground">{today.minutes_quran}</p>
-            <p className="text-[9px] text-muted-foreground">min lecture</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.minReading" as any)}</p>
           </div>
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Headphones size={18} className="mx-auto text-secondary mb-1" />
             <p className="text-xl font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
-            <p className="text-[9px] text-muted-foreground">min écoute</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.minListening" as any)}</p>
           </div>
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <BookOpen size={18} className="mx-auto text-primary mb-1" />
             <p className="text-xl font-bold text-foreground">{today.ayat_recited}</p>
-            <p className="text-[9px] text-muted-foreground">ayat</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.ayat" as any)}</p>
           </div>
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Flame size={18} className="mx-auto text-destructive mb-1" />
             <p className="text-xl font-bold text-foreground">{streak}</p>
-            <p className="text-[9px] text-muted-foreground">jours</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.days" as any)}</p>
           </div>
         </motion.div>
 
@@ -296,10 +297,10 @@ export default function Habits() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Target size={18} className="text-primary" />
-              <span className="text-sm font-semibold text-foreground">Objectif quotidien</span>
+              <span className="text-sm font-semibold text-foreground">{t("habits.dailyGoal" as any)}</span>
             </div>
             <button onClick={() => setShowGoalPicker(!showGoalPicker)} className="text-xs text-primary font-medium">
-              {showGoalPicker ? "Fermer" : "Modifier"}
+              {showGoalPicker ? t("habits.close" as any) : t("habits.edit" as any)}
             </button>
           </div>
           <div className="flex items-center gap-3 mb-2">
@@ -314,14 +315,14 @@ export default function Habits() {
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {goal.type === "minutes" ? "minutes de Qur'an" : "ayat récitées"} ·{" "}
+            {goal.type === "minutes" ? t("habits.minutesQuran" as any) : t("habits.ayatRecited" as any)} ·{" "}
             {goalProgress.percent >= 100 ? (
-              <span className="text-success font-semibold">✅ Objectif atteint !</span>
+              <span className="text-success font-semibold">{t("habits.goalReached" as any)}</span>
             ) : `${goalProgress.percent}%`}
           </p>
           {showGoalPicker && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="mt-4 pt-3 border-t border-border">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Choisis ton objectif :</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">{t("habits.chooseGoal" as any)}</p>
               <div className="grid grid-cols-3 gap-2">
                 {GOAL_PRESETS.map((preset) => (
                   <button key={`${preset.type}-${preset.target}`}
@@ -344,16 +345,16 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={18} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">30 derniers jours</span>
+            <span className="text-sm font-semibold text-foreground">{t("habits.last30Days" as any)}</span>
           </div>
-          <HeatmapGrid days={last30Days} listeningByDay={listeningStats.dailyListening} />
+          <HeatmapGrid days={last30Days} listeningByDay={listeningStats.dailyListening} t={t} />
         </motion.div>
 
         {/* ───── SECTION: Résumé semaine ───── */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Award size={18} className="text-secondary" />
-            <span className="text-sm font-semibold text-foreground">Résumé de la semaine</span>
+            <span className="text-sm font-semibold text-foreground">{t("habits.weeklySummary" as any)}</span>
           </div>
           {(() => {
             const last7 = last30Days.slice(-7);
@@ -363,10 +364,10 @@ export default function Habits() {
             const activeDays = last7.filter((d) => d.minutes_quran > 0 || d.ayat_recited > 0 || (listeningStats.dailyListening[d.date]?.minutes || 0) > 0).length;
             return (
               <div className="grid grid-cols-4 gap-2 text-center">
-                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">min lecture</p></div>
-                <div><p className="text-lg font-bold text-foreground">{totalListenMin}</p><p className="text-[10px] text-muted-foreground">min écoute</p></div>
-                <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">ayat</p></div>
-                <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">jours actifs</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">{t("habits.minReading" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalListenMin}</p><p className="text-[10px] text-muted-foreground">{t("habits.minListening" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">{t("habits.ayat" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">{t("habits.activeDays" as any)}</p></div>
               </div>
             );
           })()}
@@ -377,31 +378,31 @@ export default function Habits() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Headphones size={18} className="text-primary" />
-              <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
+              <span className="text-sm font-semibold text-foreground">{t("habits.advancedListening" as any)}</span>
             </div>
             <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
-              Ouvrir →
+              {t("habits.open" as any)}
             </button>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
-              <p className="text-[10px] text-muted-foreground">min aujourd'hui</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.todayMin" as any)}</p>
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.sessionsCount}</p>
-              <p className="text-[10px] text-muted-foreground">sessions</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.sessions" as any)}</p>
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.averageQuizScore != null ? `${listeningStats.averageQuizScore}%` : "–"}</p>
-              <p className="text-[10px] text-muted-foreground">score quiz moy.</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.avgQuizScore" as any)}</p>
             </div>
           </div>
           {listeningStats.totalListeningMinutes > 0 && (
             <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-              <span>Total : {listeningStats.totalListeningMinutes} min d'écoute</span>
+              <span>{t("habits.totalListening" as any).replace("{min}", String(listeningStats.totalListeningMinutes))}</span>
               {listeningStats.lastSession && (
-                <span>Sourate {listeningStats.lastSession.surah_number}</span>
+                <span>{t("habits.surah" as any)} {listeningStats.lastSession.surah_number}</span>
               )}
             </div>
           )}
@@ -411,38 +412,38 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.34 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={18} className="text-secondary" />
-            <span className="text-sm font-semibold text-foreground">Activité de la semaine</span>
+            <span className="text-sm font-semibold text-foreground">{t("habits.weekActivity" as any)}</span>
           </div>
           {(() => {
             const last7 = last30Days.slice(-7);
-            const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+            const dayNames = [t("habits.daySun" as any), t("habits.dayMon" as any), t("habits.dayTue" as any), t("habits.dayWed" as any), t("habits.dayThu" as any), t("habits.dayFri" as any), t("habits.daySat" as any)];
             const weekData = last7.map((d) => {
               const dt = new Date(d.date + "T12:00:00");
               const listenMin = listeningStats.dailyListening[d.date]?.minutes || 0;
-              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, écoute: listenMin };
+              return { day: dayNames[dt.getDay()], lecture: d.minutes_quran, listen: listenMin };
             });
             return (
               <ResponsiveContainer width="100%" height={120}>
                 <BarChart data={weekData} barGap={1}>
                   <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
                   <YAxis hide />
-                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="écoute" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} name={t("habits.reading" as any)} />
+                  <Bar dataKey="listen" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} name={t("habits.listening" as any)} />
                 </BarChart>
               </ResponsiveContainer>
             );
           })()}
           <div className="flex items-center justify-center gap-4 mt-2">
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">Lecture</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">Écoute</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">{t("habits.reading" as any)}</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">{t("habits.listening" as any)}</span></div>
           </div>
         </motion.div>
 
         {/* Cloud sync hint */}
         {!isAuthenticated && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
-            <p className="text-xs text-muted-foreground">📱 Connecte-toi pour synchroniser tes habitudes entre appareils</p>
-            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">Se connecter →</button>
+            <p className="text-xs text-muted-foreground">{t("habits.syncHint" as any)}</p>
+            <button onClick={() => navigate("/auth")} className="mt-2 text-xs font-semibold text-primary">{t("habits.signIn" as any)}</button>
           </motion.div>
         )}
 
@@ -452,7 +453,7 @@ export default function Habits() {
         <div className="pt-2">
           <div className="flex items-center gap-2 mb-4">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Progression Qur'an</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("habits.quranProgress" as any)}</span>
             <div className="h-px flex-1 bg-border" />
           </div>
         </div>
