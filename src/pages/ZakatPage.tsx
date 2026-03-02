@@ -169,7 +169,7 @@ export default function ZakatPage() {
         }`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-muted-foreground">{t("zakat.totalWealth" as any)}</span>
-            <span className="font-mono text-sm font-bold text-foreground">${zakatableWealth.toFixed(2)}</span>
+            <span className="font-mono text-sm font-bold text-foreground">{zakatableWealth.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-muted-foreground">{t("zakat.aboveNisab" as any)}</span>
