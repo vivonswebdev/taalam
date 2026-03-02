@@ -2,6 +2,7 @@ import { Component, type ReactNode } from "react";
 import { useUserMode } from "@/hooks/useUserMode";
 import { HomeDashboard } from "@/components/dashboard/FeatureBubbles";
 import KidsHomePage from "@/pages/KidsHomePage";
+import TeacherHomePage from "@/pages/TeacherHomePage";
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {
@@ -30,6 +31,14 @@ export default function Home() {
 
   if (userMode === "child") {
     return <KidsHomePage />;
+  }
+
+  if (userMode === "teacher") {
+    return (
+      <HomeErrorBoundary>
+        <TeacherHomePage />
+      </HomeErrorBoundary>
+    );
   }
 
   return (
