@@ -18,8 +18,8 @@ interface UseVoiceRecognitionOptions {
 const MAX_RECORDING_DURATION_MS = 60_000;
 const TIMESLICE_MS = 1_000;
 const MIN_CHUNK_SIZE = 1;
-const NATIVE_SILENCE_TIMEOUT_MS = 3_500; // Shortened for faster fallback
-const MAX_NATIVE_RETRIES = 1; // After 1 silent attempt, force server fallback immediately
+const NATIVE_SILENCE_TIMEOUT_MS = 8_000; // Allow natural pauses between verses
+const MAX_NATIVE_RETRIES = 5; // More retries before forcing server fallback
 
 export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const { lang = "ar-SA", continuous = true, forceServer = false, onResult, onEnd, onError } = options;
@@ -49,6 +49,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const nativeNoEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasReceivedResultRef = useRef(false);
   const nativeRetryCountRef = useRef(0);
+  const sessionHadResultsRef = useRef(false); // Track if ANY result was received during the whole session
 
   const hasNativeSR = useRef(false);
   const forceServerRef = useRef(false);
@@ -276,6 +277,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       hasReceivedResultRef.current = true;
+      sessionHadResultsRef.current = true;
       // Clear timers since we got results
       if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
       if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
@@ -310,7 +312,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       nativeRetryCountRef.current++;
       console.warn(`[VoiceRecognition] Native SR ended without results via ${source} (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
 
-      if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+      // If we ever got results in this session, be more lenient with retries
+      const effectiveMaxRetries = sessionHadResultsRef.current ? MAX_NATIVE_RETRIES * 2 : MAX_NATIVE_RETRIES;
+
+      if (nativeRetryCountRef.current >= effectiveMaxRetries) {
         console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
         forceServerRef.current = true;
         recognitionRef.current = null;
@@ -452,6 +457,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       return;
     }
     nativeRetryCountRef.current = 0;
+    sessionHadResultsRef.current = false;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
       setMode("native");
