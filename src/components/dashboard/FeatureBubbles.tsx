@@ -11,11 +11,7 @@ import ProfileBubble from "@/components/ProfileBubble";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
-import ReciterSelector from "@/components/home/ReciterSelector";
-import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
-import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
-import HijriMiniWidget from "@/components/home/HijriMiniWidget";
-import NextPrayerWidget from "@/components/home/NextPrayerWidget";
+import taaloumLogo from "@/assets/taaloum-logo.png";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
 
