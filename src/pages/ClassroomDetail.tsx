@@ -368,7 +368,7 @@ export default function ClassroomDetail() {
             </div>
             <div className="bg-white rounded-xl p-4 inline-block mx-auto">
               <QRCodeSVG
-                value={`https://iqraacoran.lovable.app/join/${classroom.joinCode}`}
+                value={`https://iqraacoran.lovable.app/join/${effectiveClassroom.joinCode}`}
                 size={200}
                 level="M"
                 includeMargin={false}
