@@ -27,15 +27,41 @@ import { useHifzSRS } from "@/hooks/useHifzSRS";
 import { trackEvent } from "@/lib/trackEvent";
 import KidsHomePage from "@/pages/KidsHomePage";
 
-export default function Home() {
-  const { mode: userMode, ageGroup } = useUserMode();
+// Simple error boundary for Home
+class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error: Error) { console.error("Home error:", error); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8">
+          <p className="text-lg font-bold">⚠️ Erreur de chargement</p>
+          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+            🔄 Recharger
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
-  // ─── Kids mode: render KidsHomePage directly ───
+export default function Home() {
+  const { mode: userMode } = useUserMode();
+
   if (userMode === "child") {
     return <KidsHomePage />;
   }
 
-  return <AdultHome />;
+  return (
+    <HomeErrorBoundary>
+      <AdultHome />
+    </HomeErrorBoundary>
+  );
 }
 
 function AdultHome() {
