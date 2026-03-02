@@ -35,8 +35,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
       onClick={() => navigate(card.href)}
       className={`
         relative flex flex-col justify-between min-h-[120px] rounded-3xl p-4 text-left overflow-hidden
-        bg-gradient-to-br ${card.gradient}
-        backdrop-blur-xl border border-white/20
+        bg-card/80 backdrop-blur-xl border border-border/40
         shadow-lg hover:shadow-2xl transition-shadow
       `}
     >
