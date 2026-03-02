@@ -274,6 +274,83 @@ export type Database = {
           },
         ]
       }
+      children_points: {
+        Row: {
+          activity_type: string
+          child_id: string
+          earned_at: string
+          id: string
+          parent_id: string
+          points: number
+        }
+        Insert: {
+          activity_type?: string
+          child_id: string
+          earned_at?: string
+          id?: string
+          parent_id: string
+          points?: number
+        }
+        Update: {
+          activity_type?: string
+          child_id?: string
+          earned_at?: string
+          id?: string
+          parent_id?: string
+          points?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "children_points_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      children_profiles: {
+        Row: {
+          age: number | null
+          avatar_emoji: string
+          birth_date: string | null
+          country_code: string | null
+          created_at: string
+          gender: string | null
+          id: string
+          name: string
+          parent_id: string
+          total_points: number
+          updated_at: string
+        }
+        Insert: {
+          age?: number | null
+          avatar_emoji?: string
+          birth_date?: string | null
+          country_code?: string | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          name: string
+          parent_id: string
+          total_points?: number
+          updated_at?: string
+        }
+        Update: {
+          age?: number | null
+          avatar_emoji?: string
+          birth_date?: string | null
+          country_code?: string | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          name?: string
+          parent_id?: string
+          total_points?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       class_assignments: {
         Row: {
           class_id: string
