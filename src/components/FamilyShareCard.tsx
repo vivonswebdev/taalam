@@ -67,7 +67,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 42px system-ui, -apple-system, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("🕌 Taaloum", CARD_W / 2, 70);
+    ctx.fillText("🕌 Ta'alam", CARD_W / 2, 70);
 
     ctx.fillStyle = "#94a3b8";
     ctx.font = "18px system-ui, sans-serif";
