@@ -119,6 +119,7 @@ export default function Moods() {
   ];
 
   return (
+    <PageBackground intensity="medium">
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
       {/* Header */}
       <div className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50 px-4 py-3 flex items-center gap-3">
