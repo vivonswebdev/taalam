@@ -174,7 +174,7 @@ function AdultHome() {
     <PageBackground intensity="medium">
     <div className="home-bg min-h-screen pb-24">
       {/* Daily Tarteel Challenge */}
-      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && dailyChallenge.surah.number &&
+      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && dailyChallenge.surah.number && typeof dailyChallenge.complete === 'function' &&
         <DailyTarteelChallenge
           surah={dailyChallenge.surah}
           onComplete={(score) => dailyChallenge.complete(score)}
