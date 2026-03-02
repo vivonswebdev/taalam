@@ -3073,6 +3073,14 @@ const translations = {
   "mathGames.swipeHint": { fr: "⬆️⬇️⬅️➡️ Glisse pour fusionner !", en: "⬆️⬇️⬅️➡️ Swipe to merge!", nl: "⬆️⬇️⬅️➡️ Veeg om te combineren!", ar: "⬆️⬇️⬅️➡️ اسحب للدمج!", tr: "⬆️⬇️⬅️➡️ Birleştirmek için kaydır!", ur: "⬆️⬇️⬅️➡️ ملانے کے لیے سوائپ کریں!" },
   "mathGames.numberRunnerDesc": { fr: "Choisis le bon chemin ! Résous le calcul et place-toi sur la bonne réponse.", en: "Pick the right lane! Solve the equation and stand on the correct answer.", nl: "Kies het juiste pad! Los de som op en sta op het juiste antwoord.", ar: "اختر المسار الصحيح! حل المعادلة وقف على الإجابة الصحيحة.", tr: "Doğru yolu seç! Denklemi çöz ve doğru cevabın üzerinde dur.", ur: "صحیح راستہ چنیں! مساوات حل کریں اور صحیح جواب پر کھڑے ہوں." },
   "mathGames.lanes": { fr: "Chemins", en: "Lanes", nl: "Paden", ar: "مسارات", tr: "Yollar", ur: "راستے" },
+  "tetrisIslam.title": { fr: "Tetris Islam", en: "Tetris Islam", nl: "Tetris Islam", ar: "تتريس إسلام", tr: "Tetris İslam", ur: "ٹیٹرس اسلام" },
+  "tetrisIslam.desc": { fr: "Remplis le Mushaf avec des tetrominoes ! Complète des lignes pour mémoriser le Coran.", en: "Fill the Mushaf with tetrominoes! Complete lines to memorize the Quran.", nl: "Vul de Mushaf met tetrominoes! Maak rijen compleet om de Koran te leren.", ar: "املأ المصحف بالقطع! أكمل الصفوف لحفظ القرآن.", tr: "Mushaf'ı tetrominolarla doldur! Kuran'ı ezberlemek için satırları tamamla.", ur: "مصحف کو ٹیٹرومینوز سے بھرو! قرآن حفظ کرنے کے لیے لائنیں مکمل کرو." },
+  "tetrisIslam.pieces": { fr: "Pièces", en: "Pieces", nl: "Stukken", ar: "قطع", tr: "Parçalar", ur: "ٹکڑے" },
+  "tetrisIslam.lines": { fr: "Lignes", en: "Lines", nl: "Rijen", ar: "صفوف", tr: "Satırlar", ur: "لائنیں" },
+  "tetrisIslam.paused": { fr: "Pause", en: "Paused", nl: "Gepauzeerd", ar: "إيقاف مؤقت", tr: "Duraklatıldı", ur: "وقفہ" },
+  "tetrisIslam.resume": { fr: "Reprendre", en: "Resume", nl: "Hervatten", ar: "استئناف", tr: "Devam Et", ur: "دوبارہ شروع" },
+  "kidsGames.tetrisIslam": { fr: "Tetris Islam", en: "Tetris Islam", nl: "Tetris Islam", ar: "تتريس إسلام", tr: "Tetris İslam", ur: "ٹیٹرس اسلام" },
+  "kidsGames.tetrisIslamDesc": { fr: "Remplis le Mushaf !", en: "Fill the Mushaf!", nl: "Vul de Mushaf!", ar: "املأ المصحف!", tr: "Mushaf'ı doldur!", ur: "مصحف بھرو!" },
   "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
 } as const;
 
