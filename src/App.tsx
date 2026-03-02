@@ -84,6 +84,7 @@ import OfflineSettings from "./pages/OfflineSettings";
 import CoordinatorDashboard from "./pages/CoordinatorDashboard";
 import StudentStatsPage from "./pages/StudentStatsPage";
 import TarteelSelector from "./pages/TarteelSelector";
+import AthanSettings from "./pages/AthanSettings";
 import TarteelEasyPage from "./pages/tarteel-easy/TarteelEasyPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
