@@ -176,7 +176,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
     ctx.fillStyle = "#475569";
     ctx.font = "12px system-ui, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("taaloum.lovable.app", CARD_W / 2, CARD_H - 20);
+    ctx.fillText("app.taalam.eu", CARD_W / 2, CARD_H - 20);
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), "image/png");
