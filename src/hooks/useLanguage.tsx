@@ -2773,6 +2773,7 @@ const translations = {
   "leaderboard.rivalClose": { fr: "{name} te devance de {gap} XP !", en: "{name} is ahead by {gap} XP!", nl: "{name} staat {gap} XP voor!", ar: "{name} يتقدم عليك بـ {gap} XP!", tr: "{name} senden {gap} XP önde!", ur: "{name} آپ سے {gap} XP آگے ہے!" },
   "leaderboard.you": { fr: "toi", en: "you", nl: "jij", ar: "أنت", tr: "sen", ur: "آپ" },
   "leaderboard.friendPassed": { fr: "{name} t'a dépassé ! 💪", en: "{name} passed you! 💪", nl: "{name} heeft je ingehaald! 💪", ar: "{name} تجاوزك! 💪", tr: "{name} seni geçti! 💪", ur: "{name} نے آپ کو پیچھے چھوڑ دیا! 💪" },
+  "prayer.next": { fr: "Prochaine prière", en: "Next prayer", nl: "Volgend gebed", ar: "الصلاة التالية", tr: "Sonraki namaz", ur: "اگلی نماز" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
