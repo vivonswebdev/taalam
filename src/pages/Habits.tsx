@@ -231,23 +231,23 @@ export default function Habits() {
           <div className="grid grid-cols-4 gap-2">
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">📖</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Lire</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpRead" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+1/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">🎧</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Écouter</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpListen" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+1/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">🎤</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Réciter</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpRecite" as any)}</p>
               <p className="text-[9px] text-primary font-bold">+2/ayah</p>
             </div>
             <div className="bg-card border border-border rounded-xl p-2 text-center">
               <span className="text-lg">❓</span>
-              <p className="text-[9px] text-muted-foreground mt-0.5">Quiz</p>
-              <p className="text-[9px] text-primary font-bold">+10/bonne</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{t("habits.xpQuiz" as any)}</p>
+              <p className="text-[9px] text-primary font-bold">+10</p>
             </div>
           </div>
         </motion.div>
