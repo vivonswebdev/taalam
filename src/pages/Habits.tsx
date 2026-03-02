@@ -218,11 +218,11 @@ export default function Habits() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">
-                Streak : {streak} jour{streak > 1 ? "s" : ""} 🔥
+                {t("habits.streak" as any)} : {streak} {streak > 1 ? t("habits.streakDaysPlural" as any) : t("habits.streakDays" as any)} 🔥
               </p>
               <p className="text-[11px] text-muted-foreground">
-                {streak >= 2 ? "+5 XP/jour de bonus · " : ""}
-                Prochain bonus 🎁 dans {10 - (streak % 10)} jour{(10 - (streak % 10)) > 1 ? "s" : ""} (+50 XP)
+                {streak >= 2 ? `${t("habits.streakBonus" as any)} · ` : ""}
+                {t("habits.nextBonus" as any)} {10 - (streak % 10)} {(10 - (streak % 10)) > 1 ? t("habits.streakDaysPlural" as any) : t("habits.streakDays" as any)} (+50 XP)
               </p>
             </div>
           </div>
