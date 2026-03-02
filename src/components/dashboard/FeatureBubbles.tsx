@@ -40,7 +40,7 @@ const CATEGORIES: Category[] = [
     titleKey: "home.cat.lecture",
     emoji: "📖",
     features: [
-      { id: "quran", nameKey: "dashboard.mushaf", emoji: "📖", path: "/quran", gradient: "from-primary/30 to-accent/20" },
+      { id: "quran", nameKey: "dashboard.tarteel", emoji: "📖", path: "/quran", gradient: "from-primary/30 to-accent/20" },
       { id: "reading", nameKey: "dashboard.reading", emoji: "📚", path: "/reading", gradient: "from-accent/30 to-primary/20" },
       { id: "mushaf", nameKey: "dashboard.mushaf", emoji: "📗", path: "/mushaf", gradient: "from-secondary/30 to-primary/20" },
       { id: "listening", nameKey: "dashboard.listening", emoji: "🎧", path: "/listening", gradient: "from-primary/20 to-secondary/20" },
