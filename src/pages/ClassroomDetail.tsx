@@ -347,7 +347,7 @@ export default function ClassroomDetail() {
       </div>
 
       {/* QR Code Modal */}
-      {showQR && classroom && (
+      {showQR && effectiveClassroom && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
