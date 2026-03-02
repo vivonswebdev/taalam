@@ -102,6 +102,7 @@ import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
 import ChildGalleryPage from "./pages/ChildGalleryPage";
 import KidsMathMenuPage from "./pages/KidsMathMenuPage";
 import QuickCalcPage from "./pages/QuickCalcPage";
+import CalcMergePage from "./pages/CalcMergePage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
