@@ -218,6 +218,7 @@ export function HomeDashboard() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { items: srsItems, todayItems: srsTodayItems, learningCount, reviewingCount, masteredCount } = useHifzSRS();
   const navigate = useNavigate();
+  const [showReciterPicker, setShowReciterPicker] = useState(false);
 
   const handleAction = (action: string) => {
     switch (action) {
@@ -226,6 +227,9 @@ export function HomeDashboard() {
         break;
       case "language":
         navigate("/settings");
+        break;
+      case "reciter":
+        setShowReciterPicker(true);
         break;
       case "donate":
         window.open("https://buy.stripe.com/9AQ5mR6SldWrdQ84GI", "_blank");
