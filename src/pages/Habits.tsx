@@ -345,7 +345,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={18} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">30 derniers jours</span>
+            <span className="text-sm font-semibold text-foreground">{t("habits.last30Days" as any)}</span>
           </div>
           <HeatmapGrid days={last30Days} listeningByDay={listeningStats.dailyListening} />
         </motion.div>
