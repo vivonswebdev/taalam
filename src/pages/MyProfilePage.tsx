@@ -20,10 +20,19 @@ export default function MyProfilePage() {
   const xp = useQuranXp();
   const { streak } = useStreak();
 
+  const { mode } = useUserMode();
+  const { profiles: childProfiles, addProfile: addChildProfile, deleteProfile: deleteChildProfile, AVATAR_EMOJIS } = useChildProfiles();
+
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [editAvatar, setEditAvatar] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // Child creation state
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [childName, setChildName] = useState("");
+  const [childAvatar, setChildAvatar] = useState("👦");
+  const [childAge, setChildAge] = useState("");
 
   const startEdit = () => {
     setEditName(profile?.display_name || "");
