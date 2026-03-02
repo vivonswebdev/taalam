@@ -1886,6 +1886,18 @@ const translations = {
   "more.modeSolo.title": { fr: "Mode solo", en: "Solo mode", nl: "Solomodus", ar: "الوضع الفردي", tr: "Bireysel mod", ur: "سولو موڈ" },
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
 
+
+  // Mode Password
+  "modePassword.createTitle": { fr: "Créer un mot de passe", en: "Create a password", nl: "Wachtwoord aanmaken", ar: "إنشاء كلمة مرور", tr: "Şifre oluştur", ur: "پاس ورڈ بنائیں" },
+  "modePassword.enterTitle": { fr: "Mot de passe requis", en: "Password required", nl: "Wachtwoord vereist", ar: "كلمة المرور مطلوبة", tr: "Şifre gerekli", ur: "پاس ورڈ ضروری ہے" },
+  "modePassword.createDesc": { fr: "Créez un mot de passe pour sécuriser les changements de mode (min. 4 caractères)", en: "Create a password to secure mode changes (min. 4 characters)", nl: "Maak een wachtwoord om moduswisselingen te beveiligen (min. 4 tekens)", ar: "أنشئ كلمة مرور لتأمين تغييرات الوضع (4 أحرف على الأقل)", tr: "Mod değişikliklerini güvence altına almak için bir şifre oluşturun (min. 4 karakter)", ur: "موڈ تبدیلیوں کو محفوظ کرنے کے لیے پاس ورڈ بنائیں (کم از کم 4 حروف)" },
+  "modePassword.enterDesc": { fr: "Entrez votre mot de passe pour changer de mode", en: "Enter your password to change mode", nl: "Voer je wachtwoord in om van modus te wisselen", ar: "أدخل كلمة المرور لتغيير الوضع", tr: "Modu değiştirmek için şifrenizi girin", ur: "موڈ تبدیل کرنے کے لیے پاس ورڈ درج کریں" },
+  "modePassword.tooShort": { fr: "Minimum 4 caractères", en: "Minimum 4 characters", nl: "Minimaal 4 tekens", ar: "4 أحرف على الأقل", tr: "En az 4 karakter", ur: "کم از کم 4 حروف" },
+  "modePassword.created": { fr: "Mot de passe créé et mode changé !", en: "Password created and mode changed!", nl: "Wachtwoord aangemaakt en modus gewijzigd!", ar: "تم إنشاء كلمة المرور وتغيير الوضع!", tr: "Şifre oluşturuldu ve mod değiştirildi!", ur: "پاس ورڈ بنایا گیا اور موڈ تبدیل ہوا!" },
+  "modePassword.incorrect": { fr: "Mot de passe incorrect", en: "Incorrect password", nl: "Onjuist wachtwoord", ar: "كلمة المرور غير صحيحة", tr: "Yanlış şifre", ur: "غلط پاس ورڈ" },
+  "modePassword.modeChanged": { fr: "Mode changé avec succès !", en: "Mode changed successfully!", nl: "Modus succesvol gewijzigd!", ar: "تم تغيير الوضع بنجاح!", tr: "Mod başarıyla değiştirildi!", ur: "موڈ کامیابی سے تبدیل ہوا!" },
+  "modePassword.create": { fr: "Créer", en: "Create", nl: "Aanmaken", ar: "إنشاء", tr: "Oluştur", ur: "بنائیں" },
+
   // Install App
   "install.title": { fr: "Installer Ta'alam comme une app", en: "Install Ta'alam as an app", nl: "Installeer Ta'alam als app", ar: "تثبيت تعلّم كتطبيق", tr: "Ta'alam'ı uygulama olarak yükle", ur: "تعلّم کو ایپ کے طور پر انسٹال کریں" },
   "install.subtitle": { fr: "Ajoute Ta'alam à ton écran d'accueil pour l'utiliser comme une vraie application.", en: "Add Ta'alam to your home screen to use it like a real app.", nl: "Voeg Ta'alam toe aan je startscherm om het als een echte app te gebruiken.", ar: "أضف تعلّم إلى شاشتك الرئيسية لاستخدامه كتطبيق حقيقي.", tr: "Ta'alam'ı gerçek bir uygulama gibi kullanmak için ana ekranına ekle.", ur: "تعلّم کو ایک حقیقی ایپ کی طرح استعمال کرنے کے لیے اپنی ہوم اسکرین میں شامل کریں۔" },
