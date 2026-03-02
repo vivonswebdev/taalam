@@ -18,6 +18,8 @@ interface MenuItem {
   labelKey: string;
   descKey?: string;
   path: string;
+  kidsOnly?: boolean;
+  adultsOnly?: boolean;
 }
 
 interface Section {
@@ -25,39 +27,58 @@ interface Section {
   emoji: string;
   titleKey: string;
   items: MenuItem[];
-  showIf?: boolean;
+  kidsOnly?: boolean;
+  adultsOnly?: boolean;
 }
 
 export default function More() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { mode } = useUserMode();
+  const isKids = mode === "child";
 
-  const SECTIONS: Section[] = [
+  const ALL_SECTIONS: Section[] = [
+    // ─── Kids-specific section ───
+    {
+      id: "kids-fun",
+      emoji: "🧸",
+      titleKey: "more.sectionKidsFun",
+      kidsOnly: true,
+      items: [
+        { emoji: "🎮", labelKey: "more.kidsGames", descKey: "more.kidsGamesDesc", path: "/jeux" },
+        { emoji: "📖", labelKey: "more.kidsStories", descKey: "more.kidsStoriesDesc", path: "/kids-stories" },
+        { emoji: "⭐", labelKey: "more.kidsChecklist", descKey: "more.kidsChecklistDesc", path: "/kids-checklist" },
+        { emoji: "🎓", labelKey: "more.noorani", descKey: "more.nooraniDesc", path: "/noorani" },
+        { emoji: "🏆", labelKey: "more.ranking", descKey: "more.rankingDesc", path: "/leaderboard?mode=kids" },
+      ],
+    },
+    // ─── Lecture Coran ───
     {
       id: "lecture",
       emoji: "📖",
       titleKey: "more.sectionLecture",
       items: [
-        { emoji: "🔍", labelKey: "more.findAyah", descKey: "more.findAyahDesc", path: "/find-ayah" },
-        { emoji: "📚", labelKey: "more.juzHizb", descKey: "more.juzHizbDesc", path: "/juz" },
+        { emoji: "🔍", labelKey: "more.findAyah", descKey: "more.findAyahDesc", path: "/find-ayah", adultsOnly: true },
+        { emoji: "📚", labelKey: "more.juzHizb", descKey: "more.juzHizbDesc", path: "/juz", adultsOnly: true },
         { emoji: "📖", labelKey: "more.readingMode", descKey: "more.readingModeDesc", path: "/quran-hub" },
         { emoji: "⭐", labelKey: "more.bookmarks", descKey: "more.bookmarksDesc", path: "/bookmarks" },
-        { emoji: "📝", labelKey: "more.favoritesNotes", descKey: "more.favoritesNotesDesc", path: "/favorites-notes" },
+        { emoji: "📝", labelKey: "more.favoritesNotes", descKey: "more.favoritesNotesDesc", path: "/favorites-notes", adultsOnly: true },
       ],
     },
+    // ─── Apprentissage ───
     {
       id: "learning",
       emoji: "🎓",
       titleKey: "more.sectionLearning",
       items: [
         { emoji: "🧠", labelKey: "more.quizLevel", descKey: "more.quizLevelDesc", path: "/quiz" },
-        { emoji: "📝", labelKey: "more.studyMode", descKey: "more.studyModeDesc", path: "/study?surah=1" },
-        { emoji: "🎯", labelKey: "more.hifzSrs", descKey: "more.hifzSrsDesc", path: "/hifz-today" },
+        { emoji: "📝", labelKey: "more.studyMode", descKey: "more.studyModeDesc", path: "/study?surah=1", adultsOnly: true },
+        { emoji: "🎯", labelKey: "more.hifzSrs", descKey: "more.hifzSrsDesc", path: "/hifz-today", adultsOnly: true },
         { emoji: "📖", labelKey: "more.noorani", descKey: "more.nooraniDesc", path: "/noorani" },
         { emoji: "🎙️", labelKey: "more.recitation", descKey: "more.recitationDesc", path: "/recitation" },
       ],
     },
+    // ─── Pratique Spirituelle ───
     {
       id: "practice",
       emoji: "🕌",
@@ -65,14 +86,16 @@ export default function More() {
       items: [
         { emoji: "🕐", labelKey: "more.prayerTimes", descKey: "more.prayerTimesDesc", path: "/prayers" },
         { emoji: "📿", labelKey: "more.athkar", descKey: "more.athkarDesc", path: "/moods" },
-        { emoji: "📻", labelKey: "more.liveQuran", descKey: "more.liveQuranDesc", path: "/live-quran" },
-        { emoji: "🎧", labelKey: "more.advancedListening", descKey: "more.advancedListeningDesc", path: "/listening" },
+        { emoji: "📻", labelKey: "more.liveQuran", descKey: "more.liveQuranDesc", path: "/live-quran", adultsOnly: true },
+        { emoji: "🎧", labelKey: "more.advancedListening", descKey: "more.advancedListeningDesc", path: "/listening", adultsOnly: true },
       ],
     },
+    // ─── Social & Famille ───
     {
       id: "social",
       emoji: "👥",
       titleKey: "more.sectionSocial",
+      adultsOnly: true,
       items: [
         { emoji: "🌍", labelKey: "more.community", descKey: "more.communityDesc", path: "/community" },
         { emoji: "👨‍👩‍👧", labelKey: "more.familyClass", descKey: "more.familyClassDesc", path: "/family" },
@@ -81,23 +104,26 @@ export default function More() {
         ...(mode === "teacher" ? [{ emoji: "📊", labelKey: "more.teacherDashboard", descKey: "more.teacherDashboardDesc", path: "/teacher-dashboard" }] : []),
       ],
     },
+    // ─── Progression ───
     {
       id: "progress",
       emoji: "📊",
       titleKey: "more.sectionProgress",
+      adultsOnly: true,
       items: [
         { emoji: "📊", labelKey: "more.habitsProgress", descKey: "more.habitsDesc", path: "/habits" },
         { emoji: "🗺️", labelKey: "more.hifzMap", descKey: "more.hifzMapDesc", path: "/hifz-map" },
         { emoji: "📅", labelKey: "more.hifzPlan", descKey: "more.hifzPlanDesc", path: "/hifz-plan" },
       ],
     },
+    // ─── Paramètres ───
     {
       id: "settings",
       emoji: "⚙️",
       titleKey: "more.sectionSettings",
       items: [
         { emoji: "⚙️", labelKey: "nav.settings", descKey: "more.settingsDesc", path: "/settings" },
-        { emoji: "🔔", labelKey: "more.notifications", descKey: "more.notificationsDesc", path: "/notification-settings" },
+        { emoji: "🔔", labelKey: "more.notifications", descKey: "more.notificationsDesc", path: "/notification-settings", adultsOnly: true },
         { emoji: "📥", labelKey: "more.offline", descKey: "more.offlineDesc", path: "/offline-settings" },
         { emoji: "📲", labelKey: "more.installApp", descKey: "more.installAppDesc", path: "/install-app" },
         { emoji: "👤", labelKey: "more.loginProfile", path: "/auth" },
@@ -105,6 +131,25 @@ export default function More() {
       ],
     },
   ];
+
+  // Filter sections & items based on mode
+  const SECTIONS = ALL_SECTIONS
+    .filter((s) => {
+      if (isKids && s.adultsOnly) return false;
+      if (!isKids && s.kidsOnly) return false;
+      return true;
+    })
+    .map((s) => ({
+      ...s,
+      items: s.items.filter((item) => {
+        if (isKids && item.adultsOnly) return false;
+        if (!isKids && item.kidsOnly) return false;
+        return true;
+      }),
+    }))
+    .filter((s) => s.items.length > 0);
+
+  const defaultOpen = isKids ? ["kids-fun"] : ["lecture"];
 
   return (
     <div className="min-h-screen pb-24">
@@ -116,7 +161,7 @@ export default function More() {
             animate={{ opacity: 1 }}
             className="text-xl font-bold text-foreground flex items-center gap-2"
           >
-            ⚙️ {t("more.title")}
+            {isKids ? "🧸" : "⚙️"} {t("more.title")}
           </motion.h1>
           <p className="text-xs text-muted-foreground mt-0.5">{t("more.subtitle")}</p>
         </div>
@@ -128,7 +173,7 @@ export default function More() {
         <ModeSelector />
 
         {/* Accordion Sections */}
-        <Accordion type="multiple" defaultValue={["lecture"]} className="space-y-2">
+        <Accordion type="multiple" defaultValue={defaultOpen} className="space-y-2">
           {SECTIONS.map((section) => (
             <AccordionItem
               key={section.id}

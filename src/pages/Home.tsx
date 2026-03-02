@@ -9,7 +9,6 @@ import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useQuranXp } from "@/hooks/useQuranXp";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useMyClassChallenges } from "@/hooks/useWeeklyChallenge";
-import { useChildMode } from "@/hooks/useChildMode";
 import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { useUserMode } from "@/hooks/useUserMode";
 import { surahs } from "@/data/surahs";
@@ -25,14 +24,25 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useHifzSRS } from "@/hooks/useHifzSRS";
 import { trackEvent } from "@/lib/trackEvent";
+import KidsHomePage from "@/pages/KidsHomePage";
 
 export default function Home() {
+  const { mode: userMode, ageGroup } = useUserMode();
+
+  // ─── Kids mode: render KidsHomePage directly ───
+  if (userMode === "child") {
+    return <KidsHomePage />;
+  }
+
+  return <AdultHome />;
+}
+
+function AdultHome() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const xp = useQuranXp();
   const { classrooms } = useClassrooms();
-  const { user, signOut } = useAuth();
-  const { isChildMode } = useChildMode();
+  const { user } = useAuth();
   const { mode: userMode, ageGroup } = useUserMode();
   const classCodes = classrooms.map((c) => c.joinCode);
   const { unreadCount } = useAnnouncements(classCodes);
@@ -165,21 +175,6 @@ export default function Home() {
           </motion.div>
         );
       })}
-
-      {/* Child Mode Banner */}
-      {isChildMode && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-5 mt-2 flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-xl px-3 py-2"
-        >
-          <span className="text-lg">🧒</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-foreground">{t("child.modeBanner" as any)}</p>
-            <p className="text-[10px] text-muted-foreground">{t("child.modeBannerDesc" as any)}</p>
-          </div>
-        </motion.div>
-      )}
 
       {/* Senior welcome banner */}
       {ageGroup === "senior" && userMode === "solo" && (
@@ -319,13 +314,6 @@ export default function Home() {
             </div>
             <span className="text-xs font-bold text-primary shrink-0">{t("hifzSrs.review")} →</span>
           </motion.button>
-        </div>
-      )}
-
-      {/* ═══ Good Deeds Widget (Kids only) ═══ */}
-      {isChildMode && (
-        <div className="px-5 mt-4">
-          <GoodDeedsWidget />
         </div>
       )}
 

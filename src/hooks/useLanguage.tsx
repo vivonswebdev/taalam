@@ -957,6 +957,14 @@ const translations = {
   "more.teacherClass": { fr: "Classe Professeur", en: "Teacher Class", nl: "Lerarenklas", ar: "فصل المعلم", tr: "Öğretmen Sınıfı", ur: "استاد کلاس" },
   "more.teacherClassDesc": { fr: "Gérez vos classes", en: "Manage your classes", nl: "Beheer je klassen", ar: "إدارة فصولك", tr: "Sınıflarınızı yönetin", ur: "اپنی کلاسیں سنبھالیں" },
 
+  // More page – kids section
+  "more.sectionKidsFun": { fr: "Espace Enfants", en: "Kids Zone", nl: "Kinderzone", ar: "منطقة الأطفال", tr: "Çocuk Alanı", ur: "بچوں کا زون" },
+  "more.kidsGames": { fr: "Mes Jeux", en: "My Games", nl: "Mijn Spellen", ar: "ألعابي", tr: "Oyunlarım", ur: "میرے کھیل" },
+  "more.kidsGamesDesc": { fr: "Crush, Memory, Balance…", en: "Crush, Memory, Balance…", nl: "Crush, Memory, Balans…", ar: "كراش، ذاكرة، توازن…", tr: "Crush, Hafıza, Denge…", ur: "کرش، میموری، بیلنس…" },
+  "more.kidsStories": { fr: "Histoires Prophètes", en: "Prophet Stories", nl: "Profeetverhalen", ar: "قصص الأنبياء", tr: "Peygamber Hikayeleri", ur: "انبیاء کی کہانیاں" },
+  "more.kidsStoriesDesc": { fr: "Récits illustrés", en: "Illustrated tales", nl: "Geïllustreerde verhalen", ar: "حكايات مصورة", tr: "Resimli hikayeler", ur: "تصویری کہانیاں" },
+  "more.kidsChecklist": { fr: "Bonnes Actions", en: "Good Deeds", nl: "Goede Daden", ar: "الأعمال الصالحة", tr: "İyi Ameller", ur: "نیک اعمال" },
+  "more.kidsChecklistDesc": { fr: "Ma checklist quotidienne", en: "My daily checklist", nl: "Mijn dagelijkse checklist", ar: "قائمة مهامي اليومية", tr: "Günlük kontrol listem", ur: "میری روزانہ چیک لسٹ" },
   // More page – accordion section titles
   "more.sectionLecture": { fr: "Lecture Coran", en: "Quran Reading", nl: "Koran Lezen", ar: "قراءة القرآن", tr: "Kur'an Okuma", ur: "قرآن پڑھنا" },
   "more.sectionLearning": { fr: "Apprentissage", en: "Learning", nl: "Leren", ar: "التعلم", tr: "Öğrenme", ur: "سیکھنا" },
