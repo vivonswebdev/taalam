@@ -115,6 +115,7 @@ function AdultHome() {
       href: "/habits",
       gradient: "from-indigo-500/20 to-purple-500/20",
       emoji: "📊",
+      progress: xp.level > 0 ? (xp.xp % 100) / 100 : undefined,
     },
     {
       icon: Calendar,
@@ -132,6 +133,13 @@ function AdultHome() {
       href: "/prayers",
       gradient: "from-sky-500/20 to-blue-500/20",
       emoji: "🕐",
+      progress: (() => {
+        try {
+          const today = new Date().toISOString().split("T")[0];
+          const stored = localStorage.getItem(`prayers_${today}`);
+          return stored ? JSON.parse(stored).length / 5 : undefined;
+        } catch { return undefined; }
+      })(),
     },
   ];
 

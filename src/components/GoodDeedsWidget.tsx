@@ -128,6 +128,24 @@ export default function GoodDeedsWidget() {
         )}
       </div>
 
+      {/* Global progress bar */}
+      <div className="space-y-1.5">
+        <div className="relative h-2.5 bg-muted rounded-full overflow-hidden shadow-inner">
+          <div
+            className="h-full bg-gradient-to-r from-primary via-secondary to-primary transition-all duration-500"
+            style={{ width: `${(completed.length / 6) * 100}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-[10px] font-semibold">
+          <span className="text-muted-foreground">
+            {completed.length}/6 {t("goodDeeds.actions" as any)}
+          </span>
+          <span className={completed.length >= 6 ? "text-primary" : "text-muted-foreground"}>
+            {completed.length >= 6 ? `🔥 ${t("goodDeeds.boostActivated" as any)}` : `${6 - completed.length} ${t("goodDeeds.remaining" as any)}`}
+          </span>
+        </div>
+      </div>
+
       {/* Deeds grid */}
       <div className="grid grid-cols-3 gap-2">
         {DEEDS.map((deed) => {

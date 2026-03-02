@@ -1499,6 +1499,7 @@ const translations = {
   "goodDeeds.deed_parents": { fr: "Aider parents", en: "Help parents", nl: "Ouders helpen", ar: "مساعدة الوالدين", tr: "Anne babaya yardım", ur: "والدین کی مدد" },
   "goodDeeds.deed_quran": { fr: "Coran 10min", en: "Quran 10min", nl: "Koran 10min", ar: "قرآن 10 دقائق", tr: "Kuran 10dk", ur: "قرآن 10 منٹ" },
   "goodDeeds.remaining": { fr: "restantes", en: "remaining", nl: "resterend", ar: "متبقية", tr: "kaldı", ur: "باقی" },
+  "goodDeeds.actions": { fr: "actions", en: "actions", nl: "acties", ar: "أعمال", tr: "eylem", ur: "اعمال" },
   "shareProgress.title": { fr: "Partager ma progression", en: "Share my progress", nl: "Deel mijn voortgang", ar: "شارك تقدمي", tr: "İlerlememi paylaş", ur: "اپنی پیش رفت شیئر کریں" },
   "shareProgress.desc": { fr: "Image PNG pour WhatsApp & réseaux", en: "PNG image for WhatsApp & social", nl: "PNG-afbeelding voor WhatsApp", ar: "صورة PNG للواتساب", tr: "WhatsApp için PNG görsel", ur: "واٹس ایپ کے لیے PNG تصویر" },
   "shareProgress.text": { fr: "Mon parcours Hifz sur Ta'alam ! 🌙", en: "My Hifz journey on Ta'alam! 🌙", nl: "Mijn Hifz reis op Ta'alam! 🌙", ar: "رحلة حفظي على تعلّم! 🌙", tr: "Ta'alam'daki Hifz yolculuğum! 🌙", ur: "تعلّم پر میرا حفظ سفر! 🌙" },
@@ -1930,6 +1931,7 @@ const translations = {
   "homeCards.hifzPlanDesc": { fr: "Votre plan de mémorisation", en: "Your memorization plan", nl: "Je memorisatieplan", ar: "خطة حفظك", tr: "Ezberleme planınız", ur: "آپ کا حفظ پلان" },
   "homeCards.prayers": { fr: "Horaires Prières", en: "Prayer Times", nl: "Gebedstijden", ar: "أوقات الصلاة", tr: "Namaz Vakitleri", ur: "نماز کے اوقات" },
   "homeCards.prayersDesc": { fr: "Prochain horaire de prière", en: "Next prayer time", nl: "Volgende gebedstijd", ar: "وقت الصلاة التالي", tr: "Sonraki namaz vakti", ur: "اگلی نماز کا وقت" },
+  "homeCards.progress": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
 
   // ═══ Groups Page ═══
   "groups.title": { fr: "Mes Groupes", en: "My Groups", nl: "Mijn Groepen", ar: "مجموعاتي", tr: "Gruplarım", ur: "میرے گروپس" },

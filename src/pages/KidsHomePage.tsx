@@ -20,6 +20,13 @@ export default function KidsHomePage() {
       href: "/jeux",
       gradient: "from-purple-400/30 to-pink-400/30",
       emoji: "🎮",
+      progress: (() => {
+        try {
+          const today = new Date().toISOString().split("T")[0];
+          const stored = localStorage.getItem(`games_${today}`);
+          return stored ? Math.min(parseInt(stored) / 3, 1) : undefined;
+        } catch { return undefined; }
+      })(),
     },
     {
       icon: BookOpen,
@@ -28,6 +35,12 @@ export default function KidsHomePage() {
       href: "/quran-hub",
       gradient: "from-blue-400/30 to-cyan-400/30",
       emoji: "📖",
+      progress: (() => {
+        try {
+          const stored = localStorage.getItem("quran_juz30_progress");
+          return stored ? Math.min(parseInt(stored) / 15, 1) : undefined;
+        } catch { return undefined; }
+      })(),
     },
     {
       icon: Mic,
