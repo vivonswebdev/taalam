@@ -2796,6 +2796,21 @@ const translations = {
   "qibla.qiblaDir": { fr: "Qibla", en: "Qibla", nl: "Qibla", ar: "القبلة", tr: "Kıble", ur: "قبلہ" },
   "qibla.calibrateHint": { fr: "Faites un 8 avec votre téléphone pour calibrer", en: "Move your phone in a figure-8 to calibrate", nl: "Maak een 8-beweging met je telefoon om te kalibreren", ar: "حرّك هاتفك على شكل 8 للمعايرة", tr: "Kalibre etmek için telefonunuzla 8 hareketi yapın", ur: "کیلیبریٹ کرنے کے لیے اپنا فون 8 کی شکل میں گھمائیں" },
   "qibla.meccaInfo": { fr: "Masjid Al-Haram, La Mecque", en: "Masjid Al-Haram, Mecca", nl: "Masjid Al-Haram, Mekka", ar: "المسجد الحرام، مكة المكرمة", tr: "Mescid-i Haram, Mekke", ur: "مسجد الحرام، مکہ مکرمہ" },
+  // ═══ HIJRI CALENDAR ═══
+  "hijri.title": { fr: "Calendrier islamique", en: "Islamic Calendar", nl: "Islamitische kalender", ar: "التقويم الإسلامي", tr: "İslami Takvim", ur: "اسلامی کیلنڈر" },
+  "hijri.subtitle": { fr: "Calendrier hégirien", en: "Hijri Calendar", nl: "Hijri-kalender", ar: "التقويم الهجري", tr: "Hicri Takvim", ur: "ہجری کیلنڈر" },
+  "hijri.today": { fr: "Aujourd'hui", en: "Today", nl: "Vandaag", ar: "اليوم", tr: "Bugün", ur: "آج" },
+  "hijri.eventsThisMonth": { fr: "Événements ce mois", en: "Events this month", nl: "Evenementen deze maand", ar: "أحداث هذا الشهر", tr: "Bu ayın etkinlikleri", ur: "اس مہینے کے واقعات" },
+  "hijri.newYear": { fr: "Nouvel An islamique", en: "Islamic New Year", nl: "Islamitisch Nieuwjaar", ar: "رأس السنة الهجرية", tr: "Hicri Yılbaşı", ur: "اسلامی نیا سال" },
+  "hijri.ashura": { fr: "Achoura", en: "Day of Ashura", nl: "Dag van Asjoera", ar: "يوم عاشوراء", tr: "Aşure Günü", ur: "یوم عاشورہ" },
+  "hijri.mawlid": { fr: "Mawlid an-Nabî", en: "Mawlid an-Nabi", nl: "Mawlid an-Nabi", ar: "المولد النبوي", tr: "Mevlid Kandili", ur: "عید میلاد النبی" },
+  "hijri.isra": { fr: "Isra et Mi'raj", en: "Isra and Mi'raj", nl: "Isra en Mi'raj", ar: "الإسراء والمعراج", tr: "Miraç Kandili", ur: "شب معراج" },
+  "hijri.shabaan": { fr: "Nuit du mi-Sha'ban", en: "Mid-Sha'ban Night", nl: "Nacht van mid-Sha'ban", ar: "ليلة النصف من شعبان", tr: "Berat Kandili", ur: "شب برات" },
+  "hijri.ramadan": { fr: "Début du Ramadan", en: "Start of Ramadan", nl: "Begin Ramadan", ar: "بداية رمضان", tr: "Ramazan Başlangıcı", ur: "رمضان کا آغاز" },
+  "hijri.laylat": { fr: "Laylat al-Qadr", en: "Laylat al-Qadr", nl: "Laylat al-Qadr", ar: "ليلة القدر", tr: "Kadir Gecesi", ur: "شب قدر" },
+  "hijri.eidFitr": { fr: "Aïd al-Fitr", en: "Eid al-Fitr", nl: "Eid al-Fitr", ar: "عيد الفطر", tr: "Ramazan Bayramı", ur: "عید الفطر" },
+  "hijri.arafat": { fr: "Jour d'Arafat", en: "Day of Arafat", nl: "Dag van Arafat", ar: "يوم عرفة", tr: "Arife Günü", ur: "یوم عرفہ" },
+  "hijri.eidAdha": { fr: "Aïd al-Adha", en: "Eid al-Adha", nl: "Eid al-Adha", ar: "عيد الأضحى", tr: "Kurban Bayramı", ur: "عید الاضحی" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

@@ -87,6 +87,7 @@ import TarteelSelector from "./pages/TarteelSelector";
 import AthanSettings from "./pages/AthanSettings";
 import TarteelEasyPage from "./pages/tarteel-easy/TarteelEasyPage";
 import QiblaPage from "./pages/QiblaPage";
+import IslamicCalendarPage from "./pages/IslamicCalendarPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -193,6 +194,7 @@ const App = () => (
               <Route path="/student-stats/:classId/:studentId" element={<StudentStatsPage />} />
               <Route path="/athan-settings" element={<AthanSettings />} />
               <Route path="/qibla" element={<QiblaPage />} />
+              <Route path="/islamic-calendar" element={<IslamicCalendarPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

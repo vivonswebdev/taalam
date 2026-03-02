@@ -14,6 +14,7 @@ import PageBackground from "@/components/PageBackground";
 import ReciterSelector from "@/components/home/ReciterSelector";
 import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
 import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
+import HijriMiniWidget from "@/components/home/HijriMiniWidget";
 import NextPrayerWidget from "@/components/home/NextPrayerWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
@@ -260,6 +261,10 @@ export function HomeDashboard() {
         {/* 🔊 Reciter Selector */}
         <ReciterSelector />
 
+        {/* 🗓️ Hijri Mini Calendar */}
+        <div className="px-5 mt-2">
+          <HijriMiniWidget />
+        </div>
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
