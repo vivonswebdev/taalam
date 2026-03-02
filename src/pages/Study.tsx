@@ -104,7 +104,7 @@ export default function Study() {
             <span className="font-arabic text-primary">{surah.nameArabic}</span>
             <ChevronDown size={14} className="text-muted-foreground" />
           </button>
-          <p className="text-[10px] text-muted-foreground">Mode étude · {surah.versesCount} versets</p>
+          <p className="text-[10px] text-muted-foreground">{t("common.studyMode" as any)} · {surah.versesCount} {t("common.verses" as any)}</p>
         </div>
       </div>
 
