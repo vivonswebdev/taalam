@@ -11,13 +11,8 @@ import ProfileBubble from "@/components/ProfileBubble";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
-import ReciterSelector from "@/components/home/ReciterSelector";
-import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
-import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
-import HijriMiniWidget from "@/components/home/HijriMiniWidget";
-import NextPrayerWidget from "@/components/home/NextPrayerWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
-import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
+import { Flame } from "lucide-react";
 
 // ═══ Types ═══
 
@@ -260,16 +255,6 @@ export function HomeDashboard() {
 
         <StatsHeader t={t} />
 
-        {/* 🕌 Next Prayer Countdown */}
-        <NextPrayerWidget />
-
-        {/* 🔊 Reciter Selector */}
-        <ReciterSelector />
-
-        {/* 🗓️ Hijri Mini Calendar */}
-        <div className="px-5 mt-2">
-          <HijriMiniWidget />
-        </div>
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
@@ -280,37 +265,6 @@ export function HomeDashboard() {
           {CATEGORIES.map((cat) => (
             <CategoryCarousel key={cat.id} category={cat} onAction={handleAction} t={t} />
           ))}
-        </div>
-
-        {/* Nouveautés Famille & Compétition */}
-        <div className="px-5 mt-5 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🔥</span>
-            <h2 className="text-sm font-bold text-foreground">{t("home.newFeatures.title" as any)}</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { emoji: "🏆🏠", key: "home.newFeatures.familyLeaderboard", desc: "home.newFeatures.familyDesc", path: "/family-dashboard" },
-              { emoji: "📚👥", key: "home.newFeatures.classLeaderboard", desc: "home.newFeatures.classDesc", path: "/classrooms" },
-              { emoji: "👨‍👩‍👧‍👦", key: "home.newFeatures.kidsQuiz", desc: "home.newFeatures.kidsQuizDesc", path: "/kids-quiz" },
-              { emoji: "💬🌍", key: "home.newFeatures.community", desc: "home.newFeatures.communityDesc", path: "/community" },
-            ].map((card) => (
-              <button
-                key={card.key}
-                onClick={() => navigate(user ? card.path : "/auth")}
-                className="group rounded-2xl p-4 bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 shadow-sm hover:shadow-md active:scale-[0.98] transition-all text-left"
-              >
-                <span className="text-2xl block mb-1">{card.emoji}</span>
-                <p className="text-xs font-bold text-foreground">{t(card.key as any)}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{t(card.desc as any)}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Social 2x2 Block */}
-        <div className="mt-5">
-          <SocialActionsBlock t={t} user={user} navigate={navigate} />
         </div>
 
         {/* Hifz SRS Widget */}
@@ -336,9 +290,6 @@ export function HomeDashboard() {
           </div>
         )}
 
-        {/* Weekly Leaderboard */}
-        <WeeklyLeaderboardWidget />
-
         {/* Weak Surahs */}
         <WeakSurahsSection />
 
@@ -350,9 +301,6 @@ export function HomeDashboard() {
           </a>
         </p>
       </div>
-
-      {/* Reciter Picker Sheet */}
-      <ReciterPickerSheet open={showReciterPicker} onOpenChange={setShowReciterPicker} />
     </PageBackground>
   );
 }
