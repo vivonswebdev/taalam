@@ -26,7 +26,7 @@ export default function NextPrayerWidget() {
       <span className="text-2xl">{emoji}</span>
       <div className="flex-1 min-w-0 text-left">
         <p className="text-xs font-bold text-foreground">
-          {t("prayer.next" as any)} · {t(`prayer.${nextPrayer.name.toLowerCase()}` as any)}
+          {t("prayer.next" as any)} · {t(`prayers.${nextPrayer.name.toLowerCase()}` as any)}
         </p>
         <p className="text-[11px] text-muted-foreground">
           {nextPrayer.time} {cityName ? `· ${cityName}` : ""}
