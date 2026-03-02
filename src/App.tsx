@@ -119,7 +119,8 @@ const App = () => (
               <Route path="/learn" element={<Learn />} />
               <Route path="/learn/:surahNumber" element={<LearnDetail />} />
               <Route path="/quran" element={<Quran />} />
-              <Route path="/tarteel" element={<Quran />} />
+              <Route path="/tarteel" element={<TarteelSelector />} />
+              <Route path="/tarteel/easy" element={<TarteelEasyPage />} />
               <Route path="/recitation" element={<Quran />} />
               <Route path="/reading" element={<Reading />} />
               <Route path="/prayers" element={<Prayers />} />
