@@ -6,6 +6,7 @@ import { athkarGroups, ATHKAR_FILTERS, CORE_ATHKAR_IDS, type AthkarCategory } fr
 import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
+import PageBackground from "@/components/PageBackground";
 
 type Tab = "moods" | "maladies" | "athkar";
 
