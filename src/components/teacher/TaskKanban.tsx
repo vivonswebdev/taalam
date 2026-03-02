@@ -78,7 +78,7 @@ function SubmissionCard({ submission, onReview, onGetAudioUrl }: {
       await onReview(submission.id, status, noteInput || undefined);
       toast({ title: status === "approved" ? "✅ " + t("halaqa.approved" as any) : "❌ " + t("halaqa.rejected" as any) });
     } catch (err: any) {
-      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+      toast({ title: t("common.error" as any), description: err.message, variant: "destructive" });
     } finally {
       setReviewing(false);
       setShowNote(false);

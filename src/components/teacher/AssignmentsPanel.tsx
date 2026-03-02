@@ -39,7 +39,7 @@ export default function AssignmentsPanel({ assignments, createAssignment, toggle
       toast({ title: "✅ " + t("teacher.assignmentCreated" as any) });
       setFormTitle(""); setFormTarget(""); setFormDueDate(""); setShowForm(false);
     } catch (err: any) {
-      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+      toast({ title: t("common.error" as any), description: err.message, variant: "destructive" });
     }
   };
 

@@ -49,6 +49,7 @@ function RecognitionExercise({
   onDone: () => void;
   playAudio: (item: NooraniItem) => void;
 }) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [score, setScore] = useState(0);
@@ -127,9 +128,9 @@ function RecognitionExercise({
             }`}
           >
             {feedback === "correct" ? (
-              <><CheckCircle2 size={18} /> Bravo ! 🎉</>
+              <><CheckCircle2 size={18} /> {t("common.bravo" as any)}</>
             ) : (
-              <><XCircle size={18} /> Essaie encore 😊</>
+              <><XCircle size={18} /> {t("common.tryAgain" as any)}</>
             )}
           </motion.div>
         )}
@@ -150,6 +151,7 @@ function AudioChoiceExercise({
   onDone: () => void;
   playAudio: (item: NooraniItem) => void;
 }) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
 
@@ -230,9 +232,9 @@ function AudioChoiceExercise({
             }`}
           >
             {feedback === "correct" ? (
-              <><CheckCircle2 size={18} /> Bravo ! 🎉</>
+              <><CheckCircle2 size={18} /> {t("common.bravo" as any)}</>
             ) : (
-              <><XCircle size={18} /> Essaie encore 😊</>
+              <><XCircle size={18} /> {t("common.tryAgain" as any)}</>
             )}
           </motion.div>
         )}

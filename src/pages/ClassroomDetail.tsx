@@ -34,6 +34,7 @@ interface ChatMessage {
 function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
   classId: string; isTeacher: boolean; user: any; classroomName: string; onLeft: () => void;
 }) {
+  const { t } = useLanguage();
   const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -51,11 +52,11 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
       } else {
         // Just remove membership
         await supabase.from("classroom_members").delete().eq("classroom_id", classId).eq("user_id", user.id);
-        toast.success("Vous avez quitté le groupe");
+        toast.success(t("common.leftGroup" as any));
       }
       onLeft();
     } catch (err: any) {
-      toast.error(err.message || "Erreur");
+      toast.error(err.message || t("common.error" as any));
     } finally {
       setLoading(false);
       setConfirm(false);
@@ -348,7 +349,7 @@ export default function ClassroomDetail() {
             className="bg-card border border-border rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-foreground">Invitation QR</h3>
+              <h3 className="text-sm font-bold text-foreground">{t("common.invitationQR" as any)}</h3>
               <button onClick={() => setShowQR(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                 <X size={14} />
               </button>
@@ -368,13 +369,13 @@ export default function ClassroomDetail() {
               </p>
             </div>
             <p className="text-[10px] text-muted-foreground">
-              Scannez ce QR code pour rejoindre la classe
+              {t("common.scanQR" as any)}
             </p>
             <button
               onClick={() => shareClassroom(classroom)}
               className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
             >
-              <Share2 size={14} /> Partager le lien
+              <Share2 size={14} /> {t("common.shareLink" as any)}
             </button>
           </motion.div>
         </motion.div>
@@ -465,7 +466,7 @@ export default function ClassroomDetail() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <History size={14} />
-                <p className="text-xs font-semibold">Défis précédents</p>
+                <p className="text-xs font-semibold">{t("common.previousChallenges" as any)}</p>
               </div>
               {pastChallenges.map((pc) => {
                 const s = surahs.find((s) => s.number === pc.surah_number);
@@ -603,7 +604,7 @@ export default function ClassroomDetail() {
                 onClick={handleShareProgress}
                 className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-primary bg-primary/5 border border-primary/20 rounded-lg"
               >
-                <Sparkles size={12} /> Partager ma progression
+                <Sparkles size={12} /> {t("common.shareProgress" as any)}
               </button>
               <div className="flex gap-2">
                 <input

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, StarOff, PenLine, BookOpen, ChevronDown } from "lucide-react";
@@ -15,6 +16,7 @@ interface AyahData {
 }
 
 export default function Study() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const surahNum = parseInt(params.get("surah") || "1");
@@ -104,7 +106,7 @@ export default function Study() {
             <span className="font-arabic text-primary">{surah.nameArabic}</span>
             <ChevronDown size={14} className="text-muted-foreground" />
           </button>
-          <p className="text-[10px] text-muted-foreground">Mode étude · {surah.versesCount} versets</p>
+          <p className="text-[10px] text-muted-foreground">{t("common.studyMode" as any)} · {surah.versesCount} {t("common.verses" as any)}</p>
         </div>
       </div>
 
@@ -228,20 +230,20 @@ export default function Study() {
                           {tafsirText}
                         </p>
                       ) : (
-                        <p className="text-xs text-muted-foreground italic">Aucun tafsir disponible</p>
+                        <p className="text-xs text-muted-foreground italic">{t("common.noTafsir" as any)}</p>
                       )}
                     </div>
 
                     {/* Note */}
                     <div className="space-y-2">
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                        <PenLine size={10} /> Ma note
+                        <PenLine size={10} /> {t("common.myNote" as any)}
                       </p>
                       <textarea
                         value={noteText}
                         onChange={(e) => { e.stopPropagation(); setNoteText(e.target.value); }}
                         onClick={(e) => e.stopPropagation()}
-                        placeholder="Écris ta réflexion..."
+                        placeholder={t("common.writePlaceholder" as any)}
                         className="w-full min-h-[60px] rounded-lg bg-muted/40 border border-border p-2.5 text-xs text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
                       />
                       <button

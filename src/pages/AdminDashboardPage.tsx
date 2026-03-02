@@ -177,14 +177,14 @@ export default function AdminDashboardPage() {
 
         {/* Section 5: Visibility Controls */}
         <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎛️ Contrôle d'affichage</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🎛️ {t("admin.displayControl" as any)}</p>
           <div className="bg-card border border-border rounded-xl p-4 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {adminSettings.hide_announcement ? <EyeOff size={18} className="text-muted-foreground" /> : <Eye size={18} className="text-primary" />}
                 <div>
-                  <p className="text-sm font-semibold text-foreground">Cacher Annonce Dédicace</p>
-                  <p className="text-[10px] text-muted-foreground">Masque le popup de dédicace pour tous les utilisateurs</p>
+                  <p className="text-sm font-semibold text-foreground">{t("admin.hideAnnouncement" as any)}</p>
+                  <p className="text-[10px] text-muted-foreground">{t("admin.hideAnnouncementDesc" as any)}</p>
                 </div>
               </div>
               <Switch
@@ -197,8 +197,8 @@ export default function AdminDashboardPage() {
               <div className="flex items-center gap-3">
                 {adminSettings.hide_daily_challenge ? <EyeOff size={18} className="text-muted-foreground" /> : <Eye size={18} className="text-primary" />}
                 <div>
-                  <p className="text-sm font-semibold text-foreground">Cacher Défi du Jour</p>
-                  <p className="text-[10px] text-muted-foreground">Masque le défi quotidien Tarteel pour tous les utilisateurs</p>
+                  <p className="text-sm font-semibold text-foreground">{t("admin.hideChallenge" as any)}</p>
+                  <p className="text-[10px] text-muted-foreground">{t("admin.hideChallengeDesc" as any)}</p>
                 </div>
               </div>
               <Switch
@@ -210,12 +210,12 @@ export default function AdminDashboardPage() {
             {/* Preview */}
             {(adminSettings.hide_announcement || adminSettings.hide_daily_challenge) && (
               <div className="bg-muted/50 rounded-lg p-3 mt-2">
-                <p className="text-[10px] text-muted-foreground font-semibold mb-1">👁️ Aperçu :</p>
+                <p className="text-[10px] text-muted-foreground font-semibold mb-1">👁️ {t("admin.preview" as any)} :</p>
                 <p className="text-[10px] text-muted-foreground">
-                  {adminSettings.hide_announcement && "✅ Popup de dédicace masqué"}
+                  {adminSettings.hide_announcement && `✅ ${t("admin.popupHidden" as any)}`}
                   {adminSettings.hide_announcement && adminSettings.hide_daily_challenge && " · "}
-                  {adminSettings.hide_daily_challenge && "✅ Défi du jour masqué"}
-                  {" — "} Page d'accueil épurée pour les visiteurs.
+                  {adminSettings.hide_daily_challenge && `✅ ${t("admin.challengeHidden" as any)}`}
+                  {" — "} {t("admin.cleanHomepage" as any)}
                 </p>
               </div>
             )}
