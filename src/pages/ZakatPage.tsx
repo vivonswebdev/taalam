@@ -28,7 +28,7 @@ export default function ZakatPage() {
   const [values, setValues] = useState<ZakatValues>(INITIAL);
   const [goldPrice, setGoldPrice] = useState<number>(70); // USD per gram fallback
   const [silverPrice, setSilverPrice] = useState<number>(0.85);
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Fetch gold/silver prices
