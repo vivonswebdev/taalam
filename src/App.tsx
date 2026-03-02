@@ -99,6 +99,7 @@ import CreateChildPage from "./pages/CreateChildPage";
 import ParentInvitationsPage from "./pages/ParentInvitationsPage";
 import CreateChildForInvitePage from "./pages/CreateChildForInvitePage";
 import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
+import ChildGalleryPage from "./pages/ChildGalleryPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -215,6 +216,7 @@ const App = () => (
               <Route path="/select-child" element={<SelectChildPage />} />
               <Route path="/create-child" element={<CreateChildPage />} />
               <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
+              <Route path="/child-gallery" element={<ChildGalleryPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />

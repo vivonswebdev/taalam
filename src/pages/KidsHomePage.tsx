@@ -67,6 +67,13 @@ const KIDS_CARDS = [
     emoji: "🏆",
     color: "from-yellow-400 to-amber-500",
   },
+  {
+    titleKey: "badges.galleryTitle",
+    descKey: "badges.share",
+    href: "/child-gallery",
+    emoji: "🎖️",
+    color: "from-purple-500 to-pink-500",
+  },
 ] as const;
 
 export default function KidsHomePage() {

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { RARITY_COLORS } from "@/data/achievementsData";
 
 interface LeaderboardEntry {
   id: string;
@@ -14,6 +15,7 @@ interface LeaderboardEntry {
   age: number | null;
   total_points: number;
   parent_id: string;
+  badges?: { icon: string; rarity: string }[];
 }
 
 const AGE_FILTERS = [
@@ -43,7 +45,25 @@ export default function KidsLeaderboardPage() {
         .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
         .order("total_points", { ascending: false })
         .limit(100);
-      setEntries((data as LeaderboardEntry[]) || []);
+      const profiles = (data as LeaderboardEntry[]) || [];
+
+      // Fetch badges for all children
+      const childIds = profiles.map(p => p.id);
+      if (childIds.length > 0) {
+        const { data: badges } = await supabase
+          .from("child_achievements" as any)
+          .select("child_id, icon, rarity")
+          .in("child_id", childIds);
+        const badgeMap = new Map<string, { icon: string; rarity: string }[]>();
+        ((badges as any[]) || []).forEach((b: any) => {
+          const arr = badgeMap.get(b.child_id) || [];
+          arr.push({ icon: b.icon, rarity: b.rarity });
+          badgeMap.set(b.child_id, arr);
+        });
+        profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
+      }
+
+      setEntries(profiles);
       setLoading(false);
     })();
   }, []);
@@ -136,6 +156,14 @@ export default function KidsLeaderboardPage() {
                     {entry.country_code && <span>{getFlagEmoji(entry.country_code)}</span>}
                     {entry.age && <span>{entry.age} {t("profile.yearsOld" as any) || "ans"}</span>}
                   </div>
+                  {entry.badges && entry.badges.length > 0 && (
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      {entry.badges.slice(0, 5).map((b, bi) => (
+                        <span key={bi} className="text-[10px]">{b.icon}</span>
+                      ))}
+                      {entry.badges.length > 5 && <span className="text-[9px] text-muted-foreground">+{entry.badges.length - 5}</span>}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
                   <Star size={14} fill="currentColor" />
