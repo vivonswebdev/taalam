@@ -6,6 +6,7 @@ import { useUserMode } from "@/hooks/useUserMode";
 import { ModeSelector } from "@/components/ModeSelector";
 import ProfileBubble from "@/components/ProfileBubble";
 import BottomNav from "@/components/BottomNav";
+import PageBackground from "@/components/PageBackground";
 import {
   Accordion,
   AccordionContent,
