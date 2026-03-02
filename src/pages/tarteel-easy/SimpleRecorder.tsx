@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useXP } from "@/hooks/useXP";
 import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
 import MicPermissionHelp from "./MicPermissionHelp";
 
 export interface TranscriptionData {
