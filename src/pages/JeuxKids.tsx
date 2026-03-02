@@ -50,6 +50,13 @@ export default function JeuxKids() {
         >
           {t("kidsGames.title" as any)}
         </motion.h1>
+        <div className="flex-1" />
+        <button
+          onClick={() => navigate("/kids-leaderboard")}
+          className="px-3 py-1.5 rounded-xl bg-amber-400/80 dark:bg-amber-500/30 text-sm font-bold text-foreground flex items-center gap-1"
+        >
+          🏆 {t("kids.leaderboard" as any) || "Classement"}
+        </button>
       </div>
 
       {/* 2x2 Grid */}
