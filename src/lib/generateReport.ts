@@ -211,5 +211,5 @@ export function generateProgressReport(data: ReportData) {
 
   // Save
   const dateFile = new Date().toISOString().split("T")[0];
-  doc.save(`rapport-taalam-${dateFile}.pdf`);\n}
+  doc.save(`rapport-taalam-${dateFile}.pdf`);
 }
