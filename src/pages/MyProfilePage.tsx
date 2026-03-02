@@ -8,7 +8,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { useQuranXp } from "@/hooks/useQuranXp";
 import { useStreak } from "@/hooks/useStreak";
 import { useUserMode } from "@/hooks/useUserMode";
-import { useChildProfiles, type ChildProfile } from "@/hooks/useChildProfiles";
+import { useChildrenProfiles } from "@/hooks/useChildrenProfiles";
 import IslamicAvatarPicker from "@/components/IslamicAvatarPicker";
 import { supabase } from "@/integrations/supabase/client";
 
