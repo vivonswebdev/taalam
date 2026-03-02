@@ -134,22 +134,33 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
   const analyzeAudio = async (_blob: Blob) => {
     // TODO: replace with real API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const mockExpected = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌ";
+    const mockDetected = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ";
+
+    const expectedWords = splitArabicText(mockExpected);
+    const detectedWords = splitArabicText(mockDetected);
+
+    const matches = expectedWords.map((word, i) => ({
+      word,
+      correct: detectedWords[i]
+        ? normalizeArabic(word) === normalizeArabic(detectedWords[i])
+        : false,
+    }));
+
+    const correctCount = matches.filter((m) => m.correct).length;
+    const score = Math.round((correctCount / expectedWords.length) * 100);
+
     const mockTranscription: TranscriptionData = {
-      detected: "قُلْ هُوَ ٱللَّهُ أَحَدٌ",
-      expected: "قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ",
-      score: Math.floor(Math.random() * 30) + 70,
-      matches: [
-        { word: "قُلْ", correct: true },
-        { word: "هُوَ", correct: true },
-        { word: "ٱللَّهُ", correct: true },
-        { word: "أَحَدٌ", correct: true },
-        { word: "ٱللَّهُ", correct: false },
-        { word: "ٱلصَّمَدُ", correct: false },
-      ],
+      detected: mockDetected,
+      expected: mockExpected,
+      score,
+      matches,
     };
+
     addXP(10);
     setIsAnalyzing(false);
-    onScore(mockTranscription.score, mockTranscription);
+    onScore(score, mockTranscription);
   };
 
   useEffect(() => {
