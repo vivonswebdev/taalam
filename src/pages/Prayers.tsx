@@ -62,13 +62,22 @@ export default function Prayers() {
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-bold text-foreground">
           {t("prayers.title")}
         </motion.h1>
-        <button
-          onClick={() => navigate("/prayer-settings")}
-          className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full active:scale-[0.97] transition-transform"
-        >
-          <Settings2 size={14} />
-          {t("prayers.settings.button")}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/athan-settings")}
+            className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full active:scale-[0.97] transition-transform"
+          >
+            🕌
+            {t("athan.title" as any)}
+          </button>
+          <button
+            onClick={() => navigate("/prayer-settings")}
+            className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full active:scale-[0.97] transition-transform"
+          >
+            <Settings2 size={14} />
+            {t("prayers.settings.button")}
+          </button>
+        </div>
       </div>
 
       <div className="px-6 space-y-5">
