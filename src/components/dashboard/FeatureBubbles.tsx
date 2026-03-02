@@ -257,9 +257,6 @@ export function HomeDashboard() {
         {/* 🕌 Next Prayer Countdown */}
         <NextPrayerWidget />
 
-        {/* 🔊 Reciter Selector */}
-        <ReciterSelector />
-
         {/* 🗓️ Hijri Mini Calendar */}
         <div className="px-5 mt-2">
           <HijriMiniWidget />
