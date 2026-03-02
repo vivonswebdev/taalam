@@ -51,7 +51,7 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
       } else {
         // Just remove membership
         await supabase.from("classroom_members").delete().eq("classroom_id", classId).eq("user_id", user.id);
-        toast.success("Vous avez quitté le groupe");
+        toast.success(t("common.leftGroup" as any));
       }
       onLeft();
     } catch (err: any) {
