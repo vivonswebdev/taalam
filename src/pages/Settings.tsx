@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield, CloudOff } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield, CloudOff, Lock } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -14,6 +14,8 @@ import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+
+const PIN_KEY = "taaloum_parent_pin";
 
 export default function Settings() {
   const { resetProgress } = useProgress();
