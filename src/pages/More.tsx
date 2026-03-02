@@ -86,6 +86,7 @@ export default function More() {
       titleKey: "more.sectionPractice",
       items: [
         { emoji: "🕐", labelKey: "more.prayerTimes", descKey: "more.prayerTimesDesc", path: "/prayers" },
+        { emoji: "🕌", labelKey: "athan.title", descKey: "athan.subtitle", path: "/athan-settings", adultsOnly: true },
         { emoji: "📿", labelKey: "more.athkar", descKey: "more.athkarDesc", path: "/moods" },
         { emoji: "📻", labelKey: "more.liveQuran", descKey: "more.liveQuranDesc", path: "/live-quran", adultsOnly: true },
         { emoji: "🎧", labelKey: "more.advancedListening", descKey: "more.advancedListeningDesc", path: "/listening", adultsOnly: true },
