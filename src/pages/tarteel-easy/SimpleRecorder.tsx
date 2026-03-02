@@ -6,9 +6,16 @@ import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import MicPermissionHelp from "./MicPermissionHelp";
 
+export interface TranscriptionData {
+  detected: string;
+  expected: string;
+  score: number;
+  matches: Array<{ word: string; correct: boolean }>;
+}
+
 interface SimpleRecorderProps {
   surahNumber: number;
-  onScore: (score: number) => void;
+  onScore: (score: number, transcription: TranscriptionData) => void;
 }
 
 export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderProps) {
