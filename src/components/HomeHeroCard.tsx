@@ -60,7 +60,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
         >
           {card.emoji}
         </motion.span>
-        <Icon className="w-4 h-4 text-white/40" />
+        <Icon className="w-4 h-4 text-muted-foreground/60" />
       </div>
 
       {/* Title */}
