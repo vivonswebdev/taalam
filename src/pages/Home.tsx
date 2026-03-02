@@ -174,7 +174,7 @@ function AdultHome() {
     <PageBackground intensity="medium">
     <div className="home-bg min-h-screen pb-24">
       {/* Daily Tarteel Challenge */}
-      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && dailyChallenge.surah.number &&
+      {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && dailyChallenge.surah.number && typeof dailyChallenge.complete === 'function' &&
         <DailyTarteelChallenge
           surah={dailyChallenge.surah}
           onComplete={(score) => dailyChallenge.complete(score)}
@@ -183,7 +183,7 @@ function AdultHome() {
         }
 
       {/* Weekly Class Challenge Banner */}
-      {weeklyChallenges.filter((ch) => !myResults.some((r) => r.challenge_id === ch.id)).map((ch) => {
+      {(weeklyChallenges || []).filter((ch) => !(myResults || []).some((r) => r.challenge_id === ch.id)).map((ch) => {
           const surah = surahs.find((s) => s.number === ch.surah_number);
           return (
             <motion.div
