@@ -205,6 +205,7 @@ const App = () => (
               <Route path="/zakat" element={<ZakatPage />} />
               <Route path="/tasbih" element={<TasbihPage />} />
               <Route path="/live-haramain" element={<LiveHaramainPage />} />
+              <Route path="/profile" element={<MyProfilePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
