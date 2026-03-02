@@ -27,7 +27,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
   const qrRef = useRef<HTMLCanvasElement>(null);
   const [generating, setGenerating] = useState(false);
 
-  const joinUrl = `https://taaloum.lovable.app/family?join=${family.invite_code}`;
+  const joinUrl = `https://app.taalam.eu/family?join=${family.invite_code}`;
 
   const totalXP = members.reduce((s, m) => s + (m.xp_total || 0), 0);
   const maxStreak = members.reduce((m, c) => Math.max(m, c.streak_days || 0), 0);
@@ -67,7 +67,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 42px system-ui, -apple-system, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("🕌 Taaloum", CARD_W / 2, 70);
+    ctx.fillText("🕌 Ta'alam", CARD_W / 2, 70);
 
     ctx.fillStyle = "#94a3b8";
     ctx.font = "18px system-ui, sans-serif";
@@ -176,7 +176,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
     ctx.fillStyle = "#475569";
     ctx.font = "12px system-ui, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("taaloum.lovable.app", CARD_W / 2, CARD_H - 20);
+    ctx.fillText("app.taalam.eu", CARD_W / 2, CARD_H - 20);
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), "image/png");
@@ -189,7 +189,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
       const blob = await drawCard();
       if (!blob) throw new Error("Canvas error");
 
-      const file = new File([blob], `taaloum-${family.name.replace(/\s/g, "-")}.png`, { type: "image/png" });
+      const file = new File([blob], `taalam-${family.name.replace(/\s/g, "-")}.png`, { type: "image/png" });
       const shareText = `🕌 ${t("share.shareText" as any)} "${family.name}"!\n⚡ ${totalXP} XP · 🔥 ${maxStreak}j streak\n📎 ${t("share.code" as any)}: ${family.invite_code}\n🔗 ${joinUrl}`;
 
       if (platform === "native" && navigator.share) {

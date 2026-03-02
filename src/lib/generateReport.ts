@@ -48,6 +48,11 @@ export function generateProgressReport(data: ReportData) {
   doc.setTextColor(...PRIMARY);
   doc.text("Ta'alam", W / 2, 50, { align: "center" });
 
+  // Website URL
+  doc.setFontSize(9);
+  doc.setTextColor(...MUTED);
+  doc.text("app.taalam.eu", W / 2, 58, { align: "center" });
+
   doc.setFontSize(12);
   doc.setTextColor(...MUTED);
   doc.text(data.labels.reportTitle || "Progress Report", W / 2, 62, { align: "center" });

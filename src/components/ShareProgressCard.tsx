@@ -98,7 +98,7 @@ export default function ShareProgressCard() {
       ctx.textAlign = "center";
       ctx.fillStyle = "rgba(255,255,255,0.4)";
       ctx.font = "32px system-ui, sans-serif";
-      ctx.fillText("taaloum.lovable.app", 540, 1700);
+      ctx.fillText("app.taalam.eu", 540, 1700);
       ctx.fillText("#TaalamHifz #Free", 540, 1760);
 
       // Export
