@@ -322,10 +322,10 @@ export default function Home() {
         >
           <span className="text-2xl">📖</span>
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-sm font-bold text-white">Lire le Coran (Mushaf)</p>
-            <p className="text-[11px] text-white/60">Ouvrir le mushaf directement</p>
+            <p className="text-sm font-bold text-white">{t("home.mushafShortcutTitle" as any)}</p>
+            <p className="text-[11px] text-white/60">{t("home.mushafShortcutDesc" as any)}</p>
           </div>
-          <span className="text-xs font-bold text-primary shrink-0">Ouvrir →</span>
+          <span className="text-xs font-bold text-primary shrink-0">{t("home.open" as any)} →</span>
         </motion.button>
       </div>
 
