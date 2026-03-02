@@ -64,7 +64,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
       </div>
 
       {/* Title */}
-      <p className="text-sm font-bold text-white leading-tight mt-2 relative z-10">
+      <p className="text-sm font-bold text-foreground leading-tight mt-2 relative z-10">
         {t(card.titleKey as any)}
       </p>
 
