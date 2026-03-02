@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mic, Radio } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import PageBackground from "@/components/PageBackground";
 
 export default function QuranHub() {
   const navigate = useNavigate();
