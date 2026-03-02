@@ -159,6 +159,7 @@ export default function Habits() {
   };
 
   return (
+    <PageBackground intensity="medium">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
