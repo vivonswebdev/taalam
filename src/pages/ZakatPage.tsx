@@ -120,7 +120,7 @@ export default function ZakatPage() {
       <div className="px-4 mt-2">
         <div className="p-3 bg-accent/10 rounded-xl border border-accent/20 text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">{t("zakat.nisab" as any)}:</span>{" "}
-          {GOLD_NISAB_G}g {t("zakat.gold" as any)} ≈ ${nisabValue.toFixed(0)} {currency}
+          {GOLD_NISAB_G}g {t("zakat.gold" as any)} ≈ {nisabValue.toFixed(0)}
           {loading && " ⏳"}
         </div>
       </div>
