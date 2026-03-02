@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component, type ReactNode } from "react";
 import PageBackground from "@/components/PageBackground";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";

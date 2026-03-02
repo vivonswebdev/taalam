@@ -48,7 +48,12 @@ export default function GoodDeedsWidget() {
         .eq("user_id", user.id)
         .eq("deed_date", date)
         .maybeSingle()
-        .then(({ data }) => {
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Good deeds fetch error:", error);
+            setCompleted(getLocalDeeds(date));
+            return;
+          }
           if (data) {
             setCompleted(data.completed_deeds || []);
             if (data.boost_expires_at) {
@@ -57,6 +62,10 @@ export default function GoodDeedsWidget() {
           } else {
             setCompleted(getLocalDeeds(date));
           }
+        })
+        .catch((err) => {
+          console.error("Good deeds fetch exception:", err);
+          setCompleted(getLocalDeeds(date));
         });
     } else {
       setCompleted(getLocalDeeds(date));
