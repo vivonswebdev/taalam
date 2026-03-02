@@ -2734,7 +2734,7 @@ const translations = {
   "dashboard.features": { fr: "Fonctionnalités", en: "Features", nl: "Functies", ar: "الميزات", tr: "Özellikler", ur: "خصوصیات" },
   "dashboard.settings": { fr: "Paramètres & Plus", en: "Settings & More", nl: "Instellingen & Meer", ar: "الإعدادات والمزيد", tr: "Ayarlar ve Daha", ur: "ترتیبات اور مزید" },
   "dashboard.mushaf": { fr: "Mushaf", en: "Mushaf", nl: "Mushaf", ar: "المصحف", tr: "Mushaf", ur: "مصحف" },
-  "dashboard.tarteel": { fr: "Réciter", en: "Recite", nl: "Reciteren", ar: "ترتيل", tr: "Tilavet", ur: "تلاوت" },
+  "dashboard.tarteel": { fr: "Tarteel", en: "Tarteel", nl: "Tarteel", ar: "ترتيل", tr: "Tarteel", ur: "ترتیل" },
   "dashboard.quiz": { fr: "Quiz", en: "Quiz", nl: "Quiz", ar: "اختبار", tr: "Test", ur: "کوئز" },
   "dashboard.progress": { fr: "Progrès", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
   "dashboard.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "الترتيب", tr: "Sıralama", ur: "لیڈربورڈ" },
