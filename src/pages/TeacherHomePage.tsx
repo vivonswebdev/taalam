@@ -186,18 +186,18 @@ export default function TeacherHomePage() {
   ];
 
   const QUICK_ACTIONS = [
-    { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/prof-dashboard", badge: pendingSubmissions },
+    { emoji: "📝", label: t("teacherHome.correctHomework" as any), href: "/teacher-dashboard", badge: pendingSubmissions },
     { emoji: "➕", label: t("teacherHome.newClass" as any), href: "/classrooms", badge: 0 },
     { emoji: "📣", label: t("teacherHome.announce" as any), href: "/announcements", badge: 0 },
-    { emoji: "💬", label: t("teacherHome.messages" as any), href: "/prof-dashboard", badge: unreadMessages },
-    { emoji: "📊", label: t("teacherHome.studentStats" as any), href: "/prof-dashboard", badge: 0 },
+    { emoji: "💬", label: t("teacherHome.messages" as any), href: "/teacher-dashboard", badge: unreadMessages },
+    { emoji: "📊", label: t("teacherHome.studentStats" as any), href: "/teacher-dashboard", badge: 0 },
     { emoji: "🏆", label: t("teacherHome.leaderboard" as any), href: "/leaderboard", badge: 0 },
   ];
 
   const TOOLS = [
-    { emoji: "✉️", label: t("teacherHome.invitations" as any), href: "/prof-dashboard", badge: pendingInvitations },
-    { emoji: "📋", label: t("teacherHome.assignments" as any), href: "/prof-dashboard", badge: activeAssignments },
-    { emoji: "🎯", label: t("teacherHome.weeklyChallenge" as any), href: "/prof-dashboard", badge: 0 },
+    { emoji: "✉️", label: t("teacherHome.invitations" as any), href: "/teacher-dashboard", badge: pendingInvitations },
+    { emoji: "📋", label: t("teacherHome.assignments" as any), href: "/teacher-dashboard", badge: activeAssignments },
+    { emoji: "🎯", label: t("teacherHome.weeklyChallenge" as any), href: "/teacher-dashboard", badge: 0 },
   ];
 
   return (
@@ -247,7 +247,7 @@ export default function TeacherHomePage() {
               {alerts.map(alert => (
                 <button
                   key={alert.id}
-                  onClick={() => navigate("/prof-dashboard")}
+                  onClick={() => navigate("/teacher-dashboard")}
                   className="w-full flex items-center justify-between p-2.5 bg-card rounded-xl text-left"
                 >
                   <span className="text-xs text-foreground">{alert.message}</span>
@@ -267,7 +267,7 @@ export default function TeacherHomePage() {
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                 🏆 {t("teacherHome.topStudents" as any)}
               </h2>
-              <button onClick={() => navigate("/prof-dashboard")} className="text-[10px] text-primary font-semibold">
+              <button onClick={() => navigate("/teacher-dashboard")} className="text-[10px] text-primary font-semibold">
                 {t("teacherHome.viewAll" as any)} →
               </button>
             </div>
@@ -318,7 +318,7 @@ export default function TeacherHomePage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.08 }}
-                onClick={() => navigate("/prof-dashboard")}
+                onClick={() => navigate(`/classrooms/${c.id}`)}
                 className="w-full flex items-center justify-between p-4 bg-card/80 backdrop-blur-sm border border-border rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
               >
                 <div className="flex items-center gap-3">
