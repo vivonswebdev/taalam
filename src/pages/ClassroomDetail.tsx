@@ -333,9 +333,14 @@ export default function ClassroomDetail() {
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-card">
-        <button onClick={() => navigate("/classrooms")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+        <button onClick={() => navigate(fromCoord ? "/coord" : "/classrooms")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <ArrowLeft size={18} />
         </button>
+        {fromCoord && (
+          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold">
+            {t("coord.title" as any)}
+          </span>
+        )}
         <div className="flex-1 min-w-0">
           <h1 className="text-lg font-bold truncate">{effectiveClassroom.name}</h1>
           <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
