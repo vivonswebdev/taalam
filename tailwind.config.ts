@@ -70,6 +70,7 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
         pearl: {
           DEFAULT: "hsl(var(--pearl))",
         },
@@ -102,13 +103,50 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        // ═══ ANIMATIONS SPIRITUELLES 2026 ═══
+        "gentle-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.85", transform: "scale(0.98)" },
+        },
+        breathe: {
+          "0%, 100%": { 
+            transform: "scale(1)", 
+            boxShadow: "0 0 0 0 hsl(var(--primary) / 0.2)" 
+          },
+          "50%": { 
+            transform: "scale(1.02)", 
+            boxShadow: "0 0 0 10px hsl(var(--primary) / 0)" 
+          },
+        },
+        "card-shimmer": {
+          "0%": { transform: "translateX(-100%) rotate(25deg)" },
+          "100%": { transform: "translateX(100%) rotate(25deg)" },
+        },
+        "star-twinkle": {
+          "0%, 100%": { opacity: "0.6" },
+          "50%": { opacity: "0.95" },
+        },
+        "light-shimmer": {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.8" },
+        },
+        "waterfall-drift": {
+          "0%": { backgroundPosition: "0 0, 50px 0, 100px 0, 150px 0, 200px 0, 30px 0" },
+          "100%": { backgroundPosition: "0 300px, 50px 350px, 100px 280px, 150px 320px, 200px 290px, 30px 310px" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         shimmer: "shimmer 2s linear infinite",
+        // ═══ ANIMATIONS SPIRITUELLES 2026 ═══
         "pulse-gentle": "gentle-pulse 3s ease-in-out infinite",
+        breathe: "breathe 2s ease-in-out infinite",
+        "card-shimmer": "card-shimmer 0.8s ease-out forwards",
+        "star-twinkle": "star-twinkle 6s ease-in-out infinite alternate",
+        "light-shimmer": "light-shimmer 10s ease-in-out infinite alternate",
+        "waterfall-drift": "waterfall-drift 8s linear infinite",
       },
     },
   },
