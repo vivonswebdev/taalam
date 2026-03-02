@@ -1,22 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles } from "lucide-react";
+import { Brain, Calendar, ChevronRight, CheckCircle2, Circle, BookOpen, Mic, Target, Trash2, Plus, Sparkles, Search } from "lucide-react";
 import { trackEvent } from "@/lib/trackEvent";
 import { useHifzPlan, type HifzPlan } from "@/hooks/useHifzPlan";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate } from "react-router-dom";
 import { surahs } from "@/data/surahs";
-
-const POPULAR_SURAHS = [
-  { number: 114, label: "An-Nās" }, { number: 113, label: "Al-Falaq" },
-  { number: 112, label: "Al-Ikhlāṣ" }, { number: 111, label: "Al-Masad" },
-  { number: 110, label: "An-Naṣr" }, { number: 109, label: "Al-Kāfirūn" },
-  { number: 108, label: "Al-Kawthar" }, { number: 107, label: "Al-Mā'ūn" },
-  { number: 106, label: "Quraysh" }, { number: 105, label: "Al-Fīl" },
-  { number: 36, label: "Yā-Sīn" }, { number: 67, label: "Al-Mulk" },
-  { number: 55, label: "Ar-Raḥmān" }, { number: 56, label: "Al-Wāqi'a" },
-  { number: 18, label: "Al-Kahf" }, { number: 2, label: "Al-Baqarah" },
-];
 
 function WizardStep({ step, children }: { step: number; children: React.ReactNode }) {
   return (
