@@ -1931,6 +1931,19 @@ const translations = {
   "homeCards.prayers": { fr: "Horaires Prières", en: "Prayer Times", nl: "Gebedstijden", ar: "أوقات الصلاة", tr: "Namaz Vakitleri", ur: "نماز کے اوقات" },
   "homeCards.prayersDesc": { fr: "Prochain horaire de prière", en: "Next prayer time", nl: "Volgende gebedstijd", ar: "وقت الصلاة التالي", tr: "Sonraki namaz vakti", ur: "اگلی نماز کا وقت" },
 
+  // ═══ Groups Page ═══
+  "groups.title": { fr: "Mes Groupes", en: "My Groups", nl: "Mijn Groepen", ar: "مجموعاتي", tr: "Gruplarım", ur: "میرے گروپس" },
+  "groups.subtitle": { fr: "Rejoignez des communautés et progressez ensemble", en: "Join communities and progress together", nl: "Sluit je aan bij gemeenschappen en groei samen", ar: "انضم إلى المجتمعات وتقدم معاً", tr: "Topluluklara katılın ve birlikte ilerleyin", ur: "کمیونٹیز میں شامل ہوں اور ساتھ ترقی کریں" },
+  "groups.family": { fr: "Groupe Famille", en: "Family Group", nl: "Familiegroep", ar: "مجموعة العائلة", tr: "Aile Grubu", ur: "خاندانی گروپ" },
+  "groups.familyDesc": { fr: "Suivez vos enfants et partagez en famille", en: "Follow your children and share as a family", nl: "Volg je kinderen en deel als gezin", ar: "تابع أطفالك وشارك كعائلة", tr: "Çocuklarınızı takip edin ve aile olarak paylaşın", ur: "اپنے بچوں کی پیروی کریں اور خاندان کے طور پر شیئر کریں" },
+  "groups.class": { fr: "Groupe Classe", en: "Class Group", nl: "Klasgroep", ar: "مجموعة الفصل", tr: "Sınıf Grubu", ur: "کلاس گروپ" },
+  "groups.classDesc": { fr: "Madrasa, école ou cours de Coran", en: "Madrasa, school or Quran class", nl: "Madrasa, school of Koranles", ar: "مدرسة أو حلقة قرآن", tr: "Medrese, okul veya Kur'an dersi", ur: "مدرسہ، اسکول یا قرآن کلاس" },
+  "groups.mosque": { fr: "Groupe Mosquée", en: "Mosque Group", nl: "Moskeegroep", ar: "مجموعة المسجد", tr: "Cami Grubu", ur: "مسجد گروپ" },
+  "groups.mosqueDesc": { fr: "Communauté locale de votre mosquée", en: "Your local mosque community", nl: "Je lokale moskeegemeenschap", ar: "مجتمع مسجدك المحلي", tr: "Yerel cami topluluğunuz", ur: "آپ کی مقامی مسجد کی کمیونٹی" },
+  "groups.country": { fr: "Groupe Pays", en: "Country Group", nl: "Landgroep", ar: "مجموعة الدولة", tr: "Ülke Grubu", ur: "ملکی گروپ" },
+  "groups.countryDesc": { fr: "Compétition nationale et classement Hifz", en: "National Hifz competition and ranking", nl: "Nationale Hifz-competitie en ranglijst", ar: "مسابقة حفظ وطنية وترتيب", tr: "Ulusal Hıfz yarışması ve sıralama", ur: "قومی حفظ مقابلہ اور درجہ بندی" },
+  "groups.info": { fr: "Partagez votre progression, encouragez-vous et apprenez ensemble", en: "Share your progress, encourage each other and learn together", nl: "Deel je voortgang, moedig elkaar aan en leer samen", ar: "شارك تقدمك وشجع بعضكم وتعلموا معاً", tr: "İlerlemenizi paylaşın, birbirinizi teşvik edin ve birlikte öğrenin", ur: "اپنی پیشرفت شیئر کریں، ایک دوسرے کی حوصلہ افزائی کریں اور ساتھ سیکھیں" },
+
   // ═══ Kids 2x4 Cards ═══
   "kidsCards.games": { fr: "Mes Jeux", en: "My Games", nl: "Mijn Spellen", ar: "ألعابي", tr: "Oyunlarım", ur: "میرے کھیل" },
   "kidsCards.gamesDesc": { fr: "Crush + Memory · Joue !", en: "Crush + Memory · Play!", nl: "Crush + Memory · Speel!", ar: "كراش + ذاكرة · العب!", tr: "Crush + Hafıza · Oyna!", ur: "کرش + میموری · کھیلو!" },

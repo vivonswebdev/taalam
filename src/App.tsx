@@ -76,6 +76,7 @@ import MaladieDetail from "./pages/MaladieDetail";
 import AthkarDetail from "./pages/AthkarDetail";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityDetail from "./pages/CommunityDetail";
+import CommunityGroups from "./pages/CommunityGroups";
 import FavoritesNotesPage from "./pages/FavoritesNotesPage";
 import HifzTodayPage from "./pages/HifzTodayPage";
 import JeuxKids from "./pages/JeuxKids";
@@ -176,6 +177,7 @@ const App = () => (
               <Route path="/install-app" element={<InstallAppPage />} />
               <Route path="/mushaf" element={<MushafPage />} />
               <Route path="/quran-hub" element={<QuranHub />} />
+              <Route path="/groups" element={<CommunityGroups />} />
               <Route path="/community" element={<CommunityPage />} />
               <Route path="/community/:id" element={<CommunityDetail />} />
               <Route path="/favorites-notes" element={<FavoritesNotesPage />} />
