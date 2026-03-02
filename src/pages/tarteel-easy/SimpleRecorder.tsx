@@ -133,10 +133,22 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
   const analyzeAudio = async (_blob: Blob) => {
     // TODO: replace with real API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const mockScore = Math.floor(Math.random() * 30) + 70;
+    const mockTranscription: TranscriptionData = {
+      detected: "قُلْ هُوَ ٱللَّهُ أَحَدٌ",
+      expected: "قُلْ هُوَ ٱللَّهُ أَحَدٌ ٱللَّهُ ٱلصَّمَدُ",
+      score: Math.floor(Math.random() * 30) + 70,
+      matches: [
+        { word: "قُلْ", correct: true },
+        { word: "هُوَ", correct: true },
+        { word: "ٱللَّهُ", correct: true },
+        { word: "أَحَدٌ", correct: true },
+        { word: "ٱللَّهُ", correct: false },
+        { word: "ٱلصَّمَدُ", correct: false },
+      ],
+    };
     addXP(10);
     setIsAnalyzing(false);
-    onScore(mockScore);
+    onScore(mockTranscription.score, mockTranscription);
   };
 
   useEffect(() => {
