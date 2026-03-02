@@ -103,7 +103,7 @@ function AdultHome() {
       icon: Users,
       titleKey: "homeCards.groups",
       descKey: "homeCards.groupsDesc",
-      href: "/community",
+      href: "/groups",
       gradient: "from-green-500/20 to-teal-500/20",
       emoji: "🌍",
       badge: communityBadge > 0 ? communityBadge : undefined,
