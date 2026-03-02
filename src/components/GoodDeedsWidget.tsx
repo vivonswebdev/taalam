@@ -62,10 +62,6 @@ export default function GoodDeedsWidget() {
           } else {
             setCompleted(getLocalDeeds(date));
           }
-        })
-        .catch((err) => {
-          console.error("Good deeds fetch exception:", err);
-          setCompleted(getLocalDeeds(date));
         });
     } else {
       setCompleted(getLocalDeeds(date));
