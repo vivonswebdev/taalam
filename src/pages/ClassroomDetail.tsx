@@ -531,7 +531,7 @@ export default function ClassroomDetail() {
               {nonMembers.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => addMember(classroom.id, p.id)}
+                  onClick={() => addMember(effectiveClassroom.id, p.id)}
                   className="flex items-center gap-1.5 bg-muted border border-border rounded-full px-3 py-1.5 text-xs font-medium"
                 >
                   <span>{p.avatarEmoji}</span> {p.name}
