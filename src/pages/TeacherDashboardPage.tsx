@@ -81,28 +81,42 @@ export default function TeacherDashboardPage() {
     <div className="min-h-screen pb-24">
       <TeacherHeader />
 
-      {/* Class selector */}
+      {/* Class selector - enhanced cards */}
       <div className="px-4 py-3">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
-          {classes.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => setSelectedClassId(c.id)}
-              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                selectedClassId === c.id
-                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {c.name}
-            </button>
-          ))}
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+          {classes.map((c) => {
+            const isActive = selectedClassId === c.id;
+            const studentCount = isActive ? summary.totalStudents : null;
+            return (
+              <button
+                key={c.id}
+                onClick={() => setSelectedClassId(c.id)}
+                className={`shrink-0 relative flex flex-col items-start gap-1 px-4 py-3 rounded-2xl text-left transition-all min-w-[140px] border ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 border-primary scale-[1.02]"
+                    : "bg-card text-card-foreground border-border hover:border-primary/40 hover:shadow-md"
+                }`}
+              >
+                {isActive && (
+                  <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-primary-foreground/80 animate-pulse" />
+                )}
+                <span className="text-sm font-bold truncate max-w-[120px]">{c.name}</span>
+                <span className={`text-[10px] font-mono ${isActive ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                  {c.join_code}
+                </span>
+                <div className={`flex items-center gap-1 mt-0.5 ${isActive ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                  <Users size={12} />
+                  <span className="text-[10px] font-medium">
+                    {studentCount !== null ? `${studentCount} ${t("teacher.students" as any) || "élèves"}` : t("teacher.tapToView" as any) || "Voir"}
+                  </span>
+                </div>
+                {!isActive && (
+                  <ChevronRight size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+                )}
+              </button>
+            );
+          })}
         </div>
-        {selectedClass && (
-          <p className="text-[10px] text-muted-foreground mt-1.5 px-1">
-            Code: <span className="font-mono font-semibold text-foreground">{selectedClass.join_code}</span>
-          </p>
-        )}
       </div>
 
       {loading ? (
