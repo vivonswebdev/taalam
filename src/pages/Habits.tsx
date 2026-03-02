@@ -400,9 +400,9 @@ export default function Habits() {
           </div>
           {listeningStats.totalListeningMinutes > 0 && (
             <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-              <span>Total : {listeningStats.totalListeningMinutes} min d'écoute</span>
+              <span>{t("habits.totalListening" as any).replace("{min}", String(listeningStats.totalListeningMinutes))}</span>
               {listeningStats.lastSession && (
-                <span>Sourate {listeningStats.lastSession.surah_number}</span>
+                <span>{t("habits.surah" as any)} {listeningStats.lastSession.surah_number}</span>
               )}
             </div>
           )}
