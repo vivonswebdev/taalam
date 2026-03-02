@@ -896,6 +896,7 @@ const translations = {
   "nav.tarteel": { fr: "Tarteel", en: "Tarteel", nl: "Tarteel", ar: "ترتيل", tr: "Tertil", ur: "ترتیل" },
   "nav.quranRecit": { fr: "Coran", en: "Quran", nl: "Koran", ar: "القرآن", tr: "Kuran", ur: "قرآن" },
   "nav.heart": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
+  "nav.coord": { fr: "Coord", en: "Coord", nl: "Coörd", ar: "تنسيق", tr: "Koord", ur: "تنسیق" },
   "nav.stats": { fr: "Stats", en: "Stats", nl: "Stats", ar: "الإحصائيات", tr: "İstatistikler", ur: "اعداد و شمار" },
   "nav.moods": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
   "nav.more": { fr: "Plus", en: "More", nl: "Meer", ar: "المزيد", tr: "Daha", ur: "مزید" },
