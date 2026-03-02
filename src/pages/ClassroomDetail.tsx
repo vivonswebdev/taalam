@@ -568,7 +568,7 @@ export default function ClassroomDetail() {
                     </div>
                     {isTeacherFinal && !isTeacherMember && (
                       <button
-                        onClick={() => removeMember(classroom.id, uid)}
+                        onClick={() => removeMember(effectiveClassroom.id, uid)}
                         className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
                       >
                         <Trash2 size={12} className="text-destructive" />
