@@ -17,6 +17,50 @@ const TAB_KEYS: Record<Tab, string> = { moods: "moods.tabMoods", maladies: "mood
 const RECENT_MOODS_KEY = "taalam_recent_moods";
 const MAX_RECENT = 3;
 
+// Vibrant gradient mapping for moods
+const MOOD_GRADIENTS: Record<string, string> = {
+  sleep: "from-indigo-500 to-purple-600",
+  sadness: "from-blue-500 to-slate-600",
+  anxiety: "from-teal-500 to-cyan-600",
+  anger: "from-red-500 to-rose-600",
+  loneliness: "from-violet-500 to-purple-700",
+  forgiveness: "from-amber-500 to-orange-600",
+  gratitude: "from-emerald-500 to-green-600",
+  hope: "from-orange-400 to-amber-600",
+  love: "from-rose-500 to-pink-600",
+  hardship: "from-stone-500 to-zinc-600",
+  doubts: "from-purple-600 to-indigo-700",
+  ruqya: "from-cyan-500 to-teal-600",
+  success: "from-yellow-400 to-amber-500",
+  study: "from-sky-500 to-indigo-600",
+};
+
+// Vibrant gradient mapping for maladies
+const MALADIE_GRADIENTS: Record<string, string> = {
+  "general-illness": "from-teal-500 to-emerald-600",
+  "heart-disease": "from-rose-500 to-red-600",
+  insomnia: "from-indigo-500 to-violet-600",
+  fears: "from-purple-500 to-fuchsia-600",
+  depression: "from-slate-500 to-gray-600",
+  "evil-eye": "from-cyan-500 to-blue-600",
+};
+
+// Vibrant gradient mapping for athkar
+const ATHKAR_GRADIENTS = [
+  "from-emerald-500 to-teal-600",
+  "from-blue-500 to-indigo-600",
+  "from-amber-500 to-orange-600",
+  "from-violet-500 to-purple-600",
+  "from-rose-500 to-pink-600",
+  "from-cyan-500 to-sky-600",
+  "from-lime-500 to-green-600",
+  "from-fuchsia-500 to-pink-600",
+  "from-orange-500 to-red-500",
+  "from-teal-500 to-cyan-600",
+  "from-indigo-500 to-blue-600",
+  "from-yellow-400 to-amber-500",
+];
+
 function getRecentMoods(): string[] {
   try {
     const raw = localStorage.getItem(RECENT_MOODS_KEY);
@@ -34,28 +78,54 @@ export function trackMoodVisit(id: string) {
   } catch {}
 }
 
-function MoodCard({ icon, title, desc, loop, onClick }: {
-  icon: string; title: string; desc: string; loop?: boolean; onClick?: () => void;
+function VibrantCard({ emoji, title, desc, gradient, loop, onClick, index }: {
+  emoji: string; title: string; desc: string; gradient: string; loop?: boolean; onClick?: () => void; index: number;
 }) {
   const { t } = useLanguage();
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: Math.min(index * 0.05, 0.4), type: "spring", stiffness: 300, damping: 20 }}
+      whileTap={{ scale: 0.92 }}
       onClick={onClick}
-      className="w-full flex flex-col items-start gap-1.5 rounded-2xl px-2.5 py-2.5 bg-card/70 border border-border hover:border-primary/70 transition-all hover:scale-[1.02] active:scale-[0.98] min-h-[80px] relative"
+      className={`relative w-full flex flex-col items-center justify-center gap-1 rounded-2xl p-3 bg-gradient-to-br ${gradient} shadow-lg shadow-black/10 min-h-[100px] overflow-hidden`}
     >
-      <div className="flex items-center justify-between w-full">
-        <span className="text-2xl leading-none">{icon}</span>
-        {loop && (
-          <span className="text-[8px] px-1 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/40 whitespace-nowrap">
-            {t("moods.loopBadge" as any)}
-          </span>
-        )}
-      </div>
-      <div className="text-left">
-        <p className="text-xs font-semibold text-foreground leading-tight">{title}</p>
-        <p className="text-[9px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">{desc}</p>
-      </div>
-    </button>
+      {/* Sparkle */}
+      <motion.span
+        className="absolute top-1.5 right-2 text-sm"
+        animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
+        transition={{ repeat: Infinity, duration: 1.5, delay: index * 0.2 }}
+      >
+        ✨
+      </motion.span>
+
+      {/* Loop badge */}
+      {loop && (
+        <span className="absolute top-1.5 left-2 text-[7px] px-1.5 py-0.5 rounded-full bg-white/25 text-white font-bold backdrop-blur-sm">
+          {t("moods.loopBadge" as any)}
+        </span>
+      )}
+
+      {/* Emoji */}
+      <motion.span
+        className="text-3xl"
+        animate={{ y: [0, -3, 0] }}
+        transition={{ repeat: Infinity, duration: 2, delay: index * 0.3 }}
+      >
+        {emoji}
+      </motion.span>
+
+      {/* Title */}
+      <span className="text-[11px] font-bold text-white drop-shadow leading-tight text-center">
+        {title}
+      </span>
+
+      {/* Description */}
+      <span className="text-[8px] text-white/75 font-medium leading-tight text-center line-clamp-2">
+        {desc}
+      </span>
+    </motion.button>
   );
 }
 
@@ -70,7 +140,6 @@ function RecentMoodsSection() {
 
   if (recentIds.length === 0) return null;
 
-  // Resolve each id to a mood, maladie, or athkar
   const items = recentIds.map(id => {
     const mood = moodPresets.find(m => m.id === id);
     if (mood) return { id, emoji: mood.emoji, title: t(`mood.${id}` as any) || mood.title, path: `/moods/${id}` };
@@ -112,7 +181,6 @@ export default function Moods() {
     ? athkarGroups
     : athkarGroups.filter((g) => g.category === athkarFilter);
 
-  // All moods together: non-loop first, then loop
   const allMoods = [
     ...moodPresets.filter(m => !m.loop),
     ...moodPresets.filter(m => m.loop),
@@ -120,20 +188,23 @@ export default function Moods() {
 
   return (
     <PageBackground intensity="medium">
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-black/30 pb-24">
+    <div className="min-h-screen pb-24">
       {/* Header */}
-      <div className="sticky top-0 z-30 backdrop-blur-xl bg-background/70 border-b border-border/50 px-4 py-3 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-muted">
+      <div className="flex items-center gap-3 px-4 pt-6 pb-4">
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white/10 backdrop-blur">
           <ArrowLeft size={20} />
         </button>
-        <div>
-          <h1 className="text-lg font-semibold">❤️ {t("moods.title")}</h1>
-          <p className="text-[11px] text-muted-foreground mt-0.5">{t("moods.subtitle")}</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="text-xl font-extrabold text-foreground">❤️ {t("moods.title")}</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("moods.subtitle")}</p>
+        </motion.div>
       </div>
 
       {/* Tabs */}
-      <div className="px-4 pt-3 pb-1">
+      <div className="px-4 pb-2">
         <div className="flex bg-muted/60 rounded-2xl p-1 gap-1">
           {TAB_IDS.map((tabId) => (
             <button
@@ -161,30 +232,23 @@ export default function Moods() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Recently used */}
             <RecentMoodsSection />
 
-
-            {/* All moods in unified grid */}
-            <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
+            <div className="grid grid-cols-3 gap-3 px-4 pt-2 pb-4">
               {allMoods.map((mood, i) => {
                 const titleKey = `mood.${mood.id}` as any;
                 const subKey = `mood.${mood.id}.sub` as any;
                 return (
-                  <motion.div
+                  <VibrantCard
                     key={mood.id}
-                    initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-                  >
-                    <MoodCard
-                      icon={mood.emoji}
-                      title={t(titleKey) || mood.title}
-                      desc={t(subKey) || mood.subtitle}
-                      loop={mood.loop}
-                      onClick={() => navigate(`/moods/${mood.id}`)}
-                    />
-                  </motion.div>
+                    index={i}
+                    emoji={mood.emoji}
+                    title={t(titleKey) || mood.title}
+                    desc={t(subKey) || mood.subtitle}
+                    gradient={MOOD_GRADIENTS[mood.id] || "from-gray-500 to-slate-600"}
+                    loop={mood.loop}
+                    onClick={() => navigate(`/moods/${mood.id}`)}
+                  />
                 );
               })}
             </div>
@@ -199,23 +263,19 @@ export default function Moods() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-3 gap-2.5 p-4"
+            className="grid grid-cols-3 gap-3 p-4"
           >
             {maladiesPresets.map((m, i) => (
-              <motion.div
+              <VibrantCard
                 key={m.id}
-                initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-              >
-                <MoodCard
-                  icon={m.emoji}
-                  title={t(`maladie.${m.id}` as any) || m.title}
-                  desc={t(`maladie.${m.id}.sub` as any) || m.subtitle}
-                  loop={m.loop}
-                  onClick={() => navigate(`/maladies/${m.id}`)}
-                />
-              </motion.div>
+                index={i}
+                emoji={m.emoji}
+                title={t(`maladie.${m.id}` as any) || m.title}
+                desc={t(`maladie.${m.id}.sub` as any) || m.subtitle}
+                gradient={MALADIE_GRADIENTS[m.id] || "from-gray-500 to-slate-600"}
+                loop={m.loop}
+                onClick={() => navigate(`/maladies/${m.id}`)}
+              />
             ))}
           </motion.div>
         )}
@@ -230,7 +290,7 @@ export default function Moods() {
             transition={{ duration: 0.2 }}
           >
             {/* Filters */}
-            <div className="px-4 pt-3 pb-1 flex gap-1.5 overflow-x-auto no-scrollbar">
+            <div className="px-4 pt-2 pb-1 flex gap-1.5 overflow-x-auto no-scrollbar">
               {ATHKAR_FILTERS.map((f) => {
                 const filterKey = f.id === "all" ? "athkar.filterAll" : `athkar.filter${f.id.charAt(0).toUpperCase()}${f.id.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())}`;
                 return (
@@ -249,7 +309,6 @@ export default function Moods() {
               })}
             </div>
 
-            {/* Core athkar */}
             {(() => {
               const coreFiltered = filteredAthkar.filter(g => CORE_ATHKAR_IDS.includes(g.id));
               const situationFiltered = filteredAthkar.filter(g => !CORE_ATHKAR_IDS.includes(g.id));
@@ -260,16 +319,17 @@ export default function Moods() {
                       <div className="px-4 pt-2 pb-1">
                         <h2 className="text-sm font-bold text-foreground">📿 {t("athkar.coreTitle" as any)}</h2>
                       </div>
-                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-2">
+                      <div className="grid grid-cols-3 gap-3 px-4 pb-2">
                         {coreFiltered.map((g, i) => (
-                          <motion.div
+                          <VibrantCard
                             key={g.id}
-                            initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-                          >
-                            <MoodCard icon={g.emoji} title={t(`athkar.${g.id}` as any) || g.title} desc={t(`athkar.${g.id}.sub` as any) || g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
-                          </motion.div>
+                            index={i}
+                            emoji={g.emoji}
+                            title={t(`athkar.${g.id}` as any) || g.title}
+                            desc={t(`athkar.${g.id}.sub` as any) || g.subtitle}
+                            gradient={ATHKAR_GRADIENTS[i % ATHKAR_GRADIENTS.length]}
+                            onClick={() => navigate(`/athkar/${g.id}`)}
+                          />
                         ))}
                       </div>
                     </>
@@ -280,16 +340,17 @@ export default function Moods() {
                         <h2 className="text-sm font-bold text-foreground">🗂️ {t("athkar.situationsTitle" as any)}</h2>
                         <p className="text-[10px] text-muted-foreground mt-0.5">{t("athkar.situationsSubtitle" as any)}</p>
                       </div>
-                      <div className="grid grid-cols-3 gap-2.5 px-4 pb-4">
+                      <div className="grid grid-cols-3 gap-3 px-4 pb-4">
                         {situationFiltered.map((g, i) => (
-                          <motion.div
+                          <VibrantCard
                             key={g.id}
-                            initial={{ opacity: 0, y: 24, scale: 0.92 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{ delay: Math.min(i * 0.04, 0.4), type: "spring", stiffness: 260, damping: 20 }}
-                          >
-                            <MoodCard icon={g.emoji} title={t(`athkar.${g.id}` as any) || g.title} desc={t(`athkar.${g.id}.sub` as any) || g.subtitle} onClick={() => navigate(`/athkar/${g.id}`)} />
-                          </motion.div>
+                            index={i}
+                            emoji={g.emoji}
+                            title={t(`athkar.${g.id}` as any) || g.title}
+                            desc={t(`athkar.${g.id}.sub` as any) || g.subtitle}
+                            gradient={ATHKAR_GRADIENTS[(i + 3) % ATHKAR_GRADIENTS.length]}
+                            onClick={() => navigate(`/athkar/${g.id}`)}
+                          />
                         ))}
                       </div>
                     </>
