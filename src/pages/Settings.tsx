@@ -30,6 +30,70 @@ export default function Settings() {
   const { user } = useAuth();
   const { offlineMode, setOfflineMode, readySections } = useOfflineManager();
 
+  // PIN states
+  const [pinDialog, setPinDialog] = useState<"none" | "setup" | "confirm" | "verify">("none");
+  const [pinInput, setPinInput] = useState("");
+  const [pinFirst, setPinFirst] = useState("");
+  const [pinError, setPinError] = useState("");
+  const pinInputRef = useRef<HTMLInputElement>(null);
+  const storedPin = localStorage.getItem(PIN_KEY);
+
+  const handleChildModeToggle = () => {
+    if (!isChildMode) {
+      // Turning ON child mode — set up PIN if not already set
+      if (!storedPin) {
+        setPinDialog("setup");
+        setPinInput("");
+        setPinFirst("");
+        setPinError("");
+      } else {
+        toggleChildMode();
+      }
+    } else {
+      // Turning OFF child mode — require PIN
+      if (storedPin) {
+        setPinDialog("verify");
+        setPinInput("");
+        setPinError("");
+      } else {
+        toggleChildMode();
+      }
+    }
+  };
+
+  const handlePinSubmit = () => {
+    if (pinDialog === "setup") {
+      if (pinInput.length !== 4) return;
+      setPinFirst(pinInput);
+      setPinInput("");
+      setPinDialog("confirm");
+      setPinError("");
+    } else if (pinDialog === "confirm") {
+      if (pinInput !== pinFirst) {
+        setPinError(t("settings.pinMismatch" as any));
+        setPinInput("");
+        return;
+      }
+      localStorage.setItem(PIN_KEY, pinInput);
+      setPinDialog("none");
+      toggleChildMode();
+    } else if (pinDialog === "verify") {
+      if (pinInput !== storedPin) {
+        setPinError(t("settings.pinWrong" as any));
+        setPinInput("");
+        return;
+      }
+      setPinDialog("none");
+      toggleChildMode();
+    }
+  };
+
+  useEffect(() => {
+    if (pinDialog !== "none") {
+      setTimeout(() => pinInputRef.current?.focus(), 100);
+    }
+  }, [pinDialog]);
+
   // Profile visibility
   const [isPublic, setIsPublic] = useState(true);
 
