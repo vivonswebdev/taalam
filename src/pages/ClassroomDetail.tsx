@@ -101,6 +101,8 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
 export default function ClassroomDetail() {
   const { classId: rawClassId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromCoord = (location.state as any)?.from === "coord";
   const { t, lang } = useLanguage();
   const { user } = useAuth();
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
