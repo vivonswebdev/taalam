@@ -435,14 +435,12 @@
     100% { background-position: 0 300px, 50px 350px, 100px 280px, 150px 320px, 200px 290px, 30px 310px; }
   }
   @keyframes star-twinkle {
-    0%   { opacity: 0.5; }
-    50%  { opacity: 0.9; }
-    100% { opacity: 0.6; }
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.95; }
   }
   @keyframes light-shimmer {
-    0%   { opacity: 0.4; }
-    50%  { opacity: 0.8; }
-    100% { opacity: 0.5; }
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
   }
 
   /* ── Shared epic card styles ── */
