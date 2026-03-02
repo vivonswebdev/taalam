@@ -322,10 +322,12 @@ export default function Home() {
         </div>
       )}
 
-      {/* ═══ Good Deeds Widget ═══ */}
-      <div className="px-5 mt-4">
-        <GoodDeedsWidget />
-      </div>
+      {/* ═══ Good Deeds Widget (Kids only) ═══ */}
+      {isChildMode && (
+        <div className="px-5 mt-4">
+          <GoodDeedsWidget />
+        </div>
+      )}
 
       {/* ═══ Share ═══ */}
       <div className="px-5 mt-3">
