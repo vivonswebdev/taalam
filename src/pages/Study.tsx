@@ -16,6 +16,7 @@ interface AyahData {
 }
 
 export default function Study() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const surahNum = parseInt(params.get("surah") || "1");
