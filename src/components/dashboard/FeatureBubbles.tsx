@@ -6,7 +6,7 @@ import { useAdminSettings } from "@/hooks/useAdminSettings";
 import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import { useHifzSRS } from "@/hooks/useHifzSRS";
 import ProfileBubble from "@/components/ProfileBubble";
-import ShareProgressCard from "@/components/ShareProgressCard";
+
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
