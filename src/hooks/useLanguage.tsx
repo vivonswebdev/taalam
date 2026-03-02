@@ -3079,7 +3079,7 @@ const translations = {
   "tetrisIslam.lines": { fr: "Lignes", en: "Lines", nl: "Rijen", ar: "صفوف", tr: "Satırlar", ur: "لائنیں" },
   "tetrisIslam.paused": { fr: "Pause", en: "Paused", nl: "Gepauzeerd", ar: "إيقاف مؤقت", tr: "Duraklatıldı", ur: "وقفہ" },
   "tetrisIslam.resume": { fr: "Reprendre", en: "Resume", nl: "Hervatten", ar: "استئناف", tr: "Devam Et", ur: "دوبارہ شروع" },
-  "kidsGames.tetrisIslam": { fr: "Tetris Islam", en: "Tetris Islam", nl: "Tetris Islam", ar: "تتريس إسلام", tr: "Tetris İslam", ur: "ٹیٹرس اسلام" },
+  "kidsGames.tetrisIslam": { fr: "Tetrislam", en: "Tetrislam", nl: "Tetrislam", ar: "تتريسلام", tr: "Tetrislam", ur: "ٹیٹرسلام" },
   "kidsGames.tetrisIslamDesc": { fr: "Remplis le Mushaf !", en: "Fill the Mushaf!", nl: "Vul de Mushaf!", ar: "املأ المصحف!", tr: "Mushaf'ı doldur!", ur: "مصحف بھرو!" },
   "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
 } as const;
