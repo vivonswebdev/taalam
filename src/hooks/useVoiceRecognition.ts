@@ -277,6 +277,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       hasReceivedResultRef.current = true;
+      sessionHadResultsRef.current = true;
       // Clear timers since we got results
       if (nativeSilenceTimerRef.current) { clearTimeout(nativeSilenceTimerRef.current); nativeSilenceTimerRef.current = null; }
       if (nativeNoEndTimerRef.current) { clearTimeout(nativeNoEndTimerRef.current); nativeNoEndTimerRef.current = null; }
