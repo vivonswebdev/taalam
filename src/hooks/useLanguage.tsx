@@ -3044,6 +3044,27 @@ const translations = {
   "badges.ramadan30": { fr: "Ramadan Complet", en: "Full Ramadan", nl: "Volledige Ramadan", ar: "رمضان كامل", tr: "Tam Ramazan", ur: "مکمل رمضان" },
   "badges.firstClass": { fr: "1ère Classe", en: "First Class", nl: "Eerste Klas", ar: "الصف الأول", tr: "İlk Sınıf", ur: "پہلی کلاس" },
   "badges.helper": { fr: "Entraide", en: "Helper", nl: "Helper", ar: "مساعد", tr: "Yardımcı", ur: "مددگار" },
+  // Math Games
+  "mathGames.title": { fr: "🧮 Jeux Maths", en: "🧮 Math Games", nl: "🧮 Rekenspellen", ar: "🧮 ألعاب الرياضيات", tr: "🧮 Matematik Oyunları", ur: "🧮 ریاضی کے کھیل" },
+  "mathGames.subtitle": { fr: "Objectif Médaille d'Or ! 🏆", en: "Go for the Gold Medal! 🏆", nl: "Ga voor Goud! 🏆", ar: "الهدف الميدالية الذهبية! 🏆", tr: "Altın Madalya Hedefi! 🏆", ur: "سونے کا تمغہ! 🏆" },
+  "mathGames.quickCalc": { fr: "Quick Calc", en: "Quick Calc", nl: "Quick Calc", ar: "حساب سريع", tr: "Hızlı Hesap", ur: "فوری حساب" },
+  "mathGames.calcMerge": { fr: "Calc Merge", en: "Calc Merge", nl: "Calc Merge", ar: "دمج الحساب", tr: "Hesap Birleştir", ur: "حساب ملاؤ" },
+  "mathGames.numberRunner": { fr: "Number Runner", en: "Number Runner", nl: "Number Runner", ar: "عداء الأرقام", tr: "Sayı Koşucusu", ur: "نمبر رنر" },
+  "mathGames.mathShooter": { fr: "Math Shooter", en: "Math Shooter", nl: "Math Shooter", ar: "رامي الرياضيات", tr: "Matematik Atıcı", ur: "ریاضی شوٹر" },
+  "mathGames.quickCalcTitle": { fr: "Quick Calc", en: "Quick Calc", nl: "Quick Calc", ar: "حساب سريع", tr: "Hızlı Hesap", ur: "فوری حساب" },
+  "mathGames.quickCalcDesc": { fr: "Résous les calculs le plus vite possible !", en: "Solve calculations as fast as you can!", nl: "Los berekeningen zo snel mogelijk op!", ar: "حل الحسابات بأسرع ما يمكن!", tr: "Hesapları en hızlı şekilde çöz!", ur: "جتنی جلدی ہو سکے حساب حل کریں!" },
+  "mathGames.play": { fr: "🎮 Jouer !", en: "🎮 Play!", nl: "🎮 Spelen!", ar: "🎮 العب!", tr: "🎮 Oyna!", ur: "🎮 کھیلو!" },
+  "mathGames.levels": { fr: "Niveaux", en: "Levels", nl: "Niveaus", ar: "مستويات", tr: "Seviyeler", ur: "سطحیں" },
+  "mathGames.operations": { fr: "Opérations", en: "Operations", nl: "Bewerkingen", ar: "عمليات", tr: "İşlemler", ur: "عمل" },
+  "mathGames.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
+  "mathGames.gameOver": { fr: "Partie terminée !", en: "Game Over!", nl: "Spel voorbij!", ar: "انتهت اللعبة!", tr: "Oyun Bitti!", ur: "گیم ختم!" },
+  "mathGames.retry": { fr: "🔄 Rejouer", en: "🔄 Retry", nl: "🔄 Opnieuw", ar: "🔄 إعادة", tr: "🔄 Tekrar", ur: "🔄 دوبارہ" },
+  "mathGames.earned": { fr: "gagnés", en: "earned", nl: "verdiend", ar: "مكتسبة", tr: "kazanıldı", ur: "حاصل کیے" },
+  "mathGames.levelComplete": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
+  "mathGames.completed": { fr: "réussi !", en: "complete!", nl: "voltooid!", ar: "اكتمل!", tr: "tamamlandı!", ur: "مکمل!" },
+  "mathGames.nextLevel": { fr: "➡️ Niveau suivant", en: "➡️ Next Level", nl: "➡️ Volgend niveau", ar: "➡️ المستوى التالي", tr: "➡️ Sonraki Seviye", ur: "➡️ اگلا سطح" },
+  "mathGames.quit": { fr: "Quitter", en: "Quit", nl: "Stoppen", ar: "خروج", tr: "Çık", ur: "چھوڑیں" },
+  "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

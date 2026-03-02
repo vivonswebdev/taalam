@@ -100,6 +100,8 @@ import ParentInvitationsPage from "./pages/ParentInvitationsPage";
 import CreateChildForInvitePage from "./pages/CreateChildForInvitePage";
 import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
 import ChildGalleryPage from "./pages/ChildGalleryPage";
+import KidsMathMenuPage from "./pages/KidsMathMenuPage";
+import QuickCalcPage from "./pages/QuickCalcPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -217,6 +219,8 @@ const App = () => (
               <Route path="/create-child" element={<CreateChildPage />} />
               <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
               <Route path="/child-gallery" element={<ChildGalleryPage />} />
+              <Route path="/kids-math" element={<KidsMathMenuPage />} />
+              <Route path="/kids-quick-calc" element={<QuickCalcPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />

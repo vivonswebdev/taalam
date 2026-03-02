@@ -1293,6 +1293,53 @@ export type Database = {
         }
         Relationships: []
       }
+      math_scores: {
+        Row: {
+          child_id: string
+          created_at: string
+          game_type: string
+          id: string
+          level: number
+          max_combo: number
+          operations: string
+          played_at: string
+          score: number
+          xp_earned: number
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          game_type?: string
+          id?: string
+          level?: number
+          max_combo?: number
+          operations?: string
+          played_at?: string
+          score?: number
+          xp_earned?: number
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          game_type?: string
+          id?: string
+          level?: number
+          max_combo?: number
+          operations?: string
+          played_at?: string
+          score?: number
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "math_scores_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mushaf_bookmarks: {
         Row: {
           ayah_key: string | null
