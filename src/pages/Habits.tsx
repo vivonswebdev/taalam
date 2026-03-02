@@ -434,8 +434,8 @@ export default function Habits() {
             );
           })()}
           <div className="flex items-center justify-center gap-4 mt-2">
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">Lecture</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">Écoute</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-primary" /><span className="text-[10px] text-muted-foreground">{t("habits.reading" as any)}</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-secondary" /><span className="text-[10px] text-muted-foreground">{t("habits.listening" as any)}</span></div>
           </div>
         </motion.div>
 
