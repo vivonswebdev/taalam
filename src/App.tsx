@@ -210,6 +210,9 @@ const App = () => (
               <Route path="/tasbih" element={<TasbihPage />} />
               <Route path="/live-haramain" element={<LiveHaramainPage />} />
               <Route path="/profile" element={<MyProfilePage />} />
+              <Route path="/select-child" element={<SelectChildPage />} />
+              <Route path="/create-child" element={<CreateChildPage />} />
+              <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
