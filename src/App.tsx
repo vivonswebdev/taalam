@@ -105,6 +105,7 @@ import QuickCalcPage from "./pages/QuickCalcPage";
 import CalcMergePage from "./pages/CalcMergePage";
 import NumberRunnerPage from "./pages/NumberRunnerPage";
 import MathShooterPage from "./pages/MathShooterPage";
+import TetrisIslamPage from "./pages/TetrisIslamPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -227,6 +228,7 @@ const App = () => (
               <Route path="/kids-calc-merge" element={<CalcMergePage />} />
               <Route path="/kids-number-runner" element={<NumberRunnerPage />} />
               <Route path="/kids-math-shooter" element={<MathShooterPage />} />
+              <Route path="/tetris-islam" element={<TetrisIslamPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />
