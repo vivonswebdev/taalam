@@ -76,15 +76,15 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
       {/* Progress bar */}
       {card.progress != null && (
         <div className="w-full mt-3 space-y-1 relative z-10">
-          <div className="relative h-2 rounded-full bg-white/15 overflow-hidden shadow-inner">
+          <div className="relative h-2 rounded-full bg-muted overflow-hidden shadow-inner">
             <div
               className="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
               style={{ width: `${Math.min(card.progress * 100, 100)}%` }}
             />
           </div>
           <div className="flex justify-between items-center text-[9px] font-semibold">
-            <span className="text-white/40">{t("homeCards.progress" as any)}</span>
-            <span className={Math.round(card.progress * 100) >= 100 ? "text-green-400" : "text-white/70"}>
+            <span className="text-muted-foreground">{t("homeCards.progress" as any)}</span>
+            <span className={Math.round(card.progress * 100) >= 100 ? "text-success" : "text-foreground/70"}>
               {Math.round(card.progress * 100)}%
             </span>
           </div>
