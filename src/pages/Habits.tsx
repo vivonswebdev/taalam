@@ -207,7 +207,7 @@ export default function Habits() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">{qxp.badge.title}</p>
-              <p className="text-[11px] text-muted-foreground">Niveau {qxp.level} · {qxp.xp} XP total</p>
+              <p className="text-[11px] text-muted-foreground">{t("habits.level" as any)} {qxp.level} · {qxp.xp} {t("habits.xpTotal" as any)}</p>
             </div>
           </div>
 
