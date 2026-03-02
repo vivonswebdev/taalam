@@ -315,9 +315,9 @@ export default function Habits() {
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {goal.type === "minutes" ? "minutes de Qur'an" : "ayat récitées"} ·{" "}
+            {goal.type === "minutes" ? t("habits.minutesQuran" as any) : t("habits.ayatRecited" as any)} ·{" "}
             {goalProgress.percent >= 100 ? (
-              <span className="text-success font-semibold">✅ Objectif atteint !</span>
+              <span className="text-success font-semibold">{t("habits.goalReached" as any)}</span>
             ) : `${goalProgress.percent}%`}
           </p>
           {showGoalPicker && (
