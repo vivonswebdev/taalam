@@ -215,9 +215,9 @@ function ClassTabContent({
       {selectedClassId && myClassrooms.length > 0 && (() => {
         const selectedClass = myClassrooms.find((c) => c.id === selectedClassId);
         if (!selectedClass) return null;
-        const shareLink = `https://iqraacoran.lovable.app/join/${selectedClass.join_code}`;
+        const shareLink = `https://app.taalam.eu/join/${selectedClass.join_code}`;
         const handleShareCode = () => {
-          const text = `📚 Rejoins ma classe "${selectedClass.name}" sur Iqraa !\n🔗 ${shareLink}`;
+          const text = `📚 Rejoins ma classe "${selectedClass.name}" sur Ta'alam !\n🔗 ${shareLink}`;
           if (navigator.share) {
             navigator.share({ title: `Classe ${selectedClass.name}`, text, url: shareLink }).catch(() => {});
           } else {
