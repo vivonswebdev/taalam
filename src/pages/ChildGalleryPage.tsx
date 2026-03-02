@@ -60,7 +60,7 @@ export default function ChildGalleryPage() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {showConfetti && <Confetti />}
+      {showConfetti && <Confetti active={showConfetti} />}
 
       {/* Header */}
       <div className="bg-gradient-to-br from-amber-500/20 via-primary/10 to-purple-500/10 px-4 pt-5 pb-6">
