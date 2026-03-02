@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { RARITY_COLORS } from "@/data/achievementsData";
 
 interface LeaderboardEntry {
   id: string;
@@ -14,6 +15,7 @@ interface LeaderboardEntry {
   age: number | null;
   total_points: number;
   parent_id: string;
+  badges?: { icon: string; rarity: string }[];
 }
 
 const AGE_FILTERS = [
