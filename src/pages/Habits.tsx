@@ -288,7 +288,7 @@ export default function Habits() {
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Flame size={18} className="mx-auto text-destructive mb-1" />
             <p className="text-xl font-bold text-foreground">{streak}</p>
-            <p className="text-[9px] text-muted-foreground">jours</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.days" as any)}</p>
           </div>
         </motion.div>
 
