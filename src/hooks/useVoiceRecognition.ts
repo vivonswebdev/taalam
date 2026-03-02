@@ -312,7 +312,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       nativeRetryCountRef.current++;
       console.warn(`[VoiceRecognition] Native SR ended without results via ${source} (retry ${nativeRetryCountRef.current}/${MAX_NATIVE_RETRIES})`);
 
-      if (nativeRetryCountRef.current >= MAX_NATIVE_RETRIES) {
+      // If we ever got results in this session, be more lenient with retries
+      const effectiveMaxRetries = sessionHadResultsRef.current ? MAX_NATIVE_RETRIES * 2 : MAX_NATIVE_RETRIES;
+
+      if (nativeRetryCountRef.current >= effectiveMaxRetries) {
         console.warn("[VoiceRecognition] Max native retries reached, forcing server STT");
         forceServerRef.current = true;
         recognitionRef.current = null;
