@@ -375,9 +375,9 @@ export default function ClassroomDetail() {
               />
             </div>
             <div>
-              <p className="font-bold text-foreground">{classroom.name}</p>
+              <p className="font-bold text-foreground">{effectiveClassroom.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Code : <span className="font-mono font-bold text-primary">{classroom.joinCode}</span>
+                Code : <span className="font-mono font-bold text-primary">{effectiveClassroom.joinCode}</span>
               </p>
             </div>
             <p className="text-[10px] text-muted-foreground">
