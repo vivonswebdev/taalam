@@ -96,6 +96,8 @@ import LiveHaramainPage from "./pages/LiveHaramainPage";
 import MyProfilePage from "./pages/MyProfilePage";
 import SelectChildPage from "./pages/SelectChildPage";
 import CreateChildPage from "./pages/CreateChildPage";
+import ParentInvitationsPage from "./pages/ParentInvitationsPage";
+import CreateChildForInvitePage from "./pages/CreateChildForInvitePage";
 import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
