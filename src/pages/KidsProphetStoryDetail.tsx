@@ -32,7 +32,7 @@ export default function KidsProphetStoryDetail() {
   const { isNarrating, toggle: toggleNarration, stop: stopNarration } = useStoryNarration();
 
   const story = prophetStories.find((s) => s.id === storyId);
-  if (!story) return <div className="p-8 text-center text-muted-foreground">Story not found</div>;
+  if (!story) return <div className="p-8 text-center text-muted-foreground">{t("common.notFound" as any)}</div>;
 
   const langKey = (lang === "fr" || lang === "en" || lang === "ar" || lang === "nl" || lang === "tr" || lang === "ur") ? lang : "en";
   const isCorrect = selected === story.quiz.correctIndex;

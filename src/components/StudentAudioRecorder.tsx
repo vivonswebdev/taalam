@@ -84,7 +84,7 @@ export default function StudentAudioRecorder({ assignmentId, classId, onSubmitte
         }).catch((e) => console.warn("Tajwid scoring failed:", e));
       }
     } catch (err: any) {
-      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+      toast({ title: t("common.error" as any), description: err.message, variant: "destructive" });
     } finally {
       setSubmitting(false);
     }

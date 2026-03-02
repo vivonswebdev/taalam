@@ -764,8 +764,8 @@ export default function Quran() {
               onClick={() => navigate("/live-quran")}
               className="card-shimmer flex flex-col items-start gap-1 p-3.5 rounded-2xl text-left bg-gradient-to-br from-indigo-700 to-blue-950 shadow-sm">
               <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg">📻</span>
-              <span className="text-sm font-bold text-white leading-tight mt-1">Live Coran</span>
-              <span className="text-[10px] text-white/70 leading-snug line-clamp-2">Radio Coran 24/7</span>
+              <span className="text-sm font-bold text-white leading-tight mt-1">{t("common.liveQuran" as any)}</span>
+              <span className="text-[10px] text-white/70 leading-snug line-clamp-2">{t("common.liveQuranDesc" as any)}</span>
             </button>
           </motion.div>
 

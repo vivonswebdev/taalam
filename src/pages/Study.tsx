@@ -241,7 +241,7 @@ export default function Study() {
                         value={noteText}
                         onChange={(e) => { e.stopPropagation(); setNoteText(e.target.value); }}
                         onClick={(e) => e.stopPropagation()}
-                        placeholder="Écris ta réflexion..."
+                        placeholder={t("common.writePlaceholder" as any)}
                         className="w-full min-h-[60px] rounded-lg bg-muted/40 border border-border p-2.5 text-xs text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
                       />
                       <button

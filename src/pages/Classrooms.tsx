@@ -192,7 +192,7 @@ export default function Classrooms() {
       // Reload to pick up the new class in local state
       window.location.reload();
     } catch (err: any) {
-      toast({ title: "Erreur", description: err.message, variant: "destructive" });
+      toast({ title: t("common.error" as any), description: err.message, variant: "destructive" });
     } finally {
       setJoining(false);
     }

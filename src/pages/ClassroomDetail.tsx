@@ -603,7 +603,7 @@ export default function ClassroomDetail() {
                 onClick={handleShareProgress}
                 className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-primary bg-primary/5 border border-primary/20 rounded-lg"
               >
-                <Sparkles size={12} /> Partager ma progression
+                <Sparkles size={12} /> {t("common.shareProgress" as any)}
               </button>
               <div className="flex gap-2">
                 <input
