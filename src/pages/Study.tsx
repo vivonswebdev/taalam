@@ -235,7 +235,7 @@ export default function Study() {
                     {/* Note */}
                     <div className="space-y-2">
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                        <PenLine size={10} /> Ma note
+                        <PenLine size={10} /> {t("common.myNote" as any)}
                       </p>
                       <textarea
                         value={noteText}
