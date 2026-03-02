@@ -306,6 +306,9 @@ export function HomeDashboard() {
           </a>
         </p>
       </div>
+
+      {/* Reciter Picker Sheet */}
+      <ReciterPickerSheet open={showReciterPicker} onOpenChange={setShowReciterPicker} />
     </PageBackground>
   );
 }
