@@ -387,15 +387,15 @@ export default function Habits() {
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.todayListeningMinutes}</p>
-              <p className="text-[10px] text-muted-foreground">min aujourd'hui</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.todayMin" as any)}</p>
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.sessionsCount}</p>
-              <p className="text-[10px] text-muted-foreground">sessions</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.sessions" as any)}</p>
             </div>
             <div>
               <p className="text-lg font-bold text-foreground">{listeningStats.averageQuizScore != null ? `${listeningStats.averageQuizScore}%` : "–"}</p>
-              <p className="text-[10px] text-muted-foreground">score quiz moy.</p>
+              <p className="text-[10px] text-muted-foreground">{t("habits.avgQuizScore" as any)}</p>
             </div>
           </div>
           {listeningStats.totalListeningMinutes > 0 && (
