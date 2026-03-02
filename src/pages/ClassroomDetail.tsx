@@ -55,7 +55,7 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
       }
       onLeft();
     } catch (err: any) {
-      toast.error(err.message || "Erreur");
+      toast.error(err.message || t("common.error" as any));
     } finally {
       setLoading(false);
       setConfirm(false);
