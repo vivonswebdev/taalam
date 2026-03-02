@@ -18,6 +18,7 @@ export default function TarteelEasyPage() {
   const [showFeedback, setShowFeedback] = useState(false);
 
   return (
+    <PageBackground intensity="immersive">
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border/40">
