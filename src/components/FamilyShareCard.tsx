@@ -27,7 +27,7 @@ export default function FamilyShareCard({ family, members, open, onClose }: Prop
   const qrRef = useRef<HTMLCanvasElement>(null);
   const [generating, setGenerating] = useState(false);
 
-  const joinUrl = `https://taaloum.lovable.app/family?join=${family.invite_code}`;
+  const joinUrl = `https://app.taalam.eu/family?join=${family.invite_code}`;
 
   const totalXP = members.reduce((s, m) => s + (m.xp_total || 0), 0);
   const maxStreak = members.reduce((m, c) => Math.max(m, c.streak_days || 0), 0);
