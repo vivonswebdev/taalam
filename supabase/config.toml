@@ -13,3 +13,5 @@ project_id = "usgqmmfigvkmxneoegig"
     verify_jwt = false
   [functions.stt-chunk]
     verify_jwt = false
+  [functions.score-tajwid]
+    verify_jwt = false

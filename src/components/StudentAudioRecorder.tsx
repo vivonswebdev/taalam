@@ -55,7 +55,7 @@ export default function StudentAudioRecorder({ assignmentId, classId, onSubmitte
         .upload(fileName, audioBlob, { contentType: "audio/webm" });
       if (uploadError) throw uploadError;
 
-      const { error: insertError } = await supabase
+      const { data: insertData, error: insertError } = await supabase
         .from("task_submissions")
         .insert({
           assignment_id: assignmentId,
@@ -63,12 +63,26 @@ export default function StudentAudioRecorder({ assignmentId, classId, onSubmitte
           class_id: classId,
           audio_url: fileName,
           status: "pending",
-        });
+        })
+        .select("id")
+        .single();
       if (insertError) throw insertError;
 
       toast({ title: "✅ " + t("halaqa.submitted" as any) });
       setAudioBlob(null);
       onSubmitted?.();
+
+      // Trigger async Tajwid scoring via AI
+      if (insertData?.id) {
+        supabase.functions.invoke("score-tajwid", {
+          body: { audio_path: fileName, submission_id: insertData.id },
+        }).then(({ data: scoreData }) => {
+          if (scoreData?.score != null) {
+            toast({ title: `🎯 Tajwid: ${scoreData.score}%`, description: scoreData.details || "" });
+            onSubmitted?.(); // refresh to show score
+          }
+        }).catch((e) => console.warn("Tajwid scoring failed:", e));
+      }
     } catch (err: any) {
       toast({ title: "Erreur", description: err.message, variant: "destructive" });
     } finally {
