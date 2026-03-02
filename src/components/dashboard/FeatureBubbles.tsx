@@ -246,6 +246,9 @@ export function HomeDashboard() {
 
         <StatsHeader t={t} />
 
+        {/* 🔊 Reciter Selector */}
+        <ReciterSelector />
+
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
