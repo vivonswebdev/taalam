@@ -8,6 +8,15 @@ export default function TarteelSelector() {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
+  // Récupérer la dernière sourate utilisée (ou Al-Ikhlas par défaut)
+  const getLastSurah = (): number => {
+    try {
+      const stored = localStorage.getItem("quranEasyLastSurah");
+      if (stored) return parseInt(stored, 10);
+    } catch {}
+    return 112; // Al-Ikhlas par défaut
+  };
+
   const modes = [
     {
       id: "easy",
@@ -22,7 +31,7 @@ export default function TarteelSelector() {
         t("tarteel.featureAudio" as any),
       ],
       gradient: "from-green-500/20 to-emerald-500/20",
-      href: "/tarteel/easy",
+      onClick: () => navigate("/tarteel/easy"),
       badge: t("tarteel.recommended" as any),
     },
     {
@@ -37,7 +46,7 @@ export default function TarteelSelector() {
         t("tarteel.featureAllJuz" as any),
       ],
       gradient: "from-purple-500/20 to-indigo-500/20",
-      href: "/recitation",
+      onClick: () => navigate(`/recitation?surah=${getLastSurah()}`),
     },
   ];
 
@@ -65,7 +74,7 @@ export default function TarteelSelector() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.15 }}
-                onClick={() => navigate(mode.href)}
+                onClick={() => mode.onClick()}
                 className={`relative w-full p-6 rounded-3xl text-left bg-gradient-to-br ${mode.gradient} backdrop-blur-xl border border-border/40 hover:scale-[1.02] transition-all`}
               >
                 {mode.badge && (

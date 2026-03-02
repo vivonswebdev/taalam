@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
 import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
@@ -52,6 +52,7 @@ function getBadge(score: number) {
 
 export default function Recitation() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { immersiveEnabled, choices } = useImmersiveBg();
   const epicBg = immersiveEnabled ? getEpicBg(choices.tarteel) : null;
   const { updateSurahProgress } = useProgress();
@@ -199,6 +200,19 @@ export default function Recitation() {
     setShowArabic(true);
     setCompletedAyahs(new Set());
   };
+
+  // Auto-select surah from URL param (?surah=112)
+  useEffect(() => {
+    const surahParam = searchParams.get("surah");
+    if (surahParam && !selectedSurah) {
+      const num = parseInt(surahParam, 10);
+      const found = surahs.find(s => s.number === num);
+      if (found) {
+        handleSelectSurah(found);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFinishAyah = useCallback(() => {
     if (!selectedSurah) return;
