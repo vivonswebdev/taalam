@@ -279,15 +279,6 @@ function AdultHome() {
               Ta'alam
             </span>
           </motion.div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="mt-2 text-[10px] text-muted-foreground/70 text-center leading-relaxed max-w-[260px] mx-auto"
-          >
-            {t("home.freeMessage" as any)}{" "}
-            <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-primary/60 font-medium underline underline-offset-2">taalam.eu</a>
-          </motion.p>
         </div>
       </div>
 
