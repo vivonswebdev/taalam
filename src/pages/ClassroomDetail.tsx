@@ -398,7 +398,7 @@ export default function ClassroomDetail() {
         classId={classId!}
         isTeacher={!!isTeacherFinal}
         user={user}
-        classroomName={classroom?.name || ""}
+        classroomName={effectiveClassroom.name || ""}
         onLeft={() => {
           // Remove from local storage
           const stored = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
