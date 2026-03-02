@@ -49,11 +49,25 @@ export default function KidsPrayerTracker() {
   }, [checked, t]);
 
   const completedCount = checked.length;
+  const [dismissed, setDismissed] = useState(false);
 
-  if (loading || !times) return null;
+  // Auto-dismiss 3s after all 5 done
+  useEffect(() => {
+    if (completedCount === 5) {
+      const timer = setTimeout(() => setDismissed(true), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [completedCount]);
+
+  if (loading || !times || dismissed) return null;
 
   return (
-    <div className="mx-4 rounded-3xl bg-gradient-to-br from-pink-100/80 to-blue-100/80 dark:from-pink-900/30 dark:to-blue-900/30 p-4 shadow-lg border border-primary/10">
+    <AnimatePresence>
+    <motion.div
+      exit={{ opacity: 0, height: 0, marginBottom: 0, scale: 0.95 }}
+      transition={{ duration: 0.5 }}
+      className="mx-4 rounded-3xl bg-gradient-to-br from-pink-100/80 to-blue-100/80 dark:from-pink-900/30 dark:to-blue-900/30 p-4 shadow-lg border border-primary/10"
+    >
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-bold text-foreground flex items-center gap-2">
           ⏰ {t("kidsPrayerTracker.title" as any)}
@@ -132,6 +146,7 @@ export default function KidsPrayerTracker() {
           🎉 {t("kidsPrayerTracker.allDone" as any)} +25⭐
         </motion.div>
       )}
-    </div>
+    </motion.div>
+    </AnimatePresence>
   );
 }
