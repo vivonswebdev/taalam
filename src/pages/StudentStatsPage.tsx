@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, TrendingUp, Calendar, BookOpen } from "lucide-react";
+import { ArrowLeft, TrendingUp, Calendar, BookOpen, Flame } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,88 @@ import { Badge } from "@/components/ui/badge";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 import { surahs as SURAHS } from "@/data/surahs";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+function ActivityHeatmap({ activity }: { activity: { date: string; minutes: number; ayat: number }[] }) {
+  const { t } = useLanguage();
+
+  // Build 30-day grid
+  const days = useMemo(() => {
+    const map = new Map(activity.map(a => [a.date, a]));
+    const result: { date: string; minutes: number; ayat: number; level: number }[] = [];
+    const today = new Date();
+
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split("T")[0];
+      const entry = map.get(key);
+      const minutes = entry?.minutes || 0;
+      const ayat = entry?.ayat || 0;
+      const level = minutes === 0 ? 0 : minutes < 5 ? 1 : minutes < 15 ? 2 : minutes < 30 ? 3 : 4;
+      result.push({ date: key, minutes, ayat, level });
+    }
+    return result;
+  }, [activity]);
+
+  const levelColors = [
+    "bg-muted",
+    "bg-emerald-200 dark:bg-emerald-900",
+    "bg-emerald-400 dark:bg-emerald-700",
+    "bg-emerald-500 dark:bg-emerald-500",
+    "bg-emerald-600 dark:bg-emerald-400",
+  ];
+
+  const activeDays = days.filter(d => d.level > 0).length;
+  const totalMinutes = days.reduce((s, d) => s + d.minutes, 0);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-card border border-border rounded-xl p-4"
+    >
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Flame size={14} className="text-primary" />
+          <p className="text-sm font-bold">{t("studentStats.activityHeatmap" as any) || "Activité 30 jours"}</p>
+        </div>
+        <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
+          <span>{activeDays}j</span>
+          <span>·</span>
+          <span>{totalMinutes} min</span>
+        </div>
+      </div>
+
+      <TooltipProvider delayDuration={0}>
+        <div className="grid grid-cols-10 gap-1">
+          {days.map((day) => (
+            <UITooltip key={day.date}>
+              <TooltipTrigger asChild>
+                <div
+                  className={`aspect-square rounded-sm ${levelColors[day.level]} transition-colors cursor-default`}
+                />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-[10px] p-1.5">
+                <p className="font-semibold">{new Date(day.date).toLocaleDateString("fr", { day: "2-digit", month: "short" })}</p>
+                <p>{day.minutes} min · {day.ayat} ayat</p>
+              </TooltipContent>
+            </UITooltip>
+          ))}
+        </div>
+      </TooltipProvider>
+
+      {/* Legend */}
+      <div className="flex items-center justify-end gap-1 mt-2">
+        <span className="text-[8px] text-muted-foreground">{t("studentStats.less" as any) || "Moins"}</span>
+        {levelColors.map((c, i) => (
+          <div key={i} className={`w-2.5 h-2.5 rounded-sm ${c}`} />
+        ))}
+        <span className="text-[8px] text-muted-foreground">{t("studentStats.more" as any) || "Plus"}</span>
+      </div>
+    </motion.div>
+  );
+}
 
 interface HifzSnapshot {
   date: string;
@@ -135,6 +217,9 @@ export default function StudentStatsPage() {
       </div>
 
       <div className="px-4 py-4 space-y-5">
+        {/* 30-Day Activity Heatmap */}
+        <ActivityHeatmap activity={activity} />
+
         {/* Hifz Summary Cards */}
         <div className="grid grid-cols-2 gap-2">
           {[
