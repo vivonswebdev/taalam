@@ -73,18 +73,18 @@ export default function ZakatPage() {
     doc.setFontSize(11);
     const date = new Date().toLocaleDateString();
     doc.text(`Date: ${date}`, 20, 30);
-    doc.text(`Gold: ${values.gold_grams}g × $${goldPrice.toFixed(2)} = $${(values.gold_grams * goldPrice).toFixed(2)}`, 20, 45);
-    doc.text(`Silver: ${values.silver_grams}g × $${silverPrice.toFixed(2)} = $${(values.silver_grams * silverPrice).toFixed(2)}`, 20, 53);
-    doc.text(`Cash: $${values.cash.toFixed(2)}`, 20, 61);
-    doc.text(`Stocks/Investments: $${values.stocks.toFixed(2)}`, 20, 69);
-    doc.text(`Business assets: $${values.business.toFixed(2)}`, 20, 77);
-    doc.text(`Debts owed to you: $${values.debts_owed_to_you.toFixed(2)}`, 20, 85);
-    doc.text(`Debts you owe: -$${values.debts_you_owe.toFixed(2)}`, 20, 93);
+    doc.text(`Gold: ${values.gold_grams}g × ${goldPrice.toFixed(2)} = ${(values.gold_grams * goldPrice).toFixed(2)}`, 20, 45);
+    doc.text(`Silver: ${values.silver_grams}g × ${silverPrice.toFixed(2)} = ${(values.silver_grams * silverPrice).toFixed(2)}`, 20, 53);
+    doc.text(`Cash: ${values.cash.toFixed(2)}`, 20, 61);
+    doc.text(`Stocks/Investments: ${values.stocks.toFixed(2)}`, 20, 69);
+    doc.text(`Business assets: ${values.business.toFixed(2)}`, 20, 77);
+    doc.text(`Debts owed to you: ${values.debts_owed_to_you.toFixed(2)}`, 20, 85);
+    doc.text(`Debts you owe: -${values.debts_you_owe.toFixed(2)}`, 20, 93);
     doc.line(20, 97, 190, 97);
-    doc.text(`Total zakatable: $${zakatableWealth.toFixed(2)}`, 20, 105);
-    doc.text(`Nisab (85g gold): $${nisabValue.toFixed(2)}`, 20, 113);
+    doc.text(`Total zakatable: ${zakatableWealth.toFixed(2)}`, 20, 105);
+    doc.text(`Nisab (85g gold): ${nisabValue.toFixed(2)}`, 20, 113);
     doc.setFontSize(14);
-    doc.text(`ZAKAT DUE (2.5%): $${zakatDue.toFixed(2)}`, 20, 125);
+    doc.text(`ZAKAT DUE (2.5%): ${zakatDue.toFixed(2)}`, 20, 125);
     doc.save(`zakat-${date}.pdf`);
   }, [values, goldPrice, silverPrice, zakatableWealth, nisabValue, zakatDue]);
 
