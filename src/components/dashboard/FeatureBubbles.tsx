@@ -74,7 +74,7 @@ const CATEGORIES: Category[] = [
       { id: "moods", nameKey: "dashboard.moods", emoji: "💎", path: "/moods", gradient: "from-accent/30 to-primary/20" },
       { id: "habits", nameKey: "dashboard.habits", emoji: "✅", path: "/habits", gradient: "from-secondary/30 to-primary/20" },
       { id: "athkar", nameKey: "home.cat.athkar", emoji: "🤲", path: "/athkar/morning", gradient: "from-primary/20 to-secondary/20" },
-      { id: "qibla", nameKey: "dashboard.qibla", emoji: "🧭", path: "/prayers", gradient: "from-accent/20 to-primary/20" },
+      { id: "qibla", nameKey: "dashboard.qibla", emoji: "🧭", path: "/qibla", gradient: "from-accent/20 to-primary/20" },
     ],
   },
   {
