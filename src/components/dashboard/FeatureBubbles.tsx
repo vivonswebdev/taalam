@@ -17,7 +17,8 @@ import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
 import HijriMiniWidget from "@/components/home/HijriMiniWidget";
 import NextPrayerWidget from "@/components/home/NextPrayerWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
-import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
+import { Flame, Search, Bell, User, ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // ═══ Types ═══
 
