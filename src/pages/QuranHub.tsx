@@ -9,6 +9,7 @@ export default function QuranHub() {
   const { t } = useLanguage();
 
   return (
+    <PageBackground intensity="subtle">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
