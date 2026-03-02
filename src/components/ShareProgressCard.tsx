@@ -111,7 +111,7 @@ export default function ShareProgressCard() {
         await navigator.share({
           files: [file],
           title: "Ta'alam Progress",
-          text: t("share.text" as any),
+          text: t("shareProgress.text" as any),
         });
       } else {
         // Fallback: download
