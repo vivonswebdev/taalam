@@ -156,6 +156,14 @@ export default function KidsLeaderboardPage() {
                     {entry.country_code && <span>{getFlagEmoji(entry.country_code)}</span>}
                     {entry.age && <span>{entry.age} {t("profile.yearsOld" as any) || "ans"}</span>}
                   </div>
+                  {entry.badges && entry.badges.length > 0 && (
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      {entry.badges.slice(0, 5).map((b, bi) => (
+                        <span key={bi} className="text-[10px]">{b.icon}</span>
+                      ))}
+                      {entry.badges.length > 5 && <span className="text-[9px] text-muted-foreground">+{entry.badges.length - 5}</span>}
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
                   <Star size={14} fill="currentColor" />
