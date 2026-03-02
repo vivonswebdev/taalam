@@ -151,6 +151,7 @@ function AudioChoiceExercise({
   onDone: () => void;
   playAudio: (item: NooraniItem) => void;
 }) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
 

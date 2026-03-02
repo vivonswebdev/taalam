@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, StarOff, PenLine, BookOpen, ChevronDown } from "lucide-react";
