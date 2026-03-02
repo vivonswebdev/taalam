@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Baby, GraduationCap, Users, Moon, Sun, Globe, Wifi, WifiOff,
-  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X, Shield
+  Bell, Crown, BarChart3, Trophy, Heart, Lock, Download, LogOut, ChevronRight, X, Shield, Smartphone
 } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
@@ -217,7 +217,7 @@ export default function ProfileBubble() {
             <DropdownMenuItem className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
               <Crown className="w-5 h-5 text-amber-400" />
               <span className="flex-1 text-sm font-medium">{t("profile.premium" as any)}</span>
-              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">FREE</span>
+              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">{t("profile.free" as any)}</span>
             </DropdownMenuItem>
           )}
 
@@ -267,6 +267,11 @@ export default function ProfileBubble() {
           <DropdownMenuItem onClick={() => navigate("/settings")} className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
             <Lock className="w-5 h-5 text-slate-400" />
             <span className="flex-1 text-sm font-medium">{t("profile.password" as any)}</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={() => navigate("/install-app")} className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
+            <Smartphone className="w-5 h-5 text-blue-400" />
+            <span className="flex-1 text-sm font-medium">{t("profile.installApp" as any)}</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">

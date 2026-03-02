@@ -1878,6 +1878,11 @@ const translations = {
   "home.leaderboardDesc": { fr: "Top mondial / pays", en: "World / country top", nl: "Wereld / land top", ar: "الأفضل عالميًا / بلدك", tr: "Dünya / ülke sıralaması", ur: "عالمی / ملکی ٹاپ" },
   "home.freeMessage": { fr: "Toutes les fonctionnalités de Ta'alam sont gratuites et resteront gratuites, in shâ Allah.", en: "All Ta'alam features are free and will remain free, in shâ Allah.", nl: "Alle functies van Ta'alam zijn gratis en blijven gratis, in shâ Allah.", ar: "جميع ميزات تعلّم مجانية وستبقى مجانية، إن شاء الله.", tr: "Ta'alam'ın tüm özellikleri ücretsizdir ve ücretsiz kalacaktır, inşallah.", ur: "تعلّم کی تمام خصوصیات مفت ہیں اور مفت رہیں گی، ان شاء اللہ۔" },
   "home.go": { fr: "Go !", en: "Go!", nl: "Ga!", ar: "انطلق!", tr: "Başla!", ur: "!چلیں" },
+  "home.seniorTitle": { fr: "Pour simplement lire le Coran", en: "Simply read the Quran", nl: "Gewoon de Koran lezen", ar: "لقراءة القرآن ببساطة", tr: "Kuran'ı kolayca oku", ur: "قرآن پاک آسانی سے پڑھیں" },
+  "home.seniorDesc": { fr: "Appuyez sur l'onglet 📖 Coran en bas pour commencer la lecture.", en: "Tap the 📖 Quran tab below to start reading.", nl: "Tik op het 📖 Koran-tabblad hieronder om te beginnen.", ar: "اضغط على تبويب 📖 القرآن أدناه لبدء القراءة.", tr: "Okumaya başlamak için aşağıdaki 📖 Kur'an sekmesine dokunun.", ur: "پڑھنا شروع کرنے کے لیے نیچے 📖 قرآن ٹیب پر ٹیپ کریں۔" },
+  "home.seniorCta": { fr: "Lire", en: "Read", nl: "Lezen", ar: "اقرأ", tr: "Oku", ur: "پڑھیں" },
+  "home.mushafShortcutTitle": { fr: "Lire le Coran (Mushaf)", en: "Read the Quran (Mushaf)", nl: "Koran lezen (Mushaf)", ar: "قراءة القرآن (المصحف)", tr: "Kur'an Oku (Mushaf)", ur: "قرآن پڑھیں (مصحف)" },
+  "home.mushafShortcutDesc": { fr: "Ouvrir le mushaf directement", en: "Open the mushaf directly", nl: "Open de mushaf direct", ar: "افتح المصحف مباشرة", tr: "Mushaf'ı doğrudan aç", ur: "مصحف براہ راست کھولیں" },
   "home.tarteelDesc": { fr: "Récitation + Correction IA", en: "Recitation + AI Correction", nl: "Recitatie + AI-correctie", ar: "تلاوة + تصحيح بالذكاء الاصطناعي", tr: "Tilavet + YZ Düzeltme", ur: "تلاوت + مصنوعی ذہانت تصحیح" },
 
   // ═══ Moods Tabs & Sections ═══
@@ -2231,6 +2236,8 @@ const translations = {
   "profile.export": { fr: "Exporter données", en: "Export data", nl: "Gegevens exporteren", ar: "تصدير البيانات", tr: "Veri dışa aktar", ur: "ڈیٹا برآمد کریں" },
   "profile.coordDashboard": { fr: "Dashboard coordinateur", en: "Coordinator Dashboard", nl: "Coördinator dashboard", ar: "لوحة المنسق", tr: "Koordinatör Paneli", ur: "کوآرڈینیٹر ڈیش بورڈ" },
   "profile.logout": { fr: "Déconnexion", en: "Log out", nl: "Uitloggen", ar: "تسجيل الخروج", tr: "Çıkış yap", ur: "لاگ آؤٹ" },
+  "profile.free": { fr: "GRATUIT", en: "FREE", nl: "GRATIS", ar: "مجاني", tr: "ÜCRETSİZ", ur: "مفت" },
+  "profile.installApp": { fr: "Installer l'app", en: "Install app", nl: "App installeren", ar: "تثبيت التطبيق", tr: "Uygulamayı yükle", ur: "ایپ انسٹال کریں" },
   "profile.pinTitle": { fr: "Code PIN requis", en: "PIN code required", nl: "Pincode vereist", ar: "رمز PIN مطلوب", tr: "PIN kodu gerekli", ur: "پن کوڈ درکار ہے" },
   "profile.pinDesc": { fr: "Entrez le code PIN pour accéder à ce mode.", en: "Enter PIN to access this mode.", nl: "Voer PIN in om deze modus te openen.", ar: "أدخل رمز PIN للوصول.", tr: "Bu moda erişmek için PIN girin.", ur: "اس موڈ تک رسائی کے لیے پن درج کریں۔" },
   "profile.pinConfirm": { fr: "Confirmer", en: "Confirm", nl: "Bevestigen", ar: "تأكيد", tr: "Onayla", ur: "تصدیق کریں" },

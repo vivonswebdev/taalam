@@ -194,11 +194,11 @@ export default function Home() {
         >
           <span className="text-lg">📖</span>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-foreground">Pour simplement lire le Coran</p>
-            <p className="text-[10px] text-muted-foreground">Appuyez sur l'onglet 📖 Coran en bas pour commencer la lecture.</p>
+            <p className="text-xs font-bold text-foreground">{t("home.seniorTitle" as any)}</p>
+            <p className="text-[10px] text-muted-foreground">{t("home.seniorDesc" as any)}</p>
           </div>
           <button onClick={() => navigate("/quran-hub")} className="shrink-0 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground rounded-lg">
-            Lire
+            {t("home.seniorCta" as any)}
           </button>
         </motion.div>
       )}
@@ -322,10 +322,10 @@ export default function Home() {
         >
           <span className="text-2xl">📖</span>
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-sm font-bold text-white">Lire le Coran (Mushaf)</p>
-            <p className="text-[11px] text-white/60">Ouvrir le mushaf directement</p>
+            <p className="text-sm font-bold text-white">{t("home.mushafShortcutTitle" as any)}</p>
+            <p className="text-[11px] text-white/60">{t("home.mushafShortcutDesc" as any)}</p>
           </div>
-          <span className="text-xs font-bold text-primary shrink-0">Ouvrir →</span>
+          <span className="text-xs font-bold text-primary shrink-0">{t("home.open" as any)} →</span>
         </motion.button>
       </div>
 
