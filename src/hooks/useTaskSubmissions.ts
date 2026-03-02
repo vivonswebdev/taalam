@@ -106,6 +106,17 @@ export function useTaskSubmissions(classId: string | null) {
       } catch (e) {
         console.warn("Auto notification failed:", e);
       }
+
+      // Notify parent(s) via push + in-app (async, non-blocking)
+      supabase.functions.invoke("notify-parent-review", {
+        body: {
+          student_id: sub.student_id,
+          status,
+          assignment_title: sub.assignment_title,
+          teacher_note: note || null,
+          class_id: classId,
+        },
+      }).catch(e => console.warn("Parent notification failed:", e));
     }
 
     await fetchSubmissions();
