@@ -24,7 +24,7 @@ interface SimpleRecorderProps {
   onRecordingStop?: () => void;
 }
 
-export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderProps) {
+export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript, onVerseVerified, onRecordingStart, onRecordingStop }: SimpleRecorderProps) {
   const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
