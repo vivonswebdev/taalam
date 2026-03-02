@@ -341,7 +341,7 @@ export default function ClassroomDetail() {
         <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <QrCode size={16} className="text-primary" />
         </button>
-        <button onClick={() => shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+        <button onClick={() => shareClassroom(effectiveClassroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <Share2 size={16} className="text-primary" />
         </button>
       </div>
