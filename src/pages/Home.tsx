@@ -145,6 +145,7 @@ function AdultHome() {
   ];
 
   return (
+    <PageBackground intensity="medium">
     <div className="home-bg min-h-screen pb-24">
       {/* Daily Tarteel Challenge */}
       {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
