@@ -105,6 +105,7 @@ import QuickCalcPage from "./pages/QuickCalcPage";
 import CalcMergePage from "./pages/CalcMergePage";
 import NumberRunnerPage from "./pages/NumberRunnerPage";
 import MathShooterPage from "./pages/MathShooterPage";
+import TetrisIslamPage from "./pages/TetrisIslamPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
