@@ -1463,6 +1463,18 @@ const translations = {
   "goodDeeds.perfectDays": { fr: "jours parfaits", en: "perfect days", nl: "perfecte dagen", ar: "أيام مثالية", tr: "mükemmel gün", ur: "کامل دن" },
   "goodDeeds.nextBadge": { fr: "Prochain badge", en: "Next badge", nl: "Volgende badge", ar: "الشارة التالية", tr: "Sonraki rozet", ur: "اگلا بیج" },
   "goodDeeds.daysLeft": { fr: "jours restants", en: "days left", nl: "dagen over", ar: "أيام متبقية", tr: "gün kaldı", ur: "دن باقی" },
+  "goodDeeds.title": { fr: "Bonnes Actions du Jour", en: "Today's Good Deeds", nl: "Goede Daden Vandaag", ar: "حسنات اليوم", tr: "Bugünün İyi İşleri", ur: "آج کی نیکیاں" },
+  "goodDeeds.deed_fajr": { fr: "Fajr à l'heure", en: "Fajr on time", nl: "Fajr op tijd", ar: "الفجر في وقته", tr: "Fecir namazı", ur: "فجر وقت پر" },
+  "goodDeeds.deed_dua": { fr: "Dua réveil", en: "Morning dua", nl: "Ochtend dua", ar: "دعاء الاستيقاظ", tr: "Sabah duası", ur: "صبح کی دعا" },
+  "goodDeeds.deed_smile": { fr: "Sourire 3 personnes", en: "Smile to 3 people", nl: "Glimlach naar 3 mensen", ar: "ابتسم لـ3 أشخاص", tr: "3 kişiye gülümse", ur: "3 لوگوں کو مسکراہٹ" },
+  "goodDeeds.deed_sadaqah": { fr: "Sadaqah", en: "Charity", nl: "Liefdadigheid", ar: "صدقة", tr: "Sadaka", ur: "صدقہ" },
+  "goodDeeds.deed_parents": { fr: "Aider parents", en: "Help parents", nl: "Ouders helpen", ar: "مساعدة الوالدين", tr: "Anne babaya yardım", ur: "والدین کی مدد" },
+  "goodDeeds.deed_quran": { fr: "Coran 10min", en: "Quran 10min", nl: "Koran 10min", ar: "قرآن 10 دقائق", tr: "Kuran 10dk", ur: "قرآن 10 منٹ" },
+  "goodDeeds.remaining": { fr: "restantes", en: "remaining", nl: "resterend", ar: "متبقية", tr: "kaldı", ur: "باقی" },
+  "shareProgress.title": { fr: "Partager ma progression", en: "Share my progress", nl: "Deel mijn voortgang", ar: "شارك تقدمي", tr: "İlerlememi paylaş", ur: "اپنی پیش رفت شیئر کریں" },
+  "shareProgress.desc": { fr: "Image PNG pour WhatsApp & réseaux", en: "PNG image for WhatsApp & social", nl: "PNG-afbeelding voor WhatsApp", ar: "صورة PNG للواتساب", tr: "WhatsApp için PNG görsel", ur: "واٹس ایپ کے لیے PNG تصویر" },
+  "shareProgress.text": { fr: "Mon parcours Hifz sur Ta'alam ! 🌙", en: "My Hifz journey on Ta'alam! 🌙", nl: "Mijn Hifz reis op Ta'alam! 🌙", ar: "رحلة حفظي على تعلّم! 🌙", tr: "Ta'alam'daki Hifz yolculuğum! 🌙", ur: "تعلّم پر میرا حفظ سفر! 🌙" },
+  "shareProgress.downloaded": { fr: "Image téléchargée !", en: "Image downloaded!", nl: "Afbeelding gedownload!", ar: "تم تحميل الصورة!", tr: "Görsel indirildi!", ur: "تصویر ڈاؤن لوڈ!" },
 
   // ─── Kids Duas ──────────────────────────────────────────
   "kidsHome.duas": { fr: "Dou'a & Adhkâr", en: "Du'a & Adhkar", nl: "Doe'a & Adhkar", ar: "أدعية وأذكار", tr: "Dua ve Zikirler", ur: "دعائیں اور اذکار" },
