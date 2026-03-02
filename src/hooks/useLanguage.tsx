@@ -2916,6 +2916,15 @@ const translations = {
   "profile.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
   "profile.settingsDesc": { fr: "Langue, thème, traduction", en: "Language, theme, translation", nl: "Taal, thema, vertaling", ar: "اللغة، المظهر، الترجمة", tr: "Dil, tema, çeviri", ur: "زبان، تھیم، ترجمہ" },
   "more.profileDesc": { fr: "Voir et modifier votre profil", en: "View and edit your profile", nl: "Bekijk en bewerk je profiel", ar: "عرض وتعديل ملفك", tr: "Profilinizi görüntüleyin ve düzenleyin", ur: "اپنا پروفائل دیکھیں اور ترمیم کریں" },
+  "profile.children": { fr: "Enfants", en: "Children", nl: "Kinderen", ar: "الأطفال", tr: "Çocuklar", ur: "بچے" },
+  "profile.addChild": { fr: "Ajouter", en: "Add", nl: "Toevoegen", ar: "إضافة", tr: "Ekle", ur: "شامل کریں" },
+  "profile.childNamePlaceholder": { fr: "Prénom de l'enfant", en: "Child's first name", nl: "Voornaam van het kind", ar: "اسم الطفل", tr: "Çocuğun adı", ur: "بچے کا نام" },
+  "profile.childAgePlaceholder": { fr: "Âge (optionnel)", en: "Age (optional)", nl: "Leeftijd (optioneel)", ar: "العمر (اختياري)", tr: "Yaş (isteğe bağlı)", ur: "عمر (اختیاری)" },
+  "profile.createChild": { fr: "Créer", en: "Create", nl: "Aanmaken", ar: "إنشاء", tr: "Oluştur", ur: "بنائیں" },
+  "profile.noChildren": { fr: "Aucun enfant ajouté", en: "No children added", nl: "Geen kinderen toegevoegd", ar: "لم تتم إضافة أطفال", tr: "Çocuk eklenmedi", ur: "کوئی بچہ شامل نہیں" },
+  "profile.yearsOld": { fr: "ans", en: "years old", nl: "jaar", ar: "سنة", tr: "yaşında", ur: "سال" },
+  "profile.viewChild": { fr: "Voir", en: "View", nl: "Bekijken", ar: "عرض", tr: "Görüntüle", ur: "دیکھیں" },
+  "profile.confirmDeleteChild": { fr: "Supprimer cet enfant ?", en: "Delete this child?", nl: "Dit kind verwijderen?", ar: "حذف هذا الطفل؟", tr: "Bu çocuk silinsin mi?", ur: "اس بچے کو حذف کریں؟" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
