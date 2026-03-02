@@ -5,8 +5,8 @@ import { ArrowLeft, Maximize2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const STREAMS = {
-  makkah: "https://www.youtube.com/embed/bSv-0S6ulVk?autoplay=1&mute=0&controls=1",
-  madinah: "https://www.youtube.com/embed/cADf7STtOjQ?autoplay=1&mute=0&controls=1",
+  makkah: "https://www.youtube.com/embed/0QGuK8osn04?autoplay=1&mute=0&controls=1",
+  madinah: "https://www.youtube.com/embed/rHWSRMcGGBQ?autoplay=1&mute=0&controls=1",
 };
 
 export default function LiveHaramainPage() {

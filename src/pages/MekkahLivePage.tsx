@@ -5,8 +5,8 @@ import { ArrowLeft, Maximize, Minimize } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MAKKAH_STREAMS = [
-  { id: "hY5wCJBFGEk", labelKey: "live.officialHaramain" },
-  { id: "gCaiPergnbo", labelKey: "live.makkahHD" },
+  { id: "0QGuK8osn04", labelKey: "live.officialHaramain" },
+  { id: "YBWgA3gR-J4", labelKey: "live.makkahHD" },
 ];
 
 export default function MekkahLivePage() {
