@@ -20,6 +20,13 @@ export default function KidsHomePage() {
       href: "/jeux",
       gradient: "from-purple-400/30 to-pink-400/30",
       emoji: "🎮",
+      progress: (() => {
+        try {
+          const today = new Date().toISOString().split("T")[0];
+          const stored = localStorage.getItem(`games_${today}`);
+          return stored ? Math.min(parseInt(stored) / 3, 1) : undefined;
+        } catch { return undefined; }
+      })(),
     },
     {
       icon: BookOpen,
