@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
 import { ArrowLeft } from "lucide-react";
+import PageBackground from "@/components/PageBackground";
 
 const GAMES = [
   { key: "coranCrush", emoji: "🎮", path: "/crush", color: "from-pink-400 to-rose-500" },
