@@ -13,7 +13,7 @@ const GAME_COLORS: Record<string, string> = {
 
 const GAME_ROUTES: Record<string, string> = {
   quick_calc: "/kids-quick-calc",
-  calc_merge: "",
+  calc_merge: "/kids-calc-merge",
   number_runner: "",
   math_shooter: "",
 };
