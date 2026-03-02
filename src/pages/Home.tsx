@@ -183,7 +183,7 @@ function AdultHome() {
         }
 
       {/* Weekly Class Challenge Banner */}
-      {weeklyChallenges.filter((ch) => !myResults.some((r) => r.challenge_id === ch.id)).map((ch) => {
+      {(weeklyChallenges || []).filter((ch) => !(myResults || []).some((r) => r.challenge_id === ch.id)).map((ch) => {
           const surah = surahs.find((s) => s.number === ch.surah_number);
           return (
             <motion.div
