@@ -457,6 +457,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       return;
     }
     nativeRetryCountRef.current = 0;
+    sessionHadResultsRef.current = false;
     const shouldUseNative = hasNativeSR.current;
     if (shouldUseNative) {
       setMode("native");
