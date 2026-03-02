@@ -112,7 +112,7 @@ export default function KidsHomePage() {
         {/* Colorful 2-col grid */}
         <div className="grid grid-cols-2 gap-4 px-4 mt-2">
           {KIDS_CARDS.map((card, i) => {
-            const progress = getProgress(card.hasProgress as string | undefined);
+            const progress = getProgress((card as any).hasProgress);
             return (
               <motion.button
                 key={card.href}
