@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
+import PageBackground from "@/components/PageBackground";
 
 const PROGRESS_KEY = "noorani_progress";
 
