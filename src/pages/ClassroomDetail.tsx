@@ -465,7 +465,7 @@ export default function ClassroomDetail() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <History size={14} />
-                <p className="text-xs font-semibold">Défis précédents</p>
+                <p className="text-xs font-semibold">{t("common.previousChallenges" as any)}</p>
               </div>
               {pastChallenges.map((pc) => {
                 const s = surahs.find((s) => s.number === pc.surah_number);
