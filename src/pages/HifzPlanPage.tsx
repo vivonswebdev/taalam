@@ -28,6 +28,18 @@ function CreatePlanWizard({ onCreate, t }: { onCreate: (params: any) => void; t:
   const [selectedJuz, setSelectedJuz] = useState<number[]>([]);
   const [dailyAyat, setDailyAyat] = useState(5);
   const [durationDays, setDurationDays] = useState(90);
+  const [surahSearch, setSurahSearch] = useState("");
+
+  const filteredSurahs = useMemo(() => {
+    const q = surahSearch.toLowerCase().trim();
+    if (!q) return surahs;
+    return surahs.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.nameArabic.includes(q) ||
+        String(s.number).includes(q)
+    );
+  }, [surahSearch]);
 
   const toggleSurah = (n: number) => {
     setSelectedSurahs((prev) => prev.includes(n) ? prev.filter((x) => x !== n) : [...prev, n]);
