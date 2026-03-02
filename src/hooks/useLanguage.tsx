@@ -3051,6 +3051,8 @@ const translations = {
   "mathGames.calcMerge": { fr: "Calc Merge", en: "Calc Merge", nl: "Calc Merge", ar: "دمج الحساب", tr: "Hesap Birleştir", ur: "حساب ملاؤ" },
   "mathGames.numberRunner": { fr: "Number Runner", en: "Number Runner", nl: "Number Runner", ar: "عداء الأرقام", tr: "Sayı Koşucusu", ur: "نمبر رنر" },
   "mathGames.mathShooter": { fr: "Math Shooter", en: "Math Shooter", nl: "Math Shooter", ar: "رامي الرياضيات", tr: "Matematik Atıcı", ur: "ریاضی شوٹر" },
+  "mathGames.mathShooterDesc": { fr: "Tire sur la bonne réponse ! Les ennemis descendent... vise juste !", en: "Shoot the correct answer! Enemies are coming down... aim well!", nl: "Schiet op het juiste antwoord! Vijanden komen naar beneden!", ar: "أطلق النار على الإجابة الصحيحة! الأعداء قادمون!", tr: "Doğru cevaba ateş et! Düşmanlar iniyor!", ur: "صحیح جواب پر گولی مارو! دشمن آ رہے ہیں!" },
+  "mathGames.targets": { fr: "Cibles", en: "Targets", nl: "Doelen", ar: "أهداف", tr: "Hedefler", ur: "اہداف" },
   "mathGames.quickCalcTitle": { fr: "Quick Calc", en: "Quick Calc", nl: "Quick Calc", ar: "حساب سريع", tr: "Hızlı Hesap", ur: "فوری حساب" },
   "mathGames.quickCalcDesc": { fr: "Résous les calculs le plus vite possible !", en: "Solve calculations as fast as you can!", nl: "Los berekeningen zo snel mogelijk op!", ar: "حل الحسابات بأسرع ما يمكن!", tr: "Hesapları en hızlı şekilde çöz!", ur: "جتنی جلدی ہو سکے حساب حل کریں!" },
   "mathGames.play": { fr: "🎮 Jouer !", en: "🎮 Play!", nl: "🎮 Spelen!", ar: "🎮 العب!", tr: "🎮 Oyna!", ur: "🎮 کھیلو!" },
