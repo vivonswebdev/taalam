@@ -348,7 +348,7 @@ export default function ClassroomDetail() {
             className="bg-card border border-border rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-foreground">Invitation QR</h3>
+              <h3 className="text-sm font-bold text-foreground">{t("common.invitationQR" as any)}</h3>
               <button onClick={() => setShowQR(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
                 <X size={14} />
               </button>
