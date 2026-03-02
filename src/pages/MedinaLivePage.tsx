@@ -1,27 +1,40 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ArrowLeft, Maximize, Minimize } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowLeft, Maximize, RefreshCw } from "lucide-react";
 
-const MEDINA_STREAMS = [
-  { id: "rHWSRMcGGBQ", labelKey: "live.officialHaramain" },
-  { id: "S2aDlWv-2cw", labelKey: "live.medinaHD" },
+const MEDINA_SOURCES = [
+  "https://streamer-1.toffeelive.com/live/sunnah_tv_576/index.m3u8",
 ];
 
 export default function MedinaLivePage() {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const [activeStream, setActiveStream] = useState(0);
-  const [fullscreen, setFullscreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [sourceIdx, setSourceIdx] = useState(0);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || error) return;
+    const src = MEDINA_SOURCES[sourceIdx];
+    if (!src) { setError(true); return; }
+    video.src = src;
+    video.load();
+    video.play().catch(() => {});
+    const onError = () => {
+      if (sourceIdx + 1 < MEDINA_SOURCES.length) setSourceIdx(i => i + 1);
+      else setError(true);
+    };
+    video.addEventListener("error", onError);
+    return () => video.removeEventListener("error", onError);
+  }, [sourceIdx, error]);
 
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-      setFullscreen(true);
-    } else {
-      document.exitFullscreen().catch(() => {});
-      setFullscreen(false);
+    const el = document.getElementById("medina-stream");
+    if (el) {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else el.requestFullscreen?.();
     }
   };
 
@@ -31,52 +44,33 @@ export default function MedinaLivePage() {
         <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
-        <div className="flex-1">
-          <h1 className="text-xl font-bold text-foreground">{t("live.medinaTitle" as any)}</h1>
-          <p className="text-xs text-muted-foreground">{t("live.medinaSubtitle" as any)}</p>
-        </div>
+        <h1 className="text-lg font-bold text-foreground flex-1">🕌 {t("liveHaramain.madinah" as any) || "Madinah Live"}</h1>
         <button onClick={toggleFullscreen} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
-          {fullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+          <Maximize className="w-4 h-4 text-muted-foreground" />
         </button>
       </div>
 
-      <div className="flex gap-2 px-4 py-2">
-        {MEDINA_STREAMS.map((s, i) => (
-          <button
-            key={s.id}
-            onClick={() => setActiveStream(i)}
-            className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-              activeStream === i
-                ? "bg-primary text-primary-foreground shadow-md"
-                : "bg-card border border-border text-muted-foreground"
-            }`}
-          >
-            {t(s.labelKey as any)}
-          </button>
-        ))}
+      <div className="px-4 mt-2">
+        <div id="medina-stream" className="rounded-2xl overflow-hidden border border-border shadow-lg aspect-video bg-black relative">
+          {error ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/80">
+              <p className="text-sm">⚠️ Flux indisponible</p>
+              <button onClick={() => { setError(false); setSourceIdx(0); }} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold">
+                <RefreshCw size={14} /> Réessayer
+              </button>
+            </div>
+          ) : (
+            <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline controls />
+          )}
+        </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="px-4 mt-2"
-      >
-        <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-xl border border-border/50 bg-black">
-          <iframe
-            key={MEDINA_STREAMS[activeStream].id}
-            src={`https://www.youtube.com/embed/${MEDINA_STREAMS[activeStream].id}?autoplay=1&mute=0&rel=0`}
-            title="Medina Live"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 w-full h-full"
-          />
-        </div>
-      </motion.div>
-
-      <div className="px-4 mt-4">
-        <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-accent/5 rounded-2xl border border-emerald-500/20 shadow-sm">
-          <p className="text-sm font-bold text-foreground">🕌 {t("live.medinaInfo" as any)}</p>
-          <p className="text-xs text-muted-foreground mt-1">{t("live.medinaDesc" as any)}</p>
+      <div className="px-4 mt-3">
+        <div className="p-4 rounded-2xl bg-card border border-border">
+          <h3 className="font-semibold text-foreground text-sm mb-1">🕌 Al-Masjid an-Nabawi</h3>
+          <p className="text-xs text-muted-foreground">
+            {t("liveHaramain.madinahDesc" as any) || "Diffusion en direct depuis la Mosquée du Prophète à Médine."}
+          </p>
         </div>
       </div>
     </div>
