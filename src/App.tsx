@@ -219,6 +219,8 @@ const App = () => (
               <Route path="/create-child" element={<CreateChildPage />} />
               <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
               <Route path="/child-gallery" element={<ChildGalleryPage />} />
+              <Route path="/kids-math" element={<KidsMathMenuPage />} />
+              <Route path="/kids-quick-calc" element={<QuickCalcPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />

@@ -74,6 +74,13 @@ const KIDS_CARDS = [
     emoji: "🎖️",
     color: "from-purple-500 to-pink-500",
   },
+  {
+    titleKey: "mathGames.title",
+    descKey: "mathGames.subtitle",
+    href: "/kids-math",
+    emoji: "🧮",
+    color: "from-amber-400 to-red-500",
+  },
 ] as const;
 
 export default function KidsHomePage() {

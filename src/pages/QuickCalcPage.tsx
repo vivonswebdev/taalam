@@ -255,7 +255,7 @@ export default function QuickCalcPage() {
   if (gameState === "levelComplete") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6 px-6">
-        {showConfetti && <Confetti />}
+        {showConfetti && <Confetti active={showConfetti} />}
         <motion.div initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring" }}>
           <span className="text-7xl">⭐</span>
         </motion.div>
