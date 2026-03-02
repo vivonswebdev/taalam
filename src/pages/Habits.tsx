@@ -453,7 +453,7 @@ export default function Habits() {
         <div className="pt-2">
           <div className="flex items-center gap-2 mb-4">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Progression Qur'an</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("habits.quranProgress" as any)}</span>
             <div className="h-px flex-1 bg-border" />
           </div>
         </div>
