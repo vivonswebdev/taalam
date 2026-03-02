@@ -4,32 +4,50 @@
 
 @layer base {
   :root {
-    --background: 150 15% 92%;
-    --foreground: 150 40% 10%;
-    --card: 150 12% 96%;
-    --card-foreground: 150 40% 10%;
+    /* ═══ PRIMAIRE — Vert Islamic moderne ═══ */
+    --primary: 152 65% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    /* ═══ SECONDAIRE — Or raffiné ═══ */
+    --secondary: 43 85% 55%;
+    --secondary-foreground: 43 15% 15%;
+
+    /* ═══ ACCENT — Turquoise spirituel ═══ */
+    --accent: 180 65% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* ═══ BACKGROUNDS ═══ */
+    --background: 150 20% 96%;
+    --foreground: 152 40% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 152 40% 12%;
     --popover: 40 30% 99%;
-    --popover-foreground: 150 40% 10%;
-    --primary: 152 56% 28%;
-    --primary-foreground: 40 40% 97%;
-    --secondary: 43 76% 52%;
-    --secondary-foreground: 43 20% 10%;
+    --popover-foreground: 152 40% 12%;
+
+    /* ═══ MUTED / BORDER ═══ */
     --muted: 39 20% 91%;
     --muted-foreground: 150 10% 46%;
-    --accent: 152 35% 92%;
-    --accent-foreground: 152 56% 22%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
     --border: 39 20% 88%;
     --input: 39 20% 88%;
-    --ring: 152 56% 28%;
+    --ring: 152 65% 38%;
     --radius: 1rem;
-    --gold: 43 76% 52%;
+
+    /* ═══ SEMANTIC ═══ */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --gold: 43 85% 55%;
     --gold-foreground: 43 20% 10%;
     --success: 145 63% 42%;
     --success-foreground: 145 10% 10%;
     --warning: 38 92% 50%;
     --warning-foreground: 38 20% 10%;
+
+    /* ═══ SPIRITUEL ═══ */
+    --pearl: 40 25% 97%;
+    --moonlight: 210 30% 94%;
+    --desert: 35 45% 88%;
+
+    /* ═══ SIDEBAR ═══ */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
