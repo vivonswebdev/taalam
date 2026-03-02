@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ArrowLeft } from "lucide-react";
+import PageBackground from "@/components/PageBackground";
 import { Button } from "@/components/ui/button";
 import SimpleRecorder from "./SimpleRecorder";
 import type { TranscriptionData } from "./SimpleRecorder";
