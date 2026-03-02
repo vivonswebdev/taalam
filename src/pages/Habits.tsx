@@ -427,8 +427,8 @@ export default function Habits() {
                 <BarChart data={weekData} barGap={1}>
                   <XAxis dataKey="day" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
                   <YAxis hide />
-                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="écoute" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="lecture" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} name={t("habits.reading" as any)} />
+                  <Bar dataKey="listen" stackId="a" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} name={t("habits.listening" as any)} />
                 </BarChart>
               </ResponsiveContainer>
             );
