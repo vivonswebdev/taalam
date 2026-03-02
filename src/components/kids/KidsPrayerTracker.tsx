@@ -56,7 +56,7 @@ export default function KidsPrayerTracker() {
     <div className="mx-4 rounded-3xl bg-gradient-to-br from-pink-100/80 to-blue-100/80 dark:from-pink-900/30 dark:to-blue-900/30 p-4 shadow-lg border border-primary/10">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-          ⏰ {t("kidsPrayer.title" as any)}
+          ⏰ {t("kidsPrayerTracker.title" as any)}
         </h2>
         <span className="text-xs font-bold bg-primary/15 text-primary rounded-full px-2.5 py-0.5">
           {completedCount}/5 ✅
