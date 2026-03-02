@@ -2763,6 +2763,12 @@ const translations = {
   "dashboard.community": { fr: "Communauté", en: "Community", nl: "Gemeenschap", ar: "المجتمع", tr: "Topluluk", ur: "کمیونٹی" },
   "dashboard.donate": { fr: "Soutenir", en: "Support", nl: "Steunen", ar: "دعم", tr: "Destek", ur: "سپورٹ" },
   "dashboard.faq": { fr: "Aide", en: "Help", nl: "Help", ar: "مساعدة", tr: "Yardım", ur: "مدد" },
+  // ═══ RECITER SELECTOR ═══
+  "reciter.current": { fr: "Récitateur actuel", en: "Current reciter", nl: "Huidige recitator", ar: "القارئ الحالي", tr: "Mevcut okuyucu", ur: "موجودہ قاری" },
+  "reciter.change": { fr: "Changer", en: "Change", nl: "Wijzigen", ar: "تغيير", tr: "Değiştir", ur: "تبدیل" },
+  "reciter.popular": { fr: "Populaires", en: "Popular", nl: "Populair", ar: "الأكثر شهرة", tr: "Popüler", ur: "مقبول" },
+  "reciter.kids": { fr: "Voix d'enfants", en: "Children's voices", nl: "Kinderstemmen", ar: "أصوات الأطفال", tr: "Çocuk sesleri", ur: "بچوں کی آوازیں" },
+  "reciter.others": { fr: "Autres récitateurs", en: "Other reciters", nl: "Andere recitatoren", ar: "قراء آخرون", tr: "Diğer okuyucular", ur: "دیگر قاری" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

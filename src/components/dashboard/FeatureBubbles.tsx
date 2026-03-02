@@ -10,6 +10,7 @@ import ProfileBubble from "@/components/ProfileBubble";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
+import ReciterSelector from "@/components/home/ReciterSelector";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
 
@@ -244,6 +245,9 @@ export function HomeDashboard() {
         )}
 
         <StatsHeader t={t} />
+
+        {/* 🔊 Reciter Selector */}
+        <ReciterSelector />
 
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
