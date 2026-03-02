@@ -307,7 +307,19 @@ export default function ClassroomDetail() {
     }
   };
 
-  if (!classroom && !resolvedClassId) {
+  // Fetch classroom from DB if not found locally (e.g. coordinator viewing another teacher's class)
+  const [dbClassroom, setDbClassroom] = useState<{ name: string; joinCode: string; teacherId: string } | null>(null);
+  useEffect(() => {
+    if (classroom || !classId) return;
+    supabase.from("classrooms").select("name, join_code, teacher_id").eq("id", classId).maybeSingle()
+      .then(({ data }) => {
+        if (data) setDbClassroom({ name: data.name, joinCode: data.join_code, teacherId: data.teacher_id });
+      });
+  }, [classroom, classId]);
+
+  const effectiveClassroom = classroom || (dbClassroom ? { ...dbClassroom, id: classId! } : null);
+
+  if (!effectiveClassroom) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Chargement...</p>
@@ -323,19 +335,19 @@ export default function ClassroomDetail() {
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1 min-w-0">
-          <h1 className="text-lg font-bold truncate">{classroom.name}</h1>
-          <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {classroom.joinCode}</p>
+          <h1 className="text-lg font-bold truncate">{effectiveClassroom.name}</h1>
+          <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
         </div>
         <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <QrCode size={16} className="text-primary" />
         </button>
-        <button onClick={() => shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+        <button onClick={() => classroom && shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <Share2 size={16} className="text-primary" />
         </button>
       </div>
 
       {/* QR Code Modal */}
-      {showQR && classroom && (
+      {showQR && effectiveClassroom && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -356,23 +368,23 @@ export default function ClassroomDetail() {
             </div>
             <div className="bg-white rounded-xl p-4 inline-block mx-auto">
               <QRCodeSVG
-                value={`https://iqraacoran.lovable.app/join/${classroom.joinCode}`}
+                value={`https://iqraacoran.lovable.app/join/${effectiveClassroom.joinCode}`}
                 size={200}
                 level="M"
                 includeMargin={false}
               />
             </div>
             <div>
-              <p className="font-bold text-foreground">{classroom.name}</p>
+              <p className="font-bold text-foreground">{effectiveClassroom.name}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Code : <span className="font-mono font-bold text-primary">{classroom.joinCode}</span>
+                Code : <span className="font-mono font-bold text-primary">{effectiveClassroom.joinCode}</span>
               </p>
             </div>
             <p className="text-[10px] text-muted-foreground">
               {t("common.scanQR" as any)}
             </p>
             <button
-              onClick={() => shareClassroom(classroom)}
+              onClick={() => classroom && shareClassroom(classroom)}
               className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
             >
               <Share2 size={14} /> {t("common.shareLink" as any)}
@@ -386,7 +398,7 @@ export default function ClassroomDetail() {
         classId={classId!}
         isTeacher={!!isTeacherFinal}
         user={user}
-        classroomName={classroom?.name || ""}
+        classroomName={effectiveClassroom.name || ""}
         onLeft={() => {
           // Remove from local storage
           const stored = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
@@ -519,7 +531,7 @@ export default function ClassroomDetail() {
               {nonMembers.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => addMember(classroom.id, p.id)}
+                  onClick={() => addMember(effectiveClassroom.id, p.id)}
                   className="flex items-center gap-1.5 bg-muted border border-border rounded-full px-3 py-1.5 text-xs font-medium"
                 >
                   <span>{p.avatarEmoji}</span> {p.name}
@@ -556,7 +568,7 @@ export default function ClassroomDetail() {
                     </div>
                     {isTeacherFinal && !isTeacherMember && (
                       <button
-                        onClick={() => removeMember(classroom.id, uid)}
+                        onClick={() => removeMember(effectiveClassroom.id, uid)}
                         className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
                       >
                         <Trash2 size={12} className="text-destructive" />
