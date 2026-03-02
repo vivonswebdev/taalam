@@ -2901,9 +2901,7 @@ const translations = {
   "profile.namePlaceholder": { fr: "Votre nom", en: "Your name", nl: "Uw naam", ar: "اسمك", tr: "Adınız", ur: "آپ کا نام" },
   "profile.cancel": { fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء", tr: "İptal", ur: "منسوخ" },
   "profile.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
-  "profile.settings": { fr: "Paramètres", en: "Settings", nl: "Instellingen", ar: "الإعدادات", tr: "Ayarlar", ur: "ترتیبات" },
   "profile.settingsDesc": { fr: "Langue, thème, traduction", en: "Language, theme, translation", nl: "Taal, thema, vertaling", ar: "اللغة، المظهر، الترجمة", tr: "Dil, tema, çeviri", ur: "زبان، تھیم، ترجمہ" },
-  "profile.logout": { fr: "Se déconnecter", en: "Log out", nl: "Uitloggen", ar: "تسجيل الخروج", tr: "Çıkış yap", ur: "لاگ آؤٹ" },
   "more.profileDesc": { fr: "Voir et modifier votre profil", en: "View and edit your profile", nl: "Bekijk en bewerk je profiel", ar: "عرض وتعديل ملفك", tr: "Profilinizi görüntüleyin ve düzenleyin", ur: "اپنا پروفائل دیکھیں اور ترمیم کریں" },
 } as const;
 
