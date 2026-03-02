@@ -180,7 +180,7 @@ export default function ZakatPage() {
           <div className="border-t border-border/50 pt-3 flex items-center justify-between">
             <span className="text-sm font-bold text-foreground">{t("zakat.zakatDue" as any)} (2.5%)</span>
             <span className="text-xl font-bold font-mono bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ${zakatDue.toFixed(2)}
+              {zakatDue.toFixed(2)}
             </span>
           </div>
         </div>
