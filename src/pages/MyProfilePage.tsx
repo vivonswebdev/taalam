@@ -69,7 +69,7 @@ export default function MyProfilePage() {
   const stats = [
     { icon: Trophy, label: t("profile.totalXp" as any), value: `${xp.xp} XP`, color: "text-amber-500" },
     { icon: Star, label: t("profile.level" as any), value: `${xp.level}`, color: "text-primary" },
-    { icon: BookOpen, label: t("profile.streak" as any), value: `${streak?.current || 0} ${t("profile.days" as any)}`, color: "text-emerald-500" },
+    { icon: BookOpen, label: t("profile.streak" as any), value: `${streak?.currentStreak || 0} ${t("profile.days" as any)}`, color: "text-emerald-500" },
     { icon: Calendar, label: t("profile.sessions" as any), value: `${profile?.sessions_count || 0}`, color: "text-blue-500" },
   ];
 
