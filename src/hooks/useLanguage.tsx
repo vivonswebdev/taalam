@@ -853,6 +853,7 @@ const translations = {
   "nav.heart": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
   "nav.stats": { fr: "Stats", en: "Stats", nl: "Stats", ar: "الإحصائيات", tr: "İstatistikler", ur: "اعداد و شمار" },
   "nav.moods": { fr: "Cœur", en: "Heart", nl: "Hart", ar: "القلب", tr: "Kalp", ur: "دل" },
+  "nav.more": { fr: "Plus", en: "More", nl: "Meer", ar: "المزيد", tr: "Daha", ur: "مزید" },
   "moods.title": { fr: "États du cœur", en: "States of the Heart", nl: "Staten van het hart", ar: "أحوال القلب", tr: "Kalp Halleri", ur: "دل کے احوال" },
   "moods.subtitle": { fr: "Trouve le verset qui parle à ton état", en: "Find the verse that speaks to your state", nl: "Vind het vers dat past bij je gevoel", ar: "اعثر على الآية التي تخاطب حالتك", tr: "Haline uygun ayeti bul", ur: "اپنی حالت سے بات کرنے والی آیت تلاش کریں" },
   "moods.loop": { fr: "Boucle", en: "Loop", nl: "Herhalen", ar: "تكرار", tr: "Döngü", ur: "لوپ" },
