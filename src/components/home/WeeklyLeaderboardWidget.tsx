@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Trophy, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -23,13 +23,11 @@ export default function WeeklyLeaderboardWidget() {
     if (!user) return;
 
     async function loadLeaderboard() {
-      // Get family members
       const { data: familyLinks } = await supabase
         .from("family_members")
         .select("family_id, user_id")
         .eq("user_id", user!.id);
 
-      // Get classroom members
       const { data: classLinks } = await supabase
         .from("classroom_members")
         .select("classroom_id, user_id")
@@ -38,7 +36,6 @@ export default function WeeklyLeaderboardWidget() {
       const peerIds = new Set<string>();
       peerIds.add(user!.id);
 
-      // Fetch all family peers
       if (familyLinks && familyLinks.length > 0) {
         const familyIds = familyLinks.map((f) => f.family_id);
         const { data: familyPeers } = await supabase
@@ -48,7 +45,6 @@ export default function WeeklyLeaderboardWidget() {
         familyPeers?.forEach((p) => peerIds.add(p.user_id));
       }
 
-      // Fetch all class peers
       if (classLinks && classLinks.length > 0) {
         const classIds = classLinks.map((c) => c.classroom_id);
         const { data: classPeers } = await supabase
@@ -60,7 +56,6 @@ export default function WeeklyLeaderboardWidget() {
 
       if (peerIds.size <= 1) return;
 
-      // Get profiles + XP for peers
       const ids = Array.from(peerIds);
       const { data: profiles } = await supabase
         .from("profiles")
@@ -72,7 +67,6 @@ export default function WeeklyLeaderboardWidget() {
       if (profiles && profiles.length > 0) {
         setEntries(profiles);
 
-        // Find rival message
         const myIndex = profiles.findIndex((p) => p.user_id === user!.id);
         if (myIndex > 0) {
           const ahead = profiles[myIndex - 1];
@@ -95,49 +89,72 @@ export default function WeeklyLeaderboardWidget() {
 
   return (
     <div className="px-5 mt-4">
-      <button
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full rounded-3xl bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 
+                   border border-primary/20 p-6 shadow-2xl hover:shadow-primary/20 
+                   active:scale-[0.98] transition-all duration-300 hover:-translate-y-1 cursor-pointer"
         onClick={() => navigate("/leaderboard")}
-        className="w-full rounded-2xl bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 p-4 shadow-sm active:scale-[0.98] transition-transform text-left"
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Trophy size={16} className="text-primary" />
-            <span className="text-sm font-bold text-foreground">{t("leaderboard.weeklyTitle" as any)}</span>
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg text-xl">
+            🏆
           </div>
-          <ChevronRight size={14} className="text-muted-foreground" />
+          <div>
+            <h3 className="font-bold text-lg bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t("leaderboard.weeklyTitle" as any)}
+            </h3>
+            <p className="text-xs text-muted-foreground">{t("leaderboard.familyClassRank" as any)}</p>
+          </div>
         </div>
 
         {/* Rival alert */}
         {rivalMessage && (
-          <p className="text-xs text-destructive font-semibold mb-2 animate-pulse">
-            🔥 {rivalMessage}
-          </p>
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="mb-4 p-3 bg-gradient-to-r from-destructive/15 to-destructive/5 border border-destructive/20 rounded-2xl shadow-md"
+          >
+            <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+              🔥 {rivalMessage}
+            </p>
+          </motion.div>
         )}
 
         {/* Top 3 */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {entries.slice(0, 3).map((entry, i) => (
-            <div
+            <motion.div
               key={entry.user_id}
-              className={`flex items-center gap-2 rounded-xl px-3 py-1.5 ${
-                entry.user_id === user?.id ? "bg-primary/10 border border-primary/20" : ""
-              }`}
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-3 p-3 bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 hover:bg-card/70 transition-all"
             >
-              <span className="text-xs font-bold text-muted-foreground w-5">
+              <div className="w-8 h-8 flex items-center justify-center font-bold text-lg rounded-lg bg-gradient-to-r from-muted to-accent/30">
                 {i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉"}
-              </span>
-              <span className="text-sm">{entry.avatar_emoji}</span>
-              <span className="text-xs font-medium text-foreground flex-1 truncate">
-                {entry.display_name}
-                {entry.user_id === user?.id && (
-                  <span className="text-muted-foreground ml-1">({t("leaderboard.you" as any)})</span>
-                )}
-              </span>
-              <span className="text-xs font-bold text-primary">{entry.xp_total} XP</span>
-            </div>
+              </div>
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shadow-md text-sm">
+                  {entry.avatar_emoji}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-sm truncate text-foreground">{entry.display_name}</p>
+                  {entry.user_id === user?.id && (
+                    <p className="text-xs text-primary font-medium">({t("leaderboard.you" as any)})</p>
+                  )}
+                </div>
+              </div>
+              <div className="font-mono font-bold text-lg bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                {entry.xp_total.toLocaleString()} XP
+              </div>
+            </motion.div>
           ))}
         </div>
-      </button>
+      </motion.div>
     </div>
   );
 }

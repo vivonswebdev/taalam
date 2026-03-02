@@ -2780,6 +2780,7 @@ const translations = {
   "leaderboard.weeklyTitle": { fr: "Classement de la semaine", en: "Weekly leaderboard", nl: "Weekranglijst", ar: "ترتيب الأسبوع", tr: "Haftalık sıralama", ur: "ہفتہ وار لیڈربورڈ" },
   "leaderboard.rivalClose": { fr: "{name} te devance de {gap} XP !", en: "{name} is ahead by {gap} XP!", nl: "{name} staat {gap} XP voor!", ar: "{name} يتقدم عليك بـ {gap} XP!", tr: "{name} senden {gap} XP önde!", ur: "{name} آپ سے {gap} XP آگے ہے!" },
   "leaderboard.you": { fr: "toi", en: "you", nl: "jij", ar: "أنت", tr: "sen", ur: "آپ" },
+  "leaderboard.familyClassRank": { fr: "Ton classement famille/classe", en: "Your family/class ranking", nl: "Je familie/klas ranglijst", ar: "ترتيبك في العائلة/الفصل", tr: "Aile/sınıf sıralamanız", ur: "آپ کی فیملی/کلاس درجہ بندی" },
   "leaderboard.friendPassed": { fr: "{name} t'a dépassé ! 💪", en: "{name} passed you! 💪", nl: "{name} heeft je ingehaald! 💪", ar: "{name} تجاوزك! 💪", tr: "{name} seni geçti! 💪", ur: "{name} نے آپ کو پیچھے چھوڑ دیا! 💪" },
   "prayer.next": { fr: "Prochaine prière", en: "Next prayer", nl: "Volgend gebed", ar: "الصلاة التالية", tr: "Sonraki namaz", ur: "اگلی نماز" },
 } as const;
