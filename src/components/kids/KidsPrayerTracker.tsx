@@ -44,7 +44,7 @@ export default function KidsPrayerTracker() {
     if (checked.includes(name)) return;
     setChecked(prev => [...prev, name]);
     setJustChecked(name);
-    toast.success(`${t("kidsPrayer.validated" as any)} +5⭐`);
+    toast.success(`${t("kidsPrayerTracker.validated" as any)} +5⭐`);
     setTimeout(() => setJustChecked(null), 1200);
   }, [checked, t]);
 
