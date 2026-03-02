@@ -228,7 +228,7 @@ export default function Study() {
                           {tafsirText}
                         </p>
                       ) : (
-                        <p className="text-xs text-muted-foreground italic">Aucun tafsir disponible</p>
+                        <p className="text-xs text-muted-foreground italic">{t("common.noTafsir" as any)}</p>
                       )}
                     </div>
 
