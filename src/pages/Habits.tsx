@@ -283,7 +283,7 @@ export default function Habits() {
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <BookOpen size={18} className="mx-auto text-primary mb-1" />
             <p className="text-xl font-bold text-foreground">{today.ayat_recited}</p>
-            <p className="text-[9px] text-muted-foreground">ayat</p>
+            <p className="text-[9px] text-muted-foreground">{t("habits.ayat" as any)}</p>
           </div>
           <div className="bg-card border border-border rounded-2xl p-3 text-center">
             <Flame size={18} className="mx-auto text-destructive mb-1" />
