@@ -71,6 +71,15 @@ export function useQuranXp() {
   const [userId, setUserId] = useState<string | null>(null);
   const syncedRef = useRef(false);
 
+  // Detect child mode for half-XP
+  const isChildMode = (() => {
+    try {
+      return localStorage.getItem("taaloum_user_mode") === "child";
+    } catch {
+      return false;
+    }
+  })();
+
   // Auth listener
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -112,9 +121,12 @@ export function useQuranXp() {
   const addXp = useCallback((amount: number, reason?: string) => {
     if (amount <= 0) return;
 
+    // Child mode: half XP
+    const finalAmount = isChildMode ? Math.max(1, Math.floor(amount / 2)) : amount;
+
     setXp((prev) => {
       const oldLevel = getLevelFromXp(prev);
-      const next = prev + amount;
+      const next = prev + finalAmount;
       const newLevel = getLevelFromXp(next);
       saveLocalXp(next);
 
@@ -131,17 +143,17 @@ export function useQuranXp() {
 
     // Cloud sync
     if (userId) {
-      const newTotal = loadLocalXp() + amount; // approximate; real value set via setXp
+      const newTotal = loadLocalXp() + finalAmount;
       supabase.from("quran_xp").upsert({
         user_id: userId,
         xp_total: newTotal,
-        last_reason: reason || null,
+        last_reason: reason || (isChildMode ? "child-mode" : null),
       }, { onConflict: "user_id" }).then(() => {});
     }
 
-    setLastGain(amount);
+    setLastGain(finalAmount);
     setTimeout(() => setLastGain(null), 2000);
-  }, [userId]);
+  }, [userId, isChildMode]);
 
   // Award streak bonus (call from outside with current streak)
   const awardStreakBonus = useCallback((streak: number) => {

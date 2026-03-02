@@ -2769,6 +2769,10 @@ const translations = {
   "reciter.popular": { fr: "Populaires", en: "Popular", nl: "Populair", ar: "الأكثر شهرة", tr: "Popüler", ur: "مقبول" },
   "reciter.kids": { fr: "Voix d'enfants", en: "Children's voices", nl: "Kinderstemmen", ar: "أصوات الأطفال", tr: "Çocuk sesleri", ur: "بچوں کی آوازیں" },
   "reciter.others": { fr: "Autres récitateurs", en: "Other reciters", nl: "Andere recitatoren", ar: "قراء آخرون", tr: "Diğer okuyucular", ur: "دیگر قاری" },
+  "leaderboard.weeklyTitle": { fr: "Classement de la semaine", en: "Weekly leaderboard", nl: "Weekranglijst", ar: "ترتيب الأسبوع", tr: "Haftalık sıralama", ur: "ہفتہ وار لیڈربورڈ" },
+  "leaderboard.rivalClose": { fr: "{name} te devance de {gap} XP !", en: "{name} is ahead by {gap} XP!", nl: "{name} staat {gap} XP voor!", ar: "{name} يتقدم عليك بـ {gap} XP!", tr: "{name} senden {gap} XP önde!", ur: "{name} آپ سے {gap} XP آگے ہے!" },
+  "leaderboard.you": { fr: "toi", en: "you", nl: "jij", ar: "أنت", tr: "sen", ur: "آپ" },
+  "leaderboard.friendPassed": { fr: "{name} t'a dépassé ! 💪", en: "{name} passed you! 💪", nl: "{name} heeft je ingehaald! 💪", ar: "{name} تجاوزك! 💪", tr: "{name} seni geçti! 💪", ur: "{name} نے آپ کو پیچھے چھوڑ دیا! 💪" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
