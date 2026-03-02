@@ -9,6 +9,8 @@ import type { TranscriptionData } from "./SimpleRecorder";
 import SimpleFeedback from "./SimpleFeedback";
 import SurahSelector from "./SurahSelector";
 import TranscriptionView from "./TranscriptionView";
+import LiveTranscriptionPanel from "./LiveTranscriptionPanel";
+import type { VerifiedVerse } from "./LiveTranscriptionPanel";
 
 export default function TarteelEasyPage() {
   const navigate = useNavigate();
@@ -16,6 +18,22 @@ export default function TarteelEasyPage() {
   const [selectedSurah, setSelectedSurah] = useState(114);
   const [transcription, setTranscription] = useState<TranscriptionData | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  // Live transcription state
+  const [liveTranscript, setLiveTranscript] = useState("");
+  const [verifiedVerses, setVerifiedVerses] = useState<VerifiedVerse[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+
+  const handleRecordingStart = () => {
+    setIsRecording(true);
+    setLiveTranscript("");
+    setVerifiedVerses([]);
+  };
+
+  const handleRecordingStop = () => {
+    setIsRecording(false);
+    setLiveTranscript("");
+  };
 
   return (
     <PageBackground intensity="immersive">
@@ -36,10 +54,25 @@ export default function TarteelEasyPage() {
 
         {/* Flow: Record → Transcription → Feedback */}
         {!transcription ? (
-          <SimpleRecorder
-            surahNumber={selectedSurah}
-            onScore={(_score, data) => setTranscription(data)}
-          />
+          <>
+            {/* Live transcription panel - visible during recording */}
+            {(isRecording || verifiedVerses.length > 0) && (
+              <LiveTranscriptionPanel
+                verifiedVerses={verifiedVerses}
+                liveTranscript={liveTranscript}
+                isListening={isRecording}
+              />
+            )}
+
+            <SimpleRecorder
+              surahNumber={selectedSurah}
+              onScore={(_score, data) => setTranscription(data)}
+              onLiveTranscript={setLiveTranscript}
+              onVerseVerified={(verse) => setVerifiedVerses((prev) => [...prev, verse])}
+              onRecordingStart={handleRecordingStart}
+              onRecordingStop={handleRecordingStop}
+            />
+          </>
         ) : !showFeedback ? (
           <TranscriptionView
             transcription={transcription}
@@ -52,10 +85,12 @@ export default function TarteelEasyPage() {
             onRetry={() => {
               setTranscription(null);
               setShowFeedback(false);
+              setVerifiedVerses([]);
             }}
             onNext={() => {
               setTranscription(null);
               setShowFeedback(false);
+              setVerifiedVerses([]);
               setSelectedSurah((prev) => (prev > 78 ? prev - 1 : 114));
             }}
           />

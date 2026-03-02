@@ -6,6 +6,7 @@ import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getSurahText, normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
 import MicPermissionHelp from "./MicPermissionHelp";
+import type { VerifiedVerse } from "./LiveTranscriptionPanel";
 
 export interface TranscriptionData {
   detected: string;
@@ -17,6 +18,10 @@ export interface TranscriptionData {
 interface SimpleRecorderProps {
   surahNumber: number;
   onScore: (score: number, transcription: TranscriptionData) => void;
+  onLiveTranscript?: (text: string) => void;
+  onVerseVerified?: (verse: VerifiedVerse) => void;
+  onRecordingStart?: () => void;
+  onRecordingStop?: () => void;
 }
 
 export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderProps) {
