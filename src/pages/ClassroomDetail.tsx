@@ -374,7 +374,7 @@ export default function ClassroomDetail() {
               onClick={() => shareClassroom(classroom)}
               className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
             >
-              <Share2 size={14} /> Partager le lien
+              <Share2 size={14} /> {t("common.shareLink" as any)}
             </button>
           </motion.div>
         </motion.div>
