@@ -133,6 +133,8 @@ export default function TeacherDashboardPage() {
 
           <StudentsList students={students} classId={selectedClassId} />
 
+          <ClassInvitationsPanel classId={selectedClassId} />
+
           <AssignmentsPanel
             assignments={assignmentsWithStats}
             createAssignment={createAssignment}
