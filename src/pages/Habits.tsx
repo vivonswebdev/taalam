@@ -186,7 +186,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">XP Qur'an</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{t("habits.xpQuran" as any)}</span>
             <div className="h-px flex-1 bg-border" />
           </div>
 
