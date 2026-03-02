@@ -203,6 +203,8 @@ const App = () => (
               <Route path="/mekkah-live" element={<MekkahLivePage />} />
               <Route path="/medina-live" element={<MedinaLivePage />} />
               <Route path="/zakat" element={<ZakatPage />} />
+              <Route path="/tasbih" element={<TasbihPage />} />
+              <Route path="/live-haramain" element={<LiveHaramainPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
