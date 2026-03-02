@@ -214,6 +214,7 @@ export default function Recitation() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleFinishAyah = useCallback(() => {
     if (!selectedSurah) return;
     voice.stop();
     const ayah = selectedSurah.ayahs[recitingAyah];
