@@ -74,7 +74,7 @@ export default function TarteelSelector() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.15 }}
-                onClick={() => navigate(mode.href)}
+                onClick={() => mode.onClick()}
                 className={`relative w-full p-6 rounded-3xl text-left bg-gradient-to-br ${mode.gradient} backdrop-blur-xl border border-border/40 hover:scale-[1.02] transition-all`}
               >
                 {mode.badge && (
