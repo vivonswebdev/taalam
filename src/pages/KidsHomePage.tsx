@@ -111,6 +111,12 @@ export default function KidsHomePage() {
           </button>
         </div>
 
+        {/* Prayer Tracker */}
+        <KidsPrayerTracker />
+
+        {/* Ramadan Tracker */}
+        <KidsRamadanTracker />
+
         {/* Colorful 2-col grid */}
         <div className="grid grid-cols-2 gap-4 px-4 mt-2">
           {KIDS_CARDS.map((card, i) => {

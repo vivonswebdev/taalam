@@ -2976,10 +2976,9 @@ const translations = {
   "invitations.noInvitesYet": { fr: "Aucune invitation envoyée. Créez-en une pour inviter un parent.", en: "No invitations sent yet. Create one to invite a parent.", nl: "Nog geen uitnodigingen verzonden. Maak er een om een ouder uit te nodigen.", ar: "لم يتم إرسال دعوات بعد. أنشئ واحدة لدعوة أحد الوالدين.", tr: "Henüz davet gönderilmedi. Bir veli davet etmek için oluşturun.", ur: "ابھی کوئی دعوت نہیں بھیجی گئی۔ والدین کو دعوت دینے کے لیے بنائیں۔" },
 
   // ═══ KIDS PRAYER TRACKER ═══
-  "kidsPrayer.title": { fr: "Prières du jour", en: "Today's Prayers", nl: "Gebeden vandaag", ar: "صلوات اليوم", tr: "Bugünün Namazları", ur: "آج کی نمازیں" },
-  "kidsPrayer.validated": { fr: "Prière validée !", en: "Prayer done!", nl: "Gebed gedaan!", ar: "تمت الصلاة!", tr: "Namaz kılındı!", ur: "نماز ادا!" },
-  "kidsPrayer.allDone": { fr: "Toutes les prières faites ! Mashallah !", en: "All prayers done! Mashallah!", nl: "Alle gebeden gedaan! Mashallah!", ar: "كل الصلوات أُديت! ما شاء الله!", tr: "Tüm namazlar kılındı! Maşallah!", ur: "سب نمازیں ادا! ماشاءاللہ!" },
-  "kidsPrayer.tapToValidate": { fr: "Appuie pour valider !", en: "Tap to validate!", nl: "Tik om te bevestigen!", ar: "اضغط للتأكيد!", tr: "Doğrulamak için dokun!", ur: "تصدیق کے لیے ٹیپ کریں!" },
+  "kidsPrayerTracker.title": { fr: "Prières du jour", en: "Today's Prayers", nl: "Gebeden vandaag", ar: "صلوات اليوم", tr: "Bugünün Namazları", ur: "آج کی نمازیں" },
+  "kidsPrayerTracker.validated": { fr: "Prière validée !", en: "Prayer done!", nl: "Gebed gedaan!", ar: "تمت الصلاة!", tr: "Namaz kılındı!", ur: "نماز ادا!" },
+  "kidsPrayerTracker.allDone": { fr: "Toutes les prières faites ! Mashallah !", en: "All prayers done! Mashallah!", nl: "Alle gebeden gedaan! Mashallah!", ar: "كل الصلوات أُديت! ما شاء الله!", tr: "Tüm namazlar kılındı! Maşallah!", ur: "سب نمازیں ادا! ماشاءاللہ!" },
 
   // ═══ KIDS RAMADAN TRACKER ═══
   "kidsRamadan.title": { fr: "Ramadan Moubarak", en: "Ramadan Mubarak", nl: "Ramadan Mubarak", ar: "رمضان مبارك", tr: "Ramazan Mübarek", ur: "رمضان مبارک" },

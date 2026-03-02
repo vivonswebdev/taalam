@@ -129,7 +129,7 @@ export default function KidsPrayerTracker() {
           animate={{ opacity: 1, y: 0 }}
           className="mt-3 text-center text-sm font-bold text-emerald-600 dark:text-emerald-400"
         >
-          🎉 {t("kidsPrayer.allDone" as any)} +25⭐
+          🎉 {t("kidsPrayerTracker.allDone" as any)} +25⭐
         </motion.div>
       )}
     </div>
