@@ -22,7 +22,7 @@ export default function BottomNav() {
   const gameTab = { path: "/jeux", icon: Gamepad2, label: t("nav.games" as any) || "Jeux" };
 
   const endTabs = [
-    { path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" },
+    ...(!isKidMode ? [{ path: "/habits", icon: BarChart3, label: t("nav.stats" as any) || "Stats" }] : []),
     { path: "/more", icon: Menu, label: t("nav.more" as any) || "Plus" },
   ];
 
