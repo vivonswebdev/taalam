@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, LogOut, Edit2, Check, X, Mail, Calendar, Trophy, BookOpen, Star } from "lucide-react";
+import { ArrowLeft, LogOut, Edit2, Check, X, Mail, Calendar, Trophy, BookOpen, Star, Plus, Trash2, UserPlus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useQuranXp } from "@/hooks/useQuranXp";
 import { useStreak } from "@/hooks/useStreak";
+import { useUserMode } from "@/hooks/useUserMode";
+import { useChildProfiles, type ChildProfile } from "@/hooks/useChildProfiles";
 import IslamicAvatarPicker from "@/components/IslamicAvatarPicker";
 import { supabase } from "@/integrations/supabase/client";
 
