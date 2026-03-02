@@ -226,6 +226,7 @@ const App = () => (
               <Route path="/kids-quick-calc" element={<QuickCalcPage />} />
               <Route path="/kids-calc-merge" element={<CalcMergePage />} />
               <Route path="/kids-number-runner" element={<NumberRunnerPage />} />
+              <Route path="/kids-math-shooter" element={<MathShooterPage />} />
               <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
               <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />
