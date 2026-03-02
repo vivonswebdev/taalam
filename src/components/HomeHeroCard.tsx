@@ -41,7 +41,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
     >
       {/* Notification badge */}
       {card.badge != null && card.badge > 0 && (
-        <span className="absolute top-2 right-2 z-20 min-w-[20px] h-5 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold px-1.5">
+        <span className="absolute top-2 right-2 z-20 min-w-[20px] h-5 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5">
           {card.badge}
         </span>
       )}
