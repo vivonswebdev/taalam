@@ -364,10 +364,10 @@ export default function Habits() {
             const activeDays = last7.filter((d) => d.minutes_quran > 0 || d.ayat_recited > 0 || (listeningStats.dailyListening[d.date]?.minutes || 0) > 0).length;
             return (
               <div className="grid grid-cols-4 gap-2 text-center">
-                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">min lecture</p></div>
-                <div><p className="text-lg font-bold text-foreground">{totalListenMin}</p><p className="text-[10px] text-muted-foreground">min écoute</p></div>
-                <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">ayat</p></div>
-                <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">jours actifs</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalMin}</p><p className="text-[10px] text-muted-foreground">{t("habits.minReading" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalListenMin}</p><p className="text-[10px] text-muted-foreground">{t("habits.minListening" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{totalAyat}</p><p className="text-[10px] text-muted-foreground">{t("habits.ayat" as any)}</p></div>
+                <div><p className="text-lg font-bold text-foreground">{activeDays}/7</p><p className="text-[10px] text-muted-foreground">{t("habits.activeDays" as any)}</p></div>
               </div>
             );
           })()}
