@@ -103,6 +103,7 @@ export default function More() {
         { emoji: "👨‍👩‍👧", labelKey: "more.familyClass", descKey: "more.familyClassDesc", path: "/family" },
         { emoji: "🏆", labelKey: "more.ranking", descKey: "more.rankingDesc", path: "/leaderboard" },
         { emoji: "👨‍🏫", labelKey: "more.teacherClass", descKey: "more.teacherClassDesc", path: "/classrooms" },
+        { emoji: "📬", labelKey: "invitations.title", descKey: "invitations.enterCode", path: "/parent-invitations" },
         ...(mode === "teacher" ? [{ emoji: "📊", labelKey: "more.teacherDashboard", descKey: "more.teacherDashboardDesc", path: "/teacher-dashboard" }] : []),
       ],
     },

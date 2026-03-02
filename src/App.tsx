@@ -96,6 +96,8 @@ import LiveHaramainPage from "./pages/LiveHaramainPage";
 import MyProfilePage from "./pages/MyProfilePage";
 import SelectChildPage from "./pages/SelectChildPage";
 import CreateChildPage from "./pages/CreateChildPage";
+import ParentInvitationsPage from "./pages/ParentInvitationsPage";
+import CreateChildForInvitePage from "./pages/CreateChildForInvitePage";
 import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
@@ -213,6 +215,8 @@ const App = () => (
               <Route path="/select-child" element={<SelectChildPage />} />
               <Route path="/create-child" element={<CreateChildPage />} />
               <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
+              <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
+              <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />

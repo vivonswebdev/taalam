@@ -15,6 +15,7 @@ import TaskKanban from "@/components/teacher/TaskKanban";
 import TeacherStatsSection from "@/components/TeacherStatsSection";
 import TeacherMessaging from "@/components/teacher/TeacherMessaging";
 import StudentTaskBoard from "@/components/teacher/StudentTaskBoard";
+import ClassInvitationsPanel from "@/components/teacher/ClassInvitationsPanel";
 
 interface TeacherClass {
   id: string;
@@ -131,6 +132,8 @@ export default function TeacherDashboardPage() {
           />
 
           <StudentsList students={students} classId={selectedClassId} />
+
+          <ClassInvitationsPanel classId={selectedClassId} />
 
           <AssignmentsPanel
             assignments={assignmentsWithStats}
