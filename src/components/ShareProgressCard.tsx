@@ -14,15 +14,13 @@ export default function ShareProgressCard() {
   const { streak } = useStreak();
   const { user } = useAuth();
   const [generating, setGenerating] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-
-  // Load name on first render
-  useState(() => {
+  const [displayName, setDisplayName] = useState(() => {
     if (user) {
       supabase.from("profiles").select("display_name").eq("user_id", user.id).maybeSingle().then(({ data }) => {
         if (data?.display_name) setDisplayName(data.display_name);
       });
     }
+    return "";
   });
 
   const generateAndShare = useCallback(async () => {
