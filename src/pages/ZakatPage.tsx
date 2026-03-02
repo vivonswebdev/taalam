@@ -28,7 +28,7 @@ export default function ZakatPage() {
   const [values, setValues] = useState<ZakatValues>(INITIAL);
   const [goldPrice, setGoldPrice] = useState<number>(70); // USD per gram fallback
   const [silverPrice, setSilverPrice] = useState<number>(0.85);
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Fetch gold/silver prices
@@ -73,18 +73,18 @@ export default function ZakatPage() {
     doc.setFontSize(11);
     const date = new Date().toLocaleDateString();
     doc.text(`Date: ${date}`, 20, 30);
-    doc.text(`Gold: ${values.gold_grams}g × $${goldPrice.toFixed(2)} = $${(values.gold_grams * goldPrice).toFixed(2)}`, 20, 45);
-    doc.text(`Silver: ${values.silver_grams}g × $${silverPrice.toFixed(2)} = $${(values.silver_grams * silverPrice).toFixed(2)}`, 20, 53);
-    doc.text(`Cash: $${values.cash.toFixed(2)}`, 20, 61);
-    doc.text(`Stocks/Investments: $${values.stocks.toFixed(2)}`, 20, 69);
-    doc.text(`Business assets: $${values.business.toFixed(2)}`, 20, 77);
-    doc.text(`Debts owed to you: $${values.debts_owed_to_you.toFixed(2)}`, 20, 85);
-    doc.text(`Debts you owe: -$${values.debts_you_owe.toFixed(2)}`, 20, 93);
+    doc.text(`Gold: ${values.gold_grams}g × ${goldPrice.toFixed(2)} = ${(values.gold_grams * goldPrice).toFixed(2)}`, 20, 45);
+    doc.text(`Silver: ${values.silver_grams}g × ${silverPrice.toFixed(2)} = ${(values.silver_grams * silverPrice).toFixed(2)}`, 20, 53);
+    doc.text(`Cash: ${values.cash.toFixed(2)}`, 20, 61);
+    doc.text(`Stocks/Investments: ${values.stocks.toFixed(2)}`, 20, 69);
+    doc.text(`Business assets: ${values.business.toFixed(2)}`, 20, 77);
+    doc.text(`Debts owed to you: ${values.debts_owed_to_you.toFixed(2)}`, 20, 85);
+    doc.text(`Debts you owe: -${values.debts_you_owe.toFixed(2)}`, 20, 93);
     doc.line(20, 97, 190, 97);
-    doc.text(`Total zakatable: $${zakatableWealth.toFixed(2)}`, 20, 105);
-    doc.text(`Nisab (85g gold): $${nisabValue.toFixed(2)}`, 20, 113);
+    doc.text(`Total zakatable: ${zakatableWealth.toFixed(2)}`, 20, 105);
+    doc.text(`Nisab (85g gold): ${nisabValue.toFixed(2)}`, 20, 113);
     doc.setFontSize(14);
-    doc.text(`ZAKAT DUE (2.5%): $${zakatDue.toFixed(2)}`, 20, 125);
+    doc.text(`ZAKAT DUE (2.5%): ${zakatDue.toFixed(2)}`, 20, 125);
     doc.save(`zakat-${date}.pdf`);
   }, [values, goldPrice, silverPrice, zakatableWealth, nisabValue, zakatDue]);
 
@@ -120,7 +120,7 @@ export default function ZakatPage() {
       <div className="px-4 mt-2">
         <div className="p-3 bg-accent/10 rounded-xl border border-accent/20 text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">{t("zakat.nisab" as any)}:</span>{" "}
-          {GOLD_NISAB_G}g {t("zakat.gold" as any)} ≈ ${nisabValue.toFixed(0)} {currency}
+          {GOLD_NISAB_G}g {t("zakat.gold" as any)} ≈ {nisabValue.toFixed(0)}
           {loading && " ⏳"}
         </div>
       </div>
@@ -169,7 +169,7 @@ export default function ZakatPage() {
         }`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-muted-foreground">{t("zakat.totalWealth" as any)}</span>
-            <span className="font-mono text-sm font-bold text-foreground">${zakatableWealth.toFixed(2)}</span>
+            <span className="font-mono text-sm font-bold text-foreground">{zakatableWealth.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-muted-foreground">{t("zakat.aboveNisab" as any)}</span>
@@ -180,7 +180,7 @@ export default function ZakatPage() {
           <div className="border-t border-border/50 pt-3 flex items-center justify-between">
             <span className="text-sm font-bold text-foreground">{t("zakat.zakatDue" as any)} (2.5%)</span>
             <span className="text-xl font-bold font-mono bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ${zakatDue.toFixed(2)}
+              {zakatDue.toFixed(2)}
             </span>
           </div>
         </div>
