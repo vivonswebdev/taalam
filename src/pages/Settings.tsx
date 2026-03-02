@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield, CloudOff } from "lucide-react";
+import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield, CloudOff, Lock } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useLanguage, LANGUAGES } from "@/hooks/useLanguage";
@@ -15,6 +15,8 @@ import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
+const PIN_KEY = "taaloum_parent_pin";
+
 export default function Settings() {
   const { resetProgress } = useProgress();
   const { isChildMode, toggleChildMode, stickers, resetStickers } = useChildMode();
@@ -27,6 +29,70 @@ export default function Settings() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { user } = useAuth();
   const { offlineMode, setOfflineMode, readySections } = useOfflineManager();
+
+  // PIN states
+  const [pinDialog, setPinDialog] = useState<"none" | "setup" | "confirm" | "verify">("none");
+  const [pinInput, setPinInput] = useState("");
+  const [pinFirst, setPinFirst] = useState("");
+  const [pinError, setPinError] = useState("");
+  const pinInputRef = useRef<HTMLInputElement>(null);
+  const storedPin = localStorage.getItem(PIN_KEY);
+
+  const handleChildModeToggle = () => {
+    if (!isChildMode) {
+      // Turning ON child mode — set up PIN if not already set
+      if (!storedPin) {
+        setPinDialog("setup");
+        setPinInput("");
+        setPinFirst("");
+        setPinError("");
+      } else {
+        toggleChildMode();
+      }
+    } else {
+      // Turning OFF child mode — require PIN
+      if (storedPin) {
+        setPinDialog("verify");
+        setPinInput("");
+        setPinError("");
+      } else {
+        toggleChildMode();
+      }
+    }
+  };
+
+  const handlePinSubmit = () => {
+    if (pinDialog === "setup") {
+      if (pinInput.length !== 4) return;
+      setPinFirst(pinInput);
+      setPinInput("");
+      setPinDialog("confirm");
+      setPinError("");
+    } else if (pinDialog === "confirm") {
+      if (pinInput !== pinFirst) {
+        setPinError(t("settings.pinMismatch" as any));
+        setPinInput("");
+        return;
+      }
+      localStorage.setItem(PIN_KEY, pinInput);
+      setPinDialog("none");
+      toggleChildMode();
+    } else if (pinDialog === "verify") {
+      if (pinInput !== storedPin) {
+        setPinError(t("settings.pinWrong" as any));
+        setPinInput("");
+        return;
+      }
+      setPinDialog("none");
+      toggleChildMode();
+    }
+  };
+
+  useEffect(() => {
+    if (pinDialog !== "none") {
+      setTimeout(() => pinInputRef.current?.focus(), 100);
+    }
+  }, [pinDialog]);
 
   // Profile visibility
   const [isPublic, setIsPublic] = useState(true);
@@ -87,16 +153,31 @@ export default function Settings() {
       <div className="px-6 space-y-3">
         {/* Child Mode Toggle */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-2xl overflow-hidden">
-          <button onClick={toggleChildMode} className="w-full flex items-center gap-4 p-4 text-left">
+          <button onClick={handleChildModeToggle} className="w-full flex items-center gap-4 p-4 text-left">
             <Baby size={20} className={isChildMode ? "text-secondary" : "text-primary"} />
             <div className="flex-1">
               <p className="text-sm font-medium text-card-foreground">{t("settings.childMode")}</p>
-              <p className="text-xs text-muted-foreground">{t("settings.childModeDesc")}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("settings.childModeDesc")}
+                {storedPin && isChildMode && (
+                  <span className="ml-1 text-primary font-medium">{t("settings.pinProtected" as any)}</span>
+                )}
+              </p>
             </div>
             <div className={`w-12 h-7 rounded-full transition-colors relative ${isChildMode ? "bg-success" : "bg-muted"}`}>
               <motion.div animate={{ x: isChildMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
           </button>
+          {/* Change PIN button */}
+          {storedPin && (
+            <button
+              onClick={() => { setPinDialog("setup"); setPinInput(""); setPinFirst(""); setPinError(""); }}
+              className="w-full flex items-center gap-2 justify-center py-2 border-t border-border text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
+            >
+              <Lock size={12} />
+              {t("settings.pinChange" as any)}
+            </button>
+          )}
         </motion.div>
 
         {/* Daily Challenge */}
@@ -340,6 +421,58 @@ export default function Settings() {
           onComplete={(score) => { dailyChallenge.complete(score); setShowDailyChallenge(false); }}
           onDismiss={() => setShowDailyChallenge(false)}
         />
+      )}
+
+      {/* PIN Dialog */}
+      {pinDialog !== "none" && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8">
+          <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <Lock size={20} className="text-primary" />
+              <h3 className="text-lg font-bold text-card-foreground">
+                {pinDialog === "verify" ? t("settings.pinEnter" as any) : pinDialog === "confirm" ? t("settings.pinConfirm" as any) : t("settings.pinSetup" as any)}
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              {pinDialog === "setup" ? t("settings.pinSetupDesc" as any) : pinDialog === "confirm" ? t("settings.pinConfirm" as any) : t("settings.pinEnter" as any)}
+            </p>
+            <div className="flex justify-center gap-3 mb-4">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className={`w-12 h-14 rounded-xl border-2 flex items-center justify-center text-xl font-bold transition-colors ${pinInput[i] ? "border-primary bg-primary/10 text-primary" : "border-border bg-muted/30 text-muted-foreground"}`}>
+                  {pinInput[i] ? "●" : ""}
+                </div>
+              ))}
+            </div>
+            <input
+              ref={pinInputRef}
+              type="number"
+              inputMode="numeric"
+              maxLength={4}
+              value={pinInput}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                setPinInput(v);
+                setPinError("");
+              }}
+              onKeyDown={(e) => { if (e.key === "Enter" && pinInput.length === 4) handlePinSubmit(); }}
+              className="sr-only"
+              autoFocus
+            />
+            {pinError && <p className="text-xs text-destructive text-center mb-3 font-medium">{pinError}</p>}
+            <div className="flex gap-3">
+              <button onClick={() => { setPinDialog("none"); setPinInput(""); setPinError(""); }} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground active:scale-[0.98] transition-transform">
+                {t("settings.cancel")}
+              </button>
+              <button
+                onClick={handlePinSubmit}
+                disabled={pinInput.length !== 4}
+                className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium active:scale-[0.98] transition-transform disabled:opacity-40"
+              >
+                OK
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
