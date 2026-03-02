@@ -230,7 +230,7 @@ export default function Auth() {
         sessionStorage.setItem("taalam_session_active", "true");
       }
       toast.success("Connecté !");
-      navigate(redirectTo);
+      navigate("/settings");
     } catch (err: any) {
       toast.error(err.message || "Email ou mot de passe incorrect");
     } finally {
