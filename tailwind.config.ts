@@ -70,14 +70,6 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
-        pearl: {
-          DEFAULT: "hsl(var(--pearl))",
-        },
-        moonlight: {
-          DEFAULT: "hsl(var(--moonlight))",
-        },
-        desert: {
-          DEFAULT: "hsl(var(--desert))",
         },
       },
       borderRadius: {
@@ -108,7 +100,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         shimmer: "shimmer 2s linear infinite",
-        "pulse-gentle": "gentle-pulse 3s ease-in-out infinite",
       },
     },
   },
