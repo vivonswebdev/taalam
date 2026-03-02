@@ -201,7 +201,19 @@ export default function Recitation() {
     setCompletedAyahs(new Set());
   };
 
-  const handleFinishAyah = useCallback(() => {
+  // Auto-select surah from URL param (?surah=112)
+  useEffect(() => {
+    const surahParam = searchParams.get("surah");
+    if (surahParam && !selectedSurah) {
+      const num = parseInt(surahParam, 10);
+      const found = surahs.find(s => s.number === num);
+      if (found) {
+        handleSelectSurah(found);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
     if (!selectedSurah) return;
     voice.stop();
     const ayah = selectedSurah.ayahs[recitingAyah];
