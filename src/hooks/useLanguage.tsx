@@ -957,7 +957,22 @@ const translations = {
   "more.teacherClass": { fr: "Classe Professeur", en: "Teacher Class", nl: "Lerarenklas", ar: "فصل المعلم", tr: "Öğretmen Sınıfı", ur: "استاد کلاس" },
   "more.teacherClassDesc": { fr: "Gérez vos classes", en: "Manage your classes", nl: "Beheer je klassen", ar: "إدارة فصولك", tr: "Sınıflarınızı yönetin", ur: "اپنی کلاسیں سنبھالیں" },
 
-  // Hifz Plan page
+  // More page – accordion section titles
+  "more.sectionLecture": { fr: "Lecture Coran", en: "Quran Reading", nl: "Koran Lezen", ar: "قراءة القرآن", tr: "Kur'an Okuma", ur: "قرآن پڑھنا" },
+  "more.sectionLearning": { fr: "Apprentissage", en: "Learning", nl: "Leren", ar: "التعلم", tr: "Öğrenme", ur: "سیکھنا" },
+  "more.sectionPractice": { fr: "Pratique Spirituelle", en: "Spiritual Practice", nl: "Spirituele Praktijk", ar: "الممارسة الروحية", tr: "Manevi Uygulama", ur: "روحانی مشق" },
+  "more.sectionSocial": { fr: "Social & Famille", en: "Social & Family", nl: "Sociaal & Familie", ar: "اجتماعي وعائلي", tr: "Sosyal & Aile", ur: "سماجی اور خاندان" },
+  "more.sectionSettings": { fr: "Paramètres & Outils", en: "Settings & Tools", nl: "Instellingen & Tools", ar: "الإعدادات والأدوات", tr: "Ayarlar & Araçlar", ur: "ترتیبات اور اوزار" },
+  "more.readingMode": { fr: "Mode Lecture", en: "Reading Mode", nl: "Leesmodus", ar: "وضع القراءة", tr: "Okuma Modu", ur: "پڑھنے کا موڈ" },
+  "more.readingModeDesc": { fr: "Traductions, tajwid, audio", en: "Translations, tajwid, audio", nl: "Vertalingen, tajwid, audio", ar: "ترجمات، تجويد، صوت", tr: "Çeviriler, tecvid, ses", ur: "ترجمے، تجوید، آڈیو" },
+  "more.quizLevel": { fr: "Quiz Niveau", en: "Level Quiz", nl: "Niveau Quiz", ar: "اختبار المستوى", tr: "Seviye Testi", ur: "لیول کوئز" },
+  "more.quizLevelDesc": { fr: "Testez vos connaissances", en: "Test your knowledge", nl: "Test je kennis", ar: "اختبر معرفتك", tr: "Bilginizi test edin", ur: "اپنا علم جانچیں" },
+  "more.hifzMap": { fr: "Hifz Map", en: "Hifz Map", nl: "Hifz Kaart", ar: "خريطة الحفظ", tr: "Hıfz Haritası", ur: "حفظ نقشہ" },
+  "more.hifzMapDesc": { fr: "Vue d'ensemble de ta mémorisation", en: "Overview of your memorization", nl: "Overzicht van je memorisatie", ar: "نظرة عامة على حفظك", tr: "Ezberlemenize genel bakış", ur: "آپ کے حفظ کا جائزہ" },
+  "more.community": { fr: "Communauté", en: "Community", nl: "Gemeenschap", ar: "المجتمع", tr: "Topluluk", ur: "کمیونٹی" },
+  "more.offline": { fr: "Télécharger Offline", en: "Download Offline", nl: "Offline downloaden", ar: "تحميل بدون إنترنت", tr: "Çevrimdışı indir", ur: "آف لائن ڈاؤن لوڈ" },
+  "more.offlineDesc": { fr: "Audio et sourates hors-ligne", en: "Offline audio and surahs", nl: "Audio en soera's offline", ar: "صوت وسور بدون إنترنت", tr: "Çevrimdışı ses ve sureler", ur: "آف لائن آڈیو اور سورتیں" },
+  "more.version": { fr: "Version", en: "Version", nl: "Versie", ar: "الإصدار", tr: "Sürüm", ur: "ورژن" },
   "hifz.planTitle": { fr: "Plan Hifz", en: "Hifz Plan", nl: "Hifz Plan", ar: "خطة الحفظ", tr: "Hıfz Planı", ur: "حفظ پلان" },
   "hifz.planSubtitle": { fr: "Planifie ta mémorisation et tes révisions", en: "Plan your memorization and reviews", nl: "Plan je memorisatie en revisies", ar: "خطط لحفظك ومراجعاتك", tr: "Ezber ve tekrarlarını planla", ur: "اپنا حفظ اور مراجعہ منصوبہ بنائیں" },
   "hifz.createTitle": { fr: "Crée ton plan de mémorisation", en: "Create your memorization plan", nl: "Maak je memorisatieplan", ar: "أنشئ خطة حفظك", tr: "Ezberleme planını oluştur", ur: "اپنا حفظ پلان بنائیں" },
