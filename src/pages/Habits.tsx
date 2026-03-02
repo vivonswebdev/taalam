@@ -354,7 +354,7 @@ export default function Habits() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Award size={18} className="text-secondary" />
-            <span className="text-sm font-semibold text-foreground">Résumé de la semaine</span>
+            <span className="text-sm font-semibold text-foreground">{t("habits.weeklySummary" as any)}</span>
           </div>
           {(() => {
             const last7 = last30Days.slice(-7);
