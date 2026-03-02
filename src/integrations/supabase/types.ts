@@ -894,6 +894,39 @@ export type Database = {
         }
         Relationships: []
       }
+      good_deeds_progress: {
+        Row: {
+          boost_active: boolean
+          boost_expires_at: string | null
+          completed_deeds: string[]
+          created_at: string
+          deed_date: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          boost_active?: boolean
+          boost_expires_at?: string | null
+          completed_deeds?: string[]
+          created_at?: string
+          deed_date?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          boost_active?: boolean
+          boost_expires_at?: string | null
+          completed_deeds?: string[]
+          created_at?: string
+          deed_date?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       hifz_items: {
         Row: {
           ayah_from: number
