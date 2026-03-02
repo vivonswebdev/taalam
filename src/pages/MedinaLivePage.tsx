@@ -5,8 +5,8 @@ import { ArrowLeft, Maximize, Minimize } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MEDINA_STREAMS = [
-  { id: "BQNH7MfbQFE", labelKey: "live.officialHaramain" },
-  { id: "U_tPN-ED2zI", labelKey: "live.medinaHD" },
+  { id: "rHWSRMcGGBQ", labelKey: "live.officialHaramain" },
+  { id: "S2aDlWv-2cw", labelKey: "live.medinaHD" },
 ];
 
 export default function MedinaLivePage() {
