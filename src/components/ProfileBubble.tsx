@@ -217,7 +217,7 @@ export default function ProfileBubble() {
             <DropdownMenuItem className="flex items-center gap-3 py-2.5 px-2 rounded-xl cursor-pointer hover:bg-accent/30">
               <Crown className="w-5 h-5 text-amber-400" />
               <span className="flex-1 text-sm font-medium">{t("profile.premium" as any)}</span>
-              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">FREE</span>
+              <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">{t("profile.free" as any)}</span>
             </DropdownMenuItem>
           )}
 
