@@ -91,6 +91,8 @@ import IslamicCalendarPage from "./pages/IslamicCalendarPage";
 import MekkahLivePage from "./pages/MekkahLivePage";
 import MedinaLivePage from "./pages/MedinaLivePage";
 import ZakatPage from "./pages/ZakatPage";
+import TasbihPage from "./pages/TasbihPage";
+import LiveHaramainPage from "./pages/LiveHaramainPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -201,6 +203,8 @@ const App = () => (
               <Route path="/mekkah-live" element={<MekkahLivePage />} />
               <Route path="/medina-live" element={<MedinaLivePage />} />
               <Route path="/zakat" element={<ZakatPage />} />
+              <Route path="/tasbih" element={<TasbihPage />} />
+              <Route path="/live-haramain" element={<LiveHaramainPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
