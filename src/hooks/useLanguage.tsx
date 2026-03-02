@@ -3064,6 +3064,11 @@ const translations = {
   "mathGames.completed": { fr: "réussi !", en: "complete!", nl: "voltooid!", ar: "اكتمل!", tr: "tamamlandı!", ur: "مکمل!" },
   "mathGames.nextLevel": { fr: "➡️ Niveau suivant", en: "➡️ Next Level", nl: "➡️ Volgend niveau", ar: "➡️ المستوى التالي", tr: "➡️ Sonraki Seviye", ur: "➡️ اگلا سطح" },
   "mathGames.quit": { fr: "Quitter", en: "Quit", nl: "Stoppen", ar: "خروج", tr: "Çık", ur: "چھوڑیں" },
+  "mathGames.calcMergeDesc": { fr: "Fusionne les tuiles identiques pour atteindre l'objectif !", en: "Merge identical tiles to reach the target!", nl: "Combineer identieke tegels om het doel te bereiken!", ar: "ادمج البلاطات المتطابقة للوصول إلى الهدف!", tr: "Hedefi yakalamak için aynı karoları birleştir!", ur: "ہدف تک پہنچنے کے لیے ایک جیسی ٹائلیں ملائیں!" },
+  "mathGames.grid": { fr: "Grille", en: "Grid", nl: "Raster", ar: "شبكة", tr: "Izgara", ur: "گرڈ" },
+  "mathGames.bestScore": { fr: "Meilleur", en: "Best", nl: "Beste", ar: "الأفضل", tr: "En İyi", ur: "بہترین" },
+  "mathGames.target": { fr: "Objectif", en: "Target", nl: "Doel", ar: "الهدف", tr: "Hedef", ur: "ہدف" },
+  "mathGames.swipeHint": { fr: "⬆️⬇️⬅️➡️ Glisse pour fusionner !", en: "⬆️⬇️⬅️➡️ Swipe to merge!", nl: "⬆️⬇️⬅️➡️ Veeg om te combineren!", ar: "⬆️⬇️⬅️➡️ اسحب للدمج!", tr: "⬆️⬇️⬅️➡️ Birleştirmek için kaydır!", ur: "⬆️⬇️⬅️➡️ ملانے کے لیے سوائپ کریں!" },
   "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
 } as const;
 
