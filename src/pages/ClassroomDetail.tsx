@@ -335,8 +335,8 @@ export default function ClassroomDetail() {
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1 min-w-0">
-          <h1 className="text-lg font-bold truncate">{classroom.name}</h1>
-          <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {classroom.joinCode}</p>
+          <h1 className="text-lg font-bold truncate">{effectiveClassroom.name}</h1>
+          <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
         </div>
         <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <QrCode size={16} className="text-primary" />
