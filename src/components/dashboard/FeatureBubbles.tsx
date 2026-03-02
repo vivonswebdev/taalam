@@ -261,6 +261,10 @@ export function HomeDashboard() {
         {/* 🔊 Reciter Selector */}
         <ReciterSelector />
 
+        {/* 🗓️ Hijri Mini Calendar */}
+        <div className="px-5 mt-2">
+          <HijriMiniWidget />
+        </div>
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
