@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import PageBackground from "@/components/PageBackground";
 import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones, FileDown, Zap, Gift } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
