@@ -143,8 +143,8 @@ export default function ShareProgressCard() {
         <Share2 size={22} className="text-violet-400" />
       )}
       <div className="flex-1 min-w-0 text-left">
-        <p className="text-sm font-bold text-card-foreground">{t("share.title" as any)}</p>
-        <p className="text-[11px] text-muted-foreground">{t("share.desc" as any)}</p>
+        <p className="text-sm font-bold text-card-foreground">{t("shareProgress.title" as any)}</p>
+        <p className="text-[11px] text-muted-foreground">{t("shareProgress.desc" as any)}</p>
       </div>
       <Download size={16} className="text-muted-foreground shrink-0" />
     </motion.button>
