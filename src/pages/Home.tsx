@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PageBackground from "@/components/PageBackground";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Mic, Search, Heart, Users, BarChart3, Calendar, Clock, Trophy } from "lucide-react";
