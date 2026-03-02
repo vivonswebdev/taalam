@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History, QrCode, X, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
@@ -101,6 +101,8 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
 export default function ClassroomDetail() {
   const { classId: rawClassId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromCoord = (location.state as any)?.from === "coord";
   const { t, lang } = useLanguage();
   const { user } = useAuth();
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
@@ -331,9 +333,14 @@ export default function ClassroomDetail() {
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-card">
-        <button onClick={() => navigate("/classrooms")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+        <button onClick={() => navigate(fromCoord ? "/coord" : "/classrooms")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
           <ArrowLeft size={18} />
         </button>
+        {fromCoord && (
+          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold">
+            {t("coord.title" as any)}
+          </span>
+        )}
         <div className="flex-1 min-w-0">
           <h1 className="text-lg font-bold truncate">{effectiveClassroom.name}</h1>
           <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
