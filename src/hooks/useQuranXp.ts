@@ -71,6 +71,15 @@ export function useQuranXp() {
   const [userId, setUserId] = useState<string | null>(null);
   const syncedRef = useRef(false);
 
+  // Detect child mode for half-XP
+  const isChildMode = (() => {
+    try {
+      return localStorage.getItem("taaloum_user_mode") === "child";
+    } catch {
+      return false;
+    }
+  })();
+
   // Auth listener
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
