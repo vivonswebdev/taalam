@@ -11,13 +11,13 @@ import ProfileBubble from "@/components/ProfileBubble";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
+import ReciterSelector from "@/components/home/ReciterSelector";
 import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
 import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
 import HijriMiniWidget from "@/components/home/HijriMiniWidget";
 import NextPrayerWidget from "@/components/home/NextPrayerWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
-import { Flame, Search, Bell, User, ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
 
 // ═══ Types ═══
 
@@ -187,26 +187,27 @@ function SocialActionsBlock({ t, user, navigate }: { t: (k: any) => string; user
 // ═══ Stats Header ═══
 
 function StatsHeader({ t }: { t: (k: any) => string }) {
-  const navigate = useNavigate();
+  const xp = useQuranXp();
 
   return (
-    <div className="sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-background/80 backdrop-blur-sm border-b border-border">
-      <Button variant="ghost" size="sm" className="h-9 w-9 p-0" onClick={() => navigate(-1)}>
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" className="h-9 px-3 border-border/50 text-sm hover:bg-accent/10">
-          ⭐ Premium
-        </Button>
-        <button className="p-1.5 rounded-full hover:bg-accent/20 transition-colors" onClick={() => navigate("/find-ayah")}>
-          <Search className="h-5 w-5 text-muted-foreground hover:text-foreground" />
-        </button>
-        <button className="p-1.5 rounded-full hover:bg-accent/20 transition-colors" onClick={() => navigate("/notification-settings")}>
-          <Bell className="h-5 w-5 text-muted-foreground hover:text-foreground" />
-        </button>
-        <button className="p-1.5 rounded-full hover:bg-accent/20 transition-colors" onClick={() => navigate("/settings")}>
-          <User className="h-[22px] w-[22px] text-muted-foreground rounded-full bg-muted p-0.5" />
-        </button>
+    <div className="px-5 pt-10 pb-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <img src={taaloumLogo} alt="Taaloum" className="w-9 h-9 rounded-full shadow-md" />
+          <div>
+            <h1 className="text-base font-bold text-foreground tracking-tight">Taaloum</h1>
+            <p className="text-[11px] text-muted-foreground">
+              {t("home.level.label" as any)} {xp.level} · {xp.xp} XP
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-card/60 backdrop-blur-sm border border-border/40 rounded-full px-2 py-1">
+            <Flame size={13} className="text-destructive" />
+            <span className="text-[11px] font-semibold text-foreground">0j</span>
+          </div>
+          <ProfileBubble />
+        </div>
       </div>
     </div>
   );
@@ -256,6 +257,9 @@ export function HomeDashboard() {
 
         {/* 🕌 Next Prayer Countdown */}
         <NextPrayerWidget />
+
+        {/* 🔊 Reciter Selector */}
+        <ReciterSelector />
 
         {/* 🗓️ Hijri Mini Calendar */}
         <div className="px-5 mt-2">
