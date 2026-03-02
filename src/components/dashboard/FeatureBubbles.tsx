@@ -103,7 +103,7 @@ const CATEGORIES: Category[] = [
     emoji: "⚙️",
     features: [
       { id: "theme", nameKey: "dashboard.theme", emoji: "🎨", action: "theme", gradient: "from-accent/30 to-secondary/20" },
-      { id: "reciter", nameKey: "dashboard.reciter", emoji: "🔊", path: "/tarteel", gradient: "from-secondary/20 to-primary/20" },
+      { id: "reciter", nameKey: "dashboard.reciter", emoji: "🔊", action: "reciter", gradient: "from-secondary/20 to-primary/20" },
       { id: "athan", nameKey: "dashboard.athan", emoji: "⏰", path: "/athan-settings", gradient: "from-primary/20 to-accent/20" },
       { id: "notifs", nameKey: "dashboard.notifs", emoji: "🔔", path: "/notification-settings", gradient: "from-accent/20 to-secondary/20" },
       { id: "languages", nameKey: "dashboard.languages", emoji: "🌍", action: "language", gradient: "from-primary/30 to-accent/20" },
