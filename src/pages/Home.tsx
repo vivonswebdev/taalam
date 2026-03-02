@@ -433,6 +433,16 @@ export default function Home() {
         </div>
       )}
 
+      {/* ═══ Good Deeds Widget ═══ */}
+      <div className="px-5 mt-4">
+        <GoodDeedsWidget />
+      </div>
+
+      {/* ═══ Partage ═══ */}
+      <div className="px-5 mt-3">
+        <ShareProgressCard />
+      </div>
+
       {/* ═══ BLOC 4 – Communauté & Enseignant ═══ */}
       <div className="px-5 mt-3 grid grid-cols-2 gap-3">
         <HomeCard
