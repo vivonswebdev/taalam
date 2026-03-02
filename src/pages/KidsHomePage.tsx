@@ -5,6 +5,8 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import PageBackground from "@/components/PageBackground";
+import KidsPrayerTracker from "@/components/kids/KidsPrayerTracker";
+import KidsRamadanTracker from "@/components/kids/KidsRamadanTracker";
 
 const KIDS_CARDS = [
   {
