@@ -254,6 +254,9 @@ export function HomeDashboard() {
 
         <StatsHeader t={t} />
 
+        {/* 🕌 Next Prayer Countdown */}
+        <NextPrayerWidget />
+
         {/* 🔊 Reciter Selector */}
         <ReciterSelector />
 
