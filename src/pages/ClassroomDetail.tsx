@@ -34,6 +34,7 @@ interface ChatMessage {
 function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
   classId: string; isTeacher: boolean; user: any; classroomName: string; onLeft: () => void;
 }) {
+  const { t } = useLanguage();
   const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
 
