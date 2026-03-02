@@ -93,6 +93,7 @@ import MedinaLivePage from "./pages/MedinaLivePage";
 import ZakatPage from "./pages/ZakatPage";
 import TasbihPage from "./pages/TasbihPage";
 import LiveHaramainPage from "./pages/LiveHaramainPage";
+import MyProfilePage from "./pages/MyProfilePage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
