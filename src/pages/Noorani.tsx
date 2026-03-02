@@ -32,6 +32,7 @@ export default function Noorani() {
   }, []);
 
   return (
+    <PageBackground intensity="subtle">
     <div className="min-h-screen pb-24">
       <div className="px-5 pt-12 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-muted-foreground mb-4">
