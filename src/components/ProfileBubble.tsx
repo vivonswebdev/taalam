@@ -143,7 +143,7 @@ export default function ProfileBubble() {
           {/* User info header */}
           {user && displayName && (
             <>
-              <div className="flex items-center gap-3 px-2 py-2">
+              <button onClick={() => navigate("/profile")} className="w-full flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-accent/30 transition-colors text-left">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${roleConfig.bg} border ${roleConfig.border}`}>
                   <span className="text-lg">{avatarEmoji}</span>
                 </div>
@@ -151,7 +151,8 @@ export default function ProfileBubble() {
                   <p className="text-sm font-bold text-foreground truncate">{displayName}</p>
                   <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
                 </div>
-              </div>
+                <ChevronRight size={16} className="text-muted-foreground shrink-0" />
+              </button>
               <DropdownMenuSeparator />
             </>
           )}
