@@ -285,29 +285,8 @@ export function HomeDashboard() {
           </div>
         )}
 
-        {/* Share */}
-        <div className="px-5 mt-3">
-          <ShareProgressCard />
-        </div>
-
         {/* Weak Surahs */}
         <WeakSurahsSection />
-
-        {/* Join CTA */}
-        {!user && (
-          <div className="px-5 mt-4">
-            <button
-              onClick={() => navigate("/auth")}
-              className="w-full flex items-center gap-4 bg-primary/10 border border-primary/20 rounded-2xl p-4 text-left active:scale-[0.98] transition-transform"
-            >
-              <span className="text-2xl">👤</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground">{t("home.joinCommunity" as any)}</p>
-                <p className="text-xs text-muted-foreground">{t("home.joinCommunityDesc" as any)}</p>
-              </div>
-            </button>
-          </div>
-        )}
 
         {/* Free message */}
         <p className="mt-5 mb-4 text-[10px] text-muted-foreground/70 text-center leading-relaxed max-w-[280px] mx-auto">
