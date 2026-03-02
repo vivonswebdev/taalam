@@ -86,7 +86,6 @@ import StudentStatsPage from "./pages/StudentStatsPage";
 import TarteelSelector from "./pages/TarteelSelector";
 import AthanSettings from "./pages/AthanSettings";
 import TarteelEasyPage from "./pages/tarteel-easy/TarteelEasyPage";
-import ThemeDemo from "./pages/ThemeDemo";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -192,8 +191,6 @@ const App = () => (
               <Route path="/coord" element={<CoordinatorDashboard />} />
               <Route path="/student-stats/:classId/:studentId" element={<StudentStatsPage />} />
               <Route path="/athan-settings" element={<AthanSettings />} />
-              {/* ✨ THEME DEMO 2026 */}
-              <Route path="/theme-demo" element={<ThemeDemo />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
