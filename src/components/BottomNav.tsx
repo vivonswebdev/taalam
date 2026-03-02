@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2, School } from "lucide-react";
+import { Home, BookOpen, Mic, Heart, BarChart3, Menu, Gamepad2, School, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
@@ -17,7 +17,9 @@ export default function BottomNav() {
     { path: "/", icon: Home, label: t("nav.home" as any) || "Accueil" },
     { path: "/quran-hub", icon: BookOpen, label: t("nav.quran" as any) || "Coran" },
     { path: "/tarteel", icon: Mic, label: t("nav.tarteel" as any) || "Tarteel" },
-    { path: "/moods", icon: Heart, label: t("nav.heart" as any) || "Cœur" },
+    isTeacherMode
+      ? { path: "/coord", icon: Shield, label: t("nav.coord" as any) || "Coord" }
+      : { path: "/moods", icon: Heart, label: t("nav.heart" as any) || "Cœur" },
   ];
 
   const gameTab = { path: "/jeux", icon: Gamepad2, label: t("nav.games" as any) || "Jeux" };
