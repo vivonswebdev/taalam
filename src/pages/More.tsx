@@ -153,6 +153,7 @@ export default function More() {
   const defaultOpen = isKids ? ["kids-fun"] : ["lecture"];
 
   return (
+    <PageBackground intensity="medium">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-5 pt-10 pb-3 flex items-center justify-between">
