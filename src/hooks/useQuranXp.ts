@@ -121,9 +121,12 @@ export function useQuranXp() {
   const addXp = useCallback((amount: number, reason?: string) => {
     if (amount <= 0) return;
 
+    // Child mode: half XP
+    const finalAmount = isChildMode ? Math.max(1, Math.floor(amount / 2)) : amount;
+
     setXp((prev) => {
       const oldLevel = getLevelFromXp(prev);
-      const next = prev + amount;
+      const next = prev + finalAmount;
       const newLevel = getLevelFromXp(next);
       saveLocalXp(next);
 
