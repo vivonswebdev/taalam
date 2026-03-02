@@ -5,6 +5,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import HomeHeroCard, { type HeroCardData } from "@/components/HomeHeroCard";
+import PageBackground from "@/components/PageBackground";
 
 export default function KidsHomePage() {
   const navigate = useNavigate();

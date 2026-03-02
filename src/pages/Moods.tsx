@@ -301,5 +301,6 @@ export default function Moods() {
         )}
       </AnimatePresence>
     </div>
+    </PageBackground>
   );
 }

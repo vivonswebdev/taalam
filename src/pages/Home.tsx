@@ -355,5 +355,6 @@ function AdultHome() {
         <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-primary/60 font-medium underline underline-offset-2">taalam.eu</a>
       </motion.p>
     </div>
+    </PageBackground>
   );
 }

@@ -87,6 +87,7 @@ export default function QuranHub() {
           </motion.button>
         </div>
       </div>
-    </div>);
+    </div>
+    </PageBackground>);
 
 }
