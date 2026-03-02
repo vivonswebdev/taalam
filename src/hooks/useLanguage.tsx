@@ -1930,6 +1930,7 @@ const translations = {
   "homeCards.hifzPlanDesc": { fr: "Votre plan de mémorisation", en: "Your memorization plan", nl: "Je memorisatieplan", ar: "خطة حفظك", tr: "Ezberleme planınız", ur: "آپ کا حفظ پلان" },
   "homeCards.prayers": { fr: "Horaires Prières", en: "Prayer Times", nl: "Gebedstijden", ar: "أوقات الصلاة", tr: "Namaz Vakitleri", ur: "نماز کے اوقات" },
   "homeCards.prayersDesc": { fr: "Prochain horaire de prière", en: "Next prayer time", nl: "Volgende gebedstijd", ar: "وقت الصلاة التالي", tr: "Sonraki namaz vakti", ur: "اگلی نماز کا وقت" },
+  "homeCards.progress": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
 
   // ═══ Groups Page ═══
   "groups.title": { fr: "Mes Groupes", en: "My Groups", nl: "Mijn Groepen", ar: "مجموعاتي", tr: "Gruplarım", ur: "میرے گروپس" },
