@@ -38,6 +38,8 @@ export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript,
   const animationFrameRef = useRef<number>();
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const chunksRef = useRef<BlobPart[]>([]);
+  const speechRecRef = useRef<SpeechRecognition | null>(null);
+  const keepListeningRef = useRef(false);
   const { addXP } = useXP();
 
   const getSupportedMimeType = () => {
