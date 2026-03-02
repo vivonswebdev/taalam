@@ -13,6 +13,7 @@ import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
 import ReciterSelector from "@/components/home/ReciterSelector";
 import ReciterPickerSheet from "@/components/home/ReciterPickerSheet";
+import WeeklyLeaderboardWidget from "@/components/home/WeeklyLeaderboardWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame, Star, BookOpen, GraduationCap, Heart, Users, TrendingUp, Settings } from "lucide-react";
 
