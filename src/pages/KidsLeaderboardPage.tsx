@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Trophy, Star, Filter } from "lucide-react";
+import { ArrowLeft, Trophy, Star, Filter, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,11 @@ interface LeaderboardEntry {
   total_points: number;
   parent_id: string;
   badges?: { icon: string; rarity: string }[];
+}
+
+interface ClassOption {
+  id: string;
+  name: string;
 }
 
 const AGE_FILTERS = [
@@ -34,8 +39,62 @@ export default function KidsLeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [ageFilter, setAgeFilter] = useState<string | null>(null);
   const [showMineOnly, setShowMineOnly] = useState(false);
+  const [classFilter, setClassFilter] = useState<string | null>(null);
+  const [classOptions, setClassOptions] = useState<ClassOption[]>([]);
+  const [classChildIds, setClassChildIds] = useState<Set<string> | null>(null);
 
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
+
+  // Fetch classrooms the user is associated with (as teacher or parent)
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      // Get classrooms where user is teacher
+      const { data: teacherClasses } = await supabase
+        .from("classrooms")
+        .select("id, name")
+        .eq("teacher_id", user.id);
+
+      // Get classrooms where user is member (parent)
+      const { data: memberRows } = await supabase
+        .from("classroom_members")
+        .select("classroom_id")
+        .eq("user_id", user.id);
+
+      const memberClassIds = (memberRows || []).map((m: any) => m.classroom_id);
+      let parentClasses: ClassOption[] = [];
+      if (memberClassIds.length > 0) {
+        const { data } = await supabase
+          .from("classrooms")
+          .select("id, name")
+          .in("id", memberClassIds);
+        parentClasses = (data || []) as ClassOption[];
+      }
+
+      // Merge & dedupe
+      const all = [...(teacherClasses || []), ...parentClasses] as ClassOption[];
+      const unique = Array.from(new Map(all.map(c => [c.id, c])).values());
+      setClassOptions(unique);
+    })();
+  }, [user]);
+
+  // When class filter changes, fetch child IDs in that class
+  useEffect(() => {
+    if (!classFilter) {
+      setClassChildIds(null);
+      return;
+    }
+    (async () => {
+      const { data } = await supabase
+        .from("class_invitations")
+        .select("child_profile_id")
+        .eq("classroom_id", classFilter)
+        .eq("status", "child_created")
+        .not("child_profile_id", "is", null);
+      const ids = new Set((data || []).map((d: any) => d.child_profile_id).filter(Boolean));
+      setClassChildIds(ids);
+    })();
+  }, [classFilter]);
 
   useEffect(() => {
     (async () => {
@@ -76,6 +135,9 @@ export default function KidsLeaderboardPage() {
     const af = AGE_FILTERS.find(a => a.label === ageFilter);
     if (af) filtered = filtered.filter(e => e.age && e.age >= af.min && e.age <= af.max);
   }
+  if (classFilter && classChildIds) {
+    filtered = filtered.filter(e => classChildIds.has(e.id));
+  }
 
   const activeChildRank = filtered.findIndex(e => e.id === activeChildId);
 
@@ -112,6 +174,24 @@ export default function KidsLeaderboardPage() {
             </button>
           ))}
         </div>
+
+        {/* Class filter */}
+        {classOptions.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            <GraduationCap size={14} className="text-muted-foreground shrink-0 mt-1" />
+            {classOptions.map(cls => (
+              <button
+                key={cls.id}
+                onClick={() => setClassFilter(classFilter === cls.id ? null : cls.id)}
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                  classFilter === cls.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"
+                }`}
+              >
+                🎓 {cls.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {loading ? (
