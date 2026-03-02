@@ -215,6 +215,8 @@ const App = () => (
               <Route path="/select-child" element={<SelectChildPage />} />
               <Route path="/create-child" element={<CreateChildPage />} />
               <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
+              <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
+              <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
