@@ -94,6 +94,9 @@ import ZakatPage from "./pages/ZakatPage";
 import TasbihPage from "./pages/TasbihPage";
 import LiveHaramainPage from "./pages/LiveHaramainPage";
 import MyProfilePage from "./pages/MyProfilePage";
+import SelectChildPage from "./pages/SelectChildPage";
+import CreateChildPage from "./pages/CreateChildPage";
+import KidsLeaderboardPage from "./pages/KidsLeaderboardPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -207,6 +210,9 @@ const App = () => (
               <Route path="/tasbih" element={<TasbihPage />} />
               <Route path="/live-haramain" element={<LiveHaramainPage />} />
               <Route path="/profile" element={<MyProfilePage />} />
+              <Route path="/select-child" element={<SelectChildPage />} />
+              <Route path="/create-child" element={<CreateChildPage />} />
+              <Route path="/kids-leaderboard" element={<KidsLeaderboardPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <MiniPlayer />
