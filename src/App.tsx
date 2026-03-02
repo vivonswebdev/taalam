@@ -83,6 +83,8 @@ import JeuxKids from "./pages/JeuxKids";
 import OfflineSettings from "./pages/OfflineSettings";
 import CoordinatorDashboard from "./pages/CoordinatorDashboard";
 import StudentStatsPage from "./pages/StudentStatsPage";
+import TarteelSelector from "./pages/TarteelSelector";
+import TarteelEasyPage from "./pages/tarteel-easy/TarteelEasyPage";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -117,7 +119,8 @@ const App = () => (
               <Route path="/learn" element={<Learn />} />
               <Route path="/learn/:surahNumber" element={<LearnDetail />} />
               <Route path="/quran" element={<Quran />} />
-              <Route path="/tarteel" element={<Quran />} />
+              <Route path="/tarteel" element={<TarteelSelector />} />
+              <Route path="/tarteel/easy" element={<TarteelEasyPage />} />
               <Route path="/recitation" element={<Quran />} />
               <Route path="/reading" element={<Reading />} />
               <Route path="/prayers" element={<Prayers />} />

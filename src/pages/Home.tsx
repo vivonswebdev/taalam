@@ -79,7 +79,7 @@ function AdultHome() {
       icon: Mic,
       titleKey: "homeCards.tarteel",
       descKey: "homeCards.tarteelDesc",
-      href: "/quran?mode=dictation",
+      href: "/tarteel",
       gradient: "from-blue-500/20 to-cyan-500/20",
       emoji: "🎤",
     },
