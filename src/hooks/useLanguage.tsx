@@ -1878,6 +1878,11 @@ const translations = {
   "home.leaderboardDesc": { fr: "Top mondial / pays", en: "World / country top", nl: "Wereld / land top", ar: "الأفضل عالميًا / بلدك", tr: "Dünya / ülke sıralaması", ur: "عالمی / ملکی ٹاپ" },
   "home.freeMessage": { fr: "Toutes les fonctionnalités de Ta'alam sont gratuites et resteront gratuites, in shâ Allah.", en: "All Ta'alam features are free and will remain free, in shâ Allah.", nl: "Alle functies van Ta'alam zijn gratis en blijven gratis, in shâ Allah.", ar: "جميع ميزات تعلّم مجانية وستبقى مجانية، إن شاء الله.", tr: "Ta'alam'ın tüm özellikleri ücretsizdir ve ücretsiz kalacaktır, inşallah.", ur: "تعلّم کی تمام خصوصیات مفت ہیں اور مفت رہیں گی، ان شاء اللہ۔" },
   "home.go": { fr: "Go !", en: "Go!", nl: "Ga!", ar: "انطلق!", tr: "Başla!", ur: "!چلیں" },
+  "home.seniorTitle": { fr: "Pour simplement lire le Coran", en: "Simply read the Quran", nl: "Gewoon de Koran lezen", ar: "لقراءة القرآن ببساطة", tr: "Kuran'ı kolayca oku", ur: "قرآن پاک آسانی سے پڑھیں" },
+  "home.seniorDesc": { fr: "Appuyez sur l'onglet 📖 Coran en bas pour commencer la lecture.", en: "Tap the 📖 Quran tab below to start reading.", nl: "Tik op het 📖 Koran-tabblad hieronder om te beginnen.", ar: "اضغط على تبويب 📖 القرآن أدناه لبدء القراءة.", tr: "Okumaya başlamak için aşağıdaki 📖 Kur'an sekmesine dokunun.", ur: "پڑھنا شروع کرنے کے لیے نیچے 📖 قرآن ٹیب پر ٹیپ کریں۔" },
+  "home.seniorCta": { fr: "Lire", en: "Read", nl: "Lezen", ar: "اقرأ", tr: "Oku", ur: "پڑھیں" },
+  "home.mushafShortcutTitle": { fr: "Lire le Coran (Mushaf)", en: "Read the Quran (Mushaf)", nl: "Koran lezen (Mushaf)", ar: "قراءة القرآن (المصحف)", tr: "Kur'an Oku (Mushaf)", ur: "قرآن پڑھیں (مصحف)" },
+  "home.mushafShortcutDesc": { fr: "Ouvrir le mushaf directement", en: "Open the mushaf directly", nl: "Open de mushaf direct", ar: "افتح المصحف مباشرة", tr: "Mushaf'ı doğrudan aç", ur: "مصحف براہ راست کھولیں" },
   "home.tarteelDesc": { fr: "Récitation + Correction IA", en: "Recitation + AI Correction", nl: "Recitatie + AI-correctie", ar: "تلاوة + تصحيح بالذكاء الاصطناعي", tr: "Tilavet + YZ Düzeltme", ur: "تلاوت + مصنوعی ذہانت تصحیح" },
 
   // ═══ Moods Tabs & Sections ═══
