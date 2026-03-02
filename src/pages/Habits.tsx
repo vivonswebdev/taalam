@@ -378,10 +378,10 @@ export default function Habits() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Headphones size={18} className="text-primary" />
-              <span className="text-sm font-semibold text-foreground">Écoute avancée</span>
+              <span className="text-sm font-semibold text-foreground">{t("habits.advancedListening" as any)}</span>
             </div>
             <button onClick={() => navigate("/listening")} className="text-xs text-primary font-medium">
-              Ouvrir →
+              {t("habits.open" as any)}
             </button>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center">
