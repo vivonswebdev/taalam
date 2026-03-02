@@ -4,14 +4,17 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SimpleRecorder from "./SimpleRecorder";
+import type { TranscriptionData } from "./SimpleRecorder";
 import SimpleFeedback from "./SimpleFeedback";
 import SurahSelector from "./SurahSelector";
+import TranscriptionView from "./TranscriptionView";
 
 export default function TarteelEasyPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [selectedSurah, setSelectedSurah] = useState(114);
-  const [score, setScore] = useState<number | null>(null);
+  const [transcription, setTranscription] = useState<TranscriptionData | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -29,16 +32,28 @@ export default function TarteelEasyPage() {
         {/* Surah Selector */}
         <SurahSelector selectedSurah={selectedSurah} onSelect={setSelectedSurah} />
 
-        {/* Recorder or Feedback */}
-        {score === null ? (
-          <SimpleRecorder surahNumber={selectedSurah} onScore={setScore} />
+        {/* Flow: Record → Transcription → Feedback */}
+        {!transcription ? (
+          <SimpleRecorder
+            surahNumber={selectedSurah}
+            onScore={(_score, data) => setTranscription(data)}
+          />
+        ) : !showFeedback ? (
+          <TranscriptionView
+            transcription={transcription}
+            onContinue={() => setShowFeedback(true)}
+          />
         ) : (
           <SimpleFeedback
-            score={score}
+            score={transcription.score}
             surahNumber={selectedSurah}
-            onRetry={() => setScore(null)}
+            onRetry={() => {
+              setTranscription(null);
+              setShowFeedback(false);
+            }}
             onNext={() => {
-              setScore(null);
+              setTranscription(null);
+              setShowFeedback(false);
               setSelectedSurah((prev) => (prev > 78 ? prev - 1 : 114));
             }}
           />

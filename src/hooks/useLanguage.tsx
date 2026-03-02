@@ -1992,6 +1992,18 @@ const translations = {
   "tarteel.micAndroid3": { fr: "Autorisez et rechargez", en: "Allow and reload", nl: "Sta toe en herlaad", ar: "اسمح وأعد التحميل", tr: "İzin verin ve yenileyin", ur: "اجازت دیں اور دوبارہ لوڈ کریں" },
   "tarteel.micRefresh": { fr: "Après modification, rafraîchissez la page.", en: "After changes, refresh the page.", nl: "Na wijzigingen, ververs de pagina.", ar: "بعد التعديل، أعد تحميل الصفحة.", tr: "Değişikliklerden sonra sayfayı yenileyin.", ur: "تبدیلیوں کے بعد صفحہ ریفریش کریں۔" },
 
+  "tarteel.detectedText": { fr: "Texte détecté", en: "Detected text", nl: "Gedetecteerde tekst", ar: "النص المكتشف", tr: "Algılanan metin", ur: "پہچانا گیا متن" },
+  "tarteel.comparisonDesc": { fr: "Comparaison avec le texte attendu", en: "Comparison with expected text", nl: "Vergelijking met verwachte tekst", ar: "مقارنة مع النص المتوقع", tr: "Beklenen metinle karşılaştırma", ur: "متوقع متن سے موازنہ" },
+  "tarteel.youSaid": { fr: "Vous avez dit :", en: "You said:", nl: "U zei:", ar: "قلتَ:", tr: "Söylediniz:", ur: "آپ نے کہا:" },
+  "tarteel.fullText": { fr: "Texte complet :", en: "Full text:", nl: "Volledige tekst:", ar: "النص الكامل:", tr: "Tam metin:", ur: "مکمل متن:" },
+  "tarteel.correct": { fr: "Correct", en: "Correct", nl: "Correct", ar: "صحيح", tr: "Doğru", ur: "درست" },
+  "tarteel.missing": { fr: "Manquant", en: "Missing", nl: "Ontbrekend", ar: "ناقص", tr: "Eksik", ur: "غائب" },
+  "tarteel.seeDetails": { fr: "Voir le résultat détaillé", en: "See detailed result", nl: "Bekijk gedetailleerd resultaat", ar: "عرض النتيجة المفصلة", tr: "Ayrıntılı sonucu görün", ur: "تفصیلی نتیجہ دیکھیں" },
+  "tarteel.popularSurahs": { fr: "Sourates populaires", en: "Popular surahs", nl: "Populaire soera's", ar: "سور شائعة", tr: "Popüler sureler", ur: "مقبول سورتیں" },
+  "tarteel.allSurahs": { fr: "Toutes les sourates (Juz 30)", en: "All surahs (Juz 30)", nl: "Alle soera's (Juz 30)", ar: "جميع السور (الجزء 30)", tr: "Tüm sureler (Cüz 30)", ur: "تمام سورتیں (پارہ 30)" },
+  "tarteel.collapse": { fr: "Réduire", en: "Collapse", nl: "Inklappen", ar: "تصغير", tr: "Daralt", ur: "سمیٹیں" },
+  "tarteel.seeAll": { fr: "Voir tout", en: "See all", nl: "Alles zien", ar: "عرض الكل", tr: "Tümünü gör", ur: "سب دیکھیں" },
+
   "kidsCards.games": { fr: "Mes Jeux", en: "My Games", nl: "Mijn Spellen", ar: "ألعابي", tr: "Oyunlarım", ur: "میرے کھیل" },
   "kidsCards.gamesDesc": { fr: "Crush + Memory · Joue !", en: "Crush + Memory · Play!", nl: "Crush + Memory · Speel!", ar: "كراش + ذاكرة · العب!", tr: "Crush + Hafıza · Oyna!", ur: "کرش + میموری · کھیلو!" },
   "kidsCards.quran": { fr: "Lire le Coran", en: "Read Quran", nl: "Koran lezen", ar: "قراءة القرآن", tr: "Kur'an oku", ur: "قرآن پڑھیں" },
