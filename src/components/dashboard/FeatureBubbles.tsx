@@ -296,6 +296,9 @@ export function HomeDashboard() {
           </div>
         )}
 
+        {/* Weekly Leaderboard */}
+        <WeeklyLeaderboardWidget />
+
         {/* Weak Surahs */}
         <WeakSurahsSection />
 
