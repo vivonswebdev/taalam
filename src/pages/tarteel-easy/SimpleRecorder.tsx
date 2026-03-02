@@ -6,6 +6,7 @@ import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getSurahText, normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
 import MicPermissionHelp from "./MicPermissionHelp";
+import type { VerifiedVerse } from "./LiveTranscriptionPanel";
 
 export interface TranscriptionData {
   detected: string;
@@ -17,9 +18,13 @@ export interface TranscriptionData {
 interface SimpleRecorderProps {
   surahNumber: number;
   onScore: (score: number, transcription: TranscriptionData) => void;
+  onLiveTranscript?: (text: string) => void;
+  onVerseVerified?: (verse: VerifiedVerse) => void;
+  onRecordingStart?: () => void;
+  onRecordingStop?: () => void;
 }
 
-export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderProps) {
+export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript, onVerseVerified, onRecordingStart, onRecordingStop }: SimpleRecorderProps) {
   const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -33,6 +38,8 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
   const animationFrameRef = useRef<number>();
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const chunksRef = useRef<BlobPart[]>([]);
+  const speechRecRef = useRef<SpeechRecognition | null>(null);
+  const keepListeningRef = useRef(false);
   const { addXP } = useXP();
 
   const getSupportedMimeType = () => {
@@ -102,6 +109,10 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
       setRecordingTime(0);
+      onRecordingStart?.();
+
+      // Start native SpeechRecognition for live transcription
+      startLiveSpeechRecognition();
 
       timerRef.current = setInterval(() => {
         setRecordingTime((prev) => {
@@ -121,12 +132,89 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
     }
   };
 
+  const startLiveSpeechRecognition = useCallback(() => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+
+    const rec: SpeechRecognition = new SR();
+    rec.lang = "ar-SA";
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 1;
+    keepListeningRef.current = true;
+
+    const expectedText = getSurahText(surahNumber);
+    const expectedWords = splitArabicText(expectedText);
+
+    rec.onresult = (event: SpeechRecognitionEvent) => {
+      let interim = "";
+      let finalText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalText += result[0].transcript + " ";
+        } else {
+          interim += result[0].transcript;
+        }
+      }
+
+      if (interim) {
+        onLiveTranscript?.(interim.trim());
+      }
+
+      if (finalText.trim()) {
+        onLiveTranscript?.("");
+        // Check similarity with expected words
+        const spokenWords = splitArabicText(finalText.trim());
+        const matchCount = spokenWords.filter((w, i) => {
+          const exp = expectedWords[i] || "";
+          return normalizeArabic(w) === normalizeArabic(exp);
+        }).length;
+        const similarity = spokenWords.length > 0 ? matchCount / Math.max(spokenWords.length, 1) : 0;
+        onVerseVerified?.({ text: finalText.trim(), correct: similarity >= 0.6 });
+      }
+    };
+
+    rec.onerror = (event: any) => {
+      const err = event?.error || "unknown";
+      if (err === "no-speech" || err === "audio-capture") {
+        // Auto-restart on silence
+        if (keepListeningRef.current) {
+          setTimeout(() => {
+            try { rec.start(); } catch {}
+          }, 300);
+        }
+        return;
+      }
+      console.log("[LiveSTT] error:", err);
+    };
+
+    rec.onend = () => {
+      if (keepListeningRef.current) {
+        try { rec.start(); } catch {}
+      }
+    };
+
+    try {
+      rec.start();
+      speechRecRef.current = rec;
+    } catch {}
+  }, [surahNumber, onLiveTranscript, onVerseVerified]);
+
   const stopRecording = () => {
+    // Stop speech recognition
+    keepListeningRef.current = false;
+    if (speechRecRef.current) {
+      try { speechRecRef.current.stop(); } catch {}
+      speechRecRef.current = null;
+    }
+
     if (mediaRecorderRef.current?.state === "recording") {
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
     setIsAnalyzing(true);
+    onRecordingStop?.();
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     if (timerRef.current) clearInterval(timerRef.current);
   };
@@ -170,6 +258,11 @@ export default function SimpleRecorder({ surahNumber, onScore }: SimpleRecorderP
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (timerRef.current) clearInterval(timerRef.current);
+      keepListeningRef.current = false;
+      if (speechRecRef.current) {
+        try { speechRecRef.current.stop(); } catch {}
+        speechRecRef.current = null;
+      }
     };
   }, []);
 
