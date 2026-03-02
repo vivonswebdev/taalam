@@ -157,72 +157,17 @@ export default function MyProfilePage() {
             <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
               <span className="text-lg">👶</span> {t("profile.children" as any) || "Enfants"}
             </h3>
-            <button
-              onClick={() => setShowAddChild(!showAddChild)}
-              className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-xl text-xs font-semibold hover:bg-primary/20 transition-colors"
-            >
-              <UserPlus size={14} />
-              {t("profile.addChild" as any) || "Ajouter"}
-            </button>
+            {childProfiles.length < 5 && (
+              <button
+                onClick={() => navigate("/create-child")}
+                className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-xl text-xs font-semibold hover:bg-primary/20 transition-colors"
+              >
+                <UserPlus size={14} />
+                {t("profile.addChild" as any) || "Ajouter"}
+              </button>
+            )}
           </div>
 
-          {/* Add child form */}
-          {showAddChild && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="bg-card border border-border rounded-2xl p-4 mb-3 space-y-3">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => {
-                    const idx = AVATAR_EMOJIS.indexOf(childAvatar);
-                    setChildAvatar(AVATAR_EMOJIS[(idx + 1) % AVATAR_EMOJIS.length]);
-                  }}
-                  className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-accent/10 border-2 border-primary/30 flex items-center justify-center text-3xl shrink-0"
-                >
-                  {childAvatar}
-                </button>
-                <div className="flex-1 space-y-2">
-                  <input
-                    value={childName}
-                    onChange={(e) => setChildName(e.target.value)}
-                    placeholder={t("profile.childNamePlaceholder" as any) || "Prénom de l'enfant"}
-                    className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-                  />
-                  <input
-                    value={childAge}
-                    onChange={(e) => setChildAge(e.target.value.replace(/\D/g, ""))}
-                    placeholder={t("profile.childAgePlaceholder" as any) || "Âge (optionnel)"}
-                    className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-                    inputMode="numeric"
-                    maxLength={2}
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => { setShowAddChild(false); setChildName(""); setChildAge(""); }}
-                  className="flex-1 py-2 bg-muted text-muted-foreground rounded-xl text-sm font-medium"
-                >
-                  {t("profile.cancel" as any) || "Annuler"}
-                </button>
-                <button
-                  onClick={() => {
-                    if (!childName.trim()) return;
-                    addChildProfile(childName.trim(), childAvatar, childAge ? parseInt(childAge) : undefined);
-                    setChildName("");
-                    setChildAge("");
-                    setChildAvatar("👦");
-                    setShowAddChild(false);
-                  }}
-                  disabled={!childName.trim()}
-                  className="flex-1 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold disabled:opacity-40"
-                >
-                  <Plus size={14} className="inline mr-1" />
-                  {t("profile.createChild" as any) || "Créer"}
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Children list */}
           {childProfiles.length === 0 ? (
             <div className="bg-card border border-dashed border-border rounded-2xl p-6 text-center">
               <span className="text-3xl block mb-2">👶</span>
@@ -233,7 +178,7 @@ export default function MyProfilePage() {
               {childProfiles.map((child) => (
                 <div key={child.id} className="flex items-center gap-3 bg-card border border-border rounded-2xl p-3">
                   <span className="text-2xl w-10 h-10 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                    {child.avatarEmoji}
+                    {child.avatar_emoji}
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">{child.name}</p>
@@ -244,13 +189,7 @@ export default function MyProfilePage() {
                     )}
                   </div>
                   <button
-                    onClick={() => navigate(`/child/${child.id}`)}
-                    className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[11px] font-semibold"
-                  >
-                    {t("profile.viewChild" as any) || "Voir"}
-                  </button>
-                  <button
-                    onClick={() => { if (confirm(t("profile.confirmDeleteChild" as any) || `Supprimer ${child.name} ?`)) deleteChildProfile(child.id); }}
+                    onClick={() => { if (confirm(t("profile.confirmDeleteChild" as any) || `Supprimer ${child.name} ?`)) deleteChildDB(child.id); }}
                     className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive hover:bg-destructive/20 transition-colors"
                   >
                     <Trash2 size={14} />
@@ -259,6 +198,15 @@ export default function MyProfilePage() {
               ))}
             </div>
           )}
+
+          {/* Leaderboard link */}
+          <button
+            onClick={() => navigate("/kids-leaderboard")}
+            className="w-full mt-3 flex items-center gap-3 p-3 bg-card border border-border rounded-2xl hover:bg-accent/30 transition-colors"
+          >
+            <span className="text-lg">🏆</span>
+            <p className="text-sm font-medium text-foreground">{t("kids.leaderboard" as any) || "Classement enfants"}</p>
+          </button>
         </motion.div>
       )}
 
