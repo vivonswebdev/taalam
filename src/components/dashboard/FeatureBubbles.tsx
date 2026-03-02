@@ -22,7 +22,7 @@ interface Feature {
   nameKey: string;
   emoji: string;
   path?: string;
-  action?: "theme" | "language" | "donate";
+  action?: "theme" | "language" | "donate" | "reciter";
   gradient: string;
 }
 
