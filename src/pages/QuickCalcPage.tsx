@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { generateQuestion, generateChoices, getDifficultyForLevel, MathQuestion } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+// Confetti requires active prop
 
 const QUESTIONS_PER_LEVEL = 10;
 const MAX_LIVES = 3;
