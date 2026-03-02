@@ -125,7 +125,7 @@ const CATEGORIES: Category[] = [
 function FeatureBubble({ item, onAction, t }: { item: Feature; onAction: (a: string) => void; t: (k: any) => string }) {
   const inner = (
     <div className="flex flex-col items-center gap-1.5 w-[72px] shrink-0">
-      <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${item.gradient} border border-border/40 flex items-center justify-center text-2xl shadow-sm hover:scale-110 active:scale-95 transition-transform duration-200`}>
+      <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center text-2xl shadow-lg shadow-black/15 hover:scale-110 active:scale-95 transition-transform duration-200`}>
         {item.emoji}
       </div>
       <span className="text-[10px] font-medium text-foreground text-center leading-tight line-clamp-2 w-full">
