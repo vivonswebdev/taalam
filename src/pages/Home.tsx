@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { LogOut, Trophy } from "lucide-react";
+import { BookOpen, Mic, Search, Heart, Users, BarChart3, Calendar, Clock, Trophy } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useClassrooms } from "@/hooks/useClassrooms";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,6 +17,7 @@ import ProfileBubble from "@/components/ProfileBubble";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import GoodDeedsWidget from "@/components/GoodDeedsWidget";
 import ShareProgressCard from "@/components/ShareProgressCard";
+import HomeHeroCard, { type HeroCardData } from "@/components/HomeHeroCard";
 import islamicPattern from "@/assets/islamic-pattern.jpg";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,62 +25,6 @@ import WeakSurahsSection from "@/components/WeakSurahsSection";
 import { useHifzPlan } from "@/hooks/useHifzPlan";
 import { useHifzSRS } from "@/hooks/useHifzSRS";
 import { trackEvent } from "@/lib/trackEvent";
-
-function HomeCard({
-  emoji,
-  title,
-  desc,
-  cta,
-  onClick,
-  gradient,
-  delay = 0,
-  children,
-}: {
-  emoji: string;
-  title: string;
-  desc: string;
-  cta: string;
-  onClick: () => void;
-  gradient: string;
-  delay?: number;
-  children?: React.ReactNode;
-}) {
-  return (
-    <motion.button
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-      whileTap={{ scale: 0.97 }}
-      onClick={onClick}
-      className={`relative flex flex-col justify-between min-h-[130px] rounded-2xl p-4 text-left overflow-hidden ${gradient}`}
-      style={{
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 8px 32px rgba(31,38,135,0.15)",
-      }}
-    >
-      {/* Shimmer effect on hover */}
-      <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-      <div className="flex items-start gap-3 relative z-10">
-        <motion.span
-          className="text-2xl shrink-0"
-          whileHover={{ scale: 1.3, rotate: 10 }}
-          transition={{ type: "spring", stiffness: 400 }}
-        >
-          {emoji}
-        </motion.span>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-white leading-tight">{title}</p>
-          <p className="text-[11px] text-white/60 mt-1 line-clamp-2">{desc}</p>
-        </div>
-      </div>
-      {children}
-      <span className="mt-auto pt-2 text-[11px] font-semibold text-primary flex items-center gap-1 relative z-10">
-        {cta} →
-      </span>
-    </motion.button>
-  );
-}
 
 export default function Home() {
   const navigate = useNavigate();
@@ -94,44 +39,95 @@ export default function Home() {
   const dailyChallenge = useDailyTarteelChallenge();
   const { challenges: weeklyChallenges, myResults } = useMyClassChallenges();
   const { plan, todayTasks, overallProgress } = useHifzPlan();
-  const { settings: adminSettings, loading: adminSettingsLoading } = useAdminSettings();
+  const { settings: adminSettings } = useAdminSettings();
   const { items: srsItems, todayItems: srsTodayItems, learningCount, reviewingCount, masteredCount } = useHifzSRS();
 
-  const [memberCounts, setMemberCounts] = useState<Record<string, number>>({});
-  const [unreadMessages, setUnreadMessages] = useState<Record<string, number>>({});
+  const [communityBadge, setCommunityBadge] = useState(0);
 
   useEffect(() => {
-    if (classrooms.length === 0) return;
-    const ids = classrooms.map((c) => c.id);
+    if (!user) return;
     supabase
-      .from("classroom_members")
-      .select("classroom_id")
-      .in("classroom_id", ids)
+      .from("community_members")
+      .select("community_id")
+      .eq("user_id", user.id)
       .then(({ data }) => {
-        const counts: Record<string, number> = {};
-        (data || []).forEach((m: any) => {
-          counts[m.classroom_id] = (counts[m.classroom_id] || 0) + 1;
-        });
-        setMemberCounts(counts);
+        if (data && data.length > 0) setCommunityBadge(data.length);
       });
-    const unread: Record<string, number> = {};
-    Promise.all(
-      ids.map(async (id) => {
-        const lastRead = localStorage.getItem(`chat_last_read_${id}`) || "1970-01-01T00:00:00Z";
-        const { count } = await supabase
-          .from("class_messages")
-          .select("id", { count: "exact", head: true })
-          .eq("classroom_id", id)
-          .gt("created_at", lastRead);
-        unread[id] = count || 0;
-      })
-    ).then(() => setUnreadMessages(unread));
-  }, [classrooms]);
+  }, [user]);
+
+  // ─── 8 ADULT HERO CARDS ───
+  const ADULT_CARDS: HeroCardData[] = [
+    {
+      icon: BookOpen,
+      titleKey: "homeCards.mushaf",
+      descKey: "homeCards.mushafDesc",
+      href: "/mushaf",
+      gradient: "from-purple-500/20 to-pink-500/20",
+      emoji: "📖",
+    },
+    {
+      icon: Mic,
+      titleKey: "homeCards.tarteel",
+      descKey: "homeCards.tarteelDesc",
+      href: "/quran?mode=dictation",
+      gradient: "from-blue-500/20 to-cyan-500/20",
+      emoji: "🎤",
+    },
+    {
+      icon: Search,
+      titleKey: "homeCards.findAyah",
+      descKey: "homeCards.findAyahDesc",
+      href: "/find-ayah",
+      gradient: "from-orange-500/20 to-red-500/20",
+      emoji: "🔍",
+    },
+    {
+      icon: Heart,
+      titleKey: "homeCards.moods",
+      descKey: "homeCards.moodsDesc",
+      href: "/moods",
+      gradient: "from-rose-500/20 to-pink-500/20",
+      emoji: "❤️",
+    },
+    {
+      icon: Users,
+      titleKey: "homeCards.groups",
+      descKey: "homeCards.groupsDesc",
+      href: "/community",
+      gradient: "from-green-500/20 to-teal-500/20",
+      emoji: "🌍",
+      badge: communityBadge > 0 ? communityBadge : undefined,
+    },
+    {
+      icon: BarChart3,
+      titleKey: "homeCards.stats",
+      descKey: "homeCards.statsDesc",
+      href: "/habits",
+      gradient: "from-indigo-500/20 to-purple-500/20",
+      emoji: "📊",
+    },
+    {
+      icon: Calendar,
+      titleKey: "homeCards.hifzPlan",
+      descKey: "homeCards.hifzPlanDesc",
+      href: "/hifz-plan",
+      gradient: "from-amber-500/20 to-orange-500/20",
+      emoji: "📅",
+      progress: plan ? overallProgress / 100 : undefined,
+    },
+    {
+      icon: Clock,
+      titleKey: "homeCards.prayers",
+      descKey: "homeCards.prayersDesc",
+      href: "/prayers",
+      gradient: "from-sky-500/20 to-blue-500/20",
+      emoji: "🕐",
+    },
+  ];
 
   return (
     <div className="home-bg min-h-screen pb-24">
-
-      {/* Daily Tarteel Challenge – hidden if admin toggled off */}
+      {/* Daily Tarteel Challenge */}
       {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
         <DailyTarteelChallenge
           surah={dailyChallenge.surah}
@@ -205,7 +201,6 @@ export default function Home() {
 
       {/* ═══ HEADER ═══ */}
       <div className="relative overflow-visible">
-        {/* Animated glow orbs */}
         <motion.div
           className="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full pointer-events-none"
           style={{ background: "radial-gradient(circle, hsla(152,60%,40%,0.25) 0%, transparent 70%)" }}
@@ -213,22 +208,6 @@ export default function Home() {
           animate={{ opacity: [0, 1, 0.7, 1], scale: [0.5, 1.1, 1] }}
           transition={{ duration: 2, ease: "easeOut" }}
         />
-        <motion.div
-          className="absolute -top-6 left-[20%] w-40 h-40 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsla(210,60%,50%,0.15) 0%, transparent 70%)" }}
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
-        />
-        <motion.div
-          className="absolute -top-4 right-[15%] w-36 h-36 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsla(43,70%,50%,0.12) 0%, transparent 70%)" }}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.8, delay: 0.5, ease: "easeOut" }}
-        />
-
-        {/* Islamic pattern with parallax fade */}
         <motion.img
           src={islamicPattern}
           alt=""
@@ -239,12 +218,11 @@ export default function Home() {
         />
 
         <div className="relative px-6 pt-12 pb-4 text-center">
-          {/* Top bar */}
           <div className="absolute top-3 right-4 z-10 flex items-center gap-2">
             <ProfileBubble />
           </div>
 
-          {/* Basmala with glow entrance */}
+          {/* Basmala */}
           <motion.p
             initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -254,7 +232,7 @@ export default function Home() {
             بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </motion.p>
 
-          {/* Stats row – staggered pop-in */}
+          {/* Stats row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -279,7 +257,7 @@ export default function Home() {
             ))}
           </motion.div>
 
-          {/* Logo with glow pulse */}
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -310,109 +288,20 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ Raccourci Mushaf ═══ */}
-      <div className="px-5 mt-5">
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => { trackEvent("module_open", "mushaf_shortcut"); navigate("/mushaf"); }}
-          className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-r from-amber-800/40 to-yellow-900/20 border border-amber-400/30 shadow-lg"
-        >
-          <span className="text-2xl">📖</span>
-          <div className="flex-1 min-w-0 text-left">
-            <p className="text-sm font-bold text-white">{t("home.mushafShortcutTitle" as any)}</p>
-            <p className="text-[11px] text-white/60">{t("home.mushafShortcutDesc" as any)}</p>
-          </div>
-          <span className="text-xs font-bold text-primary shrink-0">{t("home.open" as any)} →</span>
-        </motion.button>
+      {/* ═══ 2x4 HERO GRID ═══ */}
+      <div className="px-4 mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {ADULT_CARDS.map((card, i) => (
+          <HomeHeroCard key={card.href} card={card} index={i} t={t} />
+        ))}
       </div>
 
-      {/* ═══ BLOC 1 – Tarteel & États du cœur ═══ */}
-      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
-        <HomeCard
-          emoji="🎤"
-          title={t("home.tarteelButton" as any)}
-          desc={t("home.tarteelDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "tarteel"); navigate("/quran?mode=dictation"); }}
-          gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
-          delay={0.25}
-        />
-        <HomeCard
-          emoji="❤️"
-          title={t("home.moodsTitle" as any)}
-          desc={t("home.moodsSubtitle" as any)}
-          cta={t("home.moodsButton" as any)}
-          onClick={() => { trackEvent("module_open", "moods"); navigate("/moods"); }}
-          gradient="bg-gradient-to-br from-emerald-700/60 to-teal-700/30 border border-emerald-400/40"
-          delay={0.3}
-        />
-      </div>
-
-      {/* ═══ BLOC 2 – Recherche & Kids ═══ */}
-      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
-        <HomeCard
-          emoji="🔍"
-          title={t("home.findAyahTitle" as any)}
-          desc={t("home.findAyahDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "find_ayah"); navigate("/find-ayah"); }}
-          gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
-          delay={0.35}
-        />
-        <HomeCard
-          emoji="🧩"
-          title={t("home.kidsTitle" as any)}
-          desc={t("home.kidsDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "kids_space"); navigate("/kids"); }}
-          gradient="bg-gradient-to-br from-indigo-700/60 to-violet-700/30 border border-indigo-400/40"
-          delay={0.4}
-        />
-      </div>
-
-      {/* ═══ BLOC 3 – Hifz & Quiz ═══ */}
-      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
-        <HomeCard
-          emoji="📖"
-          title={t("home.hifzPlanTitle" as any)}
-          desc={t("home.hifzPlanDesc" as any)}
-          cta={plan ? t("home.open" as any) : t("home.hifzCreatePlan" as any)}
-          onClick={() => { trackEvent("module_open", "hifz"); navigate("/hifz-plan"); }}
-          gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
-          delay={0.45}
-        >
-          {plan && (
-            <div className="w-full mt-2">
-              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${overallProgress >= 100 ? "bg-green-400" : "bg-white/70"}`}
-                  style={{ width: `${Math.min(overallProgress, 100)}%` }}
-                />
-              </div>
-            </div>
-          )}
-        </HomeCard>
-        <HomeCard
-          emoji="🧠"
-          title={t("home.startQuiz" as any)}
-          desc={t("home.quizDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "quiz"); navigate("/quiz"); }}
-          gradient="bg-gradient-to-br from-sky-700/60 to-cyan-700/30 border border-sky-400/40"
-          delay={0.5}
-        />
-      </div>
-
-      {/* ═══ Widget Hifz SRS ═══ */}
+      {/* ═══ Hifz SRS Widget ═══ */}
       {srsItems.length > 0 && (
-        <div className="px-5 mt-3">
+        <div className="px-5 mt-4">
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.52 }}
+            transition={{ delay: 0.6 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => { trackEvent("module_open", "hifz_srs"); navigate("/hifz-today"); }}
             className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-r from-violet-700/40 to-purple-900/20 border border-violet-400/30 shadow-lg"
@@ -438,166 +327,15 @@ export default function Home() {
         <GoodDeedsWidget />
       </div>
 
-      {/* ═══ Partage ═══ */}
+      {/* ═══ Share ═══ */}
       <div className="px-5 mt-3">
         <ShareProgressCard />
-      </div>
-
-      {/* ═══ BLOC 4 – Communauté & Enseignant ═══ */}
-      <div className="px-5 mt-3 grid grid-cols-2 gap-3">
-        <HomeCard
-          emoji="🌍"
-          title={t("community.title" as any)}
-          desc={t("community.menuDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "community"); navigate("/community"); }}
-          gradient="bg-gradient-to-br from-pink-700/60 to-rose-700/30 border border-pink-400/40"
-          delay={0.55}
-        />
-        <HomeCard
-          emoji="🎓"
-          title={t("teacher.dashboard" as any)}
-          desc={t("teacher.dashboardDesc" as any)}
-          cta={t("home.open" as any)}
-          onClick={() => { trackEvent("module_open", "teacher"); navigate("/teacher-dashboard"); }}
-          gradient="bg-gradient-to-br from-pink-700/60 to-rose-700/30 border border-pink-400/40"
-          delay={0.6}
-        />
-      </div>
-
-      {/* ═══ BLOC 5 – Suivi ═══ */}
-      <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("home.trackingSection" as any)}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <HomeCard
-            emoji="📊"
-            title={t("home.progressTitle" as any)}
-            desc={t("home.progressDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => { trackEvent("module_open", "habits"); navigate("/habits"); }}
-            gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
-            delay={0.65}
-          />
-          <HomeCard
-            emoji="🏆"
-            title={t("home.leaderboardTitle" as any)}
-            desc={t("home.leaderboardDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => { trackEvent("module_open", "leaderboard"); navigate("/leaderboard"); }}
-            gradient="bg-gradient-to-br from-slate-800/70 to-slate-900/40 border border-slate-600/50"
-            delay={0.7}
-          />
-        </div>
-      </div>
-
-      {/* ═══ BLOC 6 – Outils rapides ═══ */}
-      <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("more.sectionQuran" as any)}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <HomeCard
-            emoji="📖"
-            title={t("more.mushaf" as any)}
-            desc={t("more.mushafDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/mushaf")}
-            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
-            delay={0.75}
-          />
-          <HomeCard
-            emoji="📿"
-            title={t("more.athkar" as any)}
-            desc={t("more.athkarDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/moods")}
-            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
-            delay={0.8}
-          />
-          <HomeCard
-            emoji="📻"
-            title={t("more.liveQuran" as any)}
-            desc={t("more.liveQuranDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/live-quran")}
-            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
-            delay={0.85}
-          />
-          <HomeCard
-            emoji="🎧"
-            title={t("more.advancedListening" as any)}
-            desc={t("more.advancedListeningDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/listening")}
-            gradient="bg-gradient-to-br from-amber-700/60 to-yellow-700/30 border border-amber-400/40"
-            delay={0.9}
-          />
-        </div>
-      </div>
-
-      {/* ═══ BLOC 7 – Modules ═══ */}
-      <div className="px-5 mt-6 space-y-3">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">{t("more.sectionModules" as any)}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <HomeCard
-            emoji="🧠"
-            title={t("more.hifzPlan" as any)}
-            desc={t("more.hifzPlanDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/hifz-plan")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={0.95}
-          />
-          <HomeCard
-            emoji="📝"
-            title={t("more.studyMode" as any)}
-            desc={t("more.studyModeDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/study?surah=1")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={1}
-          />
-          <HomeCard
-            emoji="⭐"
-            title={t("more.bookmarks" as any)}
-            desc={t("more.bookmarksDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/bookmarks")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={1.05}
-          />
-          <HomeCard
-            emoji="👨‍👩‍👧"
-            title={t("more.familyClass" as any)}
-            desc={t("more.familyClassDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/family")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={1.1}
-          />
-          <HomeCard
-            emoji="🕐"
-            title={t("more.prayerTimes" as any)}
-            desc={t("more.prayerTimesDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/prayers")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={1.15}
-          />
-          <HomeCard
-            emoji="📚"
-            title={t("more.juzHizb" as any)}
-            desc={t("more.juzHizbDesc" as any)}
-            cta={t("home.open" as any)}
-            onClick={() => navigate("/juz")}
-            gradient="bg-gradient-to-br from-purple-700/60 to-fuchsia-700/30 border border-purple-400/40"
-            delay={1.2}
-          />
-        </div>
       </div>
 
       {/* Weak Surahs */}
       <WeakSurahsSection />
 
-      {/* Join community CTA */}
+      {/* Join CTA */}
       {!user && (
         <div className="px-5 mt-4">
           <motion.button
