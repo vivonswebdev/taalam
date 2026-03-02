@@ -109,6 +109,10 @@ export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript,
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
       setRecordingTime(0);
+      onRecordingStart?.();
+
+      // Start native SpeechRecognition for live transcription
+      startLiveSpeechRecognition();
 
       timerRef.current = setInterval(() => {
         setRecordingTime((prev) => {
