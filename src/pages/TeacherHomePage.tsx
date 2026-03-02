@@ -267,7 +267,7 @@ export default function TeacherHomePage() {
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                 🏆 {t("teacherHome.topStudents" as any)}
               </h2>
-              <button onClick={() => navigate("/prof-dashboard")} className="text-[10px] text-primary font-semibold">
+              <button onClick={() => navigate("/teacher-dashboard")} className="text-[10px] text-primary font-semibold">
                 {t("teacherHome.viewAll" as any)} →
               </button>
             </div>
