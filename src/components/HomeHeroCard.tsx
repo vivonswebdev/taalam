@@ -48,7 +48,7 @@ export default function HomeHeroCard({ card, index, t, kids }: Props) {
 
       {/* Shimmer on hover */}
       <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 -translate-x-full animate-[shimmer_2.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_2.5s_infinite] bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
       {/* Emoji + Icon */}
