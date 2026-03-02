@@ -300,7 +300,7 @@ export default function Habits() {
               <span className="text-sm font-semibold text-foreground">{t("habits.dailyGoal" as any)}</span>
             </div>
             <button onClick={() => setShowGoalPicker(!showGoalPicker)} className="text-xs text-primary font-medium">
-              {showGoalPicker ? "Fermer" : "Modifier"}
+              {showGoalPicker ? t("habits.close" as any) : t("habits.edit" as any)}
             </button>
           </div>
           <div className="flex items-center gap-3 mb-2">
