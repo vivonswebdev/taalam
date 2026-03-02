@@ -6,6 +6,7 @@ import { useUserMode } from "@/hooks/useUserMode";
 import { ModeSelector } from "@/components/ModeSelector";
 import ProfileBubble from "@/components/ProfileBubble";
 import BottomNav from "@/components/BottomNav";
+import PageBackground from "@/components/PageBackground";
 import {
   Accordion,
   AccordionContent,
@@ -152,6 +153,7 @@ export default function More() {
   const defaultOpen = isKids ? ["kids-fun"] : ["lecture"];
 
   return (
+    <PageBackground intensity="medium">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-5 pt-10 pb-3 flex items-center justify-between">
@@ -237,5 +239,6 @@ export default function More() {
 
       <BottomNav />
     </div>
+    </PageBackground>
   );
 }

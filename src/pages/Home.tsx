@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PageBackground from "@/components/PageBackground";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Mic, Search, Heart, Users, BarChart3, Calendar, Clock, Trophy } from "lucide-react";
@@ -144,6 +145,7 @@ function AdultHome() {
   ];
 
   return (
+    <PageBackground intensity="medium">
     <div className="home-bg min-h-screen pb-24">
       {/* Daily Tarteel Challenge */}
       {!adminSettings.hide_daily_challenge && !dailyChallenge.isCompleted && dailyChallenge.surah && (
@@ -353,5 +355,6 @@ function AdultHome() {
         <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-primary/60 font-medium underline underline-offset-2">taalam.eu</a>
       </motion.p>
     </div>
+    </PageBackground>
   );
 }

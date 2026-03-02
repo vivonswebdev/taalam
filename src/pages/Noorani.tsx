@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { NOORANI_LESSONS } from "@/data/nooraniLessons";
+import PageBackground from "@/components/PageBackground";
 
 const PROGRESS_KEY = "noorani_progress";
 
@@ -31,6 +32,7 @@ export default function Noorani() {
   }, []);
 
   return (
+    <PageBackground intensity="subtle">
     <div className="min-h-screen pb-24">
       <div className="px-5 pt-12 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-muted-foreground mb-4">
@@ -78,5 +80,6 @@ export default function Noorani() {
         })}
       </div>
     </div>
+    </PageBackground>
   );
 }

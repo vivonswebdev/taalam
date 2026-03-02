@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import PageBackground from "@/components/PageBackground";
 import { Flame, BookOpen, Clock, Target, TrendingUp, Award, Trophy, Star, Sparkles, Baby, Layers, Map, Headphones, FileDown, Zap, Gift } from "lucide-react";
 import { useQuranHabits, type GoalType } from "@/hooks/useQuranHabits";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -158,6 +159,7 @@ export default function Habits() {
   };
 
   return (
+    <PageBackground intensity="medium">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
@@ -591,5 +593,6 @@ export default function Habits() {
         )}
       </div>
     </div>
+    </PageBackground>
   );
 }

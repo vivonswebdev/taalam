@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mic, Radio } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import PageBackground from "@/components/PageBackground";
 
 export default function QuranHub() {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
   return (
+    <PageBackground intensity="subtle">
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
@@ -85,6 +87,7 @@ export default function QuranHub() {
           </motion.button>
         </div>
       </div>
-    </div>);
+    </div>
+    </PageBackground>);
 
 }

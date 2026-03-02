@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
 import { ArrowLeft } from "lucide-react";
+import PageBackground from "@/components/PageBackground";
 
 const GAMES = [
   { key: "coranCrush", emoji: "🎮", path: "/crush", color: "from-pink-400 to-rose-500" },
@@ -35,6 +36,7 @@ export default function JeuxKids() {
   }
 
   return (
+    <PageBackground intensity="immersive">
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 dark:from-yellow-900/30 dark:via-orange-900/20 dark:to-amber-900/30 pb-24">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-4">
@@ -87,5 +89,6 @@ export default function JeuxKids() {
         ))}
       </div>
     </div>
+    </PageBackground>
   );
 }
