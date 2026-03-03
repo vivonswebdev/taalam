@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => ({
         display: "standalone",
         display_override: ["window-controls-overlay", "standalone"],
         orientation: "portrait",
-        dir: "auto",
+        dir: "ltr" as const,
         categories: ["education", "lifestyle"],
         start_url: "/",
         scope: "/",
