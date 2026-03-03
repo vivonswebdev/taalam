@@ -83,7 +83,7 @@ export function ParentalCodeCard({ user }: Props) {
             </p>
           </div>
           {hasCode && !editing && (
-            <ShieldCheck size={18} className="text-emerald-500" />
+            <ShieldCheck size={18} className="text-primary" />
           )}
         </div>
 
