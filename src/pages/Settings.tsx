@@ -14,6 +14,7 @@ import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { ParentalCodeCard } from "@/components/ParentalCodeCard";
 
 const PIN_KEY = "taaloum_parent_pin";
 
