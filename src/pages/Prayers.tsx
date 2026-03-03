@@ -8,7 +8,7 @@ import { useQibla } from "@/hooks/useQibla";
 import { useChildMode } from "@/hooks/useChildMode";
 import { useSound } from "@/hooks/useSound";
 import { useNavigate } from "react-router-dom";
-import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation, CheckCircle2 } from "lucide-react";
+import { Clock, Compass, MapPin, Loader2, Settings2, Bell, BellOff, AlertTriangle, Navigation, CheckCircle2, Volume2, VolumeX, Vibrate } from "lucide-react";
 import HijriCalendar from "@/components/HijriCalendar";
 import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
