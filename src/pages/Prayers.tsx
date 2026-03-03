@@ -219,6 +219,34 @@ export default function Prayers() {
                         />
                         <span className="text-xs text-muted-foreground">{t("prayers.notif.offset")}</span>
                       </div>
+
+                      {/* Athan Sound Toggle */}
+                      <button
+                        onClick={() => notif.updateConfig({ athanEnabled: !notif.config.athanEnabled })}
+                        className="w-full flex items-center justify-between mt-3 pt-3 border-t border-border"
+                      >
+                        <div className="flex items-center gap-2">
+                          {notif.config.athanEnabled !== false ? <Volume2 size={14} className="text-primary" /> : <VolumeX size={14} className="text-muted-foreground" />}
+                          <span className="text-xs font-medium text-foreground">{t("prayers.notif.athanSound" as any)}</span>
+                        </div>
+                        <div className={`w-10 h-6 rounded-full transition-colors relative ${notif.config.athanEnabled !== false ? "bg-primary" : "bg-muted"}`}>
+                          <motion.div animate={{ x: notif.config.athanEnabled !== false ? 16 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-0.5 w-5 h-5 rounded-full bg-card shadow-md" />
+                        </div>
+                      </button>
+
+                      {/* Vibration Toggle */}
+                      <button
+                        onClick={() => notif.updateConfig({ vibrationEnabled: !notif.config.vibrationEnabled })}
+                        className="w-full flex items-center justify-between mt-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Vibrate size={14} className={notif.config.vibrationEnabled !== false ? "text-primary" : "text-muted-foreground"} />
+                          <span className="text-xs font-medium text-foreground">{t("prayers.notif.vibration" as any)}</span>
+                        </div>
+                        <div className={`w-10 h-6 rounded-full transition-colors relative ${notif.config.vibrationEnabled !== false ? "bg-primary" : "bg-muted"}`}>
+                          <motion.div animate={{ x: notif.config.vibrationEnabled !== false ? 16 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-0.5 w-5 h-5 rounded-full bg-card shadow-md" />
+                        </div>
+                      </button>
                     </div>
                   )}
                 </>
