@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
           { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" as any },
           { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" as any },
           { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" as any },
-          { src: "/icon-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          { src: "/icon-512-maskable.png", sizes: "512x512", type: "image/jpeg", purpose: "maskable" },
         ],
         screenshots: [
           { src: "/icon-512.png", sizes: "512x512", type: "image/png", form_factor: "wide", label: "Ta'alam App" } as any,
