@@ -19,6 +19,9 @@ export const RECITERS_LIST: ReciterData[] = [
   { id: "ar.ajmi", name: "Ahmad Al-Ajmi", nameArabic: "أحمد العجمي", apiEdition: "ar.ahmedajamy", popular: true },
   { id: "ar.rifai", name: "Hani Ar-Rifai", nameArabic: "هاني الرفاعي", apiEdition: "ar.hanirifai", popular: true },
   { id: "ar.shatri", name: "Abu Bakr Ash-Shatri", nameArabic: "أبو بكر الشاطري", apiEdition: "ar.aaborakrshatri", popular: true },
+  { id: "ar.kalbani", name: "Adel Al-Kalbani", nameArabic: "عادل الكلباني", apiEdition: "ar.maaborakstar", popular: true },
+  { id: "ar.harraz", name: "Hisham Al-Harraz", nameArabic: "هشام الهراز", apiEdition: "ar.ibrahimakhbar", popular: true },
+  { id: "ar.qazabri", name: "Omar Al-Qazabri", nameArabic: "عمر القزابري", apiEdition: "ar.ibrahimakhbar", popular: true },
 
   // Autres
   { id: "ar.tablawi", name: "Mohammad At-Tablawi", nameArabic: "محمد الطبلاوي", apiEdition: "ar.muhammadayyoub", popular: false },
