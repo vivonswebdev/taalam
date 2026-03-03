@@ -63,6 +63,14 @@ export default function Reading() {
   const [startAyah, setStartAyah] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [translations, setTranslations] = useState<Record<number, string>>({});
+  const [reciterSearch, setReciterSearch] = useState("");
+
+  const filteredRecitersPopular = RECITERS.filter(r => r.popular && (
+    !reciterSearch || r.name.toLowerCase().includes(reciterSearch.toLowerCase()) || r.label.includes(reciterSearch)
+  ));
+  const filteredRecitersOther = RECITERS.filter(r => !r.popular && (
+    !reciterSearch || r.name.toLowerCase().includes(reciterSearch.toLowerCase()) || r.label.includes(reciterSearch)
+  ));
 
   // Fetch 114 surahs list
   useEffect(() => {
@@ -268,12 +276,43 @@ export default function Reading() {
                   <User size={16} className="text-muted-foreground" />
                   <span className="text-sm font-medium text-foreground">{t("reading.defaultReciter")}</span>
                 </div>
-                <div className="space-y-1.5">
-                  {RECITERS.map((r) => (
+                <input
+                  type="text"
+                  placeholder="🔍 ..."
+                  value={reciterSearch}
+                  onChange={(e) => setReciterSearch(e.target.value)}
+                  className="w-full mb-2 px-3 py-2 rounded-xl border border-border bg-background text-xs outline-none focus:ring-2 focus:ring-primary/30"
+                />
+                <div className="space-y-1 max-h-60 overflow-y-auto">
+                  {/* Populaires */}
+                  {filteredRecitersPopular.length > 0 && (
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1 mb-0.5">⭐ {t("reciter.popular" as any)}</p>
+                  )}
+                  {filteredRecitersPopular.map((r) => (
                     <button
                       key={r.id}
-                      onClick={() => setDefaultReciter(r.id)}
-                      className={`w-full text-left px-3 py-2.5 rounded-xl border-2 transition-colors ${
+                      onClick={() => setDefaultReciter(r.id as any)}
+                      className={`w-full text-left px-3 py-2 rounded-xl border-2 transition-colors ${
+                        settings.defaultReciter === r.id
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:bg-accent/50"
+                      }`}
+                    >
+                      <span className={`text-xs font-semibold ${settings.defaultReciter === r.id ? "text-primary" : "text-foreground"}`}>
+                        {r.name}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground ml-2 font-arabic">{r.label}</span>
+                    </button>
+                  ))}
+                  {/* Autres */}
+                  {filteredRecitersOther.length > 0 && (
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-2 mb-0.5">📚 {t("reciter.others" as any)}</p>
+                  )}
+                  {filteredRecitersOther.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => setDefaultReciter(r.id as any)}
+                      className={`w-full text-left px-3 py-2 rounded-xl border-2 transition-colors ${
                         settings.defaultReciter === r.id
                           ? "border-primary bg-primary/10"
                           : "border-border hover:bg-accent/50"

@@ -10,15 +10,18 @@ export const ARABIC_FONTS = [
 
 export type ArabicFontId = typeof ARABIC_FONTS[number]["id"];
 
-// ─── Reciters ───────────────────────────────────────────────
-export const RECITERS = [
-  { id: "ar.alafasy", name: "Al-Afasy", label: "مشاري العفاسي" },
-  { id: "ar.husary", name: "Al-Husary", label: "محمود خليل الحصري" },
-  { id: "ar.minshawi", name: "Al-Minshawi", label: "محمد صديق المنشاوي" },
-  { id: "ar.abdurrahmaansudais", name: "As-Sudais", label: "عبد الرحمن السديس" },
-] as const;
+// ─── Reciters (re-export from central list) ────────────────
+import { RECITERS_LIST, getSelectedReciterId, setSelectedReciterId } from "@/data/reciters";
 
-export type ReciterId = typeof RECITERS[number]["id"];
+export const RECITERS = RECITERS_LIST.filter(r => r.category !== "kids").map(r => ({
+  id: r.id,
+  name: r.name,
+  label: r.nameArabic,
+  apiEdition: r.apiEdition,
+  popular: r.popular,
+}));
+
+export type ReciterId = string;
 
 // ─── Settings Interface ─────────────────────────────────────
 export interface ReadingSettings {
