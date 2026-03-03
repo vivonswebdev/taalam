@@ -180,6 +180,9 @@ export default function Settings() {
           )}
         </motion.div>
 
+        {/* Parental Code for mode switching */}
+        {user && <ParentalCodeCard user={user} />}
+
         {/* Daily Challenge */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="bg-card border border-border rounded-2xl overflow-hidden">
           <button onClick={() => setShowDailyChallenge(true)} className="w-full flex items-center gap-4 p-4 text-left">
