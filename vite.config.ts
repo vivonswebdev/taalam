@@ -37,10 +37,15 @@ export default defineConfig(({ mode }) => ({
         dir: "ltr" as const,
         categories: ["education", "lifestyle"],
         icons: [
-          { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" as any },
-          { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+          { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" as any },
+          { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" as any },
+          { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" as any },
           { src: "/icon-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
+        screenshots: [
+          { src: "/icon-512.png", sizes: "512x512", type: "image/png", form_factor: "wide", label: "Ta'alam App" } as any,
+          { src: "/icon-512.png", sizes: "512x512", type: "image/png", form_factor: "narrow", label: "Ta'alam App" } as any,
+        ] as any,
         shortcuts: [
           { name: "Tarteel", short_name: "Tarteel", url: "/tarteel", icons: [{ src: "/icon-192.png", sizes: "192x192" }] },
           { name: "Coran", short_name: "Coran", url: "/quran", icons: [{ src: "/icon-192.png", sizes: "192x192" }] },
