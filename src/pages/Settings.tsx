@@ -14,6 +14,7 @@ import { useDailyTarteelChallenge } from "@/hooks/useDailyTarteelChallenge";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { ParentalCodeCard } from "@/components/ParentalCodeCard";
 
 const PIN_KEY = "taaloum_parent_pin";
 
@@ -179,6 +180,9 @@ export default function Settings() {
             </button>
           )}
         </motion.div>
+
+        {/* Parental Code for mode switching */}
+        {user && <ParentalCodeCard user={user} />}
 
         {/* Daily Challenge */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="bg-card border border-border rounded-2xl overflow-hidden">
