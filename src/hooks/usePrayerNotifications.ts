@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { PrayerTimes } from "@/hooks/usePrayerTimes";
+import { getAthanReciterById, getDefaultAthanReciter } from "@/data/athanData";
 
 export interface PrayerNotifConfig {
   enabled: boolean;
   prayers: Record<string, boolean>;
   offsetMinutes: number;
+  athanEnabled: boolean;
+  vibrationEnabled: boolean;
 }
 
 const STORAGE_KEY = "quranEasyPrayerNotifs";
@@ -14,6 +17,8 @@ const defaultConfig: PrayerNotifConfig = {
   enabled: false,
   prayers: { Fajr: true, Dhuhr: true, Asr: true, Maghrib: true, Isha: true },
   offsetMinutes: 10,
+  athanEnabled: true,
+  vibrationEnabled: true,
 };
 
 function load(): PrayerNotifConfig {
@@ -28,10 +33,49 @@ function save(c: PrayerNotifConfig) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(c));
 }
 
+function getSelectedReciterId(): string {
+  return localStorage.getItem("athan_reciter") || "alafasy";
+}
+
+function getAthanVolume(): number {
+  return parseFloat(localStorage.getItem("athan_volume") || "0.8");
+}
+
+/** Play athan audio for the selected reciter, returns stop function */
+function playAthanAudio(): (() => void) | null {
+  const reciter = getAthanReciterById(getSelectedReciterId()) || getDefaultAthanReciter();
+  if (!reciter.audioUrl) return null;
+
+  try {
+    const audio = new Audio(reciter.audioUrl);
+    audio.volume = getAthanVolume();
+    // Play only ~30s of the athan (short version)
+    audio.play().catch(() => {});
+    const stopTimer = setTimeout(() => {
+      try { audio.pause(); audio.currentTime = 0; } catch {}
+    }, 30000);
+    
+    return () => {
+      clearTimeout(stopTimer);
+      try { audio.pause(); audio.currentTime = 0; } catch {}
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Vibrate pattern for athan: long pulse */
+function vibrateAthan() {
+  try {
+    navigator.vibrate?.([300, 100, 300, 100, 500]);
+  } catch {}
+}
+
 export function usePrayerNotifications(times: PrayerTimes | null, cityName?: string) {
   const [config, setConfig] = useState<PrayerNotifConfig>(load);
   const [permissionState, setPermissionState] = useState<NotificationPermission | "unsupported">("default");
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const stopAthanRef = useRef<(() => void) | null>(null);
 
   // Check support
   useEffect(() => {
@@ -40,6 +84,13 @@ export function usePrayerNotifications(times: PrayerTimes | null, cityName?: str
     } else {
       setPermissionState(Notification.permission);
     }
+  }, []);
+
+  // Cleanup athan audio on unmount
+  useEffect(() => {
+    return () => {
+      stopAthanRef.current?.();
+    };
   }, []);
 
   const requestPermission = useCallback(async () => {
@@ -67,7 +118,7 @@ export function usePrayerNotifications(times: PrayerTimes | null, cityName?: str
     });
   }, []);
 
-  // Schedule notifications
+  // Schedule notifications + athan sound
   useEffect(() => {
     // Clear previous timers
     timersRef.current.forEach(clearTimeout);
@@ -84,20 +135,52 @@ export function usePrayerNotifications(times: PrayerTimes | null, cityName?: str
       const prayerDate = new Date();
       prayerDate.setHours(h, m, 0, 0);
 
-      // Subtract offset
-      const notifTime = new Date(prayerDate.getTime() - config.offsetMinutes * 60000);
-      const delay = notifTime.getTime() - now.getTime();
+      // 1) Offset notification (X min before)
+      if (config.offsetMinutes > 0) {
+        const notifTime = new Date(prayerDate.getTime() - config.offsetMinutes * 60000);
+        const delay = notifTime.getTime() - now.getTime();
 
-      if (delay > 0) {
+        if (delay > 0) {
+          const timer = setTimeout(() => {
+            new Notification(`🕌 ${name}`, {
+              body: cityName
+                ? `Il reste ${config.offsetMinutes} min avant ${name} à ${cityName}`
+                : `Il reste ${config.offsetMinutes} min avant ${name}`,
+              icon: "/icon-192.png",
+              tag: `prayer-pre-${name}`,
+              silent: true,
+            });
+          }, delay);
+          timersRef.current.push(timer);
+        }
+      }
+
+      // 2) Exact prayer time: athan sound + vibration + notification
+      const athanDelay = prayerDate.getTime() - now.getTime();
+      if (athanDelay > 0) {
         const timer = setTimeout(() => {
-          new Notification(`🕌 ${name}`, {
+          // Show notification
+          new Notification(`🕌 ${name} — الله أكبر`, {
             body: cityName
-              ? `Il reste ${config.offsetMinutes} min avant ${name} à ${cityName}`
-              : `Il reste ${config.offsetMinutes} min avant ${name}`,
-            icon: "/favicon.ico",
-            tag: `prayer-${name}`,
+              ? `C'est l'heure de ${name} à ${cityName}`
+              : `C'est l'heure de ${name}`,
+            icon: "/icon-192.png",
+            tag: `prayer-athan-${name}`,
+            silent: true, // We handle sound ourselves
+            requireInteraction: true,
           });
-        }, delay);
+
+          // Play athan audio
+          if (config.athanEnabled !== false) {
+            stopAthanRef.current?.();
+            stopAthanRef.current = playAthanAudio();
+          }
+
+          // Vibrate
+          if (config.vibrationEnabled !== false) {
+            vibrateAthan();
+          }
+        }, athanDelay);
         timersRef.current.push(timer);
       }
     }
@@ -115,5 +198,9 @@ export function usePrayerNotifications(times: PrayerTimes | null, cityName?: str
     permissionState,
     requestPermission,
     supported: permissionState !== "unsupported",
+    stopAthan: () => {
+      stopAthanRef.current?.();
+      stopAthanRef.current = null;
+    },
   };
 }
