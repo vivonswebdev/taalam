@@ -384,6 +384,8 @@ const translations = {
   "prayers.notif.offset": { fr: "min avant l'adhan", en: "min before adhan", nl: "min voor adhan", ar: "دقيقة قبل الأذان", tr: "dk ezan öncesi", ur: "منٹ اذان سے پہلے" },
   "prayers.notif.unsupported": { fr: "Notifications non supportées sur cet appareil", en: "Notifications not supported on this device", nl: "Meldingen niet ondersteund op dit apparaat", ar: "الإشعارات غير مدعومة على هذا الجهاز", tr: "Bu cihazda bildirimler desteklenmiyor", ur: "اس آلے پر اطلاعات دستیاب نہیں" },
    "prayers.notif.denied": { fr: "Permission refusée. Activez les notifications dans les réglages de votre navigateur.", en: "Permission denied. Enable notifications in your browser settings.", nl: "Toestemming geweigerd. Schakel meldingen in via je browserinstellingen.", ar: "تم رفض الإذن. فعّل الإشعارات من إعدادات المتصفح.", tr: "İzin reddedildi. Tarayıcı ayarlarından bildirimleri açın.", ur: "اجازت سے انکار۔ براؤزر کی ترتیبات سے اطلاعات فعال کریں۔" },
+  "prayers.notif.athanSound": { fr: "Son de l'Adhan", en: "Adhan Sound", nl: "Adhan geluid", ar: "صوت الأذان", tr: "Ezan Sesi", ur: "اذان کی آواز" },
+  "prayers.notif.vibration": { fr: "Vibration", en: "Vibration", nl: "Trillen", ar: "اهتزاز", tr: "Titreşim", ur: "وائبریشن" },
 
   // Hijri Calendar
   "calendar.title": { fr: "Calendrier Hijri", en: "Hijri Calendar", nl: "Hijri Kalender", ar: "التقويم الهجري", tr: "Hicri Takvim", ur: "ہجری کیلنڈر" },
