@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { RotateCcw, Info, Baby, Heart, Globe, Languages, Users, Sun, Moon, Megaphone, Flame, Shield, CloudOff } from "lucide-react";
 import { useProgress } from "@/hooks/useProgress";
