@@ -63,6 +63,7 @@ export default function Reading() {
   const [startAyah, setStartAyah] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [translations, setTranslations] = useState<Record<number, string>>({});
+  const [transliterations, setTransliterations] = useState<Record<number, string>>({});
   const [reciterSearch, setReciterSearch] = useState("");
 
   const filteredRecitersPopular = RECITERS.filter(r => r.popular && (
