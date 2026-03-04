@@ -937,21 +937,18 @@ export default function MushafPage() {
                         <Type size={14} className="text-muted-foreground" />
                         <span className="text-sm font-medium">{t("mushaf.textSize" as any)}</span>
                       </div>
-                      <div className="flex gap-2">
-                        {FONT_SIZES.map((fs) => (
-                          <button
-                            key={fs.key}
-                            onClick={() => { setFontSize(fs.value); localStorage.setItem(MUSHAF_FONT_KEY, String(fs.value)); }}
-                            className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium border transition-colors ${
-                              fontSize === fs.value
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:bg-accent/40"
-                            }`}
-                          >
-                            <span className="block text-base mb-0.5 font-['Amiri','serif']" style={{ fontSize: `${fs.value * 0.5}px` }}>ب</span>
-                            {fs.label}
-                          </button>
-                        ))}
+                      <div className="flex items-center gap-3">
+                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '14px' }}>ب</span>
+                        <Slider
+                          min={MIN_FONT_SIZE}
+                          max={MAX_FONT_SIZE}
+                          step={2}
+                          value={[fontSize]}
+                          onValueChange={([v]) => { setFontSize(v); localStorage.setItem(MUSHAF_FONT_KEY, String(v)); }}
+                          className="flex-1"
+                        />
+                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '28px' }}>ب</span>
+                        <span className="text-[10px] text-muted-foreground w-8 text-right">{fontSize}px</span>
                       </div>
                     </div>
 
