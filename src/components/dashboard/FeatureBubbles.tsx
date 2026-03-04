@@ -41,6 +41,7 @@ const CATEGORIES: Category[] = [
   emoji: "📖",
   features: [
   { id: "quran", nameKey: "dashboard.tarteel", emoji: "📖", path: "/quran", gradient: "from-blue-400 to-cyan-500" },
+  { id: "listenTest", nameKey: "dashboard.shazamCoran", emoji: "🎵", path: "/listen-test", gradient: "from-fuchsia-400 to-pink-500" },
   { id: "reading", nameKey: "dashboard.reading", emoji: "📚", path: "/reading", gradient: "from-emerald-400 to-green-500" },
   { id: "mushaf", nameKey: "dashboard.mushaf", emoji: "📗", path: "/mushaf", gradient: "from-teal-400 to-emerald-500" },
   { id: "listening", nameKey: "dashboard.listening", emoji: "🎧", path: "/listening", gradient: "from-violet-400 to-purple-500" },
