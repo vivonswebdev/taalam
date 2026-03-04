@@ -39,7 +39,7 @@ const THEMES: Record<MushafTheme, { bg: string; text: string; medallion: string;
 
 const DEFAULT_FONT_SIZE = 24;
 const MIN_FONT_SIZE = 18;
-const MAX_FONT_SIZE = 56;
+const MAX_FONT_SIZE = 168;
 
 // ─── Ayah Medallion ───
 function AyahMedallion({ number, color, textColor }: { number: number; color: string; textColor: string }) {
