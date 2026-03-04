@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
+import SEOHead from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap, Landmark, Lightbulb } from "lucide-react";
@@ -232,6 +233,7 @@ export default function Quiz() {
 
     return (
       <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+        <SEOHead title="Quiz Coran - Testez vos connaissances" description="Testez vos connaissances coraniques avec des quiz adaptatifs : tajwid, mémorisation, prophètes et plus." path="/quiz" />
         <FloatingXpWidget />
         <div className="px-6 pt-14 pb-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-4">

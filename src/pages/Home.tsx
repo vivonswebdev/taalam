@@ -3,6 +3,7 @@ import { useUserMode } from "@/hooks/useUserMode";
 import { HomeDashboard } from "@/components/dashboard/FeatureBubbles";
 import KidsHomePage from "@/pages/KidsHomePage";
 import TeacherHomePage from "@/pages/TeacherHomePage";
+import SEOHead from "@/components/SEOHead";
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {
@@ -43,6 +44,7 @@ export default function Home() {
 
   return (
     <HomeErrorBoundary>
+      <SEOHead title="Ta'alam - Apprendre le Coran facilement" description="Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille." path="/" />
       <HomeDashboard />
     </HomeErrorBoundary>
   );

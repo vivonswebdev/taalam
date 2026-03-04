@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
 import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Users, Share2, ChevronUp, Plus, Maximize2 } from "lucide-react";
 import { useLeaderboard, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useClassLeaderboard } from "@/hooks/useClassLeaderboard";
@@ -367,6 +368,7 @@ export default function Leaderboard() {
 
   return (
     <div className="min-h-screen pb-24">
+      <SEOHead title="Classement - Leaderboard" description="Comparez votre progression avec la communauté Ta'alam. Classement hebdomadaire, par pays et par niveau." path="/leaderboard" />
       <div className="px-6 pt-6">
         <div className="flex items-center justify-between mb-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground">

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";
@@ -99,6 +100,7 @@ export default function KidsHomePage() {
 
   return (
     <PageBackground intensity="immersive">
+      <SEOHead title="Espace Enfants - Apprendre l'Islam en jouant" description="Jeux islamiques, quiz prophètes, prière et Coran pour les enfants. Apprentissage ludique et sécurisé." path="/kids" />
       <div className="min-h-screen pb-24">
         {/* Header */}
         <div className="flex items-center gap-3 px-4 pt-6 pb-4">

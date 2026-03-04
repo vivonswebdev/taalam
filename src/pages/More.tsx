@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
 import { ModeSelector } from "@/components/ModeSelector";
@@ -156,6 +157,7 @@ export default function More() {
 
   return (
     <PageBackground intensity="medium">
+    <SEOHead title="Plus - Paramètres & Outils" description="Accédez aux paramètres, outils islamiques, prières, calendrier hijri et plus encore." path="/more" />
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-5 pt-10 pb-3 flex items-center justify-between">

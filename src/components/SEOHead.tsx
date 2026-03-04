@@ -38,6 +38,15 @@ export default function SEOHead({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+
+      {/* Hreflang pour SEO multilingue */}
+      <link rel="alternate" hrefLang="fr" href={`${BASE_URL}${path}`} />
+      <link rel="alternate" hrefLang="en" href={`${BASE_URL}${path}?lang=en`} />
+      <link rel="alternate" hrefLang="ar" href={`${BASE_URL}${path}?lang=ar`} />
+      <link rel="alternate" hrefLang="nl" href={`${BASE_URL}${path}?lang=nl`} />
+      <link rel="alternate" hrefLang="ur" href={`${BASE_URL}${path}?lang=ur`} />
+      <link rel="alternate" hrefLang="tr" href={`${BASE_URL}${path}?lang=tr`} />
+      <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}${path}`} />
     </Helmet>
   );
 }

@@ -11,8 +11,16 @@ export default defineConfig(({ mode }) => ({
     hmr: { overlay: false },
   },
   build: {
+    chunkSizeWarningLimit: 600,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) return 'assets/css/[name]-[hash][extname]';
+          if (assetInfo.name?.match(/\.(png|jpe?g|svg|gif|webp|ico)$/))
+            return 'assets/img/[name]-[hash][extname]';
+          return 'assets/[name]-[hash][extname]';
+        },
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
           "vendor-ui": [

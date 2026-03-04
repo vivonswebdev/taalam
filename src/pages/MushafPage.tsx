@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
 import { ArrowLeft, ArrowRight, BookOpen, Star, List, Settings2, ChevronLeft, Type, Palette, Volume2, VolumeX, Eye, EyeOff, Maximize } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -771,6 +772,7 @@ export default function MushafPage() {
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: theme.bg }}>
+      <SEOHead title="Mushaf - Lecture du Coran" description="Lisez le Coran dans un Mushaf numérique avec tajwid coloré, thèmes personnalisables et marque-pages." path="/mushaf" />
       {/* Header */}
       <div
         className="sticky top-0 z-20 backdrop-blur border-b px-3 pt-10 pb-2"

@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import PageBackground from "@/components/PageBackground";
+import SEOHead from "@/components/SEOHead";
 
 type Tab = "moods" | "maladies" | "athkar";
 
@@ -188,6 +189,7 @@ export default function Moods() {
 
   return (
     <PageBackground intensity="medium">
+    <SEOHead title="États du Cœur - Moods & Athkâr" description="Trouvez la paix intérieure avec des invocations, remèdes spirituels et athkâr du Coran et de la Sunnah." path="/moods" />
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-4">

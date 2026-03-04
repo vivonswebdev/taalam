@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mic, Radio } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import PageBackground from "@/components/PageBackground";
+import SEOHead from "@/components/SEOHead";
 
 export default function QuranHub() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function QuranHub() {
 
   return (
     <PageBackground intensity="subtle">
+    <SEOHead title="Coran - Lecture, Écoute & Récitation" description="Lisez le Mushaf, écoutez des récitateurs et récitez le Coran avec correction vocale IA." path="/quran-hub" />
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
