@@ -554,7 +554,7 @@ export default function MushafPage() {
    const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
     try {
       const saved = localStorage.getItem(READING_STYLE_KEY) as ReadingStyle;
-      if (saved === "mushaf" || saved === "cards" || saved === "immersive" || saved === "swipe") return saved;
+      if (saved === "mushaf" || saved === "cards" || saved === "immersive") return saved;
       return "cards";
     } catch { return "cards"; }
   });
