@@ -36,13 +36,9 @@ const THEMES: Record<MushafTheme, { bg: string; text: string; medallion: string;
   blue: { bg: "#0d1b2a", text: "#d4d8e0", medallion: "#6b93d6", medallionText: "#fff", frame: "#4a6fa5", headerBg: "rgba(13,27,42,0.95)", label: "Bleuté", emoji: "🔵" },
 };
 
-const FONT_SIZES = [
-  { key: "small", value: 22, label: "Petit" },
-  { key: "medium", value: 28, label: "Moyen" },
-  { key: "large", value: 36, label: "Grand" },
-];
-
-const DEFAULT_FONT_SIZE = 22;
+const DEFAULT_FONT_SIZE = 24;
+const MIN_FONT_SIZE = 18;
+const MAX_FONT_SIZE = 56;
 
 // ─── Ayah Medallion ───
 function AyahMedallion({ number, color, textColor }: { number: number; color: string; textColor: string }) {
