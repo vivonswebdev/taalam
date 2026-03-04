@@ -98,25 +98,12 @@ export default function Settings() {
               <p className="text-sm font-medium text-card-foreground">{t("settings.childMode")}</p>
               <p className="text-xs text-muted-foreground">
                 {t("settings.childModeDesc")}
-                {storedPin && isChildMode && (
-                  <span className="ml-1 text-primary font-medium">{t("settings.pinProtected" as any)}</span>
-                )}
               </p>
             </div>
             <div className={`w-12 h-7 rounded-full transition-colors relative ${isChildMode ? "bg-success" : "bg-muted"}`}>
               <motion.div animate={{ x: isChildMode ? 20 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute top-1 w-5 h-5 rounded-full bg-card shadow-md" />
             </div>
           </button>
-          {/* Change PIN button */}
-          {storedPin && (
-            <button
-              onClick={() => { setPinDialog("setup"); setPinInput(""); setPinFirst(""); setPinError(""); }}
-              className="w-full flex items-center gap-2 justify-center py-2 border-t border-border text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
-            >
-              <Lock size={12} />
-              {t("settings.pinChange" as any)}
-            </button>
-          )}
         </motion.div>
 
         {/* Daily Challenge */}
