@@ -349,57 +349,6 @@ export default function Settings() {
         />
       )}
 
-      {/* PIN Dialog */}
-      {pinDialog !== "none" && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm px-8">
-          <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <Lock size={20} className="text-primary" />
-              <h3 className="text-lg font-bold text-card-foreground">
-                {pinDialog === "verify" ? t("settings.pinEnter" as any) : pinDialog === "confirm" ? t("settings.pinConfirm" as any) : t("settings.pinSetup" as any)}
-              </h3>
-            </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              {pinDialog === "setup" ? t("settings.pinSetupDesc" as any) : pinDialog === "confirm" ? t("settings.pinConfirm" as any) : t("settings.pinEnter" as any)}
-            </p>
-            <div className="flex justify-center gap-3 mb-4">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`w-12 h-14 rounded-xl border-2 flex items-center justify-center text-xl font-bold transition-colors ${pinInput[i] ? "border-primary bg-primary/10 text-primary" : "border-border bg-muted/30 text-muted-foreground"}`}>
-                  {pinInput[i] ? "●" : ""}
-                </div>
-              ))}
-            </div>
-            <input
-              ref={pinInputRef}
-              type="number"
-              inputMode="numeric"
-              maxLength={4}
-              value={pinInput}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, "").slice(0, 4);
-                setPinInput(v);
-                setPinError("");
-              }}
-              onKeyDown={(e) => { if (e.key === "Enter" && pinInput.length === 4) handlePinSubmit(); }}
-              className="sr-only"
-              autoFocus
-            />
-            {pinError && <p className="text-xs text-destructive text-center mb-3 font-medium">{pinError}</p>}
-            <div className="flex gap-3">
-              <button onClick={() => { setPinDialog("none"); setPinInput(""); setPinError(""); }} className="flex-1 py-3 rounded-xl border border-border text-sm font-medium text-card-foreground active:scale-[0.98] transition-transform">
-                {t("settings.cancel")}
-              </button>
-              <button
-                onClick={handlePinSubmit}
-                disabled={pinInput.length !== 4}
-                className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium active:scale-[0.98] transition-transform disabled:opacity-40"
-              >
-                OK
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
     </div>
   );
 }
