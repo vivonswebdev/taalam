@@ -389,25 +389,71 @@ export default function MushafReader({
                 </div>
                 <Switch checked={tajwidEnabled} onCheckedChange={setTajwidEnabled} />
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Inline Player Controls (uses global audio) */}
-      <div className="px-4 py-2 shrink-0">
-        <div className="bg-card border border-border rounded-2xl p-3 space-y-2">
-          <div className="flex items-center gap-2">
-            <button onClick={onRequestPrevSurah} className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0">
-              <ChevronsLeft size={14} />
-            </button>
-            <button onClick={() => globalAudio.prevAyah()} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
-              <SkipBack size={14} />
-            </button>
-            <button
-              onClick={() => {
-                if (playing) {
-                  globalAudio.pause();
+              {/* Phonetic toggle */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🔤</span>
+                  <span className="text-sm font-medium">{t("reading.phonetic")}</span>
+                </div>
+                <Switch checked={phoneticEnabled} onCheckedChange={(v) => { setPhoneticEnabled(v); try { localStorage.setItem("reading-phonetic", String(v)); } catch {} }} />
+              </div>
+              {/* Translation toggle */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🌐</span>
+                  <span className="text-sm font-medium">{t("reading.showTranslation")}</span>
+                </div>
+                <Switch checked={translationEnabled} onCheckedChange={(v) => { setTranslationEnabled(v); try { localStorage.setItem("reading-translation", String(v)); } catch {} }} />
+              </div>
+              {/* Reciter picker */}
+              {availableReciters && availableReciters.length > 0 && onChangeReciter && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">🎙️</span>
+                    <span className="text-sm font-medium">{t("reading.defaultReciter")}</span>
+                  </div>
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    {availableReciters.map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => {
+                          onChangeReciter(r.id);
+                          // Restart playback with new reciter
+                          globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah, r.apiEdition || r.id);
+                        }}
+                        className={`w-full text-left px-3 py-1.5 rounded-xl border transition-colors text-xs ${
+                          reciterEdition === r.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-border hover:bg-accent/50 text-foreground"
+                        }`}
+                      >
+                        <span className="font-arabic">{r.nameArabic}</span>
+                        <span className="text-muted-foreground ml-2">{r.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Translation edition picker */}
+              {availableTranslations && availableTranslations.length > 0 && onChangeTranslation && translationEnabled && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">📖</span>
+                    <span className="text-sm font-medium">{t("reading.translationEdition")}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {availableTranslations.map((ed) => (
+                      <button
+                        key={ed.id}
+                        onClick={() => onChangeTranslation(ed.id)}
+                        className={`w-full text-left px-3 py-1.5 rounded-xl border transition-colors text-xs ${
+                          translationEditionId === ed.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-border hover:bg-accent/50 text-foreground"
+                        }`}
+                      >
+                        {ed.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
                 } else if (globalAudio.state.surahNumber === surah.number) {
                   globalAudio.resume();
                 } else {
