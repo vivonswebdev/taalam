@@ -414,6 +414,7 @@ function FullscreenMushafView({
   ayahs,
   theme,
   fontSize,
+  setFontSize,
   tajwidEnabled,
   currentPage,
   currentJuz,
@@ -431,6 +432,7 @@ function FullscreenMushafView({
   ayahs: { number: number; arabic: string; surahNumber: number }[];
   theme: typeof THEMES.cream;
   fontSize: number;
+  setFontSize: (size: number) => void;
   tajwidEnabled: boolean;
   currentPage: number;
   currentJuz: number;
@@ -537,10 +539,29 @@ function FullscreenMushafView({
             </motion.div>
             <motion.div
               initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-6 pt-3"
+              className="absolute bottom-0 left-0 right-0 z-50 pb-8 px-4 pt-3"
               style={{ background: `linear-gradient(to top, ${theme.bg}f0, transparent)` }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Font size presets */}
+              <div className="flex items-center justify-center gap-1.5 mb-3">
+                {FONT_PRESETS.map((p) => {
+                  const active = fontSize === p.size;
+                  return (
+                    <button
+                      key={p.key}
+                      onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
+                      className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
+                      style={{
+                        backgroundColor: active ? theme.medallion : `${theme.text}15`,
+                        color: active ? theme.medallionText : `${theme.text}99`,
+                      }}
+                    >
+                      {p.icon}
+                    </button>
+                  );
+                })}
+              </div>
               <div className="flex items-center justify-between">
                 <button onClick={goNextScreen} disabled={screenIdx >= totalScreens - 1 && !hasNext} className="p-2 disabled:opacity-20" style={{ color: theme.text }}>→</button>
                 <span className="text-[10px]" style={{ color: `${theme.text}60` }}>{t("mushaf.tipTap" as any)}</span>
@@ -729,6 +750,7 @@ export default function MushafPage() {
         ayahs={ayahs}
         theme={theme}
         fontSize={fontSize}
+        setFontSize={(s) => { setFontSize(s); localStorage.setItem(MUSHAF_FONT_KEY, String(s)); }}
         tajwidEnabled={tajwidEnabled}
         currentPage={currentPage}
         currentJuz={currentJuz}
