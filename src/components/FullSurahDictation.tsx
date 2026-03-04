@@ -551,7 +551,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="pt-2 pb-4">
           <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={() => { stopListening(); startDictation(); }}
+            onClick={() => { stopListening(); currentAyahIdx > 0 ? startRecording() : startDictation(); }}
             className={`w-full flex items-center justify-center gap-3 ${
               isChildMode ? "py-6 text-xl" : "py-5 text-lg"
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
