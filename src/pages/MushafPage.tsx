@@ -555,10 +555,10 @@ export default function MushafPage() {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [bookmarksList, setBookmarksList] = useState<{ page_number: number; id: string }[]>([]);
   const [immersiveIndex, setImmersiveIndex] = useState(0);
-  const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
+   const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
     try {
       const saved = localStorage.getItem(READING_STYLE_KEY) as ReadingStyle;
-      if (saved === "mushaf" || saved === "cards" || saved === "immersive") return saved;
+      if (saved === "mushaf" || saved === "cards" || saved === "immersive" || saved === "swipe") return saved;
       return "cards";
     } catch { return "cards"; }
   });
