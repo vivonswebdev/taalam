@@ -454,10 +454,29 @@ export default function MushafReader({
                   </div>
                 </div>
               )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Inline Player Controls (uses global audio) */}
+      <div className="px-4 py-2 shrink-0">
+        <div className="bg-card border border-border rounded-2xl p-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <button onClick={onRequestPrevSurah} className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+              <ChevronsLeft size={14} />
+            </button>
+            <button onClick={() => globalAudio.prevAyah()} className="w-8 h-8 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0">
+              <SkipBack size={14} />
+            </button>
+            <button
+              onClick={() => {
+                if (playing) {
+                  globalAudio.pause();
                 } else if (globalAudio.state.surahNumber === surah.number) {
                   globalAudio.resume();
                 } else {
-                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0);
+                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0, reciterEdition);
                 }
               }}
               className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playing ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
