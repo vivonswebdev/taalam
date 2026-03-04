@@ -42,12 +42,19 @@ interface MushafReaderProps {
 export default function MushafReader({
   surah,
   translations,
+  transliterations,
   isArabicOnly,
   onBack,
   t,
   startAtAyah = 0,
   onRequestNextSurah,
   onRequestPrevSurah,
+  reciterEdition,
+  onChangeReciter,
+  translationEditionId,
+  onChangeTranslation,
+  availableTranslations,
+  availableReciters,
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
