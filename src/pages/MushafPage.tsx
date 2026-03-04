@@ -731,6 +731,7 @@ export default function MushafPage() {
         ayahs={ayahs}
         theme={theme}
         fontSize={fontSize}
+        setFontSize={(s) => { setFontSize(s); localStorage.setItem(MUSHAF_FONT_KEY, String(s)); }}
         tajwidEnabled={tajwidEnabled}
         currentPage={currentPage}
         currentJuz={currentJuz}
