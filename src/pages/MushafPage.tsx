@@ -24,7 +24,9 @@ const MUSHAF_FONT_KEY = "mushaf_font_size";
 const MUSHAF_TAJWID_KEY = "mushaf_tajwid";
 const MUSHAF_SOUND_KEY = "mushaf_sound";
 
-type ReadingStyle = "cards" | "immersive" | "mushaf";
+type ReadingStyle = "cards" | "immersive" | "mushaf" | "swipe";
+
+const MushafSwipeTajwid = lazy(() => import("@/components/MushafSwipeTajwid"));
 type MushafTheme = "cream" | "night" | "blue" | "white";
 
 const THEMES: Record<MushafTheme, { bg: string; text: string; medallion: string; medallionText: string; frame: string; headerBg: string; label: string; emoji: string }> = {
