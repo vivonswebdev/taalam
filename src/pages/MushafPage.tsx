@@ -627,33 +627,23 @@ export default function MushafPage() {
 
   useEffect(() => { loadBookmarks(); }, [loadBookmarks]);
 
-  // Load page content
+  // Load page content from local JSON (page-accurate Madani Mushaf)
+  const { data: pageData, loading: pageLoading } = useMushafPageData(currentPage);
+
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-
-    const surahNum = getSurahForPage(currentPage);
-    const nextSurah = surahNum < 114 ? surahNum + 1 : null;
-    const nextSurahStartsHere = nextSurah && surahStartPage[nextSurah] === currentPage;
-
-    const promises = [fetchFullSurah(surahNum)];
-    if (nextSurahStartsHere && nextSurah) promises.push(fetchFullSurah(nextSurah));
-
-    Promise.all(promises).then((surahs) => {
-      if (cancelled) return;
-      const allAyahs: { number: number; arabic: string; surahNumber: number }[] = [];
-      for (const s of surahs) {
-        for (const a of s.ayahs) {
-          allAyahs.push({ number: a.number, arabic: a.arabic, surahNumber: s.number });
-        }
-      }
-      setAyahs(allAyahs);
+    if (pageData) {
+      const mapped = pageData.ayahs.map((a) => ({
+        number: a.number,
+        arabic: a.arabic,
+        surahNumber: a.surahNumber,
+      }));
+      setAyahs(mapped);
       setImmersiveIndex(0);
       setLoading(false);
-    }).catch(() => { if (!cancelled) setLoading(false); });
-
-    return () => { cancelled = true; };
-  }, [currentPage]);
+    } else if (pageLoading) {
+      setLoading(true);
+    }
+  }, [pageData, pageLoading]);
 
   const toggleBookmark = async () => {
     if (!user) { toast(t("mushaf.loginRequired" as any)); return; }
