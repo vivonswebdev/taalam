@@ -86,6 +86,7 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-screen pb-24">
+      <SEOHead title="Communauté - Groupes d'étude" description="Rejoignez des groupes d'étude coranique, partagez vos progrès et motivez-vous en communauté." path="/community" />
       <div className="px-5 pt-14 pb-3">
         <button onClick={() => navigate("/more")} className="flex items-center gap-1 text-muted-foreground mb-3">
           <ArrowLeft size={18} /> {t("community.back" as any)}

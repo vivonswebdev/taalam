@@ -368,6 +368,7 @@ export default function Leaderboard() {
 
   return (
     <div className="min-h-screen pb-24">
+      <SEOHead title="Classement - Leaderboard" description="Comparez votre progression avec la communauté Ta'alam. Classement hebdomadaire, par pays et par niveau." path="/leaderboard" />
       <div className="px-6 pt-6">
         <div className="flex items-center justify-between mb-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground">

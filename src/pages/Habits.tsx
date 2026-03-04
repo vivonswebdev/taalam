@@ -162,6 +162,7 @@ export default function Habits() {
 
   return (
     <PageBackground intensity="medium">
+    <SEOHead title="Habitudes & Progression" description="Suivez votre progression coranique : streaks, XP, statistiques de récitation et objectifs quotidiens." path="/habits" />
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-6 pt-14 pb-4">
