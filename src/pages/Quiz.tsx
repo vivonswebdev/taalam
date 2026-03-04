@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useImmersiveBg } from "@/hooks/useImmersiveBg";
 import { getEpicBg } from "@/lib/epicBg";
+import SEOHead from "@/components/SEOHead";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, XCircle, Trophy, BookOpen, Star, Sparkles, Baby, Brain, Flame, Zap, Landmark, Lightbulb } from "lucide-react";

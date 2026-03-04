@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import PageBackground from "@/components/PageBackground";
+import SEOHead from "@/components/SEOHead";
 
 type Tab = "moods" | "maladies" | "athkar";
 

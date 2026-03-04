@@ -3,6 +3,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { motion } from "framer-motion";
 import { Zap, Target, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SEOHead from "@/components/SEOHead";
 
 export default function TarteelSelector() {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
 import { ModeSelector } from "@/components/ModeSelector";

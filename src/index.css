@@ -125,6 +125,25 @@
   }
 }
 
+/* ── Accessibilité : réduction des animations ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Accessibilité : zone de frappe tactile élargie (seniors/enfants) ── */
+@media (pointer: coarse) {
+  button, a, [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
 @layer components {
   .arabic-text {
     font-family: 'Amiri', serif;

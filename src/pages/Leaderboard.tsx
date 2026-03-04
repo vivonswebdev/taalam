@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import SEOHead from "@/components/SEOHead";
 import { ArrowLeft, Trophy, Globe, Flag, GraduationCap, Users, Share2, ChevronUp, Plus, Maximize2 } from "lucide-react";
 import { useLeaderboard, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useClassLeaderboard } from "@/hooks/useClassLeaderboard";

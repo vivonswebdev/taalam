@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";

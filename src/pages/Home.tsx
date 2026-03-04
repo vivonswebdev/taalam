@@ -44,6 +44,7 @@ export default function Home() {
 
   return (
     <HomeErrorBoundary>
+      <SEOHead title="Ta'alam - Apprendre le Coran facilement" description="Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille." path="/" />
       <HomeDashboard />
     </HomeErrorBoundary>
   );
