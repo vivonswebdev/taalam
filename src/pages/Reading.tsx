@@ -44,7 +44,7 @@ const BG_THUMBS: Record<BgTheme, string | null> = {
 
 export default function Reading() {
   const { t } = useLanguage();
-  const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
+  const { resolvedEditionId, isArabicOnly, setManualEdition, isAuto, setAuto } = useTranslationPreference();
   const { settings, setDarkModeReading, setArabicFont, setDefaultReciter, arabicFontFamily } = useReadingSettings();
   const { readingPosition } = useBookmarks();
   const { immersiveEnabled, toggleImmersive, choices, setModeTheme } = useImmersiveBg();
