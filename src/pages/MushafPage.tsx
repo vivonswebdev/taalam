@@ -745,6 +745,38 @@ export default function MushafPage() {
     );
   }
 
+  // ─── Swipe image mode ───
+  if (readingStyle === "swipe") {
+    return (
+      <div className="fixed inset-0 z-40 bg-background flex flex-col">
+        <div className="flex items-center gap-2 px-3 pt-10 pb-2 bg-background/95 border-b border-border z-50">
+          <button onClick={() => changeStyle("cards")} className="p-2 -ml-2">
+            <ChevronLeft size={20} className="text-foreground" />
+          </button>
+          <div className="flex-1 text-center">
+            <p className="text-sm font-semibold font-['Amiri','serif'] text-foreground">{currentSurahMeta?.nameArabic || ""}</p>
+            <p className="text-[10px] text-muted-foreground">{t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz}</p>
+          </div>
+          <button onClick={toggleBookmark} className="p-1.5">
+            <Star size={18} className={bookmarkedPages.has(currentPage) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"} />
+          </button>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <Suspense fallback={<div className="animate-pulse bg-muted w-full h-full rounded-lg" />}>
+            <MushafSwipeTajwid
+              currentPage={currentPage}
+              onChangePage={(p) => goTo(p)}
+              isBookmarked={bookmarkedPages.has(currentPage)}
+              onToggleBookmark={toggleBookmark}
+              t={t}
+              showTajwid={tajwidEnabled}
+            />
+          </Suspense>
+        </div>
+      </div>
+    );
+  }
+
   // ─── Immersive verse mode ───
   if (readingStyle === "immersive") {
     return (
