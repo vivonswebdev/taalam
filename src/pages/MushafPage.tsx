@@ -414,6 +414,7 @@ function FullscreenMushafView({
   ayahs,
   theme,
   fontSize,
+  setFontSize,
   tajwidEnabled,
   currentPage,
   currentJuz,
@@ -431,6 +432,7 @@ function FullscreenMushafView({
   ayahs: { number: number; arabic: string; surahNumber: number }[];
   theme: typeof THEMES.cream;
   fontSize: number;
+  setFontSize: (size: number) => void;
   tajwidEnabled: boolean;
   currentPage: number;
   currentJuz: number;
