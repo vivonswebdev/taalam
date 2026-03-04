@@ -115,7 +115,7 @@ const MushafSwipeTajwid = memo(function MushafSwipeTajwid({
   );
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (e: any) => {
       dragControls.start(e);
     },
     [dragControls]
