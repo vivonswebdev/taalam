@@ -133,6 +133,12 @@ function ConditionalDedicationPopup() {
   return <DedicationPopup />;
 }
 
+/** Vérifie la version app et purge le cache client si nécessaire */
+function AppVersionGuard() {
+  useAppVersion();
+  return null;
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
