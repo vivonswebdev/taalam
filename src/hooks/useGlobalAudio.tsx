@@ -160,7 +160,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
             currentAyah: 0,
             progress: 0,
           }));
-          fetchUrls(nextNum).then(newUrls => {
+          fetchUrls(nextNum, reciterEditionRef.current).then(newUrls => {
             if (newUrls.length > 0) {
               audioUrlsRef.current = newUrls;
               playAyahInternal(0, newUrls);
