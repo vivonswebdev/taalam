@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createElement } from "react";
-import { createRoot } from "react-dom/client";
-import MushafSwipeTajwid from "../MushafSwipeTajwid";
+import { createRoot, type Root } from "react-dom/client";
+import { act } from "react-dom/test-utils";
+import MushafSwipeTajwid, { type MushafSwipeTajwidProps } from "../MushafSwipeTajwid";
 
 const dragStartSpy = vi.fn();
-let latestMotionProps: any = null;
+let latestMotionProps: Record<string, any> | null = null;
 
 vi.mock("framer-motion", () => ({
   motion: {
@@ -23,24 +24,26 @@ vi.mock("@/hooks/useTajwidData", () => ({
   useTajwidData: () => ({ getPageData: () => [] }),
 }));
 
-function mount(props: Partial<React.ComponentProps<typeof MushafSwipeTajwid>> = {}) {
+function mount(props: Partial<MushafSwipeTajwidProps> = {}) {
   const container = document.createElement("div");
   document.body.appendChild(container);
-  const root = createRoot(container);
+  const root: Root = createRoot(container);
 
-  root.render(
-    createElement(MushafSwipeTajwid, {
-      currentPage: 1,
-      onChangePage: vi.fn(),
-      isBookmarked: false,
-      onToggleBookmark: vi.fn(),
-      t: (key: string) => key,
-      showTajwid: false,
-      ...props,
-    })
-  );
+  const defaultProps: MushafSwipeTajwidProps = {
+    currentPage: 1,
+    onChangePage: vi.fn(),
+    isBookmarked: false,
+    onToggleBookmark: vi.fn(),
+    t: (key: string) => key,
+    showTajwid: false,
+    ...props,
+  };
 
-  return { container, root };
+  act(() => {
+    root.render(createElement(MushafSwipeTajwid, defaultProps));
+  });
+
+  return { container, root, props: defaultProps };
 }
 
 describe("MushafSwipeTajwid", () => {
@@ -49,16 +52,21 @@ describe("MushafSwipeTajwid", () => {
     dragStartSpy.mockClear();
   });
 
-  it("swipe drag > seuil déclenche page+1 et pointer touch démarre dragControls", () => {
+  it("swipe drag > 80 déclenche page+1 et pointer touch démarre dragControls", () => {
     const onChangePage = vi.fn();
     mount({ currentPage: 1, onChangePage });
 
     expect(latestMotionProps).toBeTruthy();
 
-    latestMotionProps.onPointerDown({ pointerType: "touch" });
+    act(() => {
+      latestMotionProps?.onPointerDown({ pointerType: "touch" });
+    });
     expect(dragStartSpy).toHaveBeenCalled();
 
-    latestMotionProps.onDragEnd({}, { offset: { x: -100 } });
+    act(() => {
+      latestMotionProps?.onDragEnd({} as PointerEvent, { offset: { x: -100 } });
+    });
+
     expect(onChangePage).toHaveBeenCalledWith(2);
   });
 
@@ -66,8 +74,10 @@ describe("MushafSwipeTajwid", () => {
     const onChangePage = vi.fn();
     mount({ currentPage: 10, onChangePage });
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    });
 
     expect(onChangePage).toHaveBeenCalledWith(11);
     expect(onChangePage).toHaveBeenCalledWith(9);
@@ -76,12 +86,16 @@ describe("MushafSwipeTajwid", () => {
   it("respecte les limites page 1 et page 604", () => {
     const onChangeStart = vi.fn();
     mount({ currentPage: 1, onChangePage: onChangeStart });
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    });
     expect(onChangeStart).not.toHaveBeenCalled();
 
     const onChangeEnd = vi.fn();
     mount({ currentPage: 604, onChangePage: onChangeEnd });
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    });
     expect(onChangeEnd).not.toHaveBeenCalled();
   });
 });
