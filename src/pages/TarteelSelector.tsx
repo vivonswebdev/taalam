@@ -53,6 +53,7 @@ export default function TarteelSelector() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
+      <SEOHead title="Tarteel - Récitation vocale du Coran" description="Récitez le Coran avec correction vocale IA. Mode facile et avancé pour progresser en tajwid." path="/tarteel" />
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">

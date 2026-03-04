@@ -157,6 +157,7 @@ export default function More() {
 
   return (
     <PageBackground intensity="medium">
+    <SEOHead title="Plus - Paramètres & Outils" description="Accédez aux paramètres, outils islamiques, prières, calendrier hijri et plus encore." path="/more" />
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-5 pt-10 pb-3 flex items-center justify-between">
