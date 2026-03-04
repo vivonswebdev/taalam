@@ -22,7 +22,7 @@ export interface GlobalAudioState {
 
 interface GlobalAudioContextType {
   state: GlobalAudioState;
-  play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number) => void;
+  play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   pause: () => void;
   resume: () => void;
   stop: () => void;
