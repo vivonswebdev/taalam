@@ -180,10 +180,17 @@ export default function Reading() {
         <MushafReader
           surah={selectedSurah}
           translations={translations}
+          transliterations={transliterations}
           isArabicOnly={isArabicOnly}
           onBack={() => setSelectedSurah(null)}
           t={t}
           startAtAyah={startAyah}
+          reciterEdition={settings.defaultReciter}
+          onChangeReciter={(ed) => setDefaultReciter(ed as any)}
+          translationEditionId={resolvedEditionId}
+          onChangeTranslation={(edId) => setManualEdition(edId)}
+          availableTranslations={AVAILABLE_EDITIONS.map(e => ({ id: e.id, label: e.label }))}
+          availableReciters={RECITERS.map(r => ({ id: r.id, name: r.name, nameArabic: r.label, apiEdition: r.apiEdition ?? r.id }))}
           onRequestNextSurah={() => {
             if (selectedSurah.number < 114) {
               const nextNum = selectedSurah.number + 1;
