@@ -1,5 +1,5 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useDragControls, useMotionValue, useTransform } from "framer-motion";
 import { useTajwidData } from "@/hooks/useTajwidData";
 import { TOTAL_MUSHAF_PAGES } from "@/data/mushafPages";
 
@@ -12,7 +12,7 @@ export interface MushafSwipeTajwidProps {
   showTajwid: boolean;
 }
 
-const SWIPE_THRESHOLD = 100;
+const SWIPE_THRESHOLD = 80;
 const IMG_BASE = "https://cdn.islamic.network/quran/images/";
 
 function getMushafImageUrl(page: number): string {
@@ -20,7 +20,6 @@ function getMushafImageUrl(page: number): string {
   return `${IMG_BASE}page${padded}.png`;
 }
 
-/** Tajwid overlay SVG with colored rectangles */
 const TajwidOverlay = memo(function TajwidOverlay({
   pageData,
 }: {
@@ -45,10 +44,10 @@ const TajwidOverlay = memo(function TajwidOverlay({
             width={x2 - x1}
             height={y2 - y1}
             fill={item.color}
-            fillOpacity={0.25}
+            fillOpacity={0.3}
             stroke={item.color}
             strokeWidth={0.3}
-            rx={0.5}
+            rx={0.4}
           />
         );
       })}
@@ -56,15 +55,6 @@ const TajwidOverlay = memo(function TajwidOverlay({
   );
 });
 
-/**
- * MushafSwipeTajwid — swipeable Mushaf page viewer with tajwid color overlay.
- *
- * - Swipe left → next page, swipe right → previous page
- * - 3D page-flip animation
- * - Tap left/right halves as fallback
- * - Keyboard arrow support
- * - Tajwid overlay toggle
- */
 const MushafSwipeTajwid = memo(function MushafSwipeTajwid({
   currentPage,
   onChangePage,
@@ -74,109 +64,117 @@ const MushafSwipeTajwid = memo(function MushafSwipeTajwid({
   showTajwid,
 }: MushafSwipeTajwidProps) {
   const { getPageData } = useTajwidData();
-  const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const dragControls = useDragControls();
+
   const [imgLoaded, setImgLoaded] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [lastDragOffset, setLastDragOffset] = useState(0);
 
   const x = useMotionValue(0);
-  const rotateY = useTransform(x, [-200, 0, 200], [15, 0, -15]);
+  const rotateY = useTransform(x, [-160, 0, 160], [14, 0, -14]);
   const shadow = useTransform(
     x,
-    [-200, 0, 200],
+    [-160, 0, 160],
     [
-      "8px 0 30px rgba(0,0,0,0.3)",
-      "0 0 0 rgba(0,0,0,0)",
-      "-8px 0 30px rgba(0,0,0,0.3)",
+      "10px 0 26px hsl(var(--foreground) / 0.20)",
+      "0 0 0 hsl(var(--foreground) / 0)",
+      "-10px 0 26px hsl(var(--foreground) / 0.20)",
     ]
   );
 
+  const pageData = useMemo(() => (showTajwid ? getPageData(currentPage) : []), [showTajwid, getPageData, currentPage]);
+
   const goNext = useCallback(() => {
-    if (currentPage < TOTAL_MUSHAF_PAGES) {
-      setDirection(1);
-      onChangePage(currentPage + 1);
-    }
+    if (currentPage >= TOTAL_MUSHAF_PAGES) return;
+    setDirection(1);
+    onChangePage(currentPage + 1);
   }, [currentPage, onChangePage]);
 
   const goPrev = useCallback(() => {
-    if (currentPage > 1) {
-      setDirection(-1);
-      onChangePage(currentPage - 1);
-    }
+    if (currentPage <= 1) return;
+    setDirection(-1);
+    onChangePage(currentPage - 1);
   }, [currentPage, onChangePage]);
 
-  // Keyboard arrows
+  const handleDragEnd = useCallback(
+    (_: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number } }) => {
+      const offsetX = info.offset.x;
+      setLastDragOffset(Math.round(offsetX));
+      console.log("drag offset:", offsetX);
+
+      if (offsetX <= -SWIPE_THRESHOLD) {
+        goNext();
+      } else if (offsetX >= SWIPE_THRESHOLD) {
+        goPrev();
+      }
+
+      x.set(0);
+    },
+    [goNext, goPrev, x]
+  );
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      dragControls.start(e);
+    },
+    [dragControls]
+  );
+
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goNext();    // Arabic RTL: left = forward
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goNext();
       if (e.key === "ArrowRight") goPrev();
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [goNext, goPrev]);
 
-  // Preload adjacent pages
   useEffect(() => {
     setImgLoaded(false);
+    x.set(0);
+
     if (currentPage < TOTAL_MUSHAF_PAGES) {
-      const img = new Image();
-      img.src = getMushafImageUrl(currentPage + 1);
+      const nextImg = new Image();
+      nextImg.src = getMushafImageUrl(currentPage + 1);
     }
+
     if (currentPage > 1) {
-      const img = new Image();
-      img.src = getMushafImageUrl(currentPage - 1);
+      const prevImg = new Image();
+      prevImg.src = getMushafImageUrl(currentPage - 1);
     }
-  }, [currentPage]);
-
-  const handleDragEnd = useCallback(
-    (_: any, info: { offset: { x: number } }) => {
-      if (info.offset.x < -SWIPE_THRESHOLD) goNext();
-      else if (info.offset.x > SWIPE_THRESHOLD) goPrev();
-    },
-    [goNext, goPrev]
-  );
-
-  // Tap fallback: left half = next, right half = prev (RTL)
-  const handleTap = useCallback(
-    (e: React.MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const tapX = e.clientX - rect.left;
-      if (tapX < rect.width / 2) goNext();
-      else goPrev();
-    },
-    [goNext, goPrev]
-  );
-
-  const pageData = showTajwid ? getPageData(currentPage) : [];
+  }, [currentPage, x]);
 
   const flipVariants = {
-    enter: (dir: number) => ({
-      rotateY: dir > 0 ? -90 : 90,
-      opacity: 0,
-      scale: 0.95,
+    enter: (dir: 1 | -1) => ({
+      rotateY: dir === 1 ? -180 : 180,
+      opacity: 0.75,
+      scale: 0.97,
     }),
     center: {
       rotateY: 0,
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
+      transition: { duration: 0.3, ease: "easeInOut" as const },
     },
-    exit: (dir: number) => ({
-      rotateY: dir > 0 ? 90 : -90,
-      opacity: 0,
-      scale: 0.95,
-      transition: { duration: 0.25 },
+    exit: (dir: 1 | -1) => ({
+      rotateY: dir === 1 ? 180 : -180,
+      opacity: 0.75,
+      scale: 0.97,
+      transition: { duration: 0.3, ease: "easeInOut" as const },
     }),
   };
 
   return (
     <div
-      ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center overflow-hidden select-none"
-      style={{ perspective: "1200px" }}
+      className="relative w-full h-screen overflow-hidden select-none touch-pan-y"
+      style={{ touchAction: "pan-y", userSelect: "none", perspective: "1200px" }}
       role="img"
       aria-label={`${t("mushaf.page")} ${currentPage}`}
+      data-testid="mushaf-swipe-root"
     >
+      <div ref={constraintsRef} className="absolute inset-0" />
+
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={currentPage}
@@ -186,38 +184,60 @@ const MushafSwipeTajwid = memo(function MushafSwipeTajwid({
           animate="center"
           exit="exit"
           drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.15}
+          dragListener={false}
+          dragControls={dragControls}
+          dragConstraints={constraintsRef}
+          dragElastic={0}
+          dragMomentum={false}
+          onPointerDown={handlePointerDown}
           onDragEnd={handleDragEnd}
           style={{ x, rotateY, boxShadow: shadow }}
-          className="relative w-full max-w-[500px] cursor-grab active:cursor-grabbing rounded-lg overflow-hidden"
-          onClick={handleTap}
+          className="absolute inset-0 mx-auto my-auto h-full max-h-screen w-full max-w-[560px] cursor-grab active:cursor-grabbing"
+          data-testid="mushaf-draggable"
         >
-          {/* Loading skeleton */}
-          {!imgLoaded && (
-            <div className="absolute inset-0 bg-muted animate-pulse rounded-lg" />
-          )}
+          {!imgLoaded && <div className="absolute inset-0 bg-muted animate-pulse" />}
 
-          {/* Mushaf page image */}
           <img
             src={getMushafImageUrl(currentPage)}
             alt={`${t("mushaf.page")} ${currentPage}`}
-            className="w-full h-auto block"
+            className="h-full w-full object-contain"
             draggable={false}
+            loading="eager"
             onLoad={() => setImgLoaded(true)}
             onError={() => setImgLoaded(true)}
-            loading="eager"
           />
 
-          {/* Tajwid color overlay */}
           {showTajwid && imgLoaded && <TajwidOverlay pageData={pageData} />}
-
-          {/* Page number badge */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-sm text-foreground text-[10px] font-semibold px-3 py-1 rounded-full border border-border">
-            {currentPage} / {TOTAL_MUSHAF_PAGES}
-          </div>
         </motion.div>
       </AnimatePresence>
+
+      <button
+        type="button"
+        aria-label={t("mushaf.nextPage") || "Next page"}
+        onClick={goNext}
+        className="absolute inset-y-0 left-0 z-30 w-1/2"
+        data-testid="tap-left-next"
+      />
+      <button
+        type="button"
+        aria-label={t("mushaf.prevPage") || "Previous page"}
+        onClick={goPrev}
+        className="absolute inset-y-0 right-0 z-30 w-1/2"
+        data-testid="tap-right-prev"
+      />
+
+      <button
+        type="button"
+        aria-label={isBookmarked ? t("mushaf.removeBookmark") || "Remove bookmark" : t("mushaf.addBookmark") || "Add bookmark"}
+        onClick={onToggleBookmark}
+        className="absolute top-3 right-3 z-40 rounded-full border border-border bg-background/80 px-2 py-1 text-[10px] text-foreground backdrop-blur-sm"
+      >
+        {isBookmarked ? "★" : "☆"}
+      </button>
+
+      <div className="absolute bottom-3 left-3 z-40 rounded-md border border-border bg-background/85 px-2 py-1 text-[10px] font-medium text-foreground backdrop-blur-sm">
+        {`Page ${currentPage} | Drag: offset ${lastDragOffset}`}
+      </div>
     </div>
   );
 });
