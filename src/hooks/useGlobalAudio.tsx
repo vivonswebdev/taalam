@@ -22,7 +22,7 @@ export interface GlobalAudioState {
 
 interface GlobalAudioContextType {
   state: GlobalAudioState;
-  play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number) => void;
+  play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   pause: () => void;
   resume: () => void;
   stop: () => void;
@@ -60,6 +60,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioUrlsRef = useRef<string[]>([]);
+  const reciterEditionRef = useRef("ar.alafasy");
   const currentAyahRef = useRef(0);
   const surahNumberRef = useRef(0);
   const totalAyahsRef = useRef(0);
@@ -87,14 +88,15 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     clearInterval_();
   }, [clearInterval_]);
 
-  const fetchUrls = useCallback(async (surahNum: number): Promise<string[]> => {
+  const fetchUrls = useCallback(async (surahNum: number, edition?: string): Promise<string[]> => {
+    const reciterEd = edition || reciterEditionRef.current || "ar.alafasy";
     try {
       // Check if offline mode is on and try cache first
       const isOffline = localStorage.getItem("taaloum_offline_mode") === "true";
       if (isOffline) {
         try {
           const cache = await caches.open("offline-audio-v2");
-          const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (cached) {
             const data = await cached.json();
             if (data.data?.ayahs) {
@@ -103,7 +105,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
           }
           // Also check mood cache
           const moodCache = await caches.open("mood-audio-v1");
-          const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (moodCached) {
             const data = await moodCached.json();
             if (data.data?.ayahs) {
@@ -116,7 +118,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
         } catch {}
       }
 
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
       const data = await res.json();
       if (data.data?.ayahs) {
         return data.data.ayahs.map((a: { audio: string }) => a.audio);
@@ -158,7 +160,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
             currentAyah: 0,
             progress: 0,
           }));
-          fetchUrls(nextNum).then(newUrls => {
+          fetchUrls(nextNum, reciterEditionRef.current).then(newUrls => {
             if (newUrls.length > 0) {
               audioUrlsRef.current = newUrls;
               playAyahInternal(0, newUrls);
@@ -194,8 +196,9 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     audio.play().catch(() => playAyahInternal(index + 1, urls));
   }, [stopAudio, fetchUrls, startProgressInterval]);
 
-  const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0) => {
+  const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
+    if (reciterEdition) reciterEditionRef.current = reciterEdition;
     surahNumberRef.current = surahNum;
     surahNameRef.current = name;
     surahNameArabicRef.current = nameAr;
@@ -215,7 +218,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       listenTestMode: listenTestModeRef.current,
     });
 
-    const urls = await fetchUrls(surahNum);
+    const urls = await fetchUrls(surahNum, reciterEditionRef.current);
     if (urls.length === 0) return;
     audioUrlsRef.current = urls;
     playAyahInternal(startAyah, urls);

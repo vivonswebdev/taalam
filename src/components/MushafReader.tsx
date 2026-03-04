@@ -24,23 +24,37 @@ import type { Surah } from "@/data/surahs";
 interface MushafReaderProps {
   surah: Surah;
   translations: Record<number, string>;
+  transliterations: Record<number, string>;
   isArabicOnly: boolean;
   onBack: () => void;
   t: (key: string) => string;
   startAtAyah?: number;
   onRequestNextSurah?: () => void;
   onRequestPrevSurah?: () => void;
+  reciterEdition?: string;
+  onChangeReciter?: (edition: string) => void;
+  translationEditionId?: string;
+  onChangeTranslation?: (editionId: string) => void;
+  availableTranslations?: { id: string; label: string }[];
+  availableReciters?: { id: string; name: string; nameArabic: string; apiEdition: string }[];
 }
 
 export default function MushafReader({
   surah,
   translations,
+  transliterations,
   isArabicOnly,
   onBack,
   t,
   startAtAyah = 0,
   onRequestNextSurah,
   onRequestPrevSurah,
+  reciterEdition,
+  onChangeReciter,
+  translationEditionId,
+  onChangeTranslation,
+  availableTranslations,
+  availableReciters,
 }: MushafReaderProps) {
   const { addBookmark, removeBookmark, isBookmarked, saveReadingPosition, readingPosition } = useBookmarks();
   const globalAudio = useGlobalAudio();
@@ -55,6 +69,12 @@ export default function MushafReader({
   const [darkOverride, setDarkOverride] = useState(false);
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [tajwidEnabled, setTajwidEnabled] = useState(true);
+  const [phoneticEnabled, setPhoneticEnabled] = useState(() => {
+    try { return localStorage.getItem("reading-phonetic") !== "false"; } catch { return true; }
+  });
+  const [translationEnabled, setTranslationEnabled] = useState(() => {
+    try { return localStorage.getItem("reading-translation") !== "false"; } catch { return true; }
+  });
   const [activeWordIndex, setActiveWordIndex] = useState(-1);
   const [readingStyle, setReadingStyle] = useState<"cards" | "immersive">(() => {
     try { return (localStorage.getItem("reading-style") as "cards" | "immersive") || "cards"; } catch { return "cards"; }
@@ -103,7 +123,7 @@ export default function MushafReader({
   useEffect(() => {
     if (autoStartedRef.current) return;
     autoStartedRef.current = true;
-    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0);
+    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0, reciterEdition);
   }, []);
 
   // Listen for surah changes from global audio + award XP for listened ayahs
@@ -369,6 +389,71 @@ export default function MushafReader({
                 </div>
                 <Switch checked={tajwidEnabled} onCheckedChange={setTajwidEnabled} />
               </div>
+              {/* Phonetic toggle */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🔤</span>
+                  <span className="text-sm font-medium">{t("reading.phonetic")}</span>
+                </div>
+                <Switch checked={phoneticEnabled} onCheckedChange={(v) => { setPhoneticEnabled(v); try { localStorage.setItem("reading-phonetic", String(v)); } catch {} }} />
+              </div>
+              {/* Translation toggle */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🌐</span>
+                  <span className="text-sm font-medium">{t("reading.showTranslation")}</span>
+                </div>
+                <Switch checked={translationEnabled} onCheckedChange={(v) => { setTranslationEnabled(v); try { localStorage.setItem("reading-translation", String(v)); } catch {} }} />
+              </div>
+              {/* Reciter picker */}
+              {availableReciters && availableReciters.length > 0 && onChangeReciter && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">🎙️</span>
+                    <span className="text-sm font-medium">{t("reading.defaultReciter")}</span>
+                  </div>
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    {availableReciters.map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => {
+                          onChangeReciter(r.id);
+                          // Restart playback with new reciter
+                          globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah, r.apiEdition || r.id);
+                        }}
+                        className={`w-full text-left px-3 py-1.5 rounded-xl border transition-colors text-xs ${
+                          reciterEdition === r.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-border hover:bg-accent/50 text-foreground"
+                        }`}
+                      >
+                        <span className="font-arabic">{r.nameArabic}</span>
+                        <span className="text-muted-foreground ml-2">{r.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Translation edition picker */}
+              {availableTranslations && availableTranslations.length > 0 && onChangeTranslation && translationEnabled && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">📖</span>
+                    <span className="text-sm font-medium">{t("reading.translationEdition")}</span>
+                  </div>
+                  <div className="space-y-1">
+                    {availableTranslations.map((ed) => (
+                      <button
+                        key={ed.id}
+                        onClick={() => onChangeTranslation(ed.id)}
+                        className={`w-full text-left px-3 py-1.5 rounded-xl border transition-colors text-xs ${
+                          translationEditionId === ed.id ? "border-primary bg-primary/10 text-primary font-bold" : "border-border hover:bg-accent/50 text-foreground"
+                        }`}
+                      >
+                        {ed.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -391,7 +476,7 @@ export default function MushafReader({
                 } else if (globalAudio.state.surahNumber === surah.number) {
                   globalAudio.resume();
                 } else {
-                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0);
+                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0, reciterEdition);
                 }
               }}
               className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playing ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
@@ -536,16 +621,16 @@ export default function MushafReader({
                   </div>
 
                   {/* Translation */}
-                  {!isArabicOnly && (translations[currentAyah] || ayah.translation) && (
+                  {translationEnabled && !isArabicOnly && (translations[currentAyah] || ayah.translation) && (
                     <p className="text-sm text-white/70 leading-relaxed border-t border-white/10 pt-4 mb-3">
                       {translations[currentAyah] || ayah.translation}
                     </p>
                   )}
 
-                  {/* Transliteration */}
-                  {ayah.transliteration && (
+                  {/* Transliteration / Phonetic */}
+                  {phoneticEnabled && (transliterations[currentAyah] || ayah.transliteration) && (
                     <p className="text-xs text-primary/60 italic leading-relaxed">
-                      {ayah.transliteration}
+                      {transliterations[currentAyah] || ayah.transliteration}
                     </p>
                   )}
                 </motion.div>
@@ -592,7 +677,7 @@ export default function MushafReader({
                     onClick={() => {
                       if (playing) globalAudio.pause();
                       else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
-                      else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
+                      else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah, reciterEdition);
                     }}
                     className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
                   >
@@ -678,16 +763,16 @@ export default function MushafReader({
               </div>
 
               {/* Translation */}
-              {!isArabicOnly && (translations[i] || ayah.translation) && (
+              {translationEnabled && !isArabicOnly && (translations[i] || ayah.translation) && (
                 <p className="text-sm text-muted-foreground mt-3 leading-relaxed text-center border-t border-border/30 pt-3">
                   {translations[i] || ayah.translation}
                 </p>
               )}
 
-              {/* Transliteration */}
-              {ayah.transliteration && (
+              {/* Transliteration / Phonetic */}
+              {phoneticEnabled && (transliterations[i] || ayah.transliteration) && (
                 <p className="text-xs text-primary/60 italic mt-2 leading-relaxed text-center">
-                  {ayah.transliteration}
+                  {transliterations[i] || ayah.transliteration}
                 </p>
               )}
 

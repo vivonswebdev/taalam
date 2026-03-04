@@ -821,6 +821,7 @@ export default function Quran() {
         <MushafReader
           surah={selectedSurah}
           translations={translations}
+          transliterations={{}}
           isArabicOnly={isArabicOnly}
           onBack={handleNewSurah}
           t={t}

@@ -5,7 +5,7 @@ import {
   Bookmark, ChevronRight, Star,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useTranslationPreference } from "@/hooks/useTranslationPreference";
+import { useTranslationPreference, AVAILABLE_EDITIONS } from "@/hooks/useTranslationPreference";
 import { useReadingSettings, ARABIC_FONTS, RECITERS } from "@/hooks/useReadingSettings";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
@@ -44,7 +44,7 @@ const BG_THUMBS: Record<BgTheme, string | null> = {
 
 export default function Reading() {
   const { t } = useLanguage();
-  const { resolvedEditionId, isArabicOnly } = useTranslationPreference();
+  const { resolvedEditionId, isArabicOnly, setManualEdition, isAuto, setAuto } = useTranslationPreference();
   const { settings, setDarkModeReading, setArabicFont, setDefaultReciter, arabicFontFamily } = useReadingSettings();
   const { readingPosition } = useBookmarks();
   const { immersiveEnabled, toggleImmersive, choices, setModeTheme } = useImmersiveBg();
@@ -63,6 +63,7 @@ export default function Reading() {
   const [startAyah, setStartAyah] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [translations, setTranslations] = useState<Record<number, string>>({});
+  const [transliterations, setTransliterations] = useState<Record<number, string>>({});
   const [reciterSearch, setReciterSearch] = useState("");
 
   const filteredRecitersPopular = RECITERS.filter(r => r.popular && (
@@ -104,6 +105,25 @@ export default function Reading() {
       })
       .catch(() => {});
   }, [selectedSurah, resolvedEditionId, isArabicOnly]);
+
+  // Fetch transliterations when surah changes
+  useEffect(() => {
+    if (!selectedSurah) { setTransliterations({}); return; }
+    // If local data already has transliteration, skip API
+    if (selectedSurah.ayahs[0]?.transliteration) { setTransliterations({}); return; }
+    fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/en.transliteration`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data?.ayahs) {
+          const map: Record<number, string> = {};
+          data.data.ayahs.forEach((a: { text: string }, i: number) => {
+            map[i] = a.text;
+          });
+          setTransliterations(map);
+        }
+      })
+      .catch(() => {});
+  }, [selectedSurah]);
 
   // Apply reading dark mode
   useEffect(() => {
@@ -160,10 +180,17 @@ export default function Reading() {
         <MushafReader
           surah={selectedSurah}
           translations={translations}
+          transliterations={transliterations}
           isArabicOnly={isArabicOnly}
           onBack={() => setSelectedSurah(null)}
           t={t}
           startAtAyah={startAyah}
+          reciterEdition={settings.defaultReciter}
+          onChangeReciter={(ed) => setDefaultReciter(ed as any)}
+          translationEditionId={resolvedEditionId}
+          onChangeTranslation={(edId) => setManualEdition(edId)}
+          availableTranslations={AVAILABLE_EDITIONS.map(e => ({ id: e.id, label: e.label }))}
+          availableReciters={RECITERS.map(r => ({ id: r.id, name: r.name, nameArabic: r.label, apiEdition: r.apiEdition ?? r.id }))}
           onRequestNextSurah={() => {
             if (selectedSurah.number < 114) {
               const nextNum = selectedSurah.number + 1;
