@@ -677,7 +677,7 @@ export default function MushafReader({
                     onClick={() => {
                       if (playing) globalAudio.pause();
                       else if (globalAudio.state.surahNumber === surah.number) globalAudio.resume();
-                      else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah);
+                      else globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah, reciterEdition);
                     }}
                     className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
                   >
