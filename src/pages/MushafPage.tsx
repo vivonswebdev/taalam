@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, useMemo, useRef, lazy, Suspense } fro
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
-import { ArrowLeft, ArrowRight, BookOpen, Star, List, Settings2, ChevronLeft, Type, Palette, Volume2, VolumeX, Eye, EyeOff, Maximize } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Star, List, Settings2, ChevronLeft, Type, Palette, Volume2, VolumeX, Eye, EyeOff } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,9 +25,8 @@ const MUSHAF_FONT_KEY = "mushaf_font_size";
 const MUSHAF_TAJWID_KEY = "mushaf_tajwid";
 const MUSHAF_SOUND_KEY = "mushaf_sound";
 
-type ReadingStyle = "cards" | "immersive" | "mushaf" | "swipe";
+type ReadingStyle = "cards" | "immersive" | "mushaf";
 
-const MushafSwipeTajwid = lazy(() => import("@/components/MushafSwipeTajwid"));
 type MushafTheme = "cream" | "night" | "blue" | "white";
 
 const THEMES: Record<MushafTheme, { bg: string; text: string; medallion: string; medallionText: string; frame: string; headerBg: string; label: string; emoji: string }> = {
@@ -36,13 +36,9 @@ const THEMES: Record<MushafTheme, { bg: string; text: string; medallion: string;
   blue: { bg: "#0d1b2a", text: "#d4d8e0", medallion: "#6b93d6", medallionText: "#fff", frame: "#4a6fa5", headerBg: "rgba(13,27,42,0.95)", label: "Bleuté", emoji: "🔵" },
 };
 
-const FONT_SIZES = [
-  { key: "small", value: 22, label: "Petit" },
-  { key: "medium", value: 28, label: "Moyen" },
-  { key: "large", value: 36, label: "Grand" },
-];
-
-const DEFAULT_FONT_SIZE = 22;
+const DEFAULT_FONT_SIZE = 24;
+const MIN_FONT_SIZE = 18;
+const MAX_FONT_SIZE = 56;
 
 // ─── Ayah Medallion ───
 function AyahMedallion({ number, color, textColor }: { number: number; color: string; textColor: string }) {
@@ -452,14 +448,25 @@ function FullscreenMushafView({
   const currentChunk = chunks[screenIdx] || [];
   const totalScreens = chunks.length;
 
-  const goPrevScreen = () => {
+  const goPrevScreen = useCallback(() => {
     if (screenIdx > 0) setScreenIdx(screenIdx - 1);
     else if (hasPrev) onPrev();
-  };
-  const goNextScreen = () => {
+  }, [screenIdx, hasPrev, onPrev]);
+  const goNextScreen = useCallback(() => {
     if (screenIdx < totalScreens - 1) setScreenIdx(screenIdx + 1);
     else if (hasNext) onNext();
-  };
+  }, [screenIdx, totalScreens, hasNext, onNext]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goNextScreen();  // RTL: left = forward
+      if (e.key === "ArrowRight") goPrevScreen();
+      if (e.key === "Escape") onBack();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [goNextScreen, goPrevScreen, onBack]);
 
   return (
     <div className="fixed inset-0 z-40" style={{ backgroundColor: theme.bg }}>
@@ -558,7 +565,7 @@ export default function MushafPage() {
    const [readingStyle, setReadingStyle] = useState<ReadingStyle>(() => {
     try {
       const saved = localStorage.getItem(READING_STYLE_KEY) as ReadingStyle;
-      if (saved === "mushaf" || saved === "cards" || saved === "immersive" || saved === "swipe") return saved;
+      if (saved === "mushaf" || saved === "cards" || saved === "immersive") return saved;
       return "cards";
     } catch { return "cards"; }
   });
@@ -745,38 +752,6 @@ export default function MushafPage() {
     );
   }
 
-  // ─── Swipe image mode ───
-  if (readingStyle === "swipe") {
-    return (
-      <div className="fixed inset-0 z-40 bg-background flex flex-col">
-        <div className="flex items-center gap-2 px-3 pt-10 pb-2 bg-background/95 border-b border-border z-50">
-          <button onClick={() => changeStyle("cards")} className="p-2 -ml-2">
-            <ChevronLeft size={20} className="text-foreground" />
-          </button>
-          <div className="flex-1 text-center">
-            <p className="text-sm font-semibold font-['Amiri','serif'] text-foreground">{currentSurahMeta?.nameArabic || ""}</p>
-            <p className="text-[10px] text-muted-foreground">{t("mushaf.page" as any)} {currentPage} — {t("mushaf.juz" as any)} {currentJuz}</p>
-          </div>
-          <button onClick={toggleBookmark} className="p-1.5">
-            <Star size={18} className={bookmarkedPages.has(currentPage) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"} />
-          </button>
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <Suspense fallback={<div className="animate-pulse bg-muted w-full h-full rounded-lg" />}>
-            <MushafSwipeTajwid
-              currentPage={currentPage}
-              onChangePage={(p) => goTo(p)}
-              isBookmarked={bookmarkedPages.has(currentPage)}
-              onToggleBookmark={toggleBookmark}
-              t={t}
-              showTajwid={tajwidEnabled}
-            />
-          </Suspense>
-        </div>
-      </div>
-    );
-  }
-
   // ─── Immersive verse mode ───
   if (readingStyle === "immersive") {
     return (
@@ -924,9 +899,8 @@ export default function MushafPage() {
                       <div className="flex gap-2">
                         {([
                           { key: "cards" as const, emoji: "📖", label: t("mushaf.styleCards" as any) },
-                          { key: "swipe" as const, emoji: "📄", label: t("mushaf.styleSwipe" as any) },
                           { key: "immersive" as const, emoji: "🌌", label: t("mushaf.styleImmersive" as any) },
-                          { key: "mushaf" as const, emoji: "🕌", label: "Plein écran" },
+                          { key: "mushaf" as const, emoji: "🕌", label: t("mushaf.styleFullscreen" as any) || "Plein écran" },
                         ]).map((s) => (
                           <button
                             key={s.key}
@@ -974,21 +948,18 @@ export default function MushafPage() {
                         <Type size={14} className="text-muted-foreground" />
                         <span className="text-sm font-medium">{t("mushaf.textSize" as any)}</span>
                       </div>
-                      <div className="flex gap-2">
-                        {FONT_SIZES.map((fs) => (
-                          <button
-                            key={fs.key}
-                            onClick={() => { setFontSize(fs.value); localStorage.setItem(MUSHAF_FONT_KEY, String(fs.value)); }}
-                            className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium border transition-colors ${
-                              fontSize === fs.value
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:bg-accent/40"
-                            }`}
-                          >
-                            <span className="block text-base mb-0.5 font-['Amiri','serif']" style={{ fontSize: `${fs.value * 0.5}px` }}>ب</span>
-                            {fs.label}
-                          </button>
-                        ))}
+                      <div className="flex items-center gap-3">
+                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '14px' }}>ب</span>
+                        <Slider
+                          min={MIN_FONT_SIZE}
+                          max={MAX_FONT_SIZE}
+                          step={2}
+                          value={[fontSize]}
+                          onValueChange={([v]) => { setFontSize(v); localStorage.setItem(MUSHAF_FONT_KEY, String(v)); }}
+                          className="flex-1"
+                        />
+                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '28px' }}>ب</span>
+                        <span className="text-[10px] text-muted-foreground w-8 text-right">{fontSize}px</span>
                       </div>
                     </div>
 

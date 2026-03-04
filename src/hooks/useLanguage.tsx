@@ -2004,9 +2004,10 @@ const translations = {
   "mushaf.loginRequired": { fr: "Connectez-vous pour sauvegarder vos favoris", en: "Log in to save your bookmarks", nl: "Log in om je favorieten op te slaan", ar: "سجّل الدخول لحفظ المفضلة", tr: "Yer imlerini kaydetmek için giriş yap", ur: "بُک مارکس محفوظ کرنے کے لیے لاگ ان کریں" },
   "mushaf.resumeLast": { fr: "Reprendre à la dernière page lue", en: "Resume at last read page", nl: "Hervat bij laatst gelezen pagina", ar: "استئناف من آخر صفحة قرأتها", tr: "Son okunan sayfadan devam et", ur: "آخری پڑھے ہوئے صفحے سے جاری رکھیں" },
   "mushaf.styleCards": { fr: "Texte", en: "Text", nl: "Tekst", ar: "نص", tr: "Metin", ur: "متن" },
-  "mushaf.styleSwipe": { fr: "Image Mushaf", en: "Mushaf Image", nl: "Mushaf Afbeelding", ar: "صورة المصحف", tr: "Mushaf Görüntüsü", ur: "مصحف تصویر" },
-  "mushaf.styleImmersive": { fr: "Plein écran", en: "Fullscreen", nl: "Volledig scherm", ar: "شاشة كاملة", tr: "Tam ekran", ur: "فل سکرین" },
+  "mushaf.styleImmersive": { fr: "Immersif", en: "Immersive", nl: "Meeslepend", ar: "غامر", tr: "Sürükleyici", ur: "عمیق" },
+  "mushaf.styleFullscreen": { fr: "Plein écran", en: "Fullscreen", nl: "Volledig scherm", ar: "شاشة كاملة", tr: "Tam ekran", ur: "فل سکرین" },
   "mushaf.styleMushaf": { fr: "Mushaf (livre)", en: "Mushaf (book)", nl: "Mushaf (boek)", ar: "المصحف (كتاب)", tr: "Mushaf (kitap)", ur: "مصحف (کتاب)" },
+  "mushaf.zoomText": { fr: "Taille du texte", en: "Text size", nl: "Tekstgrootte", ar: "حجم الخط", tr: "Metin boyutu", ur: "متن کا سائز" },
   "mushaf.tipTap": { fr: "Touchez pour afficher les contrôles", en: "Tap to show controls", nl: "Tik om bedieningselementen te tonen", ar: "اضغط لإظهار أدوات التحكم", tr: "Kontrolleri göstermek için dokunun", ur: "کنٹرولز دکھانے کے لیے ٹیپ کریں" },
   "mushaf.readingStyle": { fr: "Mode de lecture", en: "Reading mode", nl: "Leesmodus", ar: "وضع القراءة", tr: "Okuma modu", ur: "پڑھنے کا موڈ" },
 
