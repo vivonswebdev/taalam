@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mic, Radio } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import PageBackground from "@/components/PageBackground";
+import SEOHead from "@/components/SEOHead";
 
 export default function QuranHub() {
   const navigate = useNavigate();
