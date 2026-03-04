@@ -10,6 +10,7 @@ import { ActiveChildProvider } from "@/hooks/useActiveChild";
 import { GlobalAudioProvider } from "@/hooks/useGlobalAudio";
 import { UserModeProvider } from "@/hooks/useUserMode";
 import { useAdminSettings } from "./hooks/useAdminSettings";
+import { useAppVersion } from "./hooks/useAppVersion";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
@@ -132,6 +133,12 @@ function ConditionalDedicationPopup() {
   return <DedicationPopup />;
 }
 
+/** Vérifie la version app et purge le cache client si nécessaire */
+function AppVersionGuard() {
+  useAppVersion();
+  return null;
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -141,6 +148,7 @@ const App = () => (
         <LanguageProvider>
           <ActiveChildProvider>
           <UserModeProvider>
+          <AppVersionGuard />
           <Toaster />
           <Sonner />
           <BrowserRouter>
