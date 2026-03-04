@@ -621,16 +621,16 @@ export default function MushafReader({
                   </div>
 
                   {/* Translation */}
-                  {!isArabicOnly && (translations[currentAyah] || ayah.translation) && (
+                  {translationEnabled && !isArabicOnly && (translations[currentAyah] || ayah.translation) && (
                     <p className="text-sm text-white/70 leading-relaxed border-t border-white/10 pt-4 mb-3">
                       {translations[currentAyah] || ayah.translation}
                     </p>
                   )}
 
-                  {/* Transliteration */}
-                  {ayah.transliteration && (
+                  {/* Transliteration / Phonetic */}
+                  {phoneticEnabled && (transliterations[currentAyah] || ayah.transliteration) && (
                     <p className="text-xs text-primary/60 italic leading-relaxed">
-                      {ayah.transliteration}
+                      {transliterations[currentAyah] || ayah.transliteration}
                     </p>
                   )}
                 </motion.div>
