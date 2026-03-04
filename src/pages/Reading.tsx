@@ -106,6 +106,25 @@ export default function Reading() {
       .catch(() => {});
   }, [selectedSurah, resolvedEditionId, isArabicOnly]);
 
+  // Fetch transliterations when surah changes
+  useEffect(() => {
+    if (!selectedSurah) { setTransliterations({}); return; }
+    // If local data already has transliteration, skip API
+    if (selectedSurah.ayahs[0]?.transliteration) { setTransliterations({}); return; }
+    fetch(`https://api.alquran.cloud/v1/surah/${selectedSurah.number}/en.transliteration`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data?.ayahs) {
+          const map: Record<number, string> = {};
+          data.data.ayahs.forEach((a: { text: string }, i: number) => {
+            map[i] = a.text;
+          });
+          setTransliterations(map);
+        }
+      })
+      .catch(() => {});
+  }, [selectedSurah]);
+
   // Apply reading dark mode
   useEffect(() => {
     if (selectedSurah && settings.darkModeReading) {
