@@ -104,6 +104,24 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-size: 14px;
+  }
+
+  /* ── Accessibilité : focus visible ── */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ── Accessibilité : taille de police minimum 14px ── */
+  p, span, li, td, th, label, a, button, input, textarea, select {
+    font-size: max(0.875rem, 14px);
+  }
+
+  /* Exception pour texte arabe qui a sa propre gestion */
+  .arabic-text, .font-arabic {
+    font-size: inherit;
   }
 }
 
