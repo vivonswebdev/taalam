@@ -88,14 +88,15 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     clearInterval_();
   }, [clearInterval_]);
 
-  const fetchUrls = useCallback(async (surahNum: number): Promise<string[]> => {
+  const fetchUrls = useCallback(async (surahNum: number, edition?: string): Promise<string[]> => {
+    const reciterEd = edition || reciterEditionRef.current || "ar.alafasy";
     try {
       // Check if offline mode is on and try cache first
       const isOffline = localStorage.getItem("taaloum_offline_mode") === "true";
       if (isOffline) {
         try {
           const cache = await caches.open("offline-audio-v2");
-          const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (cached) {
             const data = await cached.json();
             if (data.data?.ayahs) {
@@ -104,7 +105,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
           }
           // Also check mood cache
           const moodCache = await caches.open("mood-audio-v1");
-          const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+          const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (moodCached) {
             const data = await moodCached.json();
             if (data.data?.ayahs) {
@@ -117,7 +118,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
         } catch {}
       }
 
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.alafasy`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
       const data = await res.json();
       if (data.data?.ayahs) {
         return data.data.ayahs.map((a: { audio: string }) => a.audio);
