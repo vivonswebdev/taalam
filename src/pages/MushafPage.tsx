@@ -888,9 +888,8 @@ export default function MushafPage() {
                       <div className="flex gap-2">
                         {([
                           { key: "cards" as const, emoji: "📖", label: t("mushaf.styleCards" as any) },
-                          { key: "swipe" as const, emoji: "📄", label: t("mushaf.styleSwipe" as any) },
                           { key: "immersive" as const, emoji: "🌌", label: t("mushaf.styleImmersive" as any) },
-                          { key: "mushaf" as const, emoji: "🕌", label: "Plein écran" },
+                          { key: "mushaf" as const, emoji: "🕌", label: t("mushaf.styleFullscreen" as any) || "Plein écran" },
                         ]).map((s) => (
                           <button
                             key={s.key}
