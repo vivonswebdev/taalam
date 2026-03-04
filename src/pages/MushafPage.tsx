@@ -942,18 +942,24 @@ export default function MushafPage() {
                         <Type size={14} className="text-muted-foreground" />
                         <span className="text-sm font-medium">{t("mushaf.textSize" as any)}</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '14px' }}>ب</span>
-                        <Slider
-                          min={MIN_FONT_SIZE}
-                          max={MAX_FONT_SIZE}
-                          step={2}
-                          value={[fontSize]}
-                          onValueChange={([v]) => { setFontSize(v); localStorage.setItem(MUSHAF_FONT_KEY, String(v)); }}
-                          className="flex-1"
-                        />
-                        <span className="font-['Amiri','serif'] text-muted-foreground" style={{ fontSize: '28px' }}>ب</span>
-                        <span className="text-[10px] text-muted-foreground w-8 text-right">{fontSize}px</span>
+                      <div className="grid grid-cols-5 gap-1.5">
+                        {FONT_PRESETS.map((p) => {
+                          const active = fontSize === p.size;
+                          return (
+                            <button
+                              key={p.key}
+                              onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
+                              className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border-2 transition-all ${
+                                active
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-border bg-card text-muted-foreground hover:border-muted-foreground/40"
+                              }`}
+                            >
+                              <span className="font-['Amiri','serif']" style={{ fontSize: `${Math.min(p.size / 4 + 8, 24)}px` }}>ب</span>
+                              <span className="text-[9px] font-bold">{p.icon}</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
