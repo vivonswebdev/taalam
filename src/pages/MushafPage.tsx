@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { playPageTurnSound } from "@/lib/mushafSound";
+import { useMushafPageData, type MushafPageAyah } from "@/hooks/useMushafPageData";
 
 const LAST_PAGE_KEY = "mushaf_last_page";
 const READING_STYLE_KEY = "mushaf_reading_style";
