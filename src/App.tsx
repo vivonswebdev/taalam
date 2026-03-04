@@ -148,6 +148,7 @@ const App = () => (
         <LanguageProvider>
           <ActiveChildProvider>
           <UserModeProvider>
+          <AppVersionGuard />
           <Toaster />
           <Sonner />
           <BrowserRouter>

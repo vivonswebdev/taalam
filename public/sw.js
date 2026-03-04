@@ -1,5 +1,5 @@
 // Custom Service Worker for Taaloum PWA
-const CACHE_NAME = 'taalam-v2';
+const CACHE_NAME = 'taalam-v3';
 const OFFLINE_URL = '/';
 
 self.addEventListener('install', (event) => {
