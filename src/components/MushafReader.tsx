@@ -123,7 +123,7 @@ export default function MushafReader({
   useEffect(() => {
     if (autoStartedRef.current) return;
     autoStartedRef.current = true;
-    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0);
+    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0, reciterEdition);
   }, []);
 
   // Listen for surah changes from global audio + award XP for listened ayahs
