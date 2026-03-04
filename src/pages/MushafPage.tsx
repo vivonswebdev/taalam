@@ -732,8 +732,8 @@ export default function MushafPage() {
         onBack={() => changeStyle("cards")}
         onPrev={goToPrevPage}
         onNext={goToNextPage}
-        hasPrev={currentSurahForNav > 1}
-        hasNext={currentSurahForNav < 114}
+        hasPrev={currentPage > 1}
+        hasNext={currentPage < TOTAL_MUSHAF_PAGES}
         t={t}
         onBookmarkHizb={bookmarkHizb}
         onBookmarkSajda={bookmarkSajda}
