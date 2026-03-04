@@ -2810,6 +2810,7 @@ const translations = {
   "dashboard.theme": { fr: "Thème", en: "Theme", nl: "Thema", ar: "المظهر", tr: "Tema", ur: "تھیم" },
   "dashboard.reciter": { fr: "Récitateur", en: "Reciter", nl: "Recitator", ar: "القارئ", tr: "Okuyucu", ur: "قاری" },
   "dashboard.athan": { fr: "Athan", en: "Athan", nl: "Athan", ar: "الأذان", tr: "Ezan", ur: "اذان" },
+  "dashboard.shazamCoran": { fr: "Shazam Coran", en: "Quran Shazam", nl: "Koran Shazam", ar: "شازام القرآن", tr: "Kur'an Shazam", ur: "قرآن شازام" },
   "dashboard.qibla": { fr: "Qibla", en: "Qibla", nl: "Qibla", ar: "القبلة", tr: "Kıble", ur: "قبلہ" },
   "dashboard.zakat": { fr: "Zakat", en: "Zakat", nl: "Zakat", ar: "الزكاة", tr: "Zekat", ur: "زکات" },
   "dashboard.tasbih": { fr: "Tasbih", en: "Tasbih", nl: "Tasbih", ar: "تسبيح", tr: "Tesbih", ur: "تسبیح" },
