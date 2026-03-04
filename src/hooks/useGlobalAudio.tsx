@@ -196,8 +196,9 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     audio.play().catch(() => playAyahInternal(index + 1, urls));
   }, [stopAudio, fetchUrls, startProgressInterval]);
 
-  const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0) => {
+  const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
+    if (reciterEdition) reciterEditionRef.current = reciterEdition;
     surahNumberRef.current = surahNum;
     surahNameRef.current = name;
     surahNameArabicRef.current = nameAr;
@@ -217,7 +218,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       listenTestMode: listenTestModeRef.current,
     });
 
-    const urls = await fetchUrls(surahNum);
+    const urls = await fetchUrls(surahNum, reciterEditionRef.current);
     if (urls.length === 0) return;
     audioUrlsRef.current = urls;
     playAyahInternal(startAyah, urls);
