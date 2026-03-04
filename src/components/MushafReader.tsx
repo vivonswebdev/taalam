@@ -763,16 +763,16 @@ export default function MushafReader({
               </div>
 
               {/* Translation */}
-              {!isArabicOnly && (translations[i] || ayah.translation) && (
+              {translationEnabled && !isArabicOnly && (translations[i] || ayah.translation) && (
                 <p className="text-sm text-muted-foreground mt-3 leading-relaxed text-center border-t border-border/30 pt-3">
                   {translations[i] || ayah.translation}
                 </p>
               )}
 
-              {/* Transliteration */}
-              {ayah.transliteration && (
+              {/* Transliteration / Phonetic */}
+              {phoneticEnabled && (transliterations[i] || ayah.transliteration) && (
                 <p className="text-xs text-primary/60 italic mt-2 leading-relaxed text-center">
-                  {ayah.transliteration}
+                  {transliterations[i] || ayah.transliteration}
                 </p>
               )}
 
