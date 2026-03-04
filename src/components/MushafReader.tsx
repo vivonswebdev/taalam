@@ -69,6 +69,12 @@ export default function MushafReader({
   const [darkOverride, setDarkOverride] = useState(false);
   const [longPressAyah, setLongPressAyah] = useState<number | null>(null);
   const [tajwidEnabled, setTajwidEnabled] = useState(true);
+  const [phoneticEnabled, setPhoneticEnabled] = useState(() => {
+    try { return localStorage.getItem("reading-phonetic") !== "false"; } catch { return true; }
+  });
+  const [translationEnabled, setTranslationEnabled] = useState(() => {
+    try { return localStorage.getItem("reading-translation") !== "false"; } catch { return true; }
+  });
   const [activeWordIndex, setActiveWordIndex] = useState(-1);
   const [readingStyle, setReadingStyle] = useState<"cards" | "immersive">(() => {
     try { return (localStorage.getItem("reading-style") as "cards" | "immersive") || "cards"; } catch { return "cards"; }
