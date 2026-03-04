@@ -256,6 +256,23 @@ export function HomeDashboard() {
 
         <StatsHeader t={t} />
 
+        {/* Signup banner for guests */}
+        {!user && (
+          <div className="px-5 mb-3">
+            <Link
+              to="/auth"
+              className="flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-r from-primary/20 to-accent/10 border border-primary/30 shadow-sm hover:shadow-md active:scale-[0.98] transition-all"
+            >
+              <span className="text-2xl">✨</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-foreground">{t("home.signupTitle" as any)}</p>
+                <p className="text-[10px] text-muted-foreground">{t("home.signupDesc" as any)}</p>
+              </div>
+              <span className="text-xs font-bold text-primary shrink-0">{t("home.signupBtn" as any)} →</span>
+            </Link>
+          </div>
+        )}
+
         {/* Basmala */}
         <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
