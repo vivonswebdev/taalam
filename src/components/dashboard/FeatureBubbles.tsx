@@ -76,7 +76,7 @@ const CATEGORIES: Category[] = [
   { id: "stories", nameKey: "dashboard.stories", emoji: "📜", path: "/kids-stories", gradient: "from-orange-300 to-amber-400" },
   { id: "mosques", nameKey: "dashboard.mosques", emoji: "🕌", path: "/kids-mosque-map", gradient: "from-teal-400 to-cyan-500" },
   { id: "liveHaramain", nameKey: "dashboard.liveHaramain", emoji: "🕋", path: "/live-haramain", gradient: "from-rose-500 to-red-500" },
-  { id: "athan", nameKey: "dashboard.athan", emoji: "📢", path: "/athan-settings", gradient: "from-amber-400 to-orange-500" }]
+  { id: "athan", nameKey: "dashboard.athan", emoji: "📢", path: "/prayers", gradient: "from-amber-400 to-orange-500" }]
 
 },
 {
