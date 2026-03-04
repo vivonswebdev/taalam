@@ -60,6 +60,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioUrlsRef = useRef<string[]>([]);
+  const reciterEditionRef = useRef("ar.alafasy");
   const currentAyahRef = useRef(0);
   const surahNumberRef = useRef(0);
   const totalAyahsRef = useRef(0);
