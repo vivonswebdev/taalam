@@ -448,14 +448,25 @@ function FullscreenMushafView({
   const currentChunk = chunks[screenIdx] || [];
   const totalScreens = chunks.length;
 
-  const goPrevScreen = () => {
+  const goPrevScreen = useCallback(() => {
     if (screenIdx > 0) setScreenIdx(screenIdx - 1);
     else if (hasPrev) onPrev();
-  };
-  const goNextScreen = () => {
+  }, [screenIdx, hasPrev, onPrev]);
+  const goNextScreen = useCallback(() => {
     if (screenIdx < totalScreens - 1) setScreenIdx(screenIdx + 1);
     else if (hasNext) onNext();
-  };
+  }, [screenIdx, totalScreens, hasNext, onNext]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") goNextScreen();  // RTL: left = forward
+      if (e.key === "ArrowRight") goPrevScreen();
+      if (e.key === "Escape") onBack();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [goNextScreen, goPrevScreen, onBack]);
 
   return (
     <div className="fixed inset-0 z-40" style={{ backgroundColor: theme.bg }}>
