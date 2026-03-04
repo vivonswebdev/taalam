@@ -3,6 +3,7 @@ import { useUserMode } from "@/hooks/useUserMode";
 import { HomeDashboard } from "@/components/dashboard/FeatureBubbles";
 import KidsHomePage from "@/pages/KidsHomePage";
 import TeacherHomePage from "@/pages/TeacherHomePage";
+import SEOHead from "@/components/SEOHead";
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {
