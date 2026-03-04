@@ -5,7 +5,7 @@ import {
   Bookmark, ChevronRight, Star,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useTranslationPreference } from "@/hooks/useTranslationPreference";
+import { useTranslationPreference, AVAILABLE_EDITIONS } from "@/hooks/useTranslationPreference";
 import { useReadingSettings, ARABIC_FONTS, RECITERS } from "@/hooks/useReadingSettings";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { fetchSurahList, fetchFullSurah, type SurahMeta } from "@/lib/quranData";
