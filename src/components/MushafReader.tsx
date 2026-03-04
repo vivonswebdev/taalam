@@ -24,12 +24,19 @@ import type { Surah } from "@/data/surahs";
 interface MushafReaderProps {
   surah: Surah;
   translations: Record<number, string>;
+  transliterations: Record<number, string>;
   isArabicOnly: boolean;
   onBack: () => void;
   t: (key: string) => string;
   startAtAyah?: number;
   onRequestNextSurah?: () => void;
   onRequestPrevSurah?: () => void;
+  reciterEdition?: string;
+  onChangeReciter?: (edition: string) => void;
+  translationEditionId?: string;
+  onChangeTranslation?: (editionId: string) => void;
+  availableTranslations?: { id: string; label: string }[];
+  availableReciters?: { id: string; name: string; nameArabic: string; apiEdition: string }[];
 }
 
 export default function MushafReader({
