@@ -1050,6 +1050,36 @@ export default function MushafPage() {
       </div>
 
       {/* Navigation bar - FIXED: ← always = page-1, → always = page+1, ▲▼ only screen */}
+      {/* Font size pills - always visible */}
+      <div className="fixed bottom-[88px] left-0 right-0 flex justify-center z-10 px-4">
+        <div
+          className="backdrop-blur rounded-full px-2 py-1 flex items-center gap-1 shadow-md"
+          style={{ backgroundColor: `${theme.bg}dd`, border: `1px solid ${theme.frame}30` }}
+        >
+          {FONT_PRESETS.map((p) => {
+            const active = fontSize === p.size;
+            return (
+              <button
+                key={p.key}
+                onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
+                className="transition-all"
+                style={{
+                  padding: "2px 8px",
+                  borderRadius: "9999px",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  color: active ? theme.bg : `${theme.text}99`,
+                  backgroundColor: active ? theme.frame : "transparent",
+                }}
+              >
+                {p.icon}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Navigation bar */}
       <div className="fixed bottom-16 left-0 right-0 flex justify-center z-10 px-4">
         <div
           className="backdrop-blur rounded-full px-3 py-1.5 flex items-center gap-3 shadow-lg w-full max-w-sm"

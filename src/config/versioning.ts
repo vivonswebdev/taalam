@@ -21,7 +21,6 @@ export const RESET_KEYS: string[] = [
   // Mushaf / lecture
   "mushaf_reading_style",
   "mushaf_theme",
-  "mushaf_font_size",
   "mushaf_last_page",
   "quranEasyReadingSettings",
   // Tarteel
