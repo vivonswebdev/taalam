@@ -83,6 +83,17 @@ export default function WeeklyLeaderboardWidget() {
     }
 
     loadLeaderboard();
+
+    // Auto-refresh every 15s + on tab focus
+    const interval = setInterval(loadLeaderboard, 15000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") loadLeaderboard();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [user, t]);
 
   if (entries.length <= 1) return null;
