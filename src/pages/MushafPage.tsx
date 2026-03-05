@@ -177,6 +177,7 @@ interface DecoratedContentProps {
   surahMeta: SurahMeta | undefined;
   t: (k: any) => string;
   fullscreen?: boolean;
+  fillHeight?: boolean;
   onBookmarkHizb?: (surah: number, ayah: number, hizb: number, label: string) => void;
   onBookmarkSajda?: (surah: number, ayah: number) => void;
 }
@@ -192,6 +193,7 @@ function DecoratedMushafContent({
   surahMeta,
   t,
   fullscreen = false,
+  fillHeight = false,
   onBookmarkHizb,
   onBookmarkSajda,
 }: DecoratedContentProps) {
@@ -208,6 +210,7 @@ function DecoratedMushafContent({
         borderRadius: "6px",
         padding: outerPad,
         background: `linear-gradient(135deg, ${theme.frame}15, transparent, ${theme.frame}15)`,
+        ...(fillHeight && { height: "100%", display: "flex", flexDirection: "column" as const }),
       }}
     >
       <div
@@ -216,8 +219,10 @@ function DecoratedMushafContent({
           borderRadius: "4px",
           padding: innerPad,
           backgroundColor: theme.bg,
-          minHeight: fullscreen ? "auto" : "50vh",
           position: "relative",
+          ...(fillHeight
+            ? { flex: 1, minHeight: 0, overflowY: "auto" as const }
+            : { minHeight: fullscreen ? "auto" : "200px" }),
         }}
       >
         {/* Corner decorations */}
@@ -624,6 +629,10 @@ export default function MushafPage() {
   const theme = THEMES[mushafTheme];
   const chunks = useScreenChunks(ayahs, fontSize);
 
+  // FIX 2: Swipe refs (must be before early returns)
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
   // Reset screen index on page change
   useEffect(() => { setScreenIdx(0); }, [currentPage]);
 
@@ -801,12 +810,48 @@ export default function MushafPage() {
     if (screenIdx < totalScreens - 1) setScreenIdx(screenIdx + 1);
   };
 
+  // FIX 2: Swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = Math.abs(e.touches[0].clientX - touchStartX.current);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY.current);
+    if (dx > dy * 1.5 && dx > 12) e.stopPropagation();
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dy) > Math.abs(dx) * 1.3) { touchStartX.current = null; return; }
+    if (Math.abs(dx) > 55) {
+      if (dx < 0) {
+        if (screenIdx < totalScreens - 1) goNextScreen();
+        else goToNextPage();
+      } else {
+        if (screenIdx > 0) goPrevScreen();
+        else goToPrevPage();
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
+  // FIX 1: flex column layout filling 100dvh
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: theme.bg }}>
+    <div
+      className="flex flex-col overflow-hidden"
+      style={{ height: "100dvh", backgroundColor: theme.bg }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <SEOHead title="Mushaf - Lecture du Coran" description="Lisez le Coran dans un Mushaf numérique avec tajwid coloré, thèmes personnalisables et marque-pages." path="/mushaf" />
       {/* Header */}
       <div
-        className="sticky top-0 z-20 backdrop-blur border-b px-3 pt-10 pb-2"
+        className="flex-shrink-0 z-20 backdrop-blur border-b px-3 pt-10 pb-2"
         style={{ backgroundColor: theme.headerBg, borderColor: `${theme.frame}40` }}
       >
         <div className="flex items-center justify-between">
@@ -878,7 +923,7 @@ export default function MushafPage() {
               </SheetContent>
             </Sheet>
 
-            {/* Bookmarks */}
+            {/* Bookmarks Sheet */}
             <Sheet open={showBookmarks} onOpenChange={setShowBookmarks}>
               <SheetTrigger asChild>
                 <button className="p-1.5"><BookOpen size={18} style={{ color: `${theme.text}80` }} /></button>
@@ -896,7 +941,7 @@ export default function MushafPage() {
                         return (
                           <button key={bm.id} onClick={() => { goTo(bm.page_number); setShowBookmarks(false); }} className="w-full text-left px-3 py-2 rounded-xl hover:bg-accent/40 flex justify-between items-center">
                             <span className="text-sm">{t("mushaf.page" as any)} {bm.page_number} — {meta?.nameArabic || ""}</span>
-                            <Star size={14} className="text-yellow-400 fill-yellow-400" />
+                            <Star size={14} className="fill-yellow-400" style={{ color: "#facc15" }} />
                           </button>
                         );
                       })}
@@ -906,7 +951,7 @@ export default function MushafPage() {
               </SheetContent>
             </Sheet>
 
-            {/* Settings */}
+            {/* Settings Sheet */}
             <Sheet>
               <SheetTrigger asChild>
                 <button className="p-1.5"><Settings2 size={18} style={{ color: `${theme.text}80` }} /></button>
@@ -915,7 +960,6 @@ export default function MushafPage() {
                 <SheetHeader><SheetTitle>{t("mushaf.readSettings" as any)}</SheetTitle></SheetHeader>
                 <ScrollArea className="h-[60vh]">
                   <div className="p-4 space-y-5">
-                    {/* Reading style */}
                     <div>
                       <p className="text-sm font-medium mb-2">{t("mushaf.readingStyle" as any)}</p>
                       <div className="flex gap-2">
@@ -924,65 +968,32 @@ export default function MushafPage() {
                           { key: "immersive" as const, emoji: "🌌", label: t("mushaf.styleImmersive" as any) },
                           { key: "mushaf" as const, emoji: "🕌", label: t("mushaf.styleFullscreen" as any) || "Plein écran" },
                         ]).map((s) => (
-                          <button
-                            key={s.key}
-                            onClick={() => changeStyle(s.key)}
-                            className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium border transition-colors ${
-                              readingStyle === s.key
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:bg-accent/40"
-                            }`}
-                          >
-                            <span className="block text-base mb-0.5">{s.emoji}</span>
-                            {s.label}
+                          <button key={s.key} onClick={() => changeStyle(s.key)}
+                            className={`flex-1 py-2 px-2 rounded-xl text-xs font-medium border transition-colors ${readingStyle === s.key ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground hover:bg-accent/40"}`}>
+                            <span className="block text-base mb-0.5">{s.emoji}</span>{s.label}
                           </button>
                         ))}
                       </div>
                     </div>
-
-                    {/* Theme */}
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Palette size={14} className="text-muted-foreground" />
-                        <span className="text-sm font-medium">Thème de fond</span>
-                      </div>
+                      <div className="flex items-center gap-2 mb-2"><Palette size={14} className="text-muted-foreground" /><span className="text-sm font-medium">Thème de fond</span></div>
                       <div className="flex gap-2">
                         {(Object.keys(THEMES) as MushafTheme[]).map((key) => (
-                          <button
-                            key={key}
-                            onClick={() => setMushafTheme(key)}
-                            className={`flex-1 py-2 px-1 rounded-xl text-xs font-medium border transition-colors ${
-                              mushafTheme === key
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:bg-accent/40"
-                            }`}
-                          >
-                            <span className="block text-base mb-0.5">{THEMES[key].emoji}</span>
-                            {THEMES[key].label}
+                          <button key={key} onClick={() => setMushafTheme(key)}
+                            className={`flex-1 py-2 px-1 rounded-xl text-xs font-medium border transition-colors ${mushafTheme === key ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground hover:bg-accent/40"}`}>
+                            <span className="block text-base mb-0.5">{THEMES[key].emoji}</span>{THEMES[key].label}
                           </button>
                         ))}
                       </div>
                     </div>
-
-                    {/* Font size */}
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Type size={14} className="text-muted-foreground" />
-                        <span className="text-sm font-medium">{t("mushaf.textSize" as any)}</span>
-                      </div>
+                      <div className="flex items-center gap-2 mb-2"><Type size={14} className="text-muted-foreground" /><span className="text-sm font-medium">{t("mushaf.textSize" as any)}</span></div>
                       <div className="grid grid-cols-5 gap-1.5">
                         {FONT_PRESETS.map((p) => {
                           const active = fontSize === p.size;
                           return (
-                            <button
-                              key={p.key}
-                              onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
-                              className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border-2 transition-all ${
-                                active
-                                  ? "border-primary bg-primary/10 text-primary"
-                                  : "border-border bg-card text-muted-foreground hover:border-muted-foreground/40"
-                              }`}
-                            >
+                            <button key={p.key} onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
+                              className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border-2 transition-all ${active ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground hover:border-muted-foreground/40"}`}>
                               <span className="font-['Amiri','serif']" style={{ fontSize: `${Math.min(p.size / 4 + 8, 24)}px` }}>ب</span>
                               <span className="text-[9px] font-bold">{p.icon}</span>
                             </button>
@@ -990,8 +1001,6 @@ export default function MushafPage() {
                         })}
                       </div>
                     </div>
-
-                    {/* Tajwid */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {tajwidEnabled ? <Eye size={14} className="text-muted-foreground" /> : <EyeOff size={14} className="text-muted-foreground" />}
@@ -999,8 +1008,6 @@ export default function MushafPage() {
                       </div>
                       <Switch checked={tajwidEnabled} onCheckedChange={setTajwidEnabled} />
                     </div>
-
-                    {/* Sound */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {pageSoundEnabled ? <Volume2 size={14} className="text-muted-foreground" /> : <VolumeX size={14} className="text-muted-foreground" />}
@@ -1016,11 +1023,11 @@ export default function MushafPage() {
         </div>
       </div>
 
-      {/* ═══ DECORATED MUSHAF CONTENT ═══ */}
-      <div className="px-2 py-2">
+      {/* Content area - flex-1 fills remaining space */}
+      <div className="flex-1 min-h-0 px-2 py-2 flex flex-col">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: `${theme.frame}60`, borderTopColor: "transparent" }} />
           </div>
         ) : (
           <AnimatePresence mode="wait">
@@ -1030,6 +1037,8 @@ export default function MushafPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2 }}
+              className="flex-1 flex flex-col"
+              style={{ minHeight: 0 }}
             >
               <DecoratedMushafContent
                 ayahs={currentChunk}
@@ -1041,6 +1050,7 @@ export default function MushafPage() {
                 currentHizb={currentHizb}
                 surahMeta={currentSurahMeta}
                 t={t}
+                fillHeight={true}
                 onBookmarkHizb={bookmarkHizb}
                 onBookmarkSajda={bookmarkSajda}
               />
@@ -1049,9 +1059,8 @@ export default function MushafPage() {
         )}
       </div>
 
-      {/* Navigation bar - FIXED: ← always = page-1, → always = page+1, ▲▼ only screen */}
-      {/* Font size pills - always visible */}
-      <div className="fixed bottom-[88px] left-0 right-0 flex justify-center z-10 px-4">
+      {/* Font size pills - flex-shrink-0 in flow */}
+      <div className="flex-shrink-0 flex justify-center px-4 py-1" style={{ backgroundColor: `${theme.bg}f0` }}>
         <div
           className="backdrop-blur rounded-full px-2 py-1 flex items-center gap-1 shadow-md"
           style={{ backgroundColor: `${theme.bg}dd`, border: `1px solid ${theme.frame}30` }}
@@ -1062,14 +1071,12 @@ export default function MushafPage() {
               <button
                 key={p.key}
                 onClick={() => { setFontSize(p.size); localStorage.setItem(MUSHAF_FONT_KEY, String(p.size)); }}
-                className="transition-all"
                 style={{
-                  padding: "2px 8px",
-                  borderRadius: "9999px",
-                  fontSize: "10px",
-                  fontWeight: 700,
+                  padding: "2px 8px", borderRadius: "9999px",
+                  fontSize: "10px", fontWeight: 700,
                   color: active ? theme.bg : `${theme.text}99`,
                   backgroundColor: active ? theme.frame : "transparent",
+                  transition: "all 0.15s",
                 }}
               >
                 {p.icon}
@@ -1079,38 +1086,26 @@ export default function MushafPage() {
         </div>
       </div>
 
-      {/* Navigation bar */}
-      <div className="fixed bottom-16 left-0 right-0 flex justify-center z-10 px-4">
+      {/* Navigation bar - flex-shrink-0 in flow */}
+      <div className="flex-shrink-0 flex justify-center px-4 pb-2 pt-1" style={{ backgroundColor: `${theme.bg}f0` }}>
         <div
           className="backdrop-blur rounded-full px-3 py-1.5 flex items-center gap-3 shadow-lg w-full max-w-sm"
           style={{ backgroundColor: `${theme.bg}ee`, border: `1px solid ${theme.frame}40` }}
         >
-          <button
-            onClick={goToPrevPage}
-            disabled={currentPage <= 1}
-            className="p-1.5 disabled:opacity-30"
-          >
+          <button onClick={goToPrevPage} disabled={currentPage <= 1} className="p-1.5 disabled:opacity-30">
             <ArrowLeft size={20} style={{ color: theme.text }} />
           </button>
-
           {totalScreens > 1 && (
             <button onClick={goPrevScreen} disabled={screenIdx <= 0} className="text-[10px] disabled:opacity-30" style={{ color: theme.text }}>▲</button>
           )}
-
           <span className="text-xs font-medium flex-1 text-center" style={{ color: theme.text }}>
             {currentPage}
             {totalScreens > 1 && <span className="text-[10px] opacity-60"> ({screenIdx + 1}/{totalScreens})</span>}
           </span>
-
           {totalScreens > 1 && (
             <button onClick={goNextScreen} disabled={screenIdx >= totalScreens - 1} className="text-[10px] disabled:opacity-30" style={{ color: theme.text }}>▼</button>
           )}
-
-          <button
-            onClick={goToNextPage}
-            disabled={currentPage >= TOTAL_MUSHAF_PAGES}
-            className="p-1.5 disabled:opacity-30"
-          >
+          <button onClick={goToNextPage} disabled={currentPage >= TOTAL_MUSHAF_PAGES} className="p-1.5 disabled:opacity-30">
             <ArrowRight size={20} style={{ color: theme.text }} />
           </button>
         </div>

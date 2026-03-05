@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { ActiveChildProvider } from "@/hooks/useActiveChild";
@@ -139,6 +139,21 @@ function AppVersionGuard() {
   return null;
 }
 
+const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf"];
+
+function ConditionalBottomUI() {
+  const location = useLocation();
+  const isFullscreen = MUSHAF_FULLSCREEN_ROUTES.some((r) => location.pathname.startsWith(r));
+  if (isFullscreen) return null;
+  return (
+    <>
+      <MiniPlayer />
+      <BottomNav />
+    </>
+  );
+}
+
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -259,8 +274,7 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
-              <MiniPlayer />
-              <BottomNav />
+              <ConditionalBottomUI />
             </div>
             </GlobalAudioProvider>
           </BrowserRouter>
