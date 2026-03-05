@@ -197,6 +197,9 @@ function DecoratedMushafContent({
 }: DecoratedContentProps) {
   const outerPad = fullscreen ? "2px" : "4px";
   const innerPad = fullscreen ? "10px 8px 12px" : "12px 10px 14px";
+  const arabicLineHeight = fontSize >= 120 ? 1.15 : fontSize >= 96 ? 1.2 : fontSize >= 56 ? 1.45 : 2.2;
+  const arabicWordSpacing = fontSize >= 96 ? "1px" : fontSize >= 56 ? "2px" : "3px";
+  const isLargeZoom = fontSize >= 56;
 
   return (
     <div
