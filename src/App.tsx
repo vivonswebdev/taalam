@@ -259,8 +259,7 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
-              <MiniPlayer />
-              <BottomNav />
+              <ConditionalBottomUI />
             </div>
             </GlobalAudioProvider>
           </BrowserRouter>
