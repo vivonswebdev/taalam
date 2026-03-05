@@ -615,6 +615,14 @@ export default function MushafPage() {
   });
   const [screenIdx, setScreenIdx] = useState(0);
 
+  // Reset screenIdx when chunks change (e.g. font size change)
+  const chunks = useScreenChunks(ayahs, fontSize);
+  useEffect(() => {
+    if (screenIdx >= chunks.length && chunks.length > 0) {
+      setScreenIdx(chunks.length - 1);
+    }
+  }, [chunks.length, screenIdx]);
+
   // Settings
   const [mushafTheme, setMushafTheme] = useState<MushafTheme>(() => {
     try { return (localStorage.getItem(MUSHAF_THEME_KEY) as MushafTheme) || "cream"; } catch { return "cream"; }
@@ -627,7 +635,7 @@ export default function MushafPage() {
   });
 
   const theme = THEMES[mushafTheme];
-  const chunks = useScreenChunks(ayahs, fontSize);
+  // chunks already declared above with screenIdx reset logic
 
   // FIX 2: Swipe refs (must be before early returns)
   const touchStartX = useRef<number | null>(null);
