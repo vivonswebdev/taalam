@@ -193,6 +193,7 @@ function DecoratedMushafContent({
   surahMeta,
   t,
   fullscreen = false,
+  fillHeight = false,
   onBookmarkHizb,
   onBookmarkSajda,
 }: DecoratedContentProps) {
@@ -209,6 +210,7 @@ function DecoratedMushafContent({
         borderRadius: "6px",
         padding: outerPad,
         background: `linear-gradient(135deg, ${theme.frame}15, transparent, ${theme.frame}15)`,
+        ...(fillHeight && { height: "100%", display: "flex", flexDirection: "column" as const }),
       }}
     >
       <div
@@ -217,8 +219,10 @@ function DecoratedMushafContent({
           borderRadius: "4px",
           padding: innerPad,
           backgroundColor: theme.bg,
-          minHeight: fullscreen ? "auto" : "50vh",
           position: "relative",
+          ...(fillHeight
+            ? { flex: 1, minHeight: 0, overflowY: "auto" as const }
+            : { minHeight: fullscreen ? "auto" : "200px" }),
         }}
       >
         {/* Corner decorations */}
