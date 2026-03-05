@@ -331,6 +331,8 @@ function useScreenChunks(
   fontSize: number,
 ) {
   const ayahsPerScreen = useMemo(() => {
+    if (fontSize >= 96) return 1;
+    if (fontSize >= 56) return 2;
     if (fontSize >= 36) return 4;
     if (fontSize >= 28) return 6;
     return 10;
