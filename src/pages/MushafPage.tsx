@@ -177,6 +177,7 @@ interface DecoratedContentProps {
   surahMeta: SurahMeta | undefined;
   t: (k: any) => string;
   fullscreen?: boolean;
+  fillHeight?: boolean;
   onBookmarkHizb?: (surah: number, ayah: number, hizb: number, label: string) => void;
   onBookmarkSajda?: (surah: number, ayah: number) => void;
 }
