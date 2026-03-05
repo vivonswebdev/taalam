@@ -197,6 +197,9 @@ function DecoratedMushafContent({
 }: DecoratedContentProps) {
   const outerPad = fullscreen ? "2px" : "4px";
   const innerPad = fullscreen ? "10px 8px 12px" : "12px 10px 14px";
+  const arabicLineHeight = fontSize >= 120 ? 1.15 : fontSize >= 96 ? 1.2 : fontSize >= 56 ? 1.45 : 2.2;
+  const arabicWordSpacing = fontSize >= 96 ? "1px" : fontSize >= 56 ? "2px" : "3px";
+  const isLargeZoom = fontSize >= 56;
 
   return (
     <div
@@ -275,14 +278,15 @@ function DecoratedMushafContent({
 
         {/* Ayah text */}
         <div
-          className="font-['Amiri','Scheherazade_New','serif'] leading-[2.2]"
+          className="font-['Amiri','Scheherazade_New','serif']"
           dir="rtl"
           style={{
             fontSize: `${fontSize}px`,
-            textAlign: "justify",
-            textAlignLast: "center",
+            textAlign: isLargeZoom ? "right" : "justify",
+            textAlignLast: isLargeZoom ? "right" : "center",
+            lineHeight: arabicLineHeight,
             color: theme.text,
-            wordSpacing: "3px",
+            wordSpacing: arabicWordSpacing,
           }}
         >
           {ayahs.map((a) => {
@@ -327,6 +331,8 @@ function useScreenChunks(
   fontSize: number,
 ) {
   const ayahsPerScreen = useMemo(() => {
+    if (fontSize >= 96) return 1;
+    if (fontSize >= 56) return 2;
     if (fontSize >= 36) return 4;
     if (fontSize >= 28) return 6;
     return 10;
