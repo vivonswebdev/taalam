@@ -57,7 +57,6 @@ export function useLeaderboard() {
 
   const fetchByLevel = useCallback(async (level: "beginner" | "intermediate" | "advanced") => {
     setSelectedLevel(level);
-    // Fetch all public profiles and filter by computed level
     const { data } = await supabase
       .from("profiles")
       .select("id, user_id, display_name, avatar_emoji, country_code, mastery_score, xp_total, sessions_count")
@@ -68,7 +67,21 @@ export function useLeaderboard() {
     setLevelBoard(enriched.filter((e) => e.level === level).slice(0, 50));
   }, []);
 
+  // Initial fetch
   useEffect(() => { fetchGlobal(); }, [fetchGlobal]);
+
+  // Auto-refresh on tab visibility change & every 15s
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") fetchGlobal();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    const interval = setInterval(fetchGlobal, 15000);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      clearInterval(interval);
+    };
+  }, [fetchGlobal]);
 
   return {
     globalBoard, countryBoard, levelBoard,
