@@ -139,6 +139,21 @@ function AppVersionGuard() {
   return null;
 }
 
+const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf"];
+
+function ConditionalBottomUI() {
+  const location = useLocation();
+  const isFullscreen = MUSHAF_FULLSCREEN_ROUTES.some((r) => location.pathname.startsWith(r));
+  if (isFullscreen) return null;
+  return (
+    <>
+      <MiniPlayer />
+      <BottomNav />
+    </>
+  );
+}
+
+
 const queryClient = new QueryClient();
 
 const App = () => (
