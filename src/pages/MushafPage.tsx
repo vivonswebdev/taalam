@@ -635,7 +635,7 @@ export default function MushafPage() {
   });
 
   const theme = THEMES[mushafTheme];
-  const chunks = useScreenChunks(ayahs, fontSize);
+  // chunks already declared above with screenIdx reset logic
 
   // FIX 2: Swipe refs (must be before early returns)
   const touchStartX = useRef<number | null>(null);
