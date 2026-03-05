@@ -141,14 +141,16 @@ export function useQuranXp() {
       return next;
     });
 
-    // Cloud sync
+    // Cloud sync — use the updated value directly
     if (userId) {
-      const newTotal = loadLocalXp() + finalAmount;
-      supabase.from("quran_xp").upsert({
-        user_id: userId,
-        xp_total: newTotal,
-        last_reason: reason || (isChildMode ? "child-mode" : null),
-      }, { onConflict: "user_id" }).then(() => {});
+      setXp((current) => {
+        supabase.from("quran_xp").upsert({
+          user_id: userId,
+          xp_total: current,
+          last_reason: reason || (isChildMode ? "child-mode" : null),
+        }, { onConflict: "user_id" }).then(() => {});
+        return current;
+      });
     }
 
     setLastGain(finalAmount);
