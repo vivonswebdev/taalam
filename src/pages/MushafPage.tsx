@@ -278,14 +278,15 @@ function DecoratedMushafContent({
 
         {/* Ayah text */}
         <div
-          className="font-['Amiri','Scheherazade_New','serif'] leading-[2.2]"
+          className="font-['Amiri','Scheherazade_New','serif']"
           dir="rtl"
           style={{
             fontSize: `${fontSize}px`,
-            textAlign: "justify",
-            textAlignLast: "center",
+            textAlign: isLargeZoom ? "right" : "justify",
+            textAlignLast: isLargeZoom ? "right" : "center",
+            lineHeight: arabicLineHeight,
             color: theme.text,
-            wordSpacing: "3px",
+            wordSpacing: arabicWordSpacing,
           }}
         >
           {ayahs.map((a) => {
