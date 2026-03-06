@@ -297,6 +297,24 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     });
   }, [stopAudio, fetchUrls, startProgressInterval, playNextFromPlaylist]);
 
+  const prepare = useCallback((surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
+    if (reciterEdition) reciterEditionRef.current = reciterEdition;
+    surahNumberRef.current = surahNum;
+    surahNameRef.current = name;
+    surahNameArabicRef.current = nameAr;
+    totalAyahsRef.current = total;
+    currentAyahRef.current = startAyah;
+    setState(prev => ({
+      ...prev,
+      surahNumber: surahNum,
+      surahName: name,
+      surahNameArabic: nameAr,
+      totalAyahs: total,
+      currentAyah: startAyah,
+      isPlaying: false,
+    }));
+  }, []);
+
   const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
     if (reciterEdition) reciterEditionRef.current = reciterEdition;
