@@ -118,12 +118,13 @@ export default function MushafReader({
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ayahRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
-  // Auto-start playback on mount
+  // Prepare global audio state on mount (without autoplay to avoid browser blocks)
   const autoStartedRef = useRef(false);
   useEffect(() => {
     if (autoStartedRef.current) return;
     autoStartedRef.current = true;
-    globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah || 0, reciterEdition);
+    // Set surah info so the player UI is ready, but don't auto-play
+    // User presses play button to start (avoids autoplay blocks on mobile)
   }, []);
 
   // Listen for surah changes from global audio + award XP for listened ayahs
