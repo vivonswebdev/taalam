@@ -663,10 +663,15 @@ export default function MushafPage() {
           {/* Edition selector */}
           <button
             onClick={() => setShowEditionSheet(true)}
-            style={{ ...btnStyle(theme, 34), fontSize: 14 }}
-            title="Changer de Mushaf"
+            style={{ ...btnStyle(theme, 34), fontSize: 14, position: "relative" }}
+            title={`Édition : ${currentEditionData.label}`}
           >
-            <BookOpen size={15} color={theme.frame} />
+            <span>{currentEditionData.icon}</span>
+            <span style={{
+              position: "absolute", bottom: -1, right: -1,
+              width: 8, height: 8, borderRadius: "50%",
+              background: "#22C55E", border: `2px solid ${theme.bg}`,
+            }} />
           </button>
 
           {/* Mode toggle */}
