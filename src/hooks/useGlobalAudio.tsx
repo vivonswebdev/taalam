@@ -298,7 +298,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     });
   }, [stopAudio, fetchUrls, startProgressInterval, playNextFromPlaylist]);
 
-  const prepare = useCallback((surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
+  const prepare = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     if (reciterEdition) reciterEditionRef.current = reciterEdition;
     surahNumberRef.current = surahNum;
     surahNameRef.current = name;
@@ -314,7 +314,10 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       currentAyah: startAyah,
       isPlaying: false,
     }));
-  }, []);
+    // CRITICAL: Précharger les URLs pour que play()/resume() fonctionne
+    const urls = await fetchUrls(surahNum, reciterEditionRef.current);
+    audioUrlsRef.current = urls;
+  }, [fetchUrls]);
 
   const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
