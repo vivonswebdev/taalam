@@ -808,6 +808,19 @@ export default function MushafPage() {
                   }} />
                 </div>
 
+                {/* Mushaf Edition */}
+                <div>
+                  <p className="text-sm font-semibold mb-2">Édition du Mushaf</p>
+                  <button
+                    onClick={() => setShowEditionSheet(true)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-border text-sm text-left hover:bg-accent/40 flex items-center gap-2"
+                  >
+                    <span>{currentEditionData.icon}</span>
+                    <span className="flex-1">{currentEditionData.label}</span>
+                    <span className="text-xs text-muted-foreground">Changer</span>
+                  </button>
+                </div>
+
                 {/* Reciter */}
                 <div>
                   <p className="text-sm font-semibold mb-2">Récitant</p>
