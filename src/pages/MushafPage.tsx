@@ -600,6 +600,18 @@ export default function MushafPage() {
         />
       )}
 
+      {/* Mushaf edition sheet */}
+      <MushafEditionSheet
+        open={showEditionSheet}
+        onOpenChange={setShowEditionSheet}
+        currentEdition={mushafEdition}
+        onSelect={(id) => {
+          setMushafEdition(id);
+          setStoredEdition(id);
+          toast.success(`Mushaf changé : ${getEditionById(id).label}`);
+        }}
+      />
+
       {/* ═══ MAIN CONTAINER ═══ */}
       <div
         style={{
