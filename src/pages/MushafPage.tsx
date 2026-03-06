@@ -31,7 +31,7 @@ import ReciterSelector from "@/components/mushaf/ReciterSelector";
 import AyahFavoriteSheet from "@/components/mushaf/AyahFavoriteSheet";
 import WordPopup from "@/components/mushaf/WordPopup";
 import OfflineDownloadPrompt from "@/components/mushaf/OfflineDownloadPrompt";
-import MushafEditionSheet, { getStoredEdition, setStoredEdition, getEditionById } from "@/components/mushaf/MushafEditionSheet";
+import MushafEditionSheet, { getStoredEdition, setStoredEdition, getEditionById, type MushafEdition } from "@/components/mushaf/MushafEditionSheet";
 
 // ─── CONSTANTES ─────────────────────────────────────────────
 const LAST_PAGE_KEY = "mushaf_last_page";
@@ -69,8 +69,9 @@ const THEMES = {
 
 type ThemeValues = typeof THEMES[MushafTheme];
 
-function getMushafImageUrl(page: number) {
-  return `https://static.qurancdn.com/images/bg/${page}.png`;
+function getMushafImageUrl(page: number, edition?: MushafEdition) {
+  const base = edition?.imageBaseUrl || "https://static.qurancdn.com/images/pages/page";
+  return `${base}${page}.png`;
 }
 
 function btnStyle(theme: ThemeValues, size: number): React.CSSProperties {
@@ -84,27 +85,28 @@ function btnStyle(theme: ThemeValues, size: number): React.CSSProperties {
 
 // ─── Mode IMAGE ─────────────────────────────────────────────
 function MushafImageMode({
-  page, theme, zoom, onSwipeLeft, onSwipeRight,
+  page, theme, zoom, onSwipeLeft, onSwipeRight, edition, onFallbackToText,
 }: {
   page: number; theme: ThemeValues; zoom: number;
   onSwipeLeft: () => void; onSwipeRight: () => void;
+  edition: MushafEdition; onFallbackToText: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  useEffect(() => { setLoaded(false); setError(false); }, [page]);
+  useEffect(() => { setLoaded(false); setError(false); }, [page, edition.id]);
 
   // Preload adjacent pages
   useEffect(() => {
     [page - 1, page + 1].forEach(p => {
-      if (p >= 1 && p <= TOTAL_MUSHAF_PAGES) {
+      if (p >= 1 && p <= (edition.totalPages || TOTAL_MUSHAF_PAGES)) {
         const img = new window.Image();
-        img.src = getMushafImageUrl(p);
+        img.src = getMushafImageUrl(p, edition);
       }
     });
-  }, [page]);
+  }, [page, edition]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
@@ -139,15 +141,27 @@ function MushafImageMode({
         </div>
       )}
       {error && (
-        <div className="text-center p-4" style={{ color: theme.text }}>
-          <p className="text-2xl mb-2">⚠️</p>
-          <p className="text-sm">Image indisponible · Page {page}</p>
-          <p className="text-xs opacity-60">Vérifiez votre connexion</p>
+        <div className="text-center p-6" style={{ color: theme.text }}>
+          <p className="text-4xl mb-3">📖</p>
+          <p className="text-sm font-semibold mb-1">Images non disponibles</p>
+          <p className="text-xs opacity-60 mb-4">
+            Cette édition n'a pas encore d'images.<br/>Utilisez le mode Texte avec Tajwid.
+          </p>
+          <button
+            onClick={onFallbackToText}
+            style={{
+              padding: "8px 20px", borderRadius: 12,
+              backgroundColor: theme.frame, color: "#fff",
+              fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer",
+            }}
+          >
+            Passer en mode Texte
+          </button>
         </div>
       )}
       <img
-        src={getMushafImageUrl(page)}
-        alt={`Mushaf page ${page}`}
+        src={getMushafImageUrl(page, edition)}
+        alt={`Page ${page} - ${edition.label}`}
         style={{
           maxWidth: "100%", maxHeight: "100%", objectFit: "contain",
           transform: `scale(${zoom})`, transformOrigin: "center",
@@ -649,10 +663,15 @@ export default function MushafPage() {
           {/* Edition selector */}
           <button
             onClick={() => setShowEditionSheet(true)}
-            style={{ ...btnStyle(theme, 34), fontSize: 14 }}
-            title="Changer de Mushaf"
+            style={{ ...btnStyle(theme, 34), fontSize: 14, position: "relative" }}
+            title={`Édition : ${currentEditionData.label}`}
           >
-            <BookOpen size={15} color={theme.frame} />
+            <span>{currentEditionData.icon}</span>
+            <span style={{
+              position: "absolute", bottom: -1, right: -1,
+              width: 8, height: 8, borderRadius: "50%",
+              background: "#22C55E", border: `2px solid ${theme.bg}`,
+            }} />
           </button>
 
           {/* Mode toggle */}
@@ -848,6 +867,8 @@ export default function MushafPage() {
           <MushafImageMode
             page={currentPage} theme={theme} zoom={zoom}
             onSwipeLeft={goNext} onSwipeRight={goPrev}
+            edition={currentEditionData}
+            onFallbackToText={() => setMushafMode("text")}
           />
         ) : (
           <MushafTextMode
