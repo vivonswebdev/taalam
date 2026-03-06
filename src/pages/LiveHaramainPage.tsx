@@ -11,7 +11,7 @@ const STREAMS = {
   },
   madinah: {
     label: "🕌 Madinah",
-    youtubeId: "MgaeFVMSvKo",
+    youtubeId: "9A1S0xAPVIs",
   },
 } as const;
 
