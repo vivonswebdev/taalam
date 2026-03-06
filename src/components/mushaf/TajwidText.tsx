@@ -33,13 +33,15 @@ interface TajwidTextProps {
   fontSize?: number;
   className?: string;
   enableTajwid?: boolean;
+  textColor?: string; // explicit text color for non-tajwid text
 }
 
 export default function TajwidText({
   text,
   fontSize = 28,
   className = '',
-  enableTajwid = true
+  enableTajwid = true,
+  textColor
 }: TajwidTextProps) {
   const renderedParts = useMemo(() => {
     if (!enableTajwid || !text) {
@@ -97,6 +99,7 @@ export default function TajwidText({
         lineHeight: 2.2,
         direction: 'rtl',
         display: 'inline',
+        color: textColor || 'inherit',
       }}
     >
       {renderedParts.map(part => (

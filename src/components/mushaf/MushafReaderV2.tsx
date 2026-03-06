@@ -444,6 +444,7 @@ export default function MushafReaderV2() {
                           text={tajwidEnabled ? verse.text_tajwid : verse.text_uthmani}
                           fontSize={effectiveFontSize}
                           enableTajwid={tajwidEnabled}
+                          textColor={theme.text}
                         />
                         {' '}
                         <AyahMedallion
