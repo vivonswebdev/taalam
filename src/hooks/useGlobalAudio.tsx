@@ -37,6 +37,7 @@ export interface GlobalAudioState {
 
 interface GlobalAudioContextType {
   state: GlobalAudioState;
+  prepare: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   pause: () => void;
   resume: () => void;
