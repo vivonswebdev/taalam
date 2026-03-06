@@ -1,0 +1,17 @@
+# HTML — always revalidate
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Service Worker — never cache
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Manifest — revalidate
+/manifest.webmanifest
+  Cache-Control: no-cache, must-revalidate
+
+# Hashed assets — immutable long-term cache
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

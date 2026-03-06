@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔄 Mise à jour Ta'alam</title>
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #1a6b3c, #2d8659);
+      color: white;
+    }
+    .container { text-align: center; padding: 2rem; max-width: 400px; }
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    p { font-size: 1rem; opacity: 0.9; margin-bottom: 2rem; }
+    .loader {
+      width: 50px; height: 50px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    button {
+      background: white; color: #1a6b3c; border: none;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      display: none;
+    }
+    button:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="loader" id="loader"></div>
+    <h1>🔄 Mise à jour en cours</h1>
+    <p id="status">Nettoyage du cache et rechargement…</p>
+    <button id="btn" onclick="window.location.href='/'">Recharger manuellement</button>
+  </div>
+  <script>
+    (async () => {
+      try {
+        // Clear all caches
+        if ('caches' in window) {
+          const names = await caches.keys();
+          await Promise.all(names.map(n => caches.delete(n)));
+        }
+        // Unregister all service workers
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+        // Preserve auth tokens
+        const authKeys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('sb-')) authKeys.push([key, localStorage.getItem(key)]);
+        }
+        localStorage.clear();
+        authKeys.forEach(([k, v]) => { if (v) localStorage.setItem(k, v); });
+
+        document.getElementById('status').textContent = '✅ Cache vidé ! Redirection…';
+        setTimeout(() => { window.location.href = '/?v=' + Date.now(); }, 1500);
+      } catch (e) {
+        document.getElementById('status').textContent = '❌ Erreur — utilisez le bouton ci-dessous';
+        document.getElementById('btn').style.display = 'inline-block';
+        document.getElementById('loader').style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>

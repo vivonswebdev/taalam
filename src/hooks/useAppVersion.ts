@@ -12,7 +12,7 @@ import {
  * À chaque montage de l'app :
  * 1. Compare la version stockée à APP_VERSION.
  * 2. Si différente → purge les clés obsolètes, expire les cookies,
- *    enregistre la nouvelle version, et reload UNE SEULE FOIS.
+ *    vide les caches PWA, enregistre la nouvelle version, et reload.
  * 3. Ne touche JAMAIS aux clés Supabase Auth (sb-*).
  */
 export function useAppVersion() {
@@ -25,8 +25,7 @@ export function useAppVersion() {
     const oldVersion = storedVersion ?? "(aucune)";
 
     console.info(
-      `[Taalam] Migrating app version ${oldVersion} -> ${APP_VERSION}, resetting keys:`,
-      RESET_KEYS
+      `[Taalam] Migrating app version ${oldVersion} -> ${APP_VERSION}`
     );
 
     // 1. Supprimer les clés localStorage obsolètes
@@ -47,10 +46,17 @@ export function useAppVersion() {
       }
     }
 
-    // 3. Enregistrer la nouvelle version AVANT le reload
+    // 3. Purger les caches PWA obsolètes
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => caches.delete(name));
+      }).catch(() => {});
+    }
+
+    // 4. Enregistrer la nouvelle version AVANT le reload
     localStorage.setItem(VERSION_STORAGE_KEY, APP_VERSION);
 
-    // 4. Reload propre (une seule fois grâce à l'écriture ci-dessus)
+    // 5. Reload propre (une seule fois grâce à l'écriture ci-dessus)
     window.location.reload();
-  }, []); // Exécuté une seule fois au montage
+  }, []);
 }

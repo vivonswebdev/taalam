@@ -7,8 +7,8 @@
  * ╚══════════════════════════════════════════════════════╝
  */
 
-/** Version courante de l'app – format YYYY-MM-DD-NN */
-export const APP_VERSION = "2026-03-05-01";
+/** Version courante de l'app – synced with vite.config.ts */
+export const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : "2.1.0";
 
 /** Clé localStorage qui stocke la version côté client */
 export const VERSION_STORAGE_KEY = "app_version";
@@ -40,7 +40,6 @@ export const RESET_KEYS: string[] = [
 
 /**
  * Cookies front à expirer lors d'une migration.
- * Ajouter le nom exact du cookie (sans le =valeur).
  */
 export const RESET_COOKIES: string[] = [
   "taalam_prefs",
@@ -48,6 +47,5 @@ export const RESET_COOKIES: string[] = [
 
 /**
  * Nom du cache Service Worker.
- * Incrémente le suffixe pour invalider le cache PWA.
  */
 export const SW_CACHE_NAME = "taalam-v3";

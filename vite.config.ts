@@ -4,12 +4,21 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
+// ✅ VERSION APP — incrémenter à chaque déploiement important
+const APP_VERSION = "2.1.0";
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
     hmr: { overlay: false },
   },
+
+  define: {
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
+
   build: {
     chunkSizeWarningLimit: 600,
     cssCodeSplit: true,
@@ -51,7 +60,23 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         globIgnores: ["**/firebase-messaging-sw.js", "**/sw.js"],
+
+        // ✅ Force immediate activation
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+
         runtimeCaching: [
+          {
+            // HTML — always revalidate
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-cache",
+              expiration: { maxEntries: 5, maxAgeSeconds: 60 },
+              networkTimeoutSeconds: 3,
+            },
+          },
           {
             // Cache Quran audio (CacheFirst)
             urlPattern: /^https:\/\/cdn\.islamic\.network\/quran\/audio\/.*/i,
@@ -114,6 +139,16 @@ export default defineConfig(({ mode }) => ({
             },
           },
           {
+            // Quran.com API (StaleWhileRevalidate)
+            urlPattern: /^https:\/\/api\.quran\.com\/.*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "qurancom-api-cache",
+              expiration: { maxEntries: 700, maxAgeSeconds: 30 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
             // Images (CacheFirst)
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
             handler: "CacheFirst",
@@ -127,6 +162,8 @@ export default defineConfig(({ mode }) => ({
       },
       manifest: {
         id: "be.taalam.app",
+        // @ts-ignore — version is a valid manifest field
+        version: APP_VERSION,
         name: "Ta'alam - Apprendre le Coran",
         short_name: "Ta'alam",
         description: "Apprenez le Coran facilement avec des quiz et de la récitation guidée",
