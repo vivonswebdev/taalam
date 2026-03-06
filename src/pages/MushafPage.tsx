@@ -622,7 +622,9 @@ export default function MushafPage() {
         onSelect={(id) => {
           setMushafEdition(id);
           setStoredEdition(id);
-          toast.success(`Mushaf changé : ${getEditionById(id).label}`);
+          toast.success(t("mushaf.editionChanged" as any), {
+            description: t("mushaf.editionDescription" as any),
+          });
         }}
       />
 
