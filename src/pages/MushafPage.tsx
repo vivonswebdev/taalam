@@ -416,6 +416,9 @@ export default function MushafPage() {
     try { const s = localStorage.getItem(MUSHAF_ZOOM_KEY); return s ? Number(s) : 22; } catch { return 22; }
   });
   const [zoom, setZoom] = useState(1);
+  const [mushafEdition, setMushafEdition] = useState(() => getStoredEdition());
+  const [showEditionSheet, setShowEditionSheet] = useState(false);
+  const currentEditionData = getEditionById(mushafEdition);
 
   // UI State
   const [showReciterSelector, setShowReciterSelector] = useState(() =>
