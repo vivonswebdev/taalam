@@ -8,6 +8,15 @@ const RECITERS = [
   { id: "ar.abdurrahmaansudais", name: "As-Sudais", label: "عبد الرحمن السديس" },
 ];
 
+export type RepeatMode = "none" | "ayah" | "range" | "surah";
+
+export interface PlaylistItem {
+  surahNumber: number;
+  surahName: string;
+  surahNameArabic: string;
+  totalAyahs: number;
+}
+
 export interface GlobalAudioState {
   isPlaying: boolean;
   surahNumber: number;
@@ -18,6 +27,12 @@ export interface GlobalAudioState {
   progress: number;
   continuousMode: boolean;
   listenTestMode: boolean;
+  repeatMode: RepeatMode;
+  repeatRange?: { start: number; end: number };
+  playlist: PlaylistItem[];
+  currentPlaylistIndex: number;
+  currentTime: number;
+  duration: number;
 }
 
 interface GlobalAudioContextType {
@@ -33,11 +48,13 @@ interface GlobalAudioContextType {
   jumpToAyah: (index: number) => void;
   setContinuousMode: (v: boolean) => void;
   setListenTestMode: (v: boolean) => void;
-  /** Call this from any other audio source to stop global player */
+  setRepeatMode: (mode: RepeatMode, range?: { start: number; end: number }) => void;
+  addToPlaylist: (item: PlaylistItem) => void;
+  removeFromPlaylist: (index: number) => void;
+  clearPlaylist: () => void;
+  playFromPlaylist: (index: number) => void;
   requestExclusiveAudio: () => void;
-  /** Subscribe to ayah changes (surahNumber, ayahIndex) */
   onAyahChange: React.MutableRefObject<((surahNumber: number, ayah: number) => void) | null>;
-  /** Subscribe to surah completion (for listen-test redirect) */
   onSurahComplete: React.MutableRefObject<((surahNumber: number, surahName: string) => void) | null>;
 }
 
@@ -51,6 +68,12 @@ const defaultState: GlobalAudioState = {
   progress: 0,
   continuousMode: true,
   listenTestMode: false,
+  repeatMode: "none",
+  repeatRange: undefined,
+  playlist: [],
+  currentPlaylistIndex: -1,
+  currentTime: 0,
+  duration: 0,
 };
 
 const GlobalAudioContext = createContext<GlobalAudioContextType | null>(null);
@@ -71,6 +94,10 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const onAyahChange = useRef<((surahNumber: number, ayah: number) => void) | null>(null);
   const onSurahComplete = useRef<((surahNumber: number, surahName: string) => void) | null>(null);
   const listenTestModeRef = useRef(false);
+  const repeatModeRef = useRef<RepeatMode>("none");
+  const repeatRangeRef = useRef<{ start: number; end: number } | undefined>(undefined);
+  const playlistRef = useRef<PlaylistItem[]>([]);
+  const playlistIndexRef = useRef(-1);
 
   const clearInterval_ = useCallback(() => {
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
@@ -91,7 +118,6 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   const fetchUrls = useCallback(async (surahNum: number, edition?: string): Promise<string[]> => {
     const reciterEd = edition || reciterEditionRef.current || "ar.alafasy";
     try {
-      // Check if offline mode is on and try cache first
       const isOffline = localStorage.getItem("taaloum_offline_mode") === "true";
       if (isOffline) {
         try {
@@ -99,30 +125,21 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
           const cached = await cache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (cached) {
             const data = await cached.json();
-            if (data.data?.ayahs) {
-              return data.data.ayahs.map((a: { audio: string }) => a.audio);
-            }
+            if (data.data?.ayahs) return data.data.ayahs.map((a: { audio: string }) => a.audio);
           }
-          // Also check mood cache
           const moodCache = await caches.open("mood-audio-v1");
           const moodCached = await moodCache.match(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
           if (moodCached) {
             const data = await moodCached.json();
-            if (data.data?.ayahs) {
-              return data.data.ayahs.map((a: { audio: string }) => a.audio);
-            }
+            if (data.data?.ayahs) return data.data.ayahs.map((a: { audio: string }) => a.audio);
           }
-          // Offline but not cached
           toast({ title: "Mode Offline", description: "Audio non téléchargé. Allez dans Réglages > Offline." });
           return [];
         } catch {}
       }
-
       const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${reciterEd}`);
       const data = await res.json();
-      if (data.data?.ayahs) {
-        return data.data.ayahs.map((a: { audio: string }) => a.audio);
-      }
+      if (data.data?.ayahs) return data.data.ayahs.map((a: { audio: string }) => a.audio);
     } catch {}
     return [];
   }, []);
@@ -133,19 +150,74 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       if (!audioRef.current) return;
       const dur = audioRef.current.duration || 0;
       const cur = audioRef.current.currentTime || 0;
-      setState(prev => ({ ...prev, progress: dur ? (cur / dur) * 100 : 0 }));
+      setState(prev => ({
+        ...prev,
+        progress: dur ? (cur / dur) * 100 : 0,
+        currentTime: cur,
+        duration: dur,
+      }));
     }, 250);
   }, [clearInterval_]);
 
+  const playNextFromPlaylist = useCallback(() => {
+    const pl = playlistRef.current;
+    const nextIdx = playlistIndexRef.current + 1;
+    if (nextIdx < pl.length) {
+      playlistIndexRef.current = nextIdx;
+      const item = pl[nextIdx];
+      surahNumberRef.current = item.surahNumber;
+      surahNameRef.current = item.surahName;
+      surahNameArabicRef.current = item.surahNameArabic;
+      totalAyahsRef.current = item.totalAyahs;
+      currentAyahRef.current = 0;
+      setState(prev => ({
+        ...prev,
+        surahNumber: item.surahNumber,
+        surahName: item.surahName,
+        surahNameArabic: item.surahNameArabic,
+        totalAyahs: item.totalAyahs,
+        currentAyah: 0,
+        progress: 0,
+        currentPlaylistIndex: nextIdx,
+      }));
+      return item;
+    }
+    return null;
+  }, []);
+
   const playAyahInternal = useCallback((index: number, urls: string[]) => {
     if (index >= urls.length) {
-      // Surah ended
+      // Repeat logic
+      const rm = repeatModeRef.current;
+      if (rm === "surah") {
+        // Replay from beginning
+        playAyahInternal(0, urls);
+        return;
+      }
+      if (rm === "range" && repeatRangeRef.current) {
+        playAyahInternal(repeatRangeRef.current.start, urls);
+        return;
+      }
+
+      // Check playlist
+      if (playlistRef.current.length > 0) {
+        const nextItem = playNextFromPlaylist();
+        if (nextItem) {
+          fetchUrls(nextItem.surahNumber, reciterEditionRef.current).then(newUrls => {
+            if (newUrls.length > 0) {
+              audioUrlsRef.current = newUrls;
+              playAyahInternal(0, newUrls);
+            }
+          });
+          return;
+        }
+      }
+
+      // Continuous mode
       if (continuousModeRef.current && surahNumberRef.current < 114) {
-        // Auto next surah
         const nextNum = surahNumberRef.current + 1;
         surahNumberRef.current = nextNum;
         currentAyahRef.current = 0;
-        // We need to fetch surah info – use a simple lookup
         fetchSurahMeta(nextNum).then(meta => {
           if (!meta) return;
           surahNameRef.current = meta.name;
@@ -169,7 +241,8 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
         });
         return;
       }
-      // Finished - fire surah complete callback for listen-test
+
+      // Finished
       const completedSurahNum = surahNumberRef.current;
       const completedSurahName = surahNameRef.current;
       stopAudio();
@@ -181,6 +254,9 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       return;
     }
 
+    // Repeat ayah: if we just finished playing this index and repeat is ayah
+    // This is handled via onended below
+
     stopAudio();
     const audio = new Audio(urls[index]);
     audioRef.current = audio;
@@ -189,12 +265,27 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     setState(prev => ({ ...prev, currentAyah: index, isPlaying: true }));
     onAyahChange.current?.(surahNumberRef.current, index);
 
-    audio.onended = () => playAyahInternal(index + 1, urls);
+    audio.onended = () => {
+      const rm = repeatModeRef.current;
+      if (rm === "ayah") {
+        // Replay same ayah
+        playAyahInternal(index, urls);
+        return;
+      }
+      if (rm === "range" && repeatRangeRef.current) {
+        const { start, end } = repeatRangeRef.current;
+        if (index >= end) {
+          playAyahInternal(start, urls);
+          return;
+        }
+      }
+      playAyahInternal(index + 1, urls);
+    };
     audio.onerror = () => playAyahInternal(index + 1, urls);
 
     startProgressInterval();
     audio.play().catch(() => playAyahInternal(index + 1, urls));
-  }, [stopAudio, fetchUrls, startProgressInterval]);
+  }, [stopAudio, fetchUrls, startProgressInterval, playNextFromPlaylist]);
 
   const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
@@ -206,7 +297,8 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     currentAyahRef.current = startAyah;
     isPlayingRef.current = true;
 
-    setState({
+    setState(prev => ({
+      ...prev,
       isPlaying: true,
       surahNumber: surahNum,
       surahName: name,
@@ -214,9 +306,13 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
       currentAyah: startAyah,
       totalAyahs: total,
       progress: 0,
+      currentTime: 0,
+      duration: 0,
       continuousMode: continuousModeRef.current,
       listenTestMode: listenTestModeRef.current,
-    });
+      repeatMode: repeatModeRef.current,
+      repeatRange: repeatRangeRef.current,
+    }));
 
     const urls = await fetchUrls(surahNum, reciterEditionRef.current);
     if (urls.length === 0) return;
@@ -274,12 +370,20 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
   }, [playAyahInternal]);
 
   const nextSurah = useCallback(() => {
+    // If playlist exists, use it
+    if (playlistRef.current.length > 0) {
+      const nextItem = playNextFromPlaylist();
+      if (nextItem) {
+        play(nextItem.surahNumber, nextItem.surahName, nextItem.surahNameArabic, nextItem.totalAyahs, 0);
+        return;
+      }
+    }
     if (surahNumberRef.current >= 114) return;
     const nextNum = surahNumberRef.current + 1;
     fetchSurahMeta(nextNum).then(meta => {
       if (meta) play(nextNum, meta.name, meta.nameArabic, meta.versesCount, 0);
     });
-  }, [play]);
+  }, [play, playNextFromPlaylist]);
 
   const prevSurah = useCallback(() => {
     if (surahNumberRef.current <= 1) return;
@@ -306,13 +410,50 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     setState(prev => ({ ...prev, listenTestMode: v }));
   }, []);
 
-  const requestExclusiveAudio = useCallback(() => {
-    if (isPlayingRef.current) {
-      pause();
+  const setRepeatMode = useCallback((mode: RepeatMode, range?: { start: number; end: number }) => {
+    repeatModeRef.current = mode;
+    repeatRangeRef.current = range;
+    setState(prev => ({ ...prev, repeatMode: mode, repeatRange: range }));
+  }, []);
+
+  const addToPlaylist = useCallback((item: PlaylistItem) => {
+    playlistRef.current = [...playlistRef.current, item];
+    setState(prev => ({ ...prev, playlist: [...playlistRef.current] }));
+  }, []);
+
+  const removeFromPlaylist = useCallback((index: number) => {
+    playlistRef.current = playlistRef.current.filter((_, i) => i !== index);
+    // Adjust current index
+    if (playlistIndexRef.current >= index && playlistIndexRef.current > 0) {
+      playlistIndexRef.current--;
     }
+    setState(prev => ({
+      ...prev,
+      playlist: [...playlistRef.current],
+      currentPlaylistIndex: playlistIndexRef.current,
+    }));
+  }, []);
+
+  const clearPlaylist = useCallback(() => {
+    playlistRef.current = [];
+    playlistIndexRef.current = -1;
+    setState(prev => ({ ...prev, playlist: [], currentPlaylistIndex: -1 }));
+  }, []);
+
+  const playFromPlaylist = useCallback((index: number) => {
+    const pl = playlistRef.current;
+    if (index < 0 || index >= pl.length) return;
+    playlistIndexRef.current = index;
+    const item = pl[index];
+    setState(prev => ({ ...prev, currentPlaylistIndex: index }));
+    play(item.surahNumber, item.surahName, item.surahNameArabic, item.totalAyahs, 0);
+  }, [play]);
+
+  const requestExclusiveAudio = useCallback(() => {
+    if (isPlayingRef.current) pause();
   }, [pause]);
 
-  // MediaSession API for background audio control
+  // MediaSession API
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
     if (state.isPlaying) {
@@ -328,7 +469,6 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     }
   }, [state.isPlaying, state.currentAyah, state.surahName, resume, pause, nextAyah, prevAyah]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => { stopAudio(); };
   }, [stopAudio]);
@@ -337,6 +477,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     <GlobalAudioContext.Provider value={{
       state, play, pause, resume, stop, nextAyah, prevAyah,
       nextSurah, prevSurah, jumpToAyah, setContinuousMode, setListenTestMode,
+      setRepeatMode, addToPlaylist, removeFromPlaylist, clearPlaylist, playFromPlaylist,
       requestExclusiveAudio, onAyahChange, onSurahComplete,
     }}>
       {children}
@@ -359,6 +500,11 @@ const fallback: GlobalAudioContextType = {
   jumpToAyah: noopFn,
   setContinuousMode: noopFn,
   setListenTestMode: noopFn,
+  setRepeatMode: noopFn,
+  addToPlaylist: noopFn,
+  removeFromPlaylist: noopFn,
+  clearPlaylist: noopFn,
+  playFromPlaylist: noopFn,
   requestExclusiveAudio: noopFn,
   onAyahChange: noopRef as any,
   onSurahComplete: noopRef as any,
@@ -369,7 +515,6 @@ export function useGlobalAudio() {
   return ctx ?? fallback;
 }
 
-/** Simple helper to fetch surah meta from API */
 async function fetchSurahMeta(num: number): Promise<{ name: string; nameArabic: string; versesCount: number } | null> {
   try {
     const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}`);
