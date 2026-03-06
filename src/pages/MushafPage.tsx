@@ -85,10 +85,11 @@ function btnStyle(theme: ThemeValues, size: number): React.CSSProperties {
 
 // ─── Mode IMAGE ─────────────────────────────────────────────
 function MushafImageMode({
-  page, theme, zoom, onSwipeLeft, onSwipeRight,
+  page, theme, zoom, onSwipeLeft, onSwipeRight, edition, onFallbackToText,
 }: {
   page: number; theme: ThemeValues; zoom: number;
   onSwipeLeft: () => void; onSwipeRight: () => void;
+  edition: MushafEdition; onFallbackToText: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
