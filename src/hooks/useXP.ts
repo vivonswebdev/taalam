@@ -1,158 +1,68 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { addXP as addXPToDb, fetchUserProgress } from "@/lib/progress";
-import { calcStreakBonusXP, getNextMilestone, getLevel, getLevelBadge, XP_PER_LEVEL } from "@/lib/xpCalculator";
+/**
+ * UNIFIED XP HOOK
+ * This is now a thin wrapper around useQuranXp for backward compatibility.
+ * All XP logic lives in useQuranXp.ts — this file just provides the old API shape.
+ */
+import { useEffect, useRef } from "react";
+import { useQuranXp, getLevelFromXp, getLevelBadge as getQuranLevelBadge, getLevelProgress } from "@/hooks/useQuranXp";
 
-const XP_KEY = "quranEasyXP";
-const STREAK_BONUS_KEY = "quranStreakBonusDate";
+const OLD_XP_KEY = "quranEasyXP";
+const MIGRATED_KEY = "xp_migration_done";
 
-export interface XPData {
-  xpTotal: number;
-  xpToday: number;
-  streakDays: number;
-  lastActiveDate: string; // YYYY-MM-DD
+// Re-export helpers with old names for any external consumers
+export const XP_PER_LEVEL = 500;
+
+export function getLevel(xpTotal: number) {
+  const level = getLevelFromXp(xpTotal);
+  const progress = getLevelProgress(xpTotal);
+  return { level, xpInLevel: progress.currentInLevel, xpForNext: XP_PER_LEVEL };
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function loadLocalXP(): XPData {
-  try {
-    const stored = localStorage.getItem(XP_KEY);
-    if (stored) {
-      const data: XPData = JSON.parse(stored);
-      const t = today();
-      if (data.lastActiveDate !== t) {
-        const last = new Date(data.lastActiveDate);
-        const now = new Date(t);
-        const diffDays = Math.round((now.getTime() - last.getTime()) / 86400000);
-        if (diffDays === 1) {
-          return { ...data, xpToday: 0, lastActiveDate: t };
-        } else if (diffDays > 1) {
-          return { ...data, xpToday: 0, streakDays: 0, lastActiveDate: t };
-        }
-      }
-      return data;
-    }
-  } catch {}
-  return { xpTotal: 0, xpToday: 0, streakDays: 0, lastActiveDate: today() };
-}
-
-function saveLocalXP(data: XPData) {
-  localStorage.setItem(XP_KEY, JSON.stringify(data));
-}
-
-export { getLevel, getLevelBadge, XP_PER_LEVEL };
+export { getQuranLevelBadge as getLevelBadge };
 
 export function useXP() {
-  const [data, setData] = useState<XPData>(loadLocalXP);
-  const [lastGain, setLastGain] = useState<number | null>(null);
-  const [streakBonusAwarded, setStreakBonusAwarded] = useState<number>(0);
-  const [userId, setUserId] = useState<string | null>(null);
-  const syncedRef = useRef(false);
+  const qxp = useQuranXp();
+  const migratedRef = useRef(false);
 
-  // Listen for auth state
+  // Migrate old localStorage XP on first mount
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserId(session?.user?.id ?? null);
-    });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUserId(session?.user?.id ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+    if (migratedRef.current) return;
+    migratedRef.current = true;
 
-  // Sync from Supabase on mount when authenticated
-  useEffect(() => {
-    if (!userId || syncedRef.current) return;
-    syncedRef.current = true;
-
-    fetchUserProgress(userId).then((remote) => {
-      if (remote) {
-        const t = today();
-        const synced: XPData = {
-          xpTotal: remote.xp_total,
-          xpToday: remote.last_xp_date === t ? remote.xp_today : 0,
-          streakDays: remote.streak_days,
-          lastActiveDate: remote.last_xp_date ?? t,
-        };
-        const local = loadLocalXP();
-        if (local.xpTotal > synced.xpTotal) {
-          addXPToDb(userId, local.xpTotal - synced.xpTotal);
-          setData(local);
-        } else {
-          setData(synced);
-          saveLocalXP(synced);
-        }
+    try {
+      if (localStorage.getItem(MIGRATED_KEY)) return;
+      const oldRaw = localStorage.getItem(OLD_XP_KEY);
+      if (!oldRaw) {
+        localStorage.setItem(MIGRATED_KEY, "1");
+        return;
       }
-    });
-  }, [userId]);
-
-  const addXP = useCallback((amount: number) => {
-    if (amount <= 0) return;
-
-    setData((prev) => {
-      const t = today();
-      const isNewDay = prev.lastActiveDate !== t;
-      const newData: XPData = {
-        xpTotal: prev.xpTotal + amount,
-        xpToday: (isNewDay ? 0 : prev.xpToday) + amount,
-        streakDays: isNewDay
-          ? (() => {
-              const last = new Date(prev.lastActiveDate);
-              const now = new Date(t);
-              const diffDays = Math.round((now.getTime() - last.getTime()) / 86400000);
-              return diffDays === 1 ? prev.streakDays + 1 : 1;
-            })()
-          : prev.xpToday === 0 ? prev.streakDays + 1 : prev.streakDays,
-        lastActiveDate: t,
-      };
-      if (newData.streakDays === 0) newData.streakDays = 1;
-      saveLocalXP(newData);
-      return newData;
-    });
-
-    if (userId) {
-      addXPToDb(userId, amount).catch(console.error);
+      const parsed = JSON.parse(oldRaw);
+      const oldTotal = parsed.xpTotal || 0;
+      if (oldTotal > qxp.xp) {
+        qxp.addXp(oldTotal - qxp.xp, "migration_from_old_system");
+      }
+      localStorage.removeItem(OLD_XP_KEY);
+      localStorage.setItem(MIGRATED_KEY, "1");
+    } catch {
+      // ignore
     }
+  }, [qxp.xp, qxp.addXp]);
 
-    setLastGain(amount);
-    setTimeout(() => setLastGain(null), 2000);
-  }, [userId]);
-
-  // Award streak bonus once per day on first activity
-  const awardStreakBonus = useCallback(() => {
-    const t = today();
-    const lastBonusDate = localStorage.getItem(STREAK_BONUS_KEY);
-    if (lastBonusDate === t) return 0;
-
-    const streakBonus = calcStreakBonusXP(data.streakDays);
-    if (streakBonus.total > 0) {
-      localStorage.setItem(STREAK_BONUS_KEY, t);
-      addXP(streakBonus.total);
-      setStreakBonusAwarded(streakBonus.total);
-      return streakBonus.total;
-    }
-    return 0;
-  }, [data.streakDays, addXP]);
-
-  const { level, xpInLevel, xpForNext } = getLevel(data.xpTotal);
-  const levelBadge = getLevelBadge(level);
-  const nextMilestone = getNextMilestone(data.streakDays);
+  const levelInfo = getLevel(qxp.xp);
 
   return {
-    xpTotal: data.xpTotal,
-    xpToday: data.xpToday,
-    streakDays: data.streakDays,
-    level,
-    xpInLevel,
-    xpForNext,
-    lastGain,
-    addXP,
-    awardStreakBonus,
-    streakBonusAwarded,
-    levelBadge,
-    nextMilestone,
+    xpTotal: qxp.xp,
+    xpToday: 0, // not tracked separately anymore
+    streakDays: 0, // use useStreak hook instead
+    level: levelInfo.level,
+    xpInLevel: levelInfo.xpInLevel,
+    xpForNext: levelInfo.xpForNext,
+    lastGain: qxp.lastGain,
+    addXP: qxp.addXp, // uppercase alias for backward compat
+    addXp: qxp.addXp,
+    awardStreakBonus: () => 0,
+    streakBonusAwarded: 0,
+    levelBadge: qxp.badge,
+    nextMilestone: null,
   };
 }
