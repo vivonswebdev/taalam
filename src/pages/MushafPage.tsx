@@ -867,6 +867,8 @@ export default function MushafPage() {
           <MushafImageMode
             page={currentPage} theme={theme} zoom={zoom}
             onSwipeLeft={goNext} onSwipeRight={goPrev}
+            edition={currentEditionData}
+            onFallbackToText={() => setMushafMode("text")}
           />
         ) : (
           <MushafTextMode
