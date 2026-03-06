@@ -474,10 +474,11 @@ export default function MushafReader({
               onClick={() => {
                 if (playing) {
                   globalAudio.pause();
-                } else if (globalAudio.state.surahNumber === surah.number) {
+                } else if (globalAudio.state.surahNumber === surah.number && globalAudio.state.progress > 0) {
+                  // Only resume if audio was actually loaded and playing before
                   globalAudio.resume();
                 } else {
-                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, 0, reciterEdition);
+                  globalAudio.play(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, currentAyah, reciterEdition);
                 }
               }}
               className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playing ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
