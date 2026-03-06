@@ -518,6 +518,7 @@ const noopRef = { current: null };
 const noopFn = () => {};
 const fallback: GlobalAudioContextType = {
   state: defaultState,
+  prepare: noopFn as any,
   play: noopFn as any,
   pause: noopFn,
   resume: noopFn,
