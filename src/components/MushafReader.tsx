@@ -123,8 +123,8 @@ export default function MushafReader({
   useEffect(() => {
     if (autoStartedRef.current) return;
     autoStartedRef.current = true;
-    // Set surah info so the player UI is ready, but don't auto-play
-    // User presses play button to start (avoids autoplay blocks on mobile)
+    // Initialize audio context so play button works on first click
+    globalAudio.prepare(surah.number, surah.name, surah.nameArabic, surah.ayahs.length, startAtAyah, reciterEdition);
   }, []);
 
   // Listen for surah changes from global audio + award XP for listened ayahs
