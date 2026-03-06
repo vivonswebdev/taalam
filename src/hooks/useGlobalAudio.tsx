@@ -284,7 +284,17 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     audio.onerror = () => playAyahInternal(index + 1, urls);
 
     startProgressInterval();
-    audio.play().catch(() => playAyahInternal(index + 1, urls));
+    audio.play().catch((err) => {
+      // If autoplay blocked (NotAllowedError), stop gracefully instead of cascading
+      if (err?.name === "NotAllowedError") {
+        stopAudio();
+        isPlayingRef.current = false;
+        setState(prev => ({ ...prev, isPlaying: false }));
+        return;
+      }
+      // For other errors (e.g. network), try next ayah
+      playAyahInternal(index + 1, urls);
+    });
   }, [stopAudio, fetchUrls, startProgressInterval, playNextFromPlaylist]);
 
   const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
