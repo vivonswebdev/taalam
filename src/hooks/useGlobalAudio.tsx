@@ -504,7 +504,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
 
   return (
     <GlobalAudioContext.Provider value={{
-      state, play, pause, resume, stop, nextAyah, prevAyah,
+      state, prepare, play, pause, resume, stop, nextAyah, prevAyah,
       nextSurah, prevSurah, jumpToAyah, setContinuousMode, setListenTestMode,
       setRepeatMode, addToPlaylist, removeFromPlaylist, clearPlaylist, playFromPlaylist,
       requestExclusiveAudio, onAyahChange, onSurahComplete,
