@@ -33,6 +33,7 @@ interface TajwidTextProps {
   fontSize?: number;
   className?: string;
   enableTajwid?: boolean;
+  textColor?: string; // explicit text color for non-tajwid text
 }
 
 export default function TajwidText({
