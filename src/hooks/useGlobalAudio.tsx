@@ -37,6 +37,7 @@ export interface GlobalAudioState {
 
 interface GlobalAudioContextType {
   state: GlobalAudioState;
+  prepare: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   play: (surahNumber: number, surahName: string, surahNameArabic: string, totalAyahs: number, startAyah?: number, reciterEdition?: string) => void;
   pause: () => void;
   resume: () => void;
@@ -297,6 +298,24 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     });
   }, [stopAudio, fetchUrls, startProgressInterval, playNextFromPlaylist]);
 
+  const prepare = useCallback((surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
+    if (reciterEdition) reciterEditionRef.current = reciterEdition;
+    surahNumberRef.current = surahNum;
+    surahNameRef.current = name;
+    surahNameArabicRef.current = nameAr;
+    totalAyahsRef.current = total;
+    currentAyahRef.current = startAyah;
+    setState(prev => ({
+      ...prev,
+      surahNumber: surahNum,
+      surahName: name,
+      surahNameArabic: nameAr,
+      totalAyahs: total,
+      currentAyah: startAyah,
+      isPlaying: false,
+    }));
+  }, []);
+
   const play = useCallback(async (surahNum: number, name: string, nameAr: string, total: number, startAyah = 0, reciterEdition?: string) => {
     stopAudio();
     if (reciterEdition) reciterEditionRef.current = reciterEdition;
@@ -485,7 +504,7 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
 
   return (
     <GlobalAudioContext.Provider value={{
-      state, play, pause, resume, stop, nextAyah, prevAyah,
+      state, prepare, play, pause, resume, stop, nextAyah, prevAyah,
       nextSurah, prevSurah, jumpToAyah, setContinuousMode, setListenTestMode,
       setRepeatMode, addToPlaylist, removeFromPlaylist, clearPlaylist, playFromPlaylist,
       requestExclusiveAudio, onAyahChange, onSurahComplete,
@@ -499,6 +518,7 @@ const noopRef = { current: null };
 const noopFn = () => {};
 const fallback: GlobalAudioContextType = {
   state: defaultState,
+  prepare: noopFn as any,
   play: noopFn as any,
   pause: noopFn,
   resume: noopFn,
