@@ -91,6 +91,7 @@ function MushafImageMode({
   onSwipeLeft: () => void; onSwipeRight: () => void;
   edition: MushafEdition; onFallbackToText: () => void;
 }) {
+  const { t } = useLanguage();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const touchStartX = useRef<number | null>(null);
