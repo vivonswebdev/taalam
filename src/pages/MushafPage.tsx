@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
 import {
   ChevronLeft, Bookmark, List, Settings2,
-  Play, Pause, Loader2, ChevronRight,
+  Play, Pause, Loader2, ChevronRight, BookOpen,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
