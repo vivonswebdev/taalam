@@ -7,11 +7,11 @@ import { motion } from "framer-motion";
 const STREAMS = {
   makkah: {
     label: "🕋 Makkah",
-    youtubeId: "bxqRKMBsdWk",
+    youtubeId: "DEunNzaoz_I",
   },
   madinah: {
     label: "🕌 Madinah",
-    youtubeId: "MgaeFVMSvKo",
+    youtubeId: "9A1S0xAPVIs",
   },
 } as const;
 
