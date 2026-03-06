@@ -91,6 +91,7 @@ function MushafImageMode({
   onSwipeLeft: () => void; onSwipeRight: () => void;
   edition: MushafEdition; onFallbackToText: () => void;
 }) {
+  const { t } = useLanguage();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -143,9 +144,9 @@ function MushafImageMode({
       {error && (
         <div className="text-center p-6" style={{ color: theme.text }}>
           <p className="text-4xl mb-3">📖</p>
-          <p className="text-sm font-semibold mb-1">Images non disponibles</p>
+          <p className="text-sm font-semibold mb-1">{t("mushaf.imagesNotAvailable" as any)}</p>
           <p className="text-xs opacity-60 mb-4">
-            Cette édition n'a pas encore d'images.<br/>Utilisez le mode Texte avec Tajwid.
+            {t("mushaf.imagesNotAvailableDesc" as any)}
           </p>
           <button
             onClick={onFallbackToText}
@@ -155,7 +156,7 @@ function MushafImageMode({
               fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer",
             }}
           >
-            Passer en mode Texte
+            {t("mushaf.switchToTextMode" as any)}
           </button>
         </div>
       )}
@@ -621,7 +622,9 @@ export default function MushafPage() {
         onSelect={(id) => {
           setMushafEdition(id);
           setStoredEdition(id);
-          toast.success(`Mushaf changé : ${getEditionById(id).label}`);
+          toast.success(t("mushaf.editionChanged" as any), {
+            description: t("mushaf.editionDescription" as any),
+          });
         }}
       />
 
@@ -829,14 +832,14 @@ export default function MushafPage() {
 
                 {/* Mushaf Edition */}
                 <div>
-                  <p className="text-sm font-semibold mb-2">Édition du Mushaf</p>
+                  <p className="text-sm font-semibold mb-2">{t("mushaf.mushafEdition" as any)}</p>
                   <button
                     onClick={() => setShowEditionSheet(true)}
                     className="w-full px-3 py-2.5 rounded-xl border border-border text-sm text-left hover:bg-accent/40 flex items-center gap-2"
                   >
                     <span>{currentEditionData.icon}</span>
                     <span className="flex-1">{currentEditionData.label}</span>
-                    <span className="text-xs text-muted-foreground">Changer</span>
+                    <span className="text-xs text-muted-foreground">{t("mushaf.change" as any)}</span>
                   </button>
                 </div>
 
