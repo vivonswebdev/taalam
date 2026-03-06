@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══ ZOOM MOBILE ═══ */
+html {
+  touch-action: pan-x pan-y pinch-zoom;
+}
+
+[data-mushaf-page] {
+  touch-action: manipulation pinch-zoom;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+[dir="rtl"],
+.font-\[\'Amiri\'\],
+.font-\[\'Scheherazade_New\'\],
+.font-\[\'UthmanicHafs\'\] {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+a[role="button"],
+[role="tab"] {
+  touch-action: manipulation;
+}
+
 @layer base {
   :root {
     /* ═══ PRIMAIRE — Vert Islamic moderne ═══ */
