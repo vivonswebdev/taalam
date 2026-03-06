@@ -31,6 +31,8 @@ import ReciterSelector from "@/components/mushaf/ReciterSelector";
 import AyahFavoriteSheet from "@/components/mushaf/AyahFavoriteSheet";
 import WordPopup from "@/components/mushaf/WordPopup";
 import OfflineDownloadPrompt from "@/components/mushaf/OfflineDownloadPrompt";
+import MushafEditionSheet, { getStoredEdition, setStoredEdition, getEditionById } from "@/components/mushaf/MushafEditionSheet";
+import { BookOpen } from "lucide-react";
 
 // ─── CONSTANTES ─────────────────────────────────────────────
 const LAST_PAGE_KEY = "mushaf_last_page";
