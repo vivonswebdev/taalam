@@ -99,6 +99,7 @@ export default function TajwidText({
         lineHeight: 2.2,
         direction: 'rtl',
         display: 'inline',
+        color: textColor || 'inherit',
       }}
     >
       {renderedParts.map(part => (
