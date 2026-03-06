@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import SEOHead from "@/components/SEOHead";
 import {
   ChevronLeft, Bookmark, List, Settings2,
-  Play, Pause, Loader2, ChevronRight,
+  Play, Pause, Loader2, ChevronRight, BookOpen,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,6 +31,7 @@ import ReciterSelector from "@/components/mushaf/ReciterSelector";
 import AyahFavoriteSheet from "@/components/mushaf/AyahFavoriteSheet";
 import WordPopup from "@/components/mushaf/WordPopup";
 import OfflineDownloadPrompt from "@/components/mushaf/OfflineDownloadPrompt";
+import MushafEditionSheet, { getStoredEdition, setStoredEdition, getEditionById } from "@/components/mushaf/MushafEditionSheet";
 
 // ─── CONSTANTES ─────────────────────────────────────────────
 const LAST_PAGE_KEY = "mushaf_last_page";
@@ -414,6 +415,9 @@ export default function MushafPage() {
     try { const s = localStorage.getItem(MUSHAF_ZOOM_KEY); return s ? Number(s) : 22; } catch { return 22; }
   });
   const [zoom, setZoom] = useState(1);
+  const [mushafEdition, setMushafEdition] = useState(() => getStoredEdition());
+  const [showEditionSheet, setShowEditionSheet] = useState(false);
+  const currentEditionData = getEditionById(mushafEdition);
 
   // UI State
   const [showReciterSelector, setShowReciterSelector] = useState(() =>
@@ -595,6 +599,18 @@ export default function MushafPage() {
         />
       )}
 
+      {/* Mushaf edition sheet */}
+      <MushafEditionSheet
+        open={showEditionSheet}
+        onOpenChange={setShowEditionSheet}
+        currentEdition={mushafEdition}
+        onSelect={(id) => {
+          setMushafEdition(id);
+          setStoredEdition(id);
+          toast.success(`Mushaf changé : ${getEditionById(id).label}`);
+        }}
+      />
+
       {/* ═══ MAIN CONTAINER ═══ */}
       <div
         style={{
@@ -629,6 +645,15 @@ export default function MushafPage() {
               {currentSurahMeta?.nameArabic || ""}
             </div>
           </div>
+
+          {/* Edition selector */}
+          <button
+            onClick={() => setShowEditionSheet(true)}
+            style={{ ...btnStyle(theme, 34), fontSize: 14 }}
+            title="Changer de Mushaf"
+          >
+            <BookOpen size={15} color={theme.frame} />
+          </button>
 
           {/* Mode toggle */}
           <button
@@ -781,6 +806,19 @@ export default function MushafPage() {
                     setPageSoundEnabled(v);
                     try { localStorage.setItem(MUSHAF_SOUND_KEY, String(v)); } catch {}
                   }} />
+                </div>
+
+                {/* Mushaf Edition */}
+                <div>
+                  <p className="text-sm font-semibold mb-2">Édition du Mushaf</p>
+                  <button
+                    onClick={() => setShowEditionSheet(true)}
+                    className="w-full px-3 py-2.5 rounded-xl border border-border text-sm text-left hover:bg-accent/40 flex items-center gap-2"
+                  >
+                    <span>{currentEditionData.icon}</span>
+                    <span className="flex-1">{currentEditionData.label}</span>
+                    <span className="text-xs text-muted-foreground">Changer</span>
+                  </button>
                 </div>
 
                 {/* Reciter */}
