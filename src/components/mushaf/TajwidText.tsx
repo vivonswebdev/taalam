@@ -40,7 +40,8 @@ export default function TajwidText({
   text,
   fontSize = 28,
   className = '',
-  enableTajwid = true
+  enableTajwid = true,
+  textColor
 }: TajwidTextProps) {
   const renderedParts = useMemo(() => {
     if (!enableTajwid || !text) {
