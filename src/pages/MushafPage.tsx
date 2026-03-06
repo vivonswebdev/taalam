@@ -635,6 +635,15 @@ export default function MushafPage() {
             </div>
           </div>
 
+          {/* Edition selector */}
+          <button
+            onClick={() => setShowEditionSheet(true)}
+            style={{ ...btnStyle(theme, 34), fontSize: 14 }}
+            title="Changer de Mushaf"
+          >
+            <BookOpen size={15} color={theme.frame} />
+          </button>
+
           {/* Mode toggle */}
           <button
             onClick={() => setMushafMode(m => m === "text" ? "image" : "text")}
