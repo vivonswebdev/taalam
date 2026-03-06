@@ -69,8 +69,9 @@ const THEMES = {
 
 type ThemeValues = typeof THEMES[MushafTheme];
 
-function getMushafImageUrl(page: number) {
-  return `https://static.qurancdn.com/images/bg/${page}.png`;
+function getMushafImageUrl(page: number, edition?: MushafEdition) {
+  const base = edition?.imageBaseUrl || "https://static.qurancdn.com/images/pages/page";
+  return `${base}${page}.png`;
 }
 
 function btnStyle(theme: ThemeValues, size: number): React.CSSProperties {
