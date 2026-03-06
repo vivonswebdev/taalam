@@ -1,4 +1,4 @@
-import { mushafDB, type MushafVerse } from './mushafDB';
+import { type MushafVerse } from './mushafDB';
 import { getJuzForPage } from '@/data/mushafPages';
 
 const QURAN_API_BASE = 'https://api.quran.com/api/v4';
@@ -23,7 +23,6 @@ interface QuranAPIVerse {
 
 /**
  * Fetch a single Mushaf page from Quran.com V4 API
- * Includes tajwid markup, French translation (Hamidullah), and word data
  */
 export async function fetchMushafPageFromAPI(page: number): Promise<MushafVerse[]> {
   const params = new URLSearchParams({
@@ -63,13 +62,19 @@ export async function fetchMushafPageFromAPI(page: number): Promise<MushafVerse[
 }
 
 /**
- * Load a page: try IndexedDB first, then API
+ * Load a page: try IndexedDB first, then API.
+ * If Dexie fails (e.g. browser compatibility), falls back directly to API.
  */
 export async function loadMushafPage(page: number): Promise<MushafVerse[]> {
-  // Try cached data first
-  const cached = await mushafDB.verses.where('page_number').equals(page).toArray();
-  if (cached.length > 0) {
-    return cached;
+  // Try IndexedDB cache first (may fail if Dexie has issues)
+  try {
+    const { mushafDB } = await import('./mushafDB');
+    const cached = await mushafDB.verses.where('page_number').equals(page).toArray();
+    if (cached.length > 0) {
+      return cached;
+    }
+  } catch (e) {
+    console.warn('[Mushaf] IndexedDB cache unavailable, falling back to API:', e);
   }
 
   // Fetch from API
@@ -78,8 +83,15 @@ export async function loadMushafPage(page: number): Promise<MushafVerse[]> {
   }
 
   const verses = await fetchMushafPageFromAPI(page);
-  // Store in IndexedDB
-  await mushafDB.verses.bulkPut(verses);
+
+  // Try to cache in IndexedDB (non-blocking)
+  try {
+    const { mushafDB } = await import('./mushafDB');
+    await mushafDB.verses.bulkPut(verses);
+  } catch (e) {
+    console.warn('[Mushaf] Failed to cache in IndexedDB:', e);
+  }
+
   return verses;
 }
 
@@ -90,10 +102,10 @@ export async function downloadFullQuran(
   onProgress: (downloaded: number, total: number) => void,
   abortSignal?: { aborted: boolean }
 ): Promise<void> {
+  const { mushafDB } = await import('./mushafDB');
   const TOTAL_PAGES = 604;
   const BATCH_SIZE = 5;
 
-  // Check what's already downloaded
   const settings = await mushafDB.settings.get('settings');
   const downloadedPages = new Set(settings?.downloaded_pages || []);
 
@@ -110,7 +122,6 @@ export async function downloadFullQuran(
 
     if (pageNumbers.length === 0) continue;
 
-    // Fetch pages in parallel (small batches to avoid rate limiting)
     const results = await Promise.allSettled(
       pageNumbers.map(p => fetchMushafPageFromAPI(p))
     );
@@ -127,11 +138,9 @@ export async function downloadFullQuran(
       }
     }
 
-    // Rate limit protection
     await new Promise(r => setTimeout(r, 200));
   }
 
-  // Mark download as complete
   await mushafDB.settings.put({
     id: 'settings',
     theme: 'cream',
