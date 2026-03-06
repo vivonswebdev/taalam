@@ -121,18 +121,3 @@ export function HomeDashboard() {
     </PageBackground>
   );
 }
-
-        {/* Weak Surahs */}
-        <WeakSurahsSection />
-
-        {/* Free message */}
-        <p className="mt-5 mb-4 text-[10px] text-muted-foreground/70 text-center leading-relaxed max-w-[280px] mx-auto">
-          {t("home.freeMessage" as any)}{" "}
-          <a href="https://taalam.eu" target="_blank" rel="noopener noreferrer" className="text-[hsl(var(--primary))]/60 font-medium underline underline-offset-2">
-            taalam.eu
-          </a>
-        </p>
-      </div>
-    </PageBackground>
-  );
-}
