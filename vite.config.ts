@@ -162,6 +162,7 @@ export default defineConfig(({ mode }) => ({
       },
       manifest: {
         id: "be.taalam.app",
+        // @ts-ignore — version is a valid manifest field
         version: APP_VERSION,
         name: "Ta'alam - Apprendre le Coran",
         short_name: "Ta'alam",
