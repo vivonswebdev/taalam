@@ -96,17 +96,17 @@ function MushafImageMode({
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  useEffect(() => { setLoaded(false); setError(false); }, [page]);
+  useEffect(() => { setLoaded(false); setError(false); }, [page, edition.id]);
 
   // Preload adjacent pages
   useEffect(() => {
     [page - 1, page + 1].forEach(p => {
-      if (p >= 1 && p <= TOTAL_MUSHAF_PAGES) {
+      if (p >= 1 && p <= (edition.totalPages || TOTAL_MUSHAF_PAGES)) {
         const img = new window.Image();
-        img.src = getMushafImageUrl(p);
+        img.src = getMushafImageUrl(p, edition);
       }
     });
-  }, [page]);
+  }, [page, edition]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
