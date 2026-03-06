@@ -141,15 +141,27 @@ function MushafImageMode({
         </div>
       )}
       {error && (
-        <div className="text-center p-4" style={{ color: theme.text }}>
-          <p className="text-2xl mb-2">⚠️</p>
-          <p className="text-sm">Image indisponible · Page {page}</p>
-          <p className="text-xs opacity-60">Vérifiez votre connexion</p>
+        <div className="text-center p-6" style={{ color: theme.text }}>
+          <p className="text-4xl mb-3">📖</p>
+          <p className="text-sm font-semibold mb-1">Images non disponibles</p>
+          <p className="text-xs opacity-60 mb-4">
+            Cette édition n'a pas encore d'images.<br/>Utilisez le mode Texte avec Tajwid.
+          </p>
+          <button
+            onClick={onFallbackToText}
+            style={{
+              padding: "8px 20px", borderRadius: 12,
+              backgroundColor: theme.frame, color: "#fff",
+              fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer",
+            }}
+          >
+            Passer en mode Texte
+          </button>
         </div>
       )}
       <img
-        src={getMushafImageUrl(page)}
-        alt={`Mushaf page ${page}`}
+        src={getMushafImageUrl(page, edition)}
+        alt={`Page ${page} - ${edition.label}`}
         style={{
           maxWidth: "100%", maxHeight: "100%", objectFit: "contain",
           transform: `scale(${zoom})`, transformOrigin: "center",
