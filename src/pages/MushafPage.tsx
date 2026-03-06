@@ -70,8 +70,12 @@ const THEMES = {
 type ThemeValues = typeof THEMES[MushafTheme];
 
 function getMushafImageUrl(page: number, edition?: MushafEdition) {
-  const base = edition?.imageBaseUrl || "https://static.qurancdn.com/images/pages/page";
-  return `${base}${page}.png`;
+  const padded = String(page).padStart(3, "0");
+  if (edition?.id === "indopak") {
+    return `https://www.searchtruth.org/quran/images2/${page}.jpg`;
+  }
+  // Default: cdn.islamic.network (works for madani/hafs)
+  return `https://cdn.islamic.network/quran/images/page${padded}.png`;
 }
 
 function btnStyle(theme: ThemeValues, size: number): React.CSSProperties {
