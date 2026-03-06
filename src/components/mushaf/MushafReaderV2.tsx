@@ -437,7 +437,7 @@ export default function MushafReaderV2() {
                   )}
 
                   {/* Verses */}
-                  <div dir="rtl" style={{ textAlign: 'justify', textAlignLast: 'center' }}>
+                  <div dir="rtl" data-mushaf-page style={{ textAlign: 'justify', textAlignLast: 'center' }}>
                     {verses.map(verse => (
                       <span key={verse.id} className="inline">
                         <TajwidText
