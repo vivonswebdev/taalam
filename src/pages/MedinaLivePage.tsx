@@ -29,7 +29,7 @@ export default function MedinaLivePage() {
       <div className="px-4 mt-2">
         <div id="medina-stream" className="rounded-2xl overflow-hidden border border-border shadow-lg aspect-video bg-black relative">
           <iframe
-            src="https://www.youtube.com/embed/nlH55BVcdR0?autoplay=1&mute=0&rel=0&modestbranding=1"
+            src="https://www.youtube.com/embed/MgaeFVMSvKo?autoplay=1&mute=0&rel=0"
             className="w-full h-full absolute inset-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
