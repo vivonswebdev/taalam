@@ -143,9 +143,9 @@ function MushafImageMode({
       {error && (
         <div className="text-center p-6" style={{ color: theme.text }}>
           <p className="text-4xl mb-3">📖</p>
-          <p className="text-sm font-semibold mb-1">Images non disponibles</p>
+          <p className="text-sm font-semibold mb-1">{t("mushaf.imagesNotAvailable" as any)}</p>
           <p className="text-xs opacity-60 mb-4">
-            Cette édition n'a pas encore d'images.<br/>Utilisez le mode Texte avec Tajwid.
+            {t("mushaf.imagesNotAvailableDesc" as any)}
           </p>
           <button
             onClick={onFallbackToText}
@@ -155,7 +155,7 @@ function MushafImageMode({
               fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer",
             }}
           >
-            Passer en mode Texte
+            {t("mushaf.switchToTextMode" as any)}
           </button>
         </div>
       )}
