@@ -6,7 +6,7 @@ export type NooraniLesson = {
   id: string;
   titleKey: string;
   descKey: string;
-  level: "beginner" | "intermediate" | "advanced";
+  level: "beginner" | "intermediate" | "advanced" | "expert" | "master";
   emoji: string;
   items: NooraniItem[];
   exerciseType?: NooraniExerciseType;
@@ -230,6 +230,127 @@ export const NOORANI_LESSONS: NooraniLesson[] = [
       { arabic: "ٱلْحَمْدُ لِلَّهِ", label: "al-Ḥamdu lillāh" },
       { arabic: "رَبِّ ٱلْعَٰلَمِينَ", label: "Rabbi-l-'ālamīn" },
       { arabic: "إِيَّاكَ نَعْبُدُ", label: "Iyyāka na'budu" },
+    ],
+  },
+
+  // ═══ EXPERT ═══
+  {
+    id: "lesson-18",
+    titleKey: "noorani.lesson18Title",
+    descKey: "noorani.lesson18Desc",
+    level: "expert",
+    emoji: "🔔",
+    exerciseType: "recognition",
+    items: [
+      { arabic: "قَلْقَلَة" },
+      { arabic: "قْ", label: "Qāf" }, { arabic: "طْ", label: "Ṭā'" },
+      { arabic: "بْ", label: "Bā'" }, { arabic: "جْ", label: "Jīm" },
+      { arabic: "دْ", label: "Dāl" },
+    ],
+  },
+  {
+    id: "lesson-19",
+    titleKey: "noorani.lesson19Title",
+    descKey: "noorani.lesson19Desc",
+    level: "expert",
+    emoji: "🟢",
+    exerciseType: "recognition",
+    items: [
+      { arabic: "مِنْ خَيْرٍ", label: "Iẓhār" },
+      { arabic: "مِنْ وَلِيٍّ", label: "Idghām" },
+      { arabic: "مِنْ بَعْدِ", label: "Iqlāb" },
+      { arabic: "مِنْ شَرِّ", label: "Ikhfā'" },
+      { arabic: "أَنْعَمْتَ", label: "Iẓhār" },
+      { arabic: "مَنْ يَقُولُ", label: "Idghām" },
+    ],
+  },
+  {
+    id: "lesson-20",
+    titleKey: "noorani.lesson20Title",
+    descKey: "noorani.lesson20Desc",
+    level: "expert",
+    emoji: "Ⓜ️",
+    exerciseType: "recognition",
+    items: [
+      { arabic: "هُمْ فِيهَا", label: "Ikhfā' Shafawī" },
+      { arabic: "أَمْ لَمْ", label: "Idghām Shafawī" },
+      { arabic: "لَهُمْ أَجْرٌ", label: "Iẓhār Shafawī" },
+      { arabic: "هُمْ بِهِ", label: "Ikhfā' Shafawī" },
+      { arabic: "كُنتُمْ مُؤْمِنِينَ", label: "Idghām Shafawī" },
+    ],
+  },
+  {
+    id: "lesson-21",
+    titleKey: "noorani.lesson21Title",
+    descKey: "noorani.lesson21Desc",
+    level: "expert",
+    emoji: "📏",
+    items: [
+      { arabic: "قَالَ", label: "Madd Ṭabī'ī (2)" },
+      { arabic: "ءَامَنُوا", label: "Madd Muttaṣil (4-5)" },
+      { arabic: "فِي أَنفُسِهِمْ", label: "Madd Munfaṣil (4-5)" },
+      { arabic: "الْحَاقَّةُ", label: "Madd Lāzim (6)" },
+      { arabic: "وَلَا الضَّالِّينَ", label: "Madd Lāzim (6)" },
+    ],
+  },
+  {
+    id: "lesson-22",
+    titleKey: "noorani.lesson22Title",
+    descKey: "noorani.lesson22Desc",
+    level: "expert",
+    emoji: "⬆️",
+    exerciseType: "recognition",
+    items: [
+      { arabic: "خ", label: "Tafkhīm" }, { arabic: "ص", label: "Tafkhīm" },
+      { arabic: "ض", label: "Tafkhīm" }, { arabic: "ط", label: "Tafkhīm" },
+      { arabic: "ظ", label: "Tafkhīm" }, { arabic: "غ", label: "Tafkhīm" },
+      { arabic: "ق", label: "Tafkhīm" },
+      { arabic: "س", label: "Tarqīq" }, { arabic: "ت", label: "Tarqīq" },
+    ],
+  },
+
+  // ═══ MASTER ═══
+  {
+    id: "lesson-23",
+    titleKey: "noorani.lesson23Title",
+    descKey: "noorani.lesson23Desc",
+    level: "master",
+    emoji: "🪑",
+    items: [
+      { arabic: "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ", label: "Début" },
+      { arabic: "ٱلْحَىُّ ٱلْقَيُّومُ", label: "al-Ḥayy al-Qayyūm" },
+      { arabic: "لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ", label: "Pas de sommeil" },
+      { arabic: "مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ", label: "Intercession" },
+      { arabic: "وَسِعَ كُرْسِيُّهُ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضَ", label: "Son Kursī" },
+      { arabic: "وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ", label: "Fin" },
+    ],
+  },
+  {
+    id: "lesson-24",
+    titleKey: "noorani.lesson24Title",
+    descKey: "noorani.lesson24Desc",
+    level: "master",
+    emoji: "💎",
+    items: [
+      { arabic: "قُلْ هُوَ ٱللَّهُ أَحَدٌ", label: "Al-Ikhlās 1" },
+      { arabic: "ٱللَّهُ ٱلصَّمَدُ", label: "Al-Ikhlās 2" },
+      { arabic: "لَمْ يَلِدْ وَلَمْ يُولَدْ", label: "Al-Ikhlās 3" },
+      { arabic: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ", label: "Al-Falaq 1" },
+      { arabic: "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ", label: "An-Nās 1" },
+    ],
+  },
+  {
+    id: "lesson-25",
+    titleKey: "noorani.lesson25Title",
+    descKey: "noorani.lesson25Desc",
+    level: "master",
+    emoji: "🌙",
+    items: [
+      { arabic: "إِنَّآ أَنزَلْنَٰهُ فِى لَيْلَةِ ٱلْقَدْرِ", label: "Al-Qadr 1" },
+      { arabic: "وَمَآ أَدْرَىٰكَ مَا لَيْلَةُ ٱلْقَدْرِ", label: "Al-Qadr 2" },
+      { arabic: "لَيْلَةُ ٱلْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ", label: "Al-Qadr 3" },
+      { arabic: "تَنَزَّلُ ٱلْمَلَٰٓئِكَةُ وَٱلرُّوحُ فِيهَا", label: "Al-Qadr 4" },
+      { arabic: "سَلَٰمٌ هِىَ حَتَّىٰ مَطْلَعِ ٱلْفَجْرِ", label: "Al-Qadr 5" },
     ],
   },
 ];
