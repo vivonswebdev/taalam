@@ -95,6 +95,7 @@ const StudentStatsPage = lazy(() => import("./pages/StudentStatsPage"));
 const TarteelSelector = lazy(() => import("./pages/TarteelSelector"));
 const AthanSettings = lazy(() => import("./pages/AthanSettings"));
 const TarteelEasyPage = lazy(() => import("./pages/tarteel-easy/TarteelEasyPage"));
+const TarteelOfflinePage = lazy(() => import("./pages/tarteel-offline/TarteelOfflinePage"));
 const QiblaPage = lazy(() => import("./pages/QiblaPage"));
 const IslamicCalendarPage = lazy(() => import("./pages/IslamicCalendarPage"));
 const MekkahLivePage = lazy(() => import("./pages/MekkahLivePage"));
