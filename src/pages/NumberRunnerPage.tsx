@@ -61,10 +61,11 @@ export default function NumberRunnerPage() {
   const diff = getDifficultyForLevel(level);
   const speed = OBSTACLE_TRAVEL_TIME_BASE / (1 + (level - 1) * 0.08); // gets faster
 
-  const startGame = () => {
+  const startGame = (startLevel?: number) => {
+    const sl = startLevel ?? (difficulty ? MATH_DIFF[difficulty].startLevel : 1);
     obstacleId = 0;
     setGameState("playing");
-    setLevel(1);
+    setLevel(sl);
     setScore(0);
     setCombo(0);
     setMaxCombo(0);
@@ -75,6 +76,11 @@ export default function NumberRunnerPage() {
     setObstacles([]);
     setInvincible(false);
     setComboMessage("");
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    startGame(MATH_DIFF[d].startLevel);
   };
 
   // Spawn obstacles

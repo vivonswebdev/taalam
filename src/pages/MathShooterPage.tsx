@@ -96,10 +96,11 @@ export default function MathShooterPage() {
     spawnedRef.current = true;
   }, [level]);
 
-  const startGame = () => {
+  const startGame = (startLevel?: number) => {
+    const sl = startLevel ?? (difficulty ? MATH_DIFF[difficulty].startLevel : 1);
     enemyCounter = 0;
     setGameState("playing");
-    setLevel(1);
+    setLevel(sl);
     setScore(0);
     setCombo(0);
     setMaxCombo(0);
@@ -110,6 +111,11 @@ export default function MathShooterPage() {
     setQuestion(null);
     setComboMessage("");
     spawnedRef.current = false;
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    startGame(MATH_DIFF[d].startLevel);
   };
 
   // Spawn wave when playing
