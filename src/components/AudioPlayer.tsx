@@ -373,7 +373,7 @@ export default function AudioPlayer({
           <button
             onClick={() => onRequestNextSurah?.()}
             className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
-            title="Sourate suivante"
+            title={t ? t("audio.nextSurah" as any) : "Next surah"}
           >
             <ChevronsRight size={14} />
           </button>
