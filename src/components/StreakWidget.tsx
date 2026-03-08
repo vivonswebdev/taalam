@@ -31,8 +31,8 @@ export default function StreakWidget() {
       <div className="bg-card/90 backdrop-blur-md border border-border rounded-2xl shadow-lg p-3 w-[140px]">
         {/* Streak count */}
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
-            <Flame size={16} className="text-amber-500" />
+          <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
+            <Flame size={16} className="text-secondary" />
           </div>
           <div className="leading-tight">
             <p className="text-sm font-black text-foreground">{currentStreak}</p>
