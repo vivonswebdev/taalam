@@ -1072,6 +1072,7 @@ export default function Recitation() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
