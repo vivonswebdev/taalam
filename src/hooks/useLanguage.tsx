@@ -3185,6 +3185,8 @@ const translations = {
   "kidsGames.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
   "common.undo": { fr: "Annuler", en: "Undo", nl: "Ongedaan maken", ar: "تراجع", tr: "Geri al", ur: "واپس" },
   "common.next": { fr: "Suivant", en: "Next", nl: "Volgende", ar: "التالي", tr: "İleri", ur: "اگلا" },
+  "kidsGames.wordsPerVerse": { fr: "mots/verset", en: "words/verse", nl: "woorden/vers", ar: "كلمات/آية", tr: "kelime/ayet", ur: "الفاظ/آیت" },
+  "kidsGames.chainSteps": { fr: "étapes", en: "steps", nl: "stappen", ar: "خطوات", tr: "adım", ur: "قدم" },
   // New Math games
   "mathGames.mathRace": { fr: "Math Race", en: "Math Race", nl: "Math Race", ar: "سباق الرياضيات", tr: "Matematik Yarışı", ur: "ریاضی ریس" },
   "mathGames.mathRaceDesc": { fr: "Course contre le bot !", en: "Race against the bot!", nl: "Race tegen de bot!", ar: "سباق ضد الروبوت!", tr: "Bota karşı yarış!", ur: "بوٹ کے خلاف ریس!" },
