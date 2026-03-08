@@ -64,9 +64,11 @@ export default function ArabicBubblePopPage() {
   const spawnInterval = Math.max(1200, 2500 - level * 150) * dc.spawnMult;
   const baseSpeed = (0.3 + level * 0.05) * dc.speedMult;
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback((diff?: string) => {
+    const d = diff || difficulty || "medium";
+    setDifficulty(d);
     setScore(0);
-    setLives(3);
+    setLives(BUBBLE_DIFF[d].lives);
     setCombo(0);
     setMaxCombo(0);
     setLevel(1);
@@ -74,7 +76,7 @@ export default function ArabicBubblePopPage() {
     setFloatingTexts([]);
     setTargetLetter(getRandomLetter());
     setGameState("playing");
-  }, []);
+  }, [difficulty]);
 
   // Spawn bubbles
   useEffect(() => {
