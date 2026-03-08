@@ -4,7 +4,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { ArrowLeft, Mic, Square, RotateCcw, Trophy, WifiOff, BookOpen, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,7 +13,6 @@ import quranMinimal from "@/data/quranMinimal";
 import LiveTranscript from "@/components/tarteel/LiveTranscript";
 import WordComparison from "@/components/tarteel/WordComparison";
 import ChallengeModeToggle from "@/components/tarteel/ChallengeModeToggle";
-import GlobalLeaderboard from "@/components/tarteel/GlobalLeaderboard";
 
 type Status = "ready" | "recording" | "processing" | "done";
 
@@ -300,24 +298,7 @@ export default function TarteelOfflinePage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-6">
-        <Tabs defaultValue="practice">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="practice" className="gap-1 text-xs">
-              <Mic size={14} />
-              {t("tarteelLb.practice" as any)}
-            </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="gap-1 text-xs">
-              <Trophy size={14} />
-              {t("tarteelLb.leaderboard" as any)}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="leaderboard">
-            <GlobalLeaderboard />
-          </TabsContent>
-
-          <TabsContent value="practice" className="space-y-6">
+      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
 
         {/* Verse Selector Card */}
         <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-4">
@@ -614,8 +595,6 @@ export default function TarteelOfflinePage() {
           <WifiOff size={12} className="shrink-0" />
           <span>{t("tarteelOffline.privacyNote" as any)}</span>
         </div>
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );
