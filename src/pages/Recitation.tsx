@@ -22,6 +22,7 @@ import { useAsrLogging } from "@/hooks/useAsrLogging";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
+import { FloatingParticles } from "@/components/kids/futuristic/FloatingParticles";
 
 type TarteelPhase = "select" | "listen" | "recite" | "results";
 
@@ -358,8 +359,29 @@ export default function Recitation() {
   const badge = getBadge(totalScore);
   const bodyTextClass = isChildMode ? "text-base" : "text-sm";
 
+  const cosmicBg = isChildMode
+    ? "bg-gradient-to-b from-[hsl(260,50%,12%)] via-[hsl(240,40%,18%)] to-[hsl(220,35%,10%)]"
+    : "";
+  const cosmicText = isChildMode ? "text-white" : "text-foreground";
+  const cosmicMuted = isChildMode ? "text-white/60" : "text-muted-foreground";
+
   return (
-    <div className={`min-h-screen pb-24 ${epicBg ? epicBg.className : ""}`} style={epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}>
+    <div
+      className={`min-h-screen pb-24 relative overflow-hidden ${isChildMode ? cosmicBg : (epicBg ? epicBg.className : "")}`}
+      style={!isChildMode && epicBg?.image ? { backgroundImage: `url(${epicBg.image})` } : undefined}
+    >
+      {isChildMode && <FloatingParticles count={10} />}
+      {isChildMode && (
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04] z-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(0 0% 100% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.1) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+      )}
+      <div className="relative z-10">
       <FloatingXpWidget />
       <Confetti active={showConfetti} emoji={isChildMode} />
       <StickerReward sticker={earnedSticker} onDismiss={() => setEarnedSticker(null)} />
@@ -368,15 +390,15 @@ export default function Recitation() {
       <div className="px-6 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold text-foreground`}>
+            <h1 className={`${isChildMode ? "text-2xl" : "text-xl"} font-bold ${cosmicText}`}>
               {isChildMode ? "🎤 " : ""}{t("recitation.title")}
             </h1>
-            <p className={`${bodyTextClass} text-muted-foreground mt-0.5`}>
+            <p className={`${bodyTextClass} ${cosmicMuted} mt-0.5`}>
               {t("recitation.subtitle")}
             </p>
           </div>
           {/* Streak badge */}
-          <div className="flex items-center gap-1.5 bg-secondary/15 text-secondary px-3 py-1.5 rounded-full">
+          <div className={`flex items-center gap-1.5 ${isChildMode ? "bg-white/10 backdrop-blur-md border border-white/15 text-amber-300" : "bg-secondary/15 text-secondary"} px-3 py-1.5 rounded-full`}>
             <Flame size={16} />
             <span className="text-sm font-bold">{streak.currentStreak}</span>
           </div>
@@ -1050,6 +1072,7 @@ export default function Recitation() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
