@@ -118,6 +118,12 @@ const MathMemoryPage = lazy(() => import("./pages/MathMemoryPage"));
 const MathBombPage = lazy(() => import("./pages/MathBombPage"));
 const ArabicBubblePopPage = lazy(() => import("./pages/ArabicBubblePopPage"));
 const TetrisIslamPage = lazy(() => import("./pages/TetrisIslamPage"));
+const QuranWordOrderPage = lazy(() => import("./pages/QuranWordOrderPage"));
+const DuaMatchPage = lazy(() => import("./pages/DuaMatchPage"));
+const IslamicColorsPage = lazy(() => import("./pages/IslamicColorsPage"));
+const MathRacePage = lazy(() => import("./pages/MathRacePage"));
+const MathChainPage = lazy(() => import("./pages/MathChainPage"));
+const MathDuelPage = lazy(() => import("./pages/MathDuelPage"));
 
 function PageLoader() {
   return (
