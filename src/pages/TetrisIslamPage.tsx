@@ -129,6 +129,7 @@ export default function TetrisIslamPage() {
   const { play } = useSound();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "paused" | "levelComplete" | "gameOver">("menu");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
