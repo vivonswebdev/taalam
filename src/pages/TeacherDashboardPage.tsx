@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTeacherDashboard } from "@/hooks/useTeacherDashboard";
 import { useAssignmentCompletion } from "@/hooks/useAssignmentCompletion";
 import { useTaskSubmissions } from "@/hooks/useTaskSubmissions";
+import { useUserMode } from "@/hooks/useUserMode";
 import { supabase } from "@/integrations/supabase/client";
 import TeacherHeader from "@/components/teacher/TeacherHeader";
 import TeacherSummaryCards from "@/components/teacher/TeacherSummaryCards";
@@ -27,6 +28,8 @@ export default function TeacherDashboardPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { user, loading: authLoading } = useAuth();
+  const { mode } = useUserMode();
+  const isTeacher = mode === "teacher";
 
   const [classes, setClasses] = useState<TeacherClass[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
@@ -47,13 +50,30 @@ export default function TeacherDashboardPage() {
     })();
   }, [user]);
 
+  // Cosmic / futuristic styling
+  const cosmic = isTeacher;
+  const bg = cosmic
+    ? "bg-gradient-to-b from-[hsl(260,50%,12%)] via-[hsl(240,40%,18%)] to-[hsl(220,35%,10%)]"
+    : "";
+  const textMain = cosmic ? "text-white" : "text-foreground";
+  const textMuted = cosmic ? "text-white/60" : "text-muted-foreground";
+  const cardBg = cosmic
+    ? "bg-white/[0.07] backdrop-blur-md border-white/15"
+    : "bg-card border-border";
+  const cardActive = cosmic
+    ? "bg-white/20 backdrop-blur-md text-white shadow-lg shadow-cyan-500/15 border-cyan-400/40 scale-[1.02]"
+    : "bg-primary text-primary-foreground shadow-lg shadow-primary/25 border-primary scale-[1.02]";
+  const cardInactive = cosmic
+    ? `${cardBg} text-white/80 hover:border-white/30 hover:shadow-md`
+    : "bg-card text-card-foreground border-border hover:border-primary/40 hover:shadow-md";
+
   if (authLoading) return <div className="flex items-center justify-center min-h-screen"><span className="animate-spin text-2xl">⏳</span></div>;
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
-        <GraduationCap size={48} className="text-muted-foreground" />
-        <p className="text-lg font-semibold">{t("teacher.loginRequired" as any)}</p>
+      <div className={`min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center ${cosmic ? bg : ""}`}>
+        <GraduationCap size={48} className={textMuted} />
+        <p className={`text-lg font-semibold ${textMain}`}>{t("teacher.loginRequired" as any)}</p>
         <button onClick={() => navigate("/auth")} className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-semibold">
           {t("more.loginProfile" as any)}
         </button>
@@ -63,11 +83,12 @@ export default function TeacherDashboardPage() {
 
   if (classes.length === 0 && !authLoading) {
     return (
-      <div className="min-h-screen pb-24">
-        <TeacherHeader />
-        <div className="flex flex-col items-center justify-center gap-4 px-6 pt-20 text-center">
-          <GraduationCap size={48} className="text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">{t("teacher.noClasses" as any)}</p>
+      <div className={`min-h-screen pb-24 ${cosmic ? bg : ""}`}>
+        {cosmic && <NeonGrid />}
+        <TeacherHeader cosmic={cosmic} />
+        <div className={`flex flex-col items-center justify-center gap-4 px-6 pt-20 text-center relative z-10`}>
+          <GraduationCap size={48} className={textMuted} />
+          <p className={`text-sm ${textMuted}`}>{t("teacher.noClasses" as any)}</p>
           <button onClick={() => navigate("/classrooms")} className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-semibold text-sm">
             {t("teacher.createClass" as any)}
           </button>
@@ -79,11 +100,12 @@ export default function TeacherDashboardPage() {
   const selectedClass = classes.find(c => c.id === selectedClassId);
 
   return (
-    <div className="min-h-screen pb-24">
-      <TeacherHeader />
+    <div className={`min-h-screen pb-24 ${cosmic ? bg : ""}`}>
+      {cosmic && <NeonGrid />}
+      <TeacherHeader cosmic={cosmic} />
 
-      {/* Class selector - enhanced cards */}
-      <div className="px-4 py-3">
+      {/* Class selector */}
+      <div className="px-4 py-3 relative z-10">
         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
           {classes.map((c) => {
             const isActive = selectedClassId === c.id;
@@ -93,26 +115,24 @@ export default function TeacherDashboardPage() {
                 key={c.id}
                 onClick={() => setSelectedClassId(c.id)}
                 className={`shrink-0 relative flex flex-col items-start gap-1 px-4 py-3 rounded-2xl text-left transition-all min-w-[140px] border ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25 border-primary scale-[1.02]"
-                    : "bg-card text-card-foreground border-border hover:border-primary/40 hover:shadow-md"
+                  isActive ? cardActive : cardInactive
                 }`}
               >
                 {isActive && (
-                  <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-primary-foreground/80 animate-pulse" />
+                  <span className={`absolute top-1.5 right-2 w-2 h-2 rounded-full animate-pulse ${cosmic ? "bg-cyan-400" : "bg-primary-foreground/80"}`} />
                 )}
                 <span className="text-sm font-bold truncate max-w-[120px]">{c.name}</span>
-                <span className={`text-[10px] font-mono ${isActive ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                <span className={`text-[10px] font-mono ${isActive ? (cosmic ? "text-white/70" : "text-primary-foreground/70") : textMuted}`}>
                   {c.join_code}
                 </span>
-                <div className={`flex items-center gap-1 mt-0.5 ${isActive ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                <div className={`flex items-center gap-1 mt-0.5 ${isActive ? (cosmic ? "text-white/80" : "text-primary-foreground/80") : textMuted}`}>
                   <Users size={12} />
                   <span className="text-[10px] font-medium">
                     {studentCount !== null ? `${studentCount} ${t("teacher.students" as any) || "élèves"}` : t("teacher.tapToView" as any) || "Voir"}
                   </span>
                 </div>
                 {!isActive && (
-                  <ChevronRight size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
+                  <ChevronRight size={14} className={`absolute right-2 top-1/2 -translate-y-1/2 ${cosmic ? "text-white/30" : "text-muted-foreground/50"}`} />
                 )}
               </button>
             );
@@ -123,7 +143,7 @@ export default function TeacherDashboardPage() {
       {loading ? (
         <div className="flex justify-center py-12"><span className="animate-spin text-2xl">⏳</span></div>
       ) : (
-        <div className="px-4 space-y-5">
+        <div className="px-4 space-y-5 relative z-10">
           <TeacherSummaryCards
             totalStudents={summary.totalStudents}
             avgQuranMinutes={summary.avgQuranMinutes}
@@ -156,5 +176,18 @@ export default function TeacherDashboardPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function NeonGrid() {
+  return (
+    <div
+      className="pointer-events-none fixed inset-0 opacity-[0.04] z-0"
+      style={{
+        backgroundImage:
+          "linear-gradient(hsl(0 0% 100% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.1) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+      }}
+    />
   );
 }
