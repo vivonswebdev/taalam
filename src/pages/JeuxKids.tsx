@@ -2,28 +2,31 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useUserMode } from "@/hooks/useUserMode";
-import { ArrowLeft } from "lucide-react";
-import PageBackground from "@/components/PageBackground";
+import { ArrowLeft, Trophy } from "lucide-react";
+import { GlassCard } from "@/components/kids/futuristic/GlassCard";
+import { FloatingParticles } from "@/components/kids/futuristic/FloatingParticles";
+
+const GRADIENTS = ["primary", "cosmic", "sunset", "forest"] as const;
 
 const GAMES = [
-  { key: "coranCrush", emoji: "🎮", path: "/crush", color: "from-pink-400 to-rose-500" },
-  { key: "quizProphets", emoji: "🧠", path: "/kids-quiz", color: "from-violet-400 to-purple-500" },
-  { key: "quizAnimals", emoji: "🦁", path: "/kids-quiz", color: "from-amber-400 to-orange-500" },
-  { key: "quizGoodDeeds", emoji: "⭐", path: "/kids-checklist", color: "from-emerald-400 to-green-500" },
-  { key: "sheytanGame", emoji: "👹", path: "/kids-sheytan", color: "from-red-400 to-red-600" },
-  { key: "memoryCoran", emoji: "📿", path: "/kids-memory", color: "from-cyan-400 to-blue-500" },
-  { key: "pillarQuiz", emoji: "🕌", path: "/kids-pillar-quiz", color: "from-teal-400 to-emerald-500" },
-  { key: "balance", emoji: "⚖️", path: "/kids-balance", color: "from-indigo-400 to-violet-500" },
-  { key: "memoryFaith", emoji: "💎", path: "/kids-memory-faith", color: "from-sky-400 to-blue-500" },
-  { key: "popHassanates", emoji: "🎈", path: "/kids-pop-hassanates", color: "from-fuchsia-400 to-pink-500" },
-  { key: "prophetGame", emoji: "📖", path: "/kids-prophet-game", color: "from-lime-400 to-green-500" },
-  { key: "asmaHunt", emoji: "🔎", path: "/kids-asma-hunt", color: "from-yellow-400 to-amber-500" },
-  { key: "prayerMaze", emoji: "🧩", path: "/kids-prayer-maze", color: "from-rose-400 to-pink-500" },
-  { key: "tetrisIslam", emoji: "🕌", path: "/tetris-islam", color: "from-emerald-400 to-teal-500" },
-  { key: "arabicBubbles", emoji: "🫧", path: "/kids-arabic-bubbles", color: "from-indigo-400 to-purple-500" },
-  { key: "quranWordOrder", emoji: "🔤", path: "/kids-quran-word-order", color: "from-emerald-400 to-teal-500" },
-  { key: "duaMatch", emoji: "🤲", path: "/kids-dua-match", color: "from-amber-400 to-yellow-500" },
-  { key: "islamicColors", emoji: "🎨", path: "/kids-islamic-colors", color: "from-violet-400 to-pink-500" },
+  { key: "coranCrush", emoji: "🎮", path: "/crush" },
+  { key: "quizProphets", emoji: "🧠", path: "/kids-quiz" },
+  { key: "quizAnimals", emoji: "🦁", path: "/kids-quiz" },
+  { key: "quizGoodDeeds", emoji: "⭐", path: "/kids-checklist" },
+  { key: "sheytanGame", emoji: "👹", path: "/kids-sheytan" },
+  { key: "memoryCoran", emoji: "📿", path: "/kids-memory" },
+  { key: "pillarQuiz", emoji: "🕌", path: "/kids-pillar-quiz" },
+  { key: "balance", emoji: "⚖️", path: "/kids-balance" },
+  { key: "memoryFaith", emoji: "💎", path: "/kids-memory-faith" },
+  { key: "popHassanates", emoji: "🎈", path: "/kids-pop-hassanates" },
+  { key: "prophetGame", emoji: "📖", path: "/kids-prophet-game" },
+  { key: "asmaHunt", emoji: "🔎", path: "/kids-asma-hunt" },
+  { key: "prayerMaze", emoji: "🧩", path: "/kids-prayer-maze" },
+  { key: "tetrisIslam", emoji: "🕌", path: "/tetris-islam" },
+  { key: "arabicBubbles", emoji: "🫧", path: "/kids-arabic-bubbles" },
+  { key: "quranWordOrder", emoji: "🔤", path: "/kids-quran-word-order" },
+  { key: "duaMatch", emoji: "🤲", path: "/kids-dua-match" },
+  { key: "islamicColors", emoji: "🎨", path: "/kids-islamic-colors" },
 ] as const;
 
 export default function JeuxKids() {
@@ -31,7 +34,6 @@ export default function JeuxKids() {
   const { t } = useLanguage();
   const { mode } = useUserMode();
 
-  // Redirect non-kids
   if (mode !== "child") {
     return (
       <div className="flex items-center justify-center min-h-screen p-6 text-center">
@@ -41,66 +43,98 @@ export default function JeuxKids() {
   }
 
   return (
-    <PageBackground intensity="immersive">
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-50 to-amber-100 dark:from-yellow-900/30 dark:via-orange-900/20 dark:to-amber-900/30 pb-24">
+    <div className="min-h-screen pb-24 relative overflow-hidden bg-gradient-to-b from-[hsl(260,50%,12%)] via-[hsl(240,40%,18%)] to-[hsl(220,35%,10%)]">
+      <FloatingParticles count={14} />
+
+      {/* Subtle grid overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(0 0% 100% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.1) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
+
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-6 pb-4">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white/60 dark:bg-white/10 backdrop-blur">
-          <ArrowLeft size={20} />
-        </button>
+      <div className="relative z-10 flex items-center gap-3 px-4 pt-6 pb-4">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => navigate(-1)}
+          className="p-2.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15"
+        >
+          <ArrowLeft size={20} className="text-white" />
+        </motion.button>
+
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-xl font-extrabold text-foreground"
+          className="text-xl font-extrabold text-white flex items-center gap-2"
         >
+          <motion.span
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          >
+            🎮
+          </motion.span>
           {t("kidsGames.title" as any)}
         </motion.h1>
+
         <div className="flex-1" />
-        <button
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => navigate("/kids-leaderboard")}
-          className="px-3 py-1.5 rounded-xl bg-amber-400/80 dark:bg-amber-500/30 text-sm font-bold text-foreground flex items-center gap-1"
+          className="p-2.5 rounded-2xl bg-gradient-to-br from-amber-400/30 to-orange-500/30 backdrop-blur-md border border-amber-400/30"
         >
-          🏆 {t("kids.leaderboard" as any) || "Classement"}
-        </button>
+          <Trophy size={20} className="text-amber-300" />
+        </motion.button>
       </div>
 
-      {/* 2x2 Grid */}
-      <div className="grid grid-cols-2 gap-4 px-4 mt-2">
+      {/* Games Grid */}
+      <div className="relative z-10 grid grid-cols-2 gap-4 px-4 mt-2">
         {GAMES.map((game, i) => (
-          <motion.button
+          <GlassCard
             key={game.key}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.1, type: "spring", stiffness: 300, damping: 20 }}
-            whileTap={{ scale: 0.92 }}
+            gradient={GRADIENTS[i % GRADIENTS.length]}
+            delay={i * 0.05}
             onClick={() => navigate(game.path)}
-            className={`relative flex flex-col items-center justify-center gap-2 p-5 rounded-3xl bg-gradient-to-br ${game.color} shadow-lg shadow-black/10 aspect-square`}
+            className="aspect-square flex flex-col items-center justify-center p-4"
           >
-            <motion.span
-              className="text-5xl"
-              animate={{ y: [0, -4, 0] }}
-              transition={{ repeat: Infinity, duration: 2, delay: i * 0.3 }}
-            >
-              {game.emoji}
-            </motion.span>
-            <span className="text-sm font-bold text-white drop-shadow">
-              {t(`kidsGames.${game.key}` as any)}
-            </span>
-            <span className="text-[10px] text-white/80 font-medium">
-              {t(`kidsGames.${game.key}Desc` as any)}
-            </span>
-            {/* Sparkle decorations */}
-            <motion.span
-              className="absolute top-2 right-3 text-lg"
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
-              transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.2 }}
-            >
-              ✨
-            </motion.span>
-          </motion.button>
+            <div className="flex flex-col items-center justify-center gap-2 text-center h-full">
+              {/* Sparkle */}
+              <motion.span
+                className="absolute top-2 right-3 text-sm"
+                animate={{ opacity: [0.2, 0.8, 0.2], scale: [0.8, 1.15, 0.8] }}
+                transition={{ repeat: Infinity, duration: 2, delay: i * 0.15 }}
+              >
+                ✨
+              </motion.span>
+
+              {/* Emoji */}
+              <motion.span
+                className="text-5xl drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                animate={{ y: [0, -5, 0] }}
+                transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.2, ease: "easeInOut" }}
+              >
+                {game.emoji}
+              </motion.span>
+
+              {/* Title */}
+              <span className="text-sm font-bold text-white drop-shadow-sm">
+                {t(`kidsGames.${game.key}` as any)}
+              </span>
+
+              {/* Description */}
+              <span className="text-[10px] text-white/65 font-medium leading-tight">
+                {t(`kidsGames.${game.key}Desc` as any)}
+              </span>
+            </div>
+          </GlassCard>
         ))}
       </div>
     </div>
-    </PageBackground>
   );
 }
