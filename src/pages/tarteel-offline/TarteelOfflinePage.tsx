@@ -4,6 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { ArrowLeft, Mic, Square, RotateCcw, Trophy, WifiOff, BookOpen, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,6 +14,7 @@ import quranMinimal from "@/data/quranMinimal";
 import LiveTranscript from "@/components/tarteel/LiveTranscript";
 import WordComparison from "@/components/tarteel/WordComparison";
 import ChallengeModeToggle from "@/components/tarteel/ChallengeModeToggle";
+import GlobalLeaderboard from "@/components/tarteel/GlobalLeaderboard";
 
 type Status = "ready" | "recording" | "processing" | "done";
 
