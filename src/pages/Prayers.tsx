@@ -36,6 +36,26 @@ const CUBE_CONFIG: Record<string, { icon: string; gradient: string; glowColor: s
   Isha:    { icon: "🌙", gradient: "from-indigo-500/20 to-purple-600/20", glowColor: "shadow-indigo-500/20" },
 };
 
+function HijriDateLine() {
+  const [hijri, setHijri] = useState("");
+  useEffect(() => {
+    const d = new Date();
+    fetch(`https://api.aladhan.com/v1/gpiToH/${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`)
+      .then(r => r.json())
+      .then(data => {
+        const h = data?.data?.hijri;
+        if (h) setHijri(`${h.day} ${h.month.en} ${h.year}`);
+      })
+      .catch(() => {});
+  }, []);
+  return (
+    <p className="text-xs text-white/40 mt-1">
+      📅 {new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+      {hijri && <span className="ml-2 text-cyan-400/60">• {hijri}</span>}
+    </p>
+  );
+}
+
 function NeonGrid() {
   return (
     <div
