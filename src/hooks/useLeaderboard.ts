@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getLigue, getHifzLevel, type Ligue } from "@/components/LigueBadge";
+import { getSeedLeaderboardUsers } from "@/data/leaderboardSeedUsers";
 
 export interface LeaderboardEntry {
   id: string;
