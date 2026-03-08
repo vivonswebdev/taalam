@@ -300,6 +300,7 @@ export default function TarteelOfflinePage() {
         </div>
       </div>
 
+      <div className="max-w-lg mx-auto px-4 py-6">
         <Tabs defaultValue="practice">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="practice" className="gap-1 text-xs">
