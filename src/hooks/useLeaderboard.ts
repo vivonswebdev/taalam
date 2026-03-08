@@ -122,8 +122,12 @@ export function useLeaderboard() {
     const userIds = profiles.map((p: any) => p.user_id);
     const streakMap = await fetchStreaksForUsers(userIds);
 
-    setCountryBoard(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
-  }, []);
+    const realEntries = profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id)));
+    const realIds = new Set(realEntries.map((e) => e.user_id));
+    const seedForCountry = seedUsers.filter((s) => s.country_code === country && !realIds.has(s.user_id));
+    const merged = [...realEntries, ...seedForCountry].sort((a, b) => b.xp_total - a.xp_total);
+    setCountryBoard(merged);
+  }, [seedUsers]);
 
   const fetchByLevel = useCallback(async (level: "beginner" | "intermediate" | "advanced") => {
     setSelectedLevel(level);
