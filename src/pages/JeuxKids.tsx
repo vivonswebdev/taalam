@@ -21,6 +21,9 @@ const GAMES = [
   { key: "prayerMaze", emoji: "🧩", path: "/kids-prayer-maze", color: "from-rose-400 to-pink-500" },
   { key: "tetrisIslam", emoji: "🕌", path: "/tetris-islam", color: "from-emerald-400 to-teal-500" },
   { key: "arabicBubbles", emoji: "🫧", path: "/kids-arabic-bubbles", color: "from-indigo-400 to-purple-500" },
+  { key: "quranWordOrder", emoji: "🔤", path: "/kids-quran-word-order", color: "from-emerald-400 to-teal-500" },
+  { key: "duaMatch", emoji: "🤲", path: "/kids-dua-match", color: "from-amber-400 to-yellow-500" },
+  { key: "islamicColors", emoji: "🎨", path: "/kids-islamic-colors", color: "from-violet-400 to-pink-500" },
 ] as const;
 
 export default function JeuxKids() {

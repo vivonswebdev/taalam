@@ -59,6 +59,9 @@ const GAME_ROUTES: Record<string, string> = {
   math_shooter: "/kids-math-shooter",
   math_memory: "/kids-math-memory",
   math_bomb: "/kids-math-bomb",
+  math_race: "/kids-math-race",
+  math_chain: "/kids-math-chain",
+  math_duel: "/kids-math-duel",
 };
 
 // Floating candy decorations

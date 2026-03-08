@@ -88,4 +88,7 @@ export const MATH_GAMES = [
   { id: "math_shooter", name: "Math Shooter", icon: "🚀", i18nKey: "mathShooter" },
   { id: "math_memory", name: "Math Memory", icon: "🧠", i18nKey: "mathMemory" },
   { id: "math_bomb", name: "Math Bomb", icon: "💣", i18nKey: "mathBomb" },
+  { id: "math_race", name: "Math Race", icon: "🏎️", i18nKey: "mathRace" },
+  { id: "math_chain", name: "Math Chain", icon: "⛓️", i18nKey: "mathChain" },
+  { id: "math_duel", name: "Math Duel", icon: "⚔️", i18nKey: "mathDuel" },
 ] as const;

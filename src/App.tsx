@@ -280,6 +280,12 @@ const App = () => (
                   <Route path="/kids-math-memory" element={<MathMemoryPage />} />
                   <Route path="/kids-math-bomb" element={<MathBombPage />} />
                   <Route path="/kids-arabic-bubbles" element={<ArabicBubblePopPage />} />
+                  <Route path="/kids-quran-word-order" element={<QuranWordOrderPage />} />
+                  <Route path="/kids-dua-match" element={<DuaMatchPage />} />
+                  <Route path="/kids-islamic-colors" element={<IslamicColorsPage />} />
+                  <Route path="/kids-math-race" element={<MathRacePage />} />
+                  <Route path="/kids-math-chain" element={<MathChainPage />} />
+                  <Route path="/kids-math-duel" element={<MathDuelPage />} />
                   <Route path="/tetris-islam" element={<TetrisIslamPage />} />
                   <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
                   <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
