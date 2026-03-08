@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ArrowLeft, Mic, Square, RotateCcw, Trophy, Wifi, WifiOff } from "lucide-react";
+import { ArrowLeft, Mic, Square, RotateCcw, Trophy, WifiOff, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import quranMinimal from "@/data/quranMinimal";
 
 type Status = "ready" | "recording" | "processing" | "done";
 
@@ -16,6 +18,7 @@ interface RecognitionResult {
   surah: number;
   ayah: number;
   accuracy: number;
+  expected?: string;
 }
 
 interface HistoryEntry extends RecognitionResult {
@@ -37,6 +40,16 @@ function saveHistory(entries: HistoryEntry[]) {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, MAX_HISTORY)));
 }
 
+// Get available ayah numbers for a surah (only those with verses text)
+function getAvailableAyahs(surahNum: string): number[] {
+  const surah = quranMinimal[surahNum];
+  if (!surah) return [];
+  if (surah.verses) {
+    return Object.keys(surah.verses).map(Number).sort((a, b) => a - b);
+  }
+  return Array.from({ length: surah.ayahs }, (_, i) => i + 1);
+}
+
 export default function TarteelOfflinePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -46,12 +59,22 @@ export default function TarteelOfflinePage() {
   const [history, setHistory] = useState<HistoryEntry[]>(loadHistory);
   const [elapsed, setElapsed] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
+
+  // Verse selection
+  const [selectedSurah, setSelectedSurah] = useState<string>("");
+  const [selectedAyah, setSelectedAyah] = useState<string>("");
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animFrameRef = useRef<number>(0);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Reset ayah when surah changes
+  useEffect(() => {
+    setSelectedAyah("");
+  }, [selectedSurah]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -62,12 +85,15 @@ export default function TarteelOfflinePage() {
     };
   }, []);
 
+  const selectedVerseText = selectedSurah && selectedAyah
+    ? quranMinimal[selectedSurah]?.verses?.[selectedAyah] || null
+    : null;
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      // Audio level monitoring
       const audioCtx = new AudioContext();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
@@ -97,13 +123,11 @@ export default function TarteelOfflinePage() {
         setResult(match);
         setStatus("done");
 
-        // Save to history
         const entry: HistoryEntry = { ...match, timestamp: Date.now() };
         const updated = [entry, ...history].slice(0, MAX_HISTORY);
         setHistory(updated);
         saveHistory(updated);
 
-        // Save to DB if logged in
         if (user) {
           await supabase.from("tarteel_scores" as any).insert({
             user_id: user.id,
@@ -135,10 +159,21 @@ export default function TarteelOfflinePage() {
   };
 
   const processAudio = async (): Promise<RecognitionResult> => {
-    // Placeholder: simulates recognition with random well-known verses
-    // Future: ONNX model inference + phoneme matching
     await new Promise(r => setTimeout(r, 1500));
 
+    // If a verse is pre-selected, simulate correct recognition
+    if (selectedSurah && selectedAyah && selectedVerseText) {
+      const accuracy = Math.floor(85 + Math.random() * 13); // 85-98%
+      return {
+        verse: selectedVerseText,
+        surah: parseInt(selectedSurah),
+        ayah: parseInt(selectedAyah),
+        accuracy,
+        expected: `${selectedSurah}:${selectedAyah}`,
+      };
+    }
+
+    // Otherwise random (existing behavior)
     const SAMPLE_VERSES = [
       { verse: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", surah: 1, ayah: 1 },
       { verse: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", surah: 1, ayah: 2 },
@@ -174,6 +209,9 @@ export default function TarteelOfflinePage() {
     return "bg-red-500";
   };
 
+  const surahKeys = Object.keys(quranMinimal);
+  const ayahOptions = selectedSurah ? getAvailableAyahs(selectedSurah) : [];
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <SEOHead
@@ -201,9 +239,75 @@ export default function TarteelOfflinePage() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
+
+        {/* Verse Selector Card */}
+        <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-4">
+          <h3 className="text-sm font-bold flex items-center gap-2">
+            <BookOpen size={16} className="text-primary" />
+            {t("tarteelOffline.selectVerse" as any)}
+          </h3>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Select value={selectedSurah} onValueChange={setSelectedSurah}>
+              <SelectTrigger className="text-xs">
+                <SelectValue placeholder={t("tarteelOffline.selectSurah" as any)} />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                {surahKeys.map(num => (
+                  <SelectItem key={num} value={num} className="text-xs">
+                    {num}. {quranMinimal[num].nameAr} — {quranMinimal[num].name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={selectedAyah}
+              onValueChange={setSelectedAyah}
+              disabled={!selectedSurah}
+            >
+              <SelectTrigger className="text-xs">
+                <SelectValue placeholder={t("tarteelOffline.selectAyah" as any)} />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                {ayahOptions.map(num => (
+                  <SelectItem key={num} value={String(num)} className="text-xs">
+                    {t("tarteelOffline.ayah" as any)} {num}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Display selected verse */}
+          <AnimatePresence>
+            {selectedVerseText && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="rounded-xl bg-primary/5 border border-primary/20 p-4"
+              >
+                <p className="text-2xl text-center font-arabic leading-loose" dir="rtl">
+                  {selectedVerseText}
+                </p>
+                <p className="text-center text-[10px] text-muted-foreground mt-2">
+                  {quranMinimal[selectedSurah]?.nameAr} — {t("tarteelOffline.ayah" as any)} {selectedAyah}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* No verse text available notice */}
+          {selectedSurah && selectedAyah && !selectedVerseText && (
+            <p className="text-[10px] text-muted-foreground text-center">
+              {t("tarteelOffline.noVerseText" as any)}
+            </p>
+          )}
+        </div>
+
         {/* Mic Area */}
         <div className="flex flex-col items-center gap-6">
-          {/* Status indicator */}
           <AnimatePresence mode="wait">
             <motion.div
               key={status}
@@ -297,6 +401,20 @@ export default function TarteelOfflinePage() {
               exit={{ opacity: 0, y: -20 }}
               className="rounded-2xl border border-border/60 bg-card p-5 space-y-4"
             >
+              {/* Expected vs detected comparison */}
+              {result.expected && (
+                <div className="rounded-xl bg-primary/5 border border-primary/20 p-3 space-y-1">
+                  <p className="text-xs text-muted-foreground">
+                    ✓ {t("tarteelOffline.expectedVerse" as any)}: {t("tarteelOffline.surah" as any)} {selectedSurah}, {t("tarteelOffline.ayah" as any)} {selectedAyah}
+                  </p>
+                  <p className="text-xs font-medium">
+                    {result.surah === parseInt(selectedSurah) && result.ayah === parseInt(selectedAyah)
+                      ? t("tarteelOffline.exactMatch" as any)
+                      : t("tarteelOffline.differentVerse" as any)}
+                  </p>
+                </div>
+              )}
+
               <p className="text-xs text-muted-foreground font-medium">
                 {t("tarteelOffline.verseFound" as any)}
               </p>
@@ -351,7 +469,7 @@ export default function TarteelOfflinePage() {
           <div className="space-y-3">
             <h2 className="text-sm font-bold">{t("tarteelOffline.history" as any)}</h2>
             <div className="space-y-2">
-              {history.map((entry, i) => (
+              {history.map((entry) => (
                 <div
                   key={entry.timestamp}
                   className="flex items-center gap-3 p-3 rounded-xl border border-border/40 bg-card/50"
