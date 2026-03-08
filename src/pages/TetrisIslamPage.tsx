@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useSound } from "@/hooks/useSound";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const TETRIS_DIFF: Record<string, { startLevel: number }> = {
+  easy: { startLevel: 1 },
+  medium: { startLevel: 10 },
+  hard: { startLevel: 20 },
+};
 
 // ─── Constants ─────────────────────────────────────────
 const COLS = 10;
