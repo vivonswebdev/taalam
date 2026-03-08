@@ -60,9 +60,9 @@ export default function ArabicBubblePopPage() {
   const bubbleId = useRef(0);
   const gameAreaRef = useRef<HTMLDivElement>(null);
 
-  // Level-based config
-  const spawnInterval = Math.max(1200, 2500 - level * 150);
-  const baseSpeed = 0.3 + level * 0.05;
+  const dc = difficulty ? BUBBLE_DIFF[difficulty] : BUBBLE_DIFF.medium;
+  const spawnInterval = Math.max(1200, 2500 - level * 150) * dc.spawnMult;
+  const baseSpeed = (0.3 + level * 0.05) * dc.speedMult;
 
   const startGame = useCallback(() => {
     setScore(0);
