@@ -37,14 +37,17 @@ const ACTIONS_DB = [
 export default function KidsBalancePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [cards, setCards] = useState([...ACTIONS_DB].sort(() => Math.random() - 0.5));
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [lives, setLives] = useState(3);
   const [timeLeft, setTimeLeft] = useState(100);
   const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const controls = useAnimation();
 
+  const dc = difficulty ? BALANCE_DIFF[difficulty] : BALANCE_DIFF.medium;
   const currentLevel = 1 + Math.floor(streak / 3);
 
   useEffect(() => {
