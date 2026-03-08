@@ -46,6 +46,7 @@ export default function ArabicBubblePopPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "gameover">("menu");
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
