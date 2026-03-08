@@ -90,12 +90,23 @@ export default function KidsBalancePage() {
   };
 
   const restartGame = () => {
-    setCards([...ACTIONS_DB].sort(() => Math.random() - 0.5));
+    const shuffled = [...ACTIONS_DB].sort(() => Math.random() - 0.5).slice(0, dc.cardCount);
+    setCards(shuffled);
     setScore(0);
     setStreak(0);
-    setLives(3);
+    setLives(dc.lives);
     setTimeLeft(100);
     setGameOver(false);
+    setGameStarted(true);
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    const c = BALANCE_DIFF[d];
+    const shuffled = [...ACTIONS_DB].sort(() => Math.random() - 0.5).slice(0, c.cardCount);
+    setCards(shuffled);
+    setLives(c.lives);
+    setGameStarted(true);
   };
 
   const handleAction = async (isRightSwipe: boolean) => {
