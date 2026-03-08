@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ArrowLeft, UserPlus, Share2, Trash2, BarChart3, Clock, Send, MessageSquare, Trophy, LogOut, Sparkles, History, QrCode, X, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import { useClassrooms } from "@/hooks/useClassrooms";
@@ -21,6 +20,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QRCodeSVG } from "qrcode.react";
 
 const LOCALES: Record<string, typeof fr> = { fr, en: enUS, nl, ar };
+
+const cosmicBg = "bg-gradient-to-b from-[hsl(260,50%,12%)] via-[hsl(240,40%,18%)] to-[hsl(220,35%,10%)]";
+const glass = "bg-white/[0.07] backdrop-blur-md border border-white/15";
+
+function NeonGrid() {
+  return (
+    <div
+      className="pointer-events-none fixed inset-0 opacity-[0.04] z-0"
+      style={{
+        backgroundImage:
+          "linear-gradient(hsl(0 0% 100% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.1) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+      }}
+    />
+  );
+}
 
 interface ChatMessage {
   id: string;
@@ -43,14 +58,12 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
     setLoading(true);
     try {
       if (isTeacher) {
-        // Delete entire class + members
         await supabase.from("classroom_members").delete().eq("classroom_id", classId);
         await supabase.from("class_messages").delete().eq("classroom_id", classId);
         await supabase.from("class_weekly_challenges").delete().eq("class_id", classId);
         await supabase.from("classrooms").delete().eq("id", classId);
         toast.success("Classe supprimée");
       } else {
-        // Just remove membership
         await supabase.from("classroom_members").delete().eq("classroom_id", classId).eq("user_id", user.id);
         toast.success(t("common.leftGroup" as any));
       }
@@ -65,20 +78,20 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
 
   if (confirm) {
     return (
-      <div className="mx-4 mt-3 bg-destructive/10 border border-destructive/30 rounded-xl p-4 space-y-3">
-        <p className="text-sm font-semibold text-destructive">
+      <div className="mx-4 mt-3 bg-red-500/10 border border-red-400/30 rounded-xl p-4 space-y-3 relative z-10">
+        <p className="text-sm font-semibold text-red-400">
           {isTeacher
             ? `Vous êtes le professeur. Supprimer la classe "${classroomName}" complètement ?`
             : `Quitter le groupe "${classroomName}" ?`}
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-white/50">
           {isTeacher ? "Tous les membres seront retirés et les données supprimées." : "Vous pourrez rejoindre à nouveau avec le code."}
         </p>
         <div className="flex gap-2">
-          <button onClick={() => setConfirm(false)} className="flex-1 py-2 text-sm rounded-lg bg-muted font-medium">
+          <button onClick={() => setConfirm(false)} className="flex-1 py-2 text-sm rounded-lg bg-white/10 text-white/70 font-medium">
             Non
           </button>
-          <button onClick={handleLeave} disabled={loading} className="flex-1 py-2 text-sm rounded-lg bg-destructive text-destructive-foreground font-semibold disabled:opacity-50">
+          <button onClick={handleLeave} disabled={loading} className="flex-1 py-2 text-sm rounded-lg bg-red-500 text-white font-semibold disabled:opacity-50">
             {loading ? "..." : "Oui, confirmer"}
           </button>
         </div>
@@ -87,10 +100,10 @@ function LeaveClassButton({ classId, isTeacher, user, classroomName, onLeft }: {
   }
 
   return (
-    <div className="px-4 mt-6 flex justify-center">
+    <div className="px-4 mt-6 flex justify-center relative z-10">
       <button
         onClick={() => setConfirm(true)}
-        className="text-[11px] text-muted-foreground hover:text-destructive/70 transition-colors underline underline-offset-2"
+        className="text-[11px] text-white/40 hover:text-red-400/70 transition-colors underline underline-offset-2"
       >
         {isTeacher ? "Supprimer la classe" : "Quitter le groupe"}
       </button>
@@ -108,27 +121,23 @@ export default function ClassroomDetail() {
   const { classrooms, getMembersForClass, addMember, removeMember, shareClassroom } = useClassrooms();
   const { profiles, getChildMastery, getSessionsForChild, getLastActivity } = useChildProfiles();
 
-  // Resolve classId: if it's not a UUID, look it up by join_code
   const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const isUuid = rawClassId ? UUID_RE.test(rawClassId) : false;
   const [resolvedClassId, setResolvedClassId] = useState<string | null>(isUuid ? rawClassId! : null);
 
   useEffect(() => {
     if (isUuid || !rawClassId) return;
-    // Try to find in local classrooms first
     const local = classrooms.find((c) => c.id === rawClassId || c.joinCode === rawClassId);
     if (local && UUID_RE.test(local.id)) {
       setResolvedClassId(local.id);
       return;
     }
-    // Lookup by join_code in DB
     supabase
       .rpc("lookup_classroom_by_code", { _join_code: rawClassId.toUpperCase() })
       .then(({ data: rpcData }) => {
         const data = rpcData?.[0] || null;
         if (data) {
           setResolvedClassId(data.id);
-          // Redirect to proper UUID URL
           navigate(`/classrooms/${data.id}`, { replace: true });
         }
       });
@@ -157,7 +166,6 @@ export default function ClassroomDetail() {
   const memberProfiles = profiles.filter((p) => memberIds.includes(p.id));
   const nonMembers = profiles.filter((p) => !memberIds.includes(p.id));
 
-  // DB member profiles for challenge card
   const [dbMembers, setDbMembers] = useState<Map<string, { name: string; emoji: string }>>(new Map());
   useEffect(() => {
     if (!classId) return;
@@ -178,13 +186,11 @@ export default function ClassroomDetail() {
   const [showAdd, setShowAdd] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
-  // Chat state
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load messages
   useEffect(() => {
     if (!classId) return;
     const loadMessages = async () => {
@@ -195,12 +201,10 @@ export default function ClassroomDetail() {
         .order("created_at", { ascending: true })
         .limit(100);
       if (data) setMessages(data as ChatMessage[]);
-      // Mark chat as read
       localStorage.setItem(`chat_last_read_${classId}`, new Date().toISOString());
     };
     loadMessages();
 
-    // Realtime subscription
     const channel = supabase
       .channel(`class-messages-${classId}`)
       .on(
@@ -215,12 +219,10 @@ export default function ClassroomDetail() {
     return () => { supabase.removeChannel(channel); };
   }, [classId]);
 
-  // Auto scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Share my progress in chat
   const handleShareProgress = async () => {
     if (!user || !classId) return;
     const { data: profile } = await supabase
@@ -260,7 +262,6 @@ export default function ClassroomDetail() {
     toast.success("Progression partagée !");
   };
 
-  // Auto-announce challenge creation
   const handleCreateChallengeWithAnnounce = async (sn: number, af: number, at: number, dx: boolean) => {
     const ch = await createChallenge(sn, af, at, dx);
     if (!ch || !user || !classId) return;
@@ -309,7 +310,6 @@ export default function ClassroomDetail() {
     }
   };
 
-  // Fetch classroom from DB if not found locally (e.g. coordinator viewing another teacher's class)
   const [dbClassroom, setDbClassroom] = useState<{ name: string; joinCode: string; teacherId: string } | null>(null);
   useEffect(() => {
     if (classroom || !classId) return;
@@ -323,53 +323,51 @@ export default function ClassroomDetail() {
 
   if (!effectiveClassroom) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Chargement...</p>
+      <div className={`${cosmicBg} min-h-screen flex items-center justify-center`}>
+        <p className="text-white/50">Chargement...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className={`${cosmicBg} min-h-screen pb-24`}>
+      <NeonGrid />
+
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-border bg-card">
-        <button onClick={() => navigate(fromCoord ? "/coord" : "/classrooms")} className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-white/10 bg-white/[0.05] backdrop-blur-md relative z-10">
+        <button onClick={() => navigate(fromCoord ? "/coord" : "/classrooms")} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white">
           <ArrowLeft size={18} />
         </button>
         {fromCoord && (
-          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-semibold">
+          <span className="text-[10px] bg-cyan-500/15 text-cyan-400 px-2 py-0.5 rounded-full font-semibold">
             {t("coord.title" as any)}
           </span>
         )}
         <div className="flex-1 min-w-0">
-          <h1 className="text-lg font-bold truncate">{effectiveClassroom.name}</h1>
-          <p className="text-xs text-muted-foreground">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
+          <h1 className="text-lg font-bold truncate text-white">{effectiveClassroom.name}</h1>
+          <p className="text-xs text-white/50">{t("classrooms.code")}: {effectiveClassroom.joinCode}</p>
         </div>
-        <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-          <QrCode size={16} className="text-primary" />
+        <button onClick={() => setShowQR(true)} className="w-9 h-9 rounded-full bg-cyan-500/15 flex items-center justify-center">
+          <QrCode size={16} className="text-cyan-400" />
         </button>
-        <button onClick={() => classroom && shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-          <Share2 size={16} className="text-primary" />
+        <button onClick={() => classroom && shareClassroom(classroom)} className="w-9 h-9 rounded-full bg-cyan-500/15 flex items-center justify-center">
+          <Share2 size={16} className="text-cyan-400" />
         </button>
       </div>
 
       {/* QR Code Modal */}
       {showQR && effectiveClassroom && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-6"
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6"
           onClick={() => setShowQR(false)}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+          <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-card border border-border rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl"
+            className={`${glass} rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl`}
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-foreground">{t("common.invitationQR" as any)}</h3>
-              <button onClick={() => setShowQR(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+              <h3 className="text-sm font-bold text-white">{t("common.invitationQR" as any)}</h3>
+              <button onClick={() => setShowQR(false)} className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white">
                 <X size={14} />
               </button>
             </div>
@@ -382,22 +380,22 @@ export default function ClassroomDetail() {
               />
             </div>
             <div>
-              <p className="font-bold text-foreground">{effectiveClassroom.name}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Code : <span className="font-mono font-bold text-primary">{effectiveClassroom.joinCode}</span>
+              <p className="font-bold text-white">{effectiveClassroom.name}</p>
+              <p className="text-xs text-white/50 mt-0.5">
+                Code : <span className="font-mono font-bold text-cyan-400">{effectiveClassroom.joinCode}</span>
               </p>
             </div>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-[10px] text-white/40">
               {t("common.scanQR" as any)}
             </p>
             <button
               onClick={() => classroom && shareClassroom(classroom)}
-              className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-cyan-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
             >
               <Share2 size={14} /> {t("common.shareLink" as any)}
             </button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
 
       {/* Leave / Delete button */}
@@ -407,244 +405,204 @@ export default function ClassroomDetail() {
         user={user}
         classroomName={effectiveClassroom.name || ""}
         onLeft={() => {
-          // Remove from local storage
           const stored = JSON.parse(localStorage.getItem("quranEasyClassrooms") || "[]");
           localStorage.setItem("quranEasyClassrooms", JSON.stringify(stored.filter((c: any) => c.id !== classId)));
           navigate("/classrooms", { replace: true });
         }}
       />
 
-      <Tabs defaultValue="challenge" className="px-4 py-3">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="challenge" className="text-xs gap-1">
+      <Tabs defaultValue="challenge" className="px-4 py-3 relative z-10">
+        <TabsList className="w-full grid grid-cols-3 bg-white/[0.07] border border-white/10">
+          <TabsTrigger value="challenge" className="text-xs gap-1 text-white/70 data-[state=active]:text-white data-[state=active]:bg-white/10">
             <Trophy size={14} /> Défi
           </TabsTrigger>
-          <TabsTrigger value="students" className="text-xs gap-1">
+          <TabsTrigger value="students" className="text-xs gap-1 text-white/70 data-[state=active]:text-white data-[state=active]:bg-white/10">
             <UserPlus size={14} /> {t("classrooms.students")}
           </TabsTrigger>
-          <TabsTrigger value="messages" className="text-xs gap-1">
+          <TabsTrigger value="messages" className="text-xs gap-1 text-white/70 data-[state=active]:text-white data-[state=active]:bg-white/10">
             <MessageSquare size={14} /> {t("classrooms.messages")}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="challenge" className="mt-3 space-y-4">
+          {/* Student Assignments */}
+          {!isTeacherFinal && studentAssignments.length > 0 && (
+            <div className={`${glass} rounded-xl p-4`}>
+              <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                <ClipboardList size={16} className="text-cyan-400" />
+                {t("classrooms.myAssignments" as any) || "Mes devoirs"}
+              </h3>
+              <div className="space-y-2">
+                {studentAssignments.map(a => (
+                  <div key={a.id} className="flex items-start justify-between p-2.5 rounded-lg bg-white/5">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-white truncate">{a.title}</p>
+                      <p className="text-[10px] text-white/50">
+                        {t("classrooms.dueDate" as any)}: {new Date(a.due_date).toLocaleDateString(lang)}
+                      </p>
+                    </div>
+                    {!a.seen && (
+                      <button onClick={() => markSeen(a.id)} className="text-[9px] bg-cyan-500 text-white px-2 py-0.5 rounded-full font-bold shrink-0 ml-2">
+                        {t("classrooms.markSeen" as any) || "Vu"}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <WeeklyChallengeCard
             challenge={challenge}
             results={results}
             myResult={myResult}
-            isTeacher={!!isTeacherFinal}
             loading={challengeLoading}
-            onCreateChallenge={(sn, af, at, dx) => handleCreateChallengeWithAnnounce(sn, af, at, dx)}
-            onStartChallenge={() => {
-              if (challenge) {
-                const surahNum = challenge.surah_number;
-                navigate(`/recitation?surah=${surahNum}&from=${challenge.ayah_from}&to=${challenge.ayah_to}&challengeId=${challenge.id}&classId=${classId}`);
-              }
-            }}
-            memberProfiles={dbMembers}
+            isTeacher={!!isTeacherFinal}
+            onCreateChallenge={handleCreateChallengeWithAnnounce}
+            onSubmitResult={submitResult}
+            weekStart={weekStart}
+            pastChallenges={pastChallenges}
+            dbMembers={dbMembers}
           />
 
-          {/* Student assignments */}
-          {!isTeacherFinal && studentAssignments.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ClipboardList size={14} className="text-primary" />
-                  <p className="text-xs font-bold">{t("teacher.assignments" as any)}</p>
-                </div>
-                <button onClick={() => navigate("/assignments-tutorial")} className="text-[10px] text-primary font-medium hover:underline">
-                  {t("tuto.pageTitle" as any)}
-                </button>
-              </div>
-              {studentAssignments.map((a) => (
-                <button
-                  key={a.id}
-                  onClick={() => markSeen(a.id)}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-card border border-border text-left"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold truncate">{a.title}</p>
-                    <p className="text-[10px] text-muted-foreground">
-                      {a.type} • 📅 {a.due_date}
-                    </p>
+          {!isTeacherFinal && classId && (
+            <StudentTaskKanban classId={classId} />
+          )}
+        </TabsContent>
+
+        <TabsContent value="students" className="mt-3 space-y-3">
+          {/* DB members */}
+          {dbMembers.size > 0 && (
+            <div className={`${glass} rounded-xl p-4 space-y-2`}>
+              <h3 className="text-sm font-bold text-white mb-2">
+                {t("classrooms.students")} ({dbMembers.size})
+              </h3>
+              {[...dbMembers.entries()].map(([uid, info]) => (
+                <div key={uid} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{info.emoji}</span>
+                    <span className="text-sm font-medium text-white">{info.name}</span>
                   </div>
-                  {a.isNew && (
-                    <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0 ml-2">
-                      NEW
-                    </span>
+                  {uid === dbTeacherId && (
+                    <span className="text-[9px] bg-cyan-500/15 text-cyan-400 px-2 py-0.5 rounded-full font-bold">Prof</span>
                   )}
-                </button>
+                </div>
               ))}
             </div>
           )}
 
-          {/* Student Task Kanban */}
-          {!isTeacherFinal && <StudentTaskKanban />}
-
-          {pastChallenges.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <History size={14} />
-                <p className="text-xs font-semibold">{t("common.previousChallenges" as any)}</p>
-              </div>
-              {pastChallenges.map((pc) => {
-                const s = surahs.find((s) => s.number === pc.surah_number);
+          {/* Local profiles */}
+          {memberProfiles.length > 0 && (
+            <div className={`${glass} rounded-xl p-4 space-y-2`}>
+              <h3 className="text-sm font-bold text-white mb-2">
+                {t("classrooms.localStudents" as any) || "Élèves locaux"} ({memberProfiles.length})
+              </h3>
+              {memberProfiles.map(p => {
+                const mastery = getChildMastery(p.id);
+                const sessions = getSessionsForChild(p.id);
+                const last = getLastActivity(p.id);
+                const dateLoc = LOCALES[lang] || fr;
                 return (
-                  <div key={pc.id} className="bg-card border border-border rounded-xl p-3 space-y-2">
+                  <div key={p.id} className="p-2.5 rounded-xl bg-white/5 space-y-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold">
-                        {s ? `${s.nameArabic} (${s.name})` : `Sourate ${pc.surah_number}`}
-                      </p>
-                      <span className="text-[10px] text-muted-foreground">
-                        Semaine du {new Date(pc.week_start).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-                      </span>
+                      <span className="text-sm font-semibold text-white">{p.avatarEmoji} {p.name}</span>
+                      <button onClick={() => removeMember(classId!, p.id)} className="text-red-400 p-1"><Trash2 size={12} /></button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground">
-                      Ayahs {pc.ayah_from}–{pc.ayah_to} · {pc.results.length} participant{pc.results.length > 1 ? "s" : ""}
-                    </p>
-                    {pc.results.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {pc.results.slice(0, 5).map((r, i) => {
-                          const prof = dbMembers.get(r.user_id);
-                          return (
-                            <span key={r.id} className="flex items-center gap-1 text-[10px] bg-muted rounded-full px-2 py-0.5">
-                              <span className="font-bold text-primary">{i + 1}.</span>
-                              {prof?.emoji || "👤"} {prof?.name || "Membre"} — {Math.round(r.score)}%
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2 text-[10px] text-white/50">
+                      <span>📖{sessions}s</span>
+                      {last && <span>🕐{formatDistanceToNow(new Date(last), { locale: dateLoc, addSuffix: true })}</span>}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Progress value={mastery} className="h-1.5 flex-1" />
+                      <span className="text-[10px] font-bold text-cyan-400">{Math.round(mastery)}%</span>
+                    </div>
                   </div>
                 );
               })}
             </div>
           )}
-        </TabsContent>
 
-        {/* Students tab — visible to all members */}
-        <TabsContent value="students" className="space-y-4 mt-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold">{t("classrooms.students")} ({dbMembers.size})</p>
-            {isTeacherFinal && nonMembers.length > 0 && (
-              <button onClick={() => setShowAdd(!showAdd)} className="flex items-center gap-1 text-xs text-primary font-semibold">
+          {/* Add member */}
+          {nonMembers.length > 0 && (
+            <div className="relative z-10">
+              <button onClick={() => setShowAdd(!showAdd)} className="flex items-center gap-2 text-xs text-cyan-400 font-semibold">
                 <UserPlus size={14} /> {t("classrooms.addStudent")}
               </button>
-            )}
-          </div>
-
-          {isTeacherFinal && showAdd && nonMembers.length > 0 && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap gap-2">
-              {nonMembers.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => addMember(effectiveClassroom.id, p.id)}
-                  className="flex items-center gap-1.5 bg-muted border border-border rounded-full px-3 py-1.5 text-xs font-medium"
-                >
-                  <span>{p.avatarEmoji}</span> {p.name}
-                  <UserPlus size={12} className="text-primary" />
-                </button>
-              ))}
-            </motion.div>
-          )}
-
-          {dbMembers.size === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground">{t("classrooms.noStudents")}</p>
+              {showAdd && (
+                <div className={`mt-2 ${glass} rounded-xl p-3 space-y-2`}>
+                  {nonMembers.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => { addMember(classId!, p.id); setShowAdd(false); }}
+                      className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 text-left transition-colors"
+                    >
+                      <span>{p.avatarEmoji}</span>
+                      <span className="text-sm text-white">{p.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          ) : (
-            Array.from(dbMembers.entries()).map(([uid, prof]) => {
-              const isCurrentUser = uid === user?.id;
-              const isTeacherMember = uid === dbTeacherId;
-              return (
-                <motion.div
-                  key={uid}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-card border border-border rounded-xl p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{prof.emoji}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate">
-                        {prof.name}{isCurrentUser ? " (vous)" : ""}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">
-                        {isTeacherMember ? "👨‍🏫 Professeur" : "📖 Élève"}
-                      </p>
-                    </div>
-                    {isTeacherFinal && !isTeacherMember && (
-                      <button
-                        onClick={() => removeMember(effectiveClassroom.id, uid)}
-                        className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center"
-                      >
-                        <Trash2 size={12} className="text-destructive" />
-                      </button>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })
           )}
         </TabsContent>
 
-        {/* Messages tab */}
-        <TabsContent value="messages" className="mt-3">
-          <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col" style={{ height: "calc(100vh - 280px)" }}>
-            {/* Messages list */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-2">
-              {messages.length === 0 ? (
-                <div className="text-center py-8">
-                  <MessageSquare size={28} className="mx-auto text-muted-foreground mb-2" />
-                  <p className="text-xs text-muted-foreground">{t("classrooms.noMessages")}</p>
-                </div>
-              ) : (
-                messages.map((msg) => {
-                  const isMe = msg.author_id === user?.id;
-                  return (
-                    <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
-                      <div className={`max-w-[80%] rounded-xl px-3 py-2 ${isMe ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-                        {!isMe && <p className="text-[10px] font-semibold mb-0.5 opacity-70">{msg.author_name}</p>}
-                        <p className="text-sm break-words">{msg.message}</p>
-                      </div>
-                      <span className="text-[9px] text-muted-foreground mt-0.5 px-1">
-                        {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true, locale: LOCALES[lang] || LOCALES.fr })}
-                      </span>
-                    </div>
-                  );
-                })
+        <TabsContent value="messages" className="mt-3 space-y-3">
+          <div className={`${glass} rounded-xl p-4`}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <MessageSquare size={14} className="text-cyan-400" /> {t("classrooms.messages")}
+              </h3>
+              <div className="flex gap-2">
+                <button onClick={handleShareProgress} className="text-[10px] bg-cyan-500/15 text-cyan-400 px-2 py-1 rounded-lg font-semibold flex items-center gap-1">
+                  <BarChart3 size={10} /> {t("classrooms.shareProgress" as any)}
+                </button>
+              </div>
+            </div>
+
+            <div className="max-h-60 overflow-y-auto space-y-2 mb-3">
+              {messages.length === 0 && (
+                <p className="text-center text-white/40 text-xs py-4">{t("classrooms.noMessages" as any)}</p>
               )}
+              {messages.map(msg => {
+                const isMe = msg.author_id === user?.id;
+                return (
+                  <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[80%] p-2.5 rounded-xl text-xs ${
+                      isMe ? "bg-cyan-500/20 text-white" : "bg-white/5 text-white/90"
+                    }`}>
+                      {!isMe && <p className="font-bold text-white/70 text-[10px] mb-0.5">{msg.author_name}</p>}
+                      <p className="whitespace-pre-wrap">{msg.message}</p>
+                      <p className="text-[9px] text-white/30 mt-1 text-right">
+                        {new Date(msg.created_at).toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input + share progress */}
-            <div className="border-t border-border p-2 space-y-2">
+            <div className="flex gap-2">
+              <input
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+                placeholder={t("classrooms.messagePlaceholder" as any)}
+                className="flex-1 bg-white/10 rounded-lg px-3 py-2 text-sm outline-none text-white placeholder:text-white/30"
+                maxLength={500}
+              />
               <button
-                onClick={handleShareProgress}
-                className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-primary bg-primary/5 border border-primary/20 rounded-lg"
+                onClick={handleSend}
+                disabled={!newMessage.trim() || sending}
+                className="w-10 h-10 rounded-lg bg-cyan-500 text-white flex items-center justify-center disabled:opacity-50"
               >
-                <Sparkles size={12} /> {t("common.shareProgress" as any)}
+                <Send size={16} />
               </button>
-              <div className="flex gap-2">
-                <input
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value.slice(0, 500))}
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-                  placeholder={t("classrooms.typeMessage")}
-                  className="flex-1 bg-muted rounded-lg px-3 py-2 text-sm outline-none"
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={!newMessage.trim() || sending}
-                  className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
-                >
-                  <Send size={16} />
-                </button>
-              </div>
             </div>
           </div>
         </TabsContent>
       </Tabs>
+
       <BottomNav />
     </div>
   );
