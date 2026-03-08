@@ -142,6 +142,14 @@ export default function KidsBalancePage() {
     }
   };
 
+  if (!gameStarted) {
+    return <DifficultySelector title={t("balanceGame.title" as any)} icon="⚖️" onSelect={selectDifficulty} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+      { key: "easy", emoji: "🌱", xpBase: 5, description: "5 ❤️ — 10 cards" },
+      { key: "medium", emoji: "🌿", xpBase: 10, description: "3 ❤️ — 15 cards" },
+      { key: "hard", emoji: "🔥", xpBase: 15, description: "2 ❤️ — 20 cards" },
+    ]} />;
+  }
+
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] bg-gradient-to-b from-teal-900 via-cyan-900 to-blue-900 font-sans overflow-hidden relative selection:bg-transparent">
       {/* HUD */}
