@@ -44,6 +44,8 @@ export default function Noorani() {
       { key: "beginner" as const, lessons: NOORANI_LESSONS.filter(l => l.level === "beginner") },
       { key: "intermediate" as const, lessons: NOORANI_LESSONS.filter(l => l.level === "intermediate") },
       { key: "advanced" as const, lessons: NOORANI_LESSONS.filter(l => l.level === "advanced") },
+      { key: "expert" as const, lessons: NOORANI_LESSONS.filter(l => l.level === "expert") },
+      { key: "master" as const, lessons: NOORANI_LESSONS.filter(l => l.level === "master") },
     ];
     return groups.filter(g => g.lessons.length > 0);
   }, []);

@@ -6,7 +6,7 @@ export type NooraniLesson = {
   id: string;
   titleKey: string;
   descKey: string;
-  level: "beginner" | "intermediate" | "advanced";
+  level: "beginner" | "intermediate" | "advanced" | "expert" | "master";
   emoji: string;
   items: NooraniItem[];
   exerciseType?: NooraniExerciseType;
