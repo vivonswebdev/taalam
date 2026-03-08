@@ -48,7 +48,7 @@ export default function StreakWidget() {
           </div>
           <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500"
+              className="h-full rounded-full bg-gradient-to-r from-primary to-secondary"
               initial={false}
               animate={{ width: `${progress}%` }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}

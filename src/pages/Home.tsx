@@ -39,6 +39,7 @@ export default function Home() {
       <>
         <KidsHomePage />
         <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
+        <StreakWidget />
       </>
     );
   }
@@ -48,6 +49,7 @@ export default function Home() {
       <HomeErrorBoundary>
         <TeacherHomePage />
         <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
+        <StreakWidget />
       </HomeErrorBoundary>
     );
   }
@@ -57,6 +59,7 @@ export default function Home() {
       <SEOHead title="Ta'alam - Apprendre le Coran facilement" description="Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille." path="/" />
       <HomeDashboard />
       <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
+      <StreakWidget />
     </HomeErrorBoundary>
   );
 }
