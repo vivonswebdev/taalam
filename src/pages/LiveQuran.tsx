@@ -254,7 +254,7 @@ export default function LiveQuran() {
 
       {/* Stations list */}
       <div className="px-6">
-        <p className="text-sm font-semibold text-foreground mb-3">Stations disponibles</p>
+        <p className="text-sm font-semibold text-foreground mb-3">{t("liveQuran.stations" as any)}</p>
         <div className="space-y-2">
           {STATIONS.map((station, i) => {
             const isActive = activeStation?.id === station.id;
