@@ -164,7 +164,7 @@ export default function LiveQuran() {
       <div className="px-6 pt-14 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-3">
           <ArrowLeft size={20} />
-          <span className="text-sm">Retour</span>
+          <span className="text-sm">{t("common.back" as any)}</span>
         </button>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-900 flex items-center justify-center text-2xl">
