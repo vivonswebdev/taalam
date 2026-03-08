@@ -327,6 +327,12 @@ const translations = {
   "prayers.asr": { fr: "Asr", en: "Asr", nl: "Asr", ar: "العصر", tr: "İkindi", ur: "عصر" },
   "prayers.maghrib": { fr: "Maghrib", en: "Maghrib", nl: "Maghrib", ar: "المغرب", tr: "Akşam", ur: "مغرب" },
   "prayers.isha": { fr: "Isha", en: "Isha", nl: "Isha", ar: "العشاء", tr: "Yatsı", ur: "عشاء" },
+  "prayers.doha": { fr: "Doha", en: "Doha", nl: "Doha", ar: "الضحى", tr: "Kuşluk", ur: "چاشت" },
+  "prayers.nextLabel": { fr: "Prochaine", en: "Next", nl: "Volgende", ar: "التالية", tr: "Sonraki", ur: "اگلی" },
+  "prayers.in": { fr: "dans", en: "in", nl: "over", ar: "بعد", tr: "sonra", ur: "میں" },
+  "prayers.dohaTitle": { fr: "Prière de Doha (Duha)", en: "Doha (Duha) Prayer", nl: "Doha (Duha) Gebed", ar: "صلاة الضحى", tr: "Kuşluk Namazı", ur: "نماز چاشت" },
+  "prayers.dohaDesc": { fr: "La prière de Doha est une Sunnah fortement recommandée, à accomplir entre 15 minutes après le lever du soleil jusqu'à midi. Elle consiste en 2 à 12 rak'ats.", en: "The Doha prayer is a highly recommended Sunnah, performed between 15 minutes after sunrise until noon. It consists of 2 to 12 rak'ahs.", nl: "Het Doha-gebed is een sterk aanbevolen Sunnah, te verrichten tussen 15 minuten na zonsopgang en de middag. Het bestaat uit 2 tot 12 rak'ahs.", ar: "صلاة الضحى سنة مؤكدة تؤدى بين 15 دقيقة بعد شروق الشمس وحتى الظهر. وتتكون من 2 إلى 12 ركعة.", tr: "Kuşluk namazı, güneş doğduktan 15 dakika sonra öğlene kadar kılınan çok tavsiye edilen bir sünnettir. 2 ila 12 rekâttır.", ur: "نماز چاشت ایک سنت مؤکدہ ہے، طلوع آفتاب کے 15 منٹ بعد سے ظہر تک ادا کی جاتی ہے۔ 2 سے 12 رکعات پر مشتمل ہے۔" },
+  "prayers.dohaHadith": { fr: "« Celui qui prie 2 rak'ats de Doha sera pardonné même s'il a péché autant que l'écume de la mer » – Hadith", en: "\"Whoever prays 2 rak'ahs of Doha will be forgiven even if his sins are as much as the foam of the sea\" – Hadith", nl: "\"Wie 2 rak'ahs van Doha bidt, wordt vergeven zelfs als zijn zonden zo veel zijn als het schuim van de zee\" – Hadith", ar: "\"من صلّى ركعتين من الضحى غُفرت له ذنوبه وإن كانت كزبد البحر\" – حديث", tr: "\"Kim Kuşluk'tan 2 rekât kılarsa, günahları denizin köpüğü kadar olsa bile affedilir\" – Hadis", ur: "\"جو شخص چاشت کی 2 رکعتیں پڑھے اس کے گناہ معاف ہو جائیں گے چاہے سمندر کی جھاگ جتنے ہوں\" – حدیث" },
 
   // Quiz categories
   "quiz.category.general": { fr: "Culture générale", en: "General knowledge", nl: "Algemene kennis", ar: "ثقافة عامة", tr: "Genel kültür", ur: "عمومی معلومات" },
