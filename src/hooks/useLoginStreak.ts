@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuranXp } from "./useQuranXp";
+import { supabase } from "@/integrations/supabase/client";
 
 const LOGIN_STREAK_KEY = "taaloum_login_streak";
 const LOGIN_LAST_KEY = "taaloum_login_last";
@@ -37,6 +38,8 @@ function saveLoginStreak(data: LoginStreakData) {
 
 /** XP bonus by consecutive login days */
 function getLoginXpBonus(streak: number): number {
+  if (streak >= 90) return 200;
+  if (streak >= 60) return 100;
   if (streak >= 30) return 50;
   if (streak >= 14) return 30;
   if (streak >= 7) return 20;
@@ -46,11 +49,30 @@ function getLoginXpBonus(streak: number): number {
 
 /** Emoji by streak tier */
 function getStreakEmoji(streak: number): string {
+  if (streak >= 90) return "🏆";
+  if (streak >= 60) return "💎";
   if (streak >= 30) return "👑";
   if (streak >= 14) return "💎";
   if (streak >= 7) return "🔥";
   if (streak >= 3) return "⭐";
   return "🌙";
+}
+
+/** Sync streak to profiles table in DB */
+async function syncStreakToDB(streak: number) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    await supabase
+      .from("profiles")
+      .update({
+        login_streak: streak,
+        last_login_date: getToday(),
+      } as any)
+      .eq("user_id", user.id);
+  } catch {
+    // Silently fail — localStorage is the primary store
+  }
 }
 
 export interface LoginBonusResult {
@@ -91,6 +113,9 @@ export function useLoginStreak() {
 
     // Award XP
     addXp(xp, "daily_login_bonus");
+
+    // Sync to DB for leaderboard
+    syncStreakToDB(newStreak);
 
     setBonusResult({ streak: newStreak, xpAwarded: xp, emoji, isNewDay: true });
   }, [addXp]);

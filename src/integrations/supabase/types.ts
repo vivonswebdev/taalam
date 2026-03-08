@@ -1507,6 +1507,8 @@ export type Database = {
           display_name: string
           id: string
           is_public: boolean
+          last_login_date: string | null
+          login_streak: number
           mastery_score: number
           mode_password: string | null
           preferred_mode: string
@@ -1514,6 +1516,7 @@ export type Database = {
           updated_at: string
           user_id: string
           xp_total: number
+          xp_weekly: number
         }
         Insert: {
           age_group?: string
@@ -1523,6 +1526,8 @@ export type Database = {
           display_name: string
           id?: string
           is_public?: boolean
+          last_login_date?: string | null
+          login_streak?: number
           mastery_score?: number
           mode_password?: string | null
           preferred_mode?: string
@@ -1530,6 +1535,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           xp_total?: number
+          xp_weekly?: number
         }
         Update: {
           age_group?: string
@@ -1539,6 +1545,8 @@ export type Database = {
           display_name?: string
           id?: string
           is_public?: boolean
+          last_login_date?: string | null
+          login_streak?: number
           mastery_score?: number
           mode_password?: string | null
           preferred_mode?: string
@@ -1546,6 +1554,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
           xp_total?: number
+          xp_weekly?: number
         }
         Relationships: []
       }
