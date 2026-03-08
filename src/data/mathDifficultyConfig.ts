@@ -87,4 +87,5 @@ export const MATH_GAMES = [
   { id: "number_runner", name: "Number Runner", icon: "🏃", i18nKey: "numberRunner" },
   { id: "math_shooter", name: "Math Shooter", icon: "🚀", i18nKey: "mathShooter" },
   { id: "math_memory", name: "Math Memory", icon: "🧠", i18nKey: "mathMemory" },
+  { id: "math_bomb", name: "Math Bomb", icon: "💣", i18nKey: "mathBomb" },
 ] as const;
