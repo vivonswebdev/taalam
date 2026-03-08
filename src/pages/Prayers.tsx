@@ -227,9 +227,7 @@ export default function Prayers() {
             </button>
           </div>
         </div>
-        <p className="text-xs text-white/40 mt-1">
-          📅 {new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-        </p>
+        <HijriDateLine />
       </div>
 
       <div className="px-5 space-y-4 relative z-10">
