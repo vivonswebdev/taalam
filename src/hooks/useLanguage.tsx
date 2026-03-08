@@ -1167,6 +1167,16 @@ const translations = {
   "noorani.lesson17Desc": { fr: "Applique tout ce que tu as appris sur la sourate 1", en: "Apply everything you learned on Surah 1", nl: "Pas alles toe wat je hebt geleerd op soera 1", ar: "طبّق كل ما تعلمته على سورة الفاتحة", tr: "Öğrendiğin her şeyi 1. sure üzerinde uygula", ur: "جو سیکھا وہ سورۃ الفاتحہ پر لاگو کریں" },
   "noorani.advanced": { fr: "Avancé", en: "Advanced", nl: "Gevorderd", ar: "متقدم", tr: "İleri", ur: "ایڈوانسڈ" },
   "noorani.levelProgress": { fr: "terminé", en: "completed", nl: "voltooid", ar: "مكتمل", tr: "tamamlandı", ur: "مکمل" },
+
+  // Login bonus
+  "loginBonus.title": { fr: "Connexion quotidienne !", en: "Daily login!", nl: "Dagelijkse login!", ar: "تسجيل دخول يومي!", tr: "Günlük giriş!", ur: "روزانہ لاگ ان!" },
+  "loginBonus.streak": { fr: "Jours consécutifs", en: "Consecutive days", nl: "Opeenvolgende dagen", ar: "أيام متتالية", tr: "Ardışık günler", ur: "مسلسل دن" },
+  "loginBonus.bonus": { fr: "bonus", en: "bonus", nl: "bonus", ar: "مكافأة", tr: "bonus", ur: "بونس" },
+  "loginBonus.keepGoing": { fr: "Continue comme ça, mâ shâ Allâh ! 🌟", en: "Keep it up, mā shā Allāh! 🌟", nl: "Ga zo door, mā shā Allāh! 🌟", ar: "استمر هكذا، ما شاء الله! 🌟", tr: "Böyle devam et, mā şā Allāh! 🌟", ur: "ایسے ہی جاری رکھیں، ما شاء اللہ! 🌟" },
+  "loginBonus.comeBack": { fr: "Reviens demain pour augmenter ton bonus !", en: "Come back tomorrow to increase your bonus!", nl: "Kom morgen terug voor meer bonus!", ar: "عُد غداً لزيادة مكافأتك!", tr: "Bonusunu artırmak için yarın gel!", ur: "اپنا بونس بڑھانے کے لیے کل آئیں!" },
+  "loginBonus.days": { fr: "jours", en: "days", nl: "dagen", ar: "أيام", tr: "gün", ur: "دن" },
+  "kids.totalParticipants": { fr: "Participants", en: "Participants", nl: "Deelnemers", ar: "المشاركون", tr: "Katılımcılar", ur: "شرکاء" },
+  "kids.addChildToJoin": { fr: "Ajoutez un enfant en mode Parent pour rejoindre le classement !", en: "Add a child in Parent mode to join the leaderboard!", nl: "Voeg een kind toe in Ouder-modus om mee te doen!", ar: "أضف طفلاً في وضع الوالد للانضمام إلى الترتيب!", tr: "Sıralamaya katılmak için Ebeveyn modunda bir çocuk ekleyin!", ur: "لیڈر بورڈ میں شامل ہونے کے لیے والدین موڈ میں بچہ شامل کریں!" },
   "noorani.lessonDone": { fr: "Leçon terminée !", en: "Lesson complete!", nl: "Les voltooid!", ar: "انتهى الدرس!", tr: "Ders tamamlandı!", ur: "سبق مکمل!" },
   "noorani.knownItems": { fr: "éléments maîtrisés", en: "items mastered", nl: "items beheerst", ar: "عناصر متقنة", tr: "öğe öğrenildi", ur: "آئٹمز سیکھے" },
   "noorani.backToLessons": { fr: "← Leçons", en: "← Lessons", nl: "← Lessen", ar: "← الدروس", tr: "← Dersler", ur: "← اسباق" },
