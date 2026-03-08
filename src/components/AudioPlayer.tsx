@@ -394,7 +394,7 @@ export default function AudioPlayer({
             <button
               onClick={() => onGoToBookmark?.()}
               className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"
-              title="Aller au signet"
+              title={t ? t("audio.goToBookmark" as any) : "Bookmark"}
             >
               <BookmarkCheck size={14} />
             </button>
