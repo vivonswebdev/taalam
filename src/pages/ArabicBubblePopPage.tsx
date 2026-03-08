@@ -4,6 +4,13 @@ import { ArrowLeft, Star, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const BUBBLE_DIFF: Record<string, { lives: number; speedMult: number; spawnMult: number }> = {
+  easy: { lives: 5, speedMult: 0.7, spawnMult: 1.3 },
+  medium: { lives: 3, speedMult: 1, spawnMult: 1 },
+  hard: { lives: 2, speedMult: 1.4, spawnMult: 0.7 },
+};
 
 const ARABIC_ALPHABET = [
   { char: "أ", name: "Alif" }, { char: "ب", name: "Ba" }, { char: "ت", name: "Ta" },
