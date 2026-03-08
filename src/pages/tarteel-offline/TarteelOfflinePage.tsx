@@ -300,7 +300,23 @@ export default function TarteelOfflinePage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
+        <Tabs defaultValue="practice">
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="practice" className="gap-1 text-xs">
+              <Mic size={14} />
+              {t("tarteelLb.practice" as any)}
+            </TabsTrigger>
+            <TabsTrigger value="leaderboard" className="gap-1 text-xs">
+              <Trophy size={14} />
+              {t("tarteelLb.leaderboard" as any)}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="leaderboard">
+            <GlobalLeaderboard />
+          </TabsContent>
+
+          <TabsContent value="practice" className="space-y-6">
 
         {/* Verse Selector Card */}
         <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-4">
