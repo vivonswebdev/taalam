@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { getKidsSeedLeaderboard } from "@/data/kidsLeaderboardSeed";
 
 interface LeaderboardEntry {
   id: string;
