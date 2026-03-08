@@ -171,8 +171,8 @@ export default function LiveQuran() {
             📻
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Live Coran</h1>
-            <p className="text-sm text-muted-foreground">Écoutez le Coran en continu</p>
+            <h1 className="text-xl font-bold text-foreground">{t("liveQuran.title" as any)}</h1>
+            <p className="text-sm text-muted-foreground">{t("liveQuran.subtitle" as any)}</p>
           </div>
         </div>
       </div>
