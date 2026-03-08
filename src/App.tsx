@@ -95,6 +95,7 @@ const StudentStatsPage = lazy(() => import("./pages/StudentStatsPage"));
 const TarteelSelector = lazy(() => import("./pages/TarteelSelector"));
 const AthanSettings = lazy(() => import("./pages/AthanSettings"));
 const TarteelEasyPage = lazy(() => import("./pages/tarteel-easy/TarteelEasyPage"));
+const TarteelOfflinePage = lazy(() => import("./pages/tarteel-offline/TarteelOfflinePage"));
 const QiblaPage = lazy(() => import("./pages/QiblaPage"));
 const IslamicCalendarPage = lazy(() => import("./pages/IslamicCalendarPage"));
 const MekkahLivePage = lazy(() => import("./pages/MekkahLivePage"));
@@ -191,6 +192,7 @@ const App = () => (
                   <Route path="/quran" element={<Quran />} />
                   <Route path="/tarteel" element={<TarteelSelector />} />
                   <Route path="/tarteel/easy" element={<TarteelEasyPage />} />
+                  <Route path="/tarteel/offline" element={<TarteelOfflinePage />} />
                   <Route path="/recitation" element={<Quran />} />
                   <Route path="/reading" element={<Reading />} />
                   <Route path="/prayers" element={<Prayers />} />

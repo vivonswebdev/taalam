@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { motion } from "framer-motion";
-import { Zap, Target, ArrowLeft } from "lucide-react";
+import { Zap, Target, ArrowLeft, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 
@@ -48,6 +48,21 @@ export default function TarteelSelector() {
       ],
       gradient: "from-purple-500/20 to-indigo-500/20",
       onClick: () => navigate(`/recitation?surah=${getLastSurah()}`),
+    },
+    {
+      id: "offline",
+      emoji: "📴",
+      icon: WifiOff,
+      titleKey: "tarteelOffline.modeTitle",
+      descKey: "tarteelOffline.modeDesc",
+      features: [
+        t("tarteelOffline.featureOffline" as any),
+        t("tarteelOffline.featurePrivacy" as any),
+        t("tarteelOffline.featureAllQuran" as any),
+      ],
+      gradient: "from-orange-500/20 to-amber-500/20",
+      onClick: () => navigate("/tarteel/offline"),
+      badge: "Beta",
     },
   ];
 
