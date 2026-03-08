@@ -4,6 +4,13 @@ import { ArrowLeft, Star, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const BUBBLE_DIFF: Record<string, { lives: number; speedMult: number; spawnMult: number }> = {
+  easy: { lives: 5, speedMult: 0.7, spawnMult: 1.3 },
+  medium: { lives: 3, speedMult: 1, spawnMult: 1 },
+  hard: { lives: 2, speedMult: 1.4, spawnMult: 0.7 },
+};
 
 const ARABIC_ALPHABET = [
   { char: "أ", name: "Alif" }, { char: "ب", name: "Ba" }, { char: "ت", name: "Ta" },
@@ -39,6 +46,7 @@ export default function ArabicBubblePopPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "gameover">("menu");
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
@@ -52,13 +60,15 @@ export default function ArabicBubblePopPage() {
   const bubbleId = useRef(0);
   const gameAreaRef = useRef<HTMLDivElement>(null);
 
-  // Level-based config
-  const spawnInterval = Math.max(1200, 2500 - level * 150);
-  const baseSpeed = 0.3 + level * 0.05;
+  const dc = difficulty ? BUBBLE_DIFF[difficulty] : BUBBLE_DIFF.medium;
+  const spawnInterval = Math.max(1200, 2500 - level * 150) * dc.spawnMult;
+  const baseSpeed = (0.3 + level * 0.05) * dc.speedMult;
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback((diff?: string) => {
+    const d = diff || difficulty || "medium";
+    setDifficulty(d);
     setScore(0);
-    setLives(3);
+    setLives(BUBBLE_DIFF[d].lives);
     setCombo(0);
     setMaxCombo(0);
     setLevel(1);
@@ -66,7 +76,7 @@ export default function ArabicBubblePopPage() {
     setFloatingTexts([]);
     setTargetLetter(getRandomLetter());
     setGameState("playing");
-  }, []);
+  }, [difficulty]);
 
   // Spawn bubbles
   useEffect(() => {
@@ -203,34 +213,14 @@ export default function ArabicBubblePopPage() {
         )}
       </div>
 
-      {/* Menu */}
+      {/* Difficulty Select */}
       {gameState === "menu" && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 relative z-10">
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
-            <motion.span
-              className="text-7xl block mb-3"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            >
-              🫧
-            </motion.span>
-            <h2 className="text-2xl font-black text-white mb-1">
-              {t("kidsGames.arabicBubbles" as any) || "Arabic Bubbles"}
-            </h2>
-            <p className="text-sm text-white/60 max-w-xs">
-              {t("kidsGames.arabicBubblesDesc" as any) || "Éclate les bulles avec la bonne lettre arabe !"}
-            </p>
-          </motion.div>
-
-          <motion.button
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            onClick={startGame}
-            className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-2xl text-lg font-bold shadow-lg shadow-purple-500/30 active:scale-95 transition-transform"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
+        <div className="flex-1 relative z-10">
+          <DifficultySelector title={t("kidsGames.arabicBubbles" as any) || "Arabic Bubbles"} icon="🫧" onSelect={(d) => startGame(d)} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+            { key: "easy", emoji: "🌱", xpBase: 5, description: "5 ❤️ — " + (t("memoryFaith.easy" as any)) },
+            { key: "medium", emoji: "🌿", xpBase: 10, description: "3 ❤️ — " + (t("memoryFaith.medium" as any)) },
+            { key: "hard", emoji: "🔥", xpBase: 15, description: "2 ❤️ — " + (t("memoryFaith.hard" as any)) },
+          ]} />
         </div>
       )}
 

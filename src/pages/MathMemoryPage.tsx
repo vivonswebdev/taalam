@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const MATH_DIFF: Record<string, { startLevel: number }> = {
+  easy: { startLevel: 1 },
+  medium: { startLevel: 10 },
+  hard: { startLevel: 25 },
+};
 
 interface MemoryCard {
   id: number;
@@ -107,6 +114,7 @@ export default function MathMemoryPage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "levelComplete" | "gameOver">("menu");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
@@ -237,33 +245,19 @@ export default function MathMemoryPage() {
         )}
       </div>
 
-      {/* Menu */}
+      {/* Difficulty / Menu */}
       {gameState === "menu" && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6">
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
-            <span className="text-6xl block mb-3">🧠</span>
-            <h2 className="text-xl font-black text-foreground mb-1">
-              {t("mathGames.mathMemory" as any) || "Math Memory"}
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {t("mathGames.mathMemoryDesc" as any) || "Trouve les paires calcul ↔ résultat !"}
-            </p>
-          </motion.div>
-
-          <div className="text-center space-y-1">
-            <p className="text-xs text-muted-foreground">{diff.label} {t("mathGames.level" as any)} {level}</p>
-            <p className="text-xs text-muted-foreground">{pairCount} {t("mathGames.pairs" as any) || "paires"} · {diff.ops.join(" ")}</p>
-          </div>
-
-          <motion.button
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => startLevel(level)}
-            className="px-8 py-4 bg-primary text-primary-foreground rounded-2xl text-lg font-bold shadow-lg active:scale-95 transition-transform"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
+        <div className="flex-1">
+          <DifficultySelector title={t("mathGames.mathMemory" as any) || "Math Memory"} icon="🧠" onSelect={(d) => {
+            setDifficulty(d);
+            const sl = MATH_DIFF[d].startLevel;
+            setLevel(sl);
+            startLevel(sl);
+          }} onBack={() => navigate("/kids-math")} t={(k) => t(k as any)} difficulties={[
+            { key: "easy", emoji: "🌱", xpBase: 10, description: "4 " + (t("mathGames.pairs" as any) || "paires") + " (+, -)" },
+            { key: "medium", emoji: "🌿", xpBase: 20, description: "6 " + (t("mathGames.pairs" as any) || "paires") + " (+, -, ×)" },
+            { key: "hard", emoji: "🔥", xpBase: 35, description: "8 " + (t("mathGames.pairs" as any) || "paires") + " (+, -, ×, ÷)" },
+          ]} />
         </div>
       )}
 

@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel, generateQuestion, MathQuestion } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const MATH_DIFF: Record<string, { startLevel: number }> = {
+  easy: { startLevel: 1 },
+  medium: { startLevel: 10 },
+  hard: { startLevel: 25 },
+};
 
 const MAX_LIVES = 3;
 const QUESTIONS_PER_LEVEL = 10;
@@ -30,6 +37,7 @@ export default function MathShooterPage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "levelComplete" | "gameOver">("menu");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
@@ -88,10 +96,11 @@ export default function MathShooterPage() {
     spawnedRef.current = true;
   }, [level]);
 
-  const startGame = () => {
+  const startGame = (startLevel?: number) => {
+    const sl = startLevel ?? (difficulty ? MATH_DIFF[difficulty].startLevel : 1);
     enemyCounter = 0;
     setGameState("playing");
-    setLevel(1);
+    setLevel(sl);
     setScore(0);
     setCombo(0);
     setMaxCombo(0);
@@ -102,6 +111,11 @@ export default function MathShooterPage() {
     setQuestion(null);
     setComboMessage("");
     spawnedRef.current = false;
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    startGame(MATH_DIFF[d].startLevel);
   };
 
   // Spawn wave when playing
@@ -258,56 +272,13 @@ export default function MathShooterPage() {
     }
   };
 
-  // --- MENU ---
-  if (gameState === "menu") {
-    return (
-      <div className="min-h-screen bg-background pb-24">
-        <div className="flex items-center gap-3 p-4">
-          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
-            <ArrowLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <Crosshair size={22} className="text-pink-500" />
-          <h1 className="text-lg font-bold text-foreground">🚀 Math Shooter</h1>
-        </div>
-
-        <div className="px-6 flex flex-col items-center gap-6 pt-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="w-32 h-32 rounded-full bg-gradient-to-br from-pink-500/30 to-red-500/20 flex items-center justify-center text-6xl border-4 border-pink-500/30"
-          >
-            🚀
-          </motion.div>
-
-          <div className="text-center space-y-2">
-            <h2 className="text-xl font-bold text-foreground">{t("mathGames.mathShooter" as any) || "Math Shooter"}</h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {t("mathGames.mathShooterDesc" as any) || "Tire sur la bonne réponse ! Les ennemis descendent... vise juste !"}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 w-full max-w-xs text-center">
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-primary">4</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.targets" as any) || "Cibles"}</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-amber-500">∞</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.levels" as any) || "Niveaux"}</p>
-            </div>
-          </div>
-
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={startGame}
-            className="w-full max-w-xs py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
-        </div>
-      </div>
-    );
+  // --- DIFFICULTY SELECT ---
+  if (!difficulty || gameState === "menu") {
+    return <DifficultySelector title={t("mathGames.mathShooter" as any) || "Math Shooter"} icon="🚀" onSelect={selectDifficulty} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+      { key: "easy", emoji: "🌱", xpBase: 10, description: "+, - (1-10)" },
+      { key: "medium", emoji: "🌿", xpBase: 20, description: "+, -, × (1-30)" },
+      { key: "hard", emoji: "🔥", xpBase: 35, description: "+, -, ×, ÷ (1-50)" },
+    ]} />;
   }
 
   // --- GAME OVER ---

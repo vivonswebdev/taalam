@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const CALC_DIFF: Record<string, { winTarget: number; description: string }> = {
+  easy: { winTarget: 64, description: "🎯 64" },
+  medium: { winTarget: 256, description: "🎯 256" },
+  hard: { winTarget: 1024, description: "🎯 1024" },
+};
 
 // --- Types ---
 type CellValue = number | null;
@@ -152,6 +159,7 @@ export default function CalcMergePage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "won" | "lost">("menu");
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [score, setScore] = useState(0);
@@ -283,56 +291,16 @@ export default function CalcMergePage() {
     touchStart.current = null;
   };
 
-  // --- MENU ---
-  if (gameState === "menu") {
-    return (
-      <div className="min-h-screen bg-background pb-24">
-        <div className="flex items-center gap-3 p-4">
-          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
-            <ArrowLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <span className="text-2xl">🧩</span>
-          <h1 className="text-lg font-bold text-foreground">Calc Merge</h1>
-        </div>
-
-        <div className="px-6 flex flex-col items-center gap-6 pt-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500/30 to-indigo-500/20 flex items-center justify-center text-6xl border-4 border-blue-500/30"
-          >
-            🧩
-          </motion.div>
-
-          <div className="text-center space-y-2">
-            <h2 className="text-xl font-bold text-foreground">{t("mathGames.calcMerge" as any) || "Calc Merge"}</h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {t("mathGames.calcMergeDesc" as any) || "Fusionne les tuiles identiques pour atteindre l'objectif ! Glisse dans toutes les directions."}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 w-full max-w-xs text-center">
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-primary">4×4</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.grid" as any) || "Grille"}</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-amber-500">{bestScore}</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.bestScore" as any) || "Meilleur"}</p>
-            </div>
-          </div>
-
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={startGame}
-            className="w-full max-w-xs py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
-        </div>
-      </div>
-    );
+  // --- DIFFICULTY SELECT ---
+  if (!difficulty || gameState === "menu") {
+    return <DifficultySelector title={t("mathGames.calcMerge" as any) || "Calc Merge"} icon="🧩" onSelect={(d) => {
+      setDifficulty(d);
+      startGame();
+    }} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+      { key: "easy", emoji: "🌱", xpBase: 10, description: CALC_DIFF.easy.description },
+      { key: "medium", emoji: "🌿", xpBase: 20, description: CALC_DIFF.medium.description },
+      { key: "hard", emoji: "🔥", xpBase: 35, description: CALC_DIFF.hard.description },
+    ]} />;
   }
 
   // --- GAME OVER ---

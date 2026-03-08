@@ -3,6 +3,13 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { ArrowLeft, Check, X, Scale, Star, RotateCcw, Heart, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
+import DifficultySelector from '@/components/DifficultySelector';
+
+const BALANCE_DIFF: Record<string, { lives: number; timerSpeed: number; cardCount: number }> = {
+  easy: { lives: 5, timerSpeed: 0.3, cardCount: 10 },
+  medium: { lives: 3, timerSpeed: 0.5, cardCount: 15 },
+  hard: { lives: 2, timerSpeed: 0.8, cardCount: 20 },
+};
 
 const ACTIONS_DB = [
   { id: 1, tKey: "bismillah", defaultText: "Dire Bismillah avant de manger", emoji: "🍽️", isGood: true },
@@ -30,19 +37,22 @@ const ACTIONS_DB = [
 export default function KidsBalancePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [cards, setCards] = useState([...ACTIONS_DB].sort(() => Math.random() - 0.5));
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [lives, setLives] = useState(3);
   const [timeLeft, setTimeLeft] = useState(100);
   const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const controls = useAnimation();
 
+  const dc = difficulty ? BALANCE_DIFF[difficulty] : BALANCE_DIFF.medium;
   const currentLevel = 1 + Math.floor(streak / 3);
 
   useEffect(() => {
-    if (gameOver || cards.length === 0) return;
-    const speedMultiplier = 1 + (streak * 0.25);
+    if (gameOver || cards.length === 0 || !gameStarted) return;
+    const speedMultiplier = dc.timerSpeed + (streak * 0.25);
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -54,7 +64,7 @@ export default function KidsBalancePage() {
       });
     }, 20);
     return () => clearInterval(timer);
-  }, [cards, gameOver, streak]);
+  }, [cards, gameOver, streak, gameStarted, dc.timerSpeed]);
 
   const handleTimeout = async () => {
     setStreak(0);
@@ -80,12 +90,23 @@ export default function KidsBalancePage() {
   };
 
   const restartGame = () => {
-    setCards([...ACTIONS_DB].sort(() => Math.random() - 0.5));
+    const shuffled = [...ACTIONS_DB].sort(() => Math.random() - 0.5).slice(0, dc.cardCount);
+    setCards(shuffled);
     setScore(0);
     setStreak(0);
-    setLives(3);
+    setLives(dc.lives);
     setTimeLeft(100);
     setGameOver(false);
+    setGameStarted(true);
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    const c = BALANCE_DIFF[d];
+    const shuffled = [...ACTIONS_DB].sort(() => Math.random() - 0.5).slice(0, c.cardCount);
+    setCards(shuffled);
+    setLives(c.lives);
+    setGameStarted(true);
   };
 
   const handleAction = async (isRightSwipe: boolean) => {
@@ -120,6 +141,14 @@ export default function KidsBalancePage() {
       controls.start({ x: 0, opacity: 1, rotate: 0 });
     }
   };
+
+  if (!gameStarted) {
+    return <DifficultySelector title={t("balanceGame.title" as any)} icon="⚖️" onSelect={selectDifficulty} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+      { key: "easy", emoji: "🌱", xpBase: 5, description: "5 ❤️ — 10 cards" },
+      { key: "medium", emoji: "🌿", xpBase: 10, description: "3 ❤️ — 15 cards" },
+      { key: "hard", emoji: "🔥", xpBase: 15, description: "2 ❤️ — 20 cards" },
+    ]} />;
+  }
 
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto h-[100dvh] bg-gradient-to-b from-teal-900 via-cyan-900 to-blue-900 font-sans overflow-hidden relative selection:bg-transparent">

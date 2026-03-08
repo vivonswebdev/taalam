@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel, generateQuestion, generateChoices, type MathQuestion } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const MATH_DIFF: Record<string, { startLevel: number }> = {
+  easy: { startLevel: 1 },
+  medium: { startLevel: 10 },
+  hard: { startLevel: 25 },
+};
 
 const FUSE_TOTAL = 100;
 
@@ -33,6 +40,7 @@ export default function MathBombPage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "levelComplete" | "exploded">("menu");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
@@ -186,39 +194,19 @@ export default function MathBombPage() {
         )}
       </div>
 
-      {/* Menu */}
+      {/* Difficulty / Menu */}
       {gameState === "menu" && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6">
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
-            <motion.span
-              className="text-7xl block mb-3"
-              animate={{ rotate: [0, -5, 5, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            >
-              💣
-            </motion.span>
-            <h2 className="text-xl font-black text-foreground mb-1">
-              {t("mathGames.mathBomb" as any) || "Math Bomb"}
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {t("mathGames.mathBombDesc" as any) || "Désamorce la bombe en résolvant les calculs avant l'explosion !"}
-            </p>
-          </motion.div>
-
-          <div className="text-center space-y-1">
-            <p className="text-xs text-muted-foreground">{diff.label} {t("mathGames.level" as any)} {level}</p>
-            <p className="text-xs text-muted-foreground">{getQuestionsPerBomb(level)} {t("mathGames.calculations" as any) || "calculs"} · {diff.ops.join(" ")}</p>
-          </div>
-
-          <motion.button
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => startLevel(level)}
-            className="px-8 py-4 bg-destructive text-destructive-foreground rounded-2xl text-lg font-bold shadow-lg active:scale-95 transition-transform"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
+        <div className="flex-1">
+          <DifficultySelector title={t("mathGames.mathBomb" as any) || "Math Bomb"} icon="💣" onSelect={(d) => {
+            setDifficulty(d);
+            const sl = MATH_DIFF[d].startLevel;
+            setLevel(sl);
+            startLevel(sl);
+          }} onBack={() => navigate("/kids-math")} t={(k) => t(k as any)} difficulties={[
+            { key: "easy", emoji: "🌱", xpBase: 10, description: "+, - — 8s ⏱️" },
+            { key: "medium", emoji: "🌿", xpBase: 20, description: "+, -, × — 5s ⏱️" },
+            { key: "hard", emoji: "🔥", xpBase: 35, description: "+, -, ×, ÷ — 3s ⏱️" },
+          ]} />
         </div>
       )}
 
