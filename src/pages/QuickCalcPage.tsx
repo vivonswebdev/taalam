@@ -175,56 +175,13 @@ export default function QuickCalcPage() {
   const timerPercent = question ? (timeLeft / diff.timePerCalc) * 100 : 100;
   const timerColor = timerPercent > 50 ? "bg-green-500" : timerPercent > 25 ? "bg-amber-500" : "bg-red-500";
 
-  // MENU
-  if (gameState === "menu") {
-    return (
-      <div className="min-h-screen bg-background pb-24">
-        <div className="flex items-center gap-3 p-4">
-          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border shadow-sm">
-            <ArrowLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <Zap size={22} className="text-amber-500" />
-          <h1 className="text-lg font-bold text-foreground">⚡ Quick Calc</h1>
-        </div>
-
-        <div className="px-6 flex flex-col items-center gap-6 pt-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/30 to-accent/20 flex items-center justify-center text-6xl border-4 border-primary/30"
-          >
-            ⚡
-          </motion.div>
-
-          <div className="text-center space-y-2">
-            <h2 className="text-xl font-bold text-foreground">{t("mathGames.quickCalcTitle" as any) || "Quick Calc"}</h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {t("mathGames.quickCalcDesc" as any) || "Résous les calculs le plus vite possible ! Chaque bonne réponse rapide donne plus de points."}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 w-full max-w-xs text-center">
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-primary">50</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.levels" as any) || "Niveaux"}</p>
-            </div>
-            <div className="bg-card border border-border rounded-xl p-3">
-              <p className="text-lg font-bold text-amber-500">4</p>
-              <p className="text-[10px] text-muted-foreground">{t("mathGames.operations" as any) || "Opérations"}</p>
-            </div>
-          </div>
-
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={startGame}
-            className="w-full max-w-xs py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg"
-          >
-            {t("mathGames.play" as any) || "🎮 Jouer !"}
-          </motion.button>
-        </div>
-      </div>
-    );
+  // DIFFICULTY SELECT
+  if (!difficulty || gameState === "menu") {
+    return <DifficultySelector title={t("mathGames.quickCalcTitle" as any) || "Quick Calc"} icon="⚡" onSelect={selectDifficulty} onBack={() => navigate(-1)} t={(k) => t(k as any)} difficulties={[
+      { key: "easy", emoji: "🌱", xpBase: 10, description: "+, - (1-10)" },
+      { key: "medium", emoji: "🌿", xpBase: 20, description: "+, -, × (1-30)" },
+      { key: "hard", emoji: "🔥", xpBase: 35, description: "+, -, ×, ÷ (1-50)" },
+    ]} />;
   }
 
   // GAME OVER
