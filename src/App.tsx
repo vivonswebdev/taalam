@@ -192,6 +192,7 @@ const App = () => (
                   <Route path="/quran" element={<Quran />} />
                   <Route path="/tarteel" element={<TarteelSelector />} />
                   <Route path="/tarteel/easy" element={<TarteelEasyPage />} />
+                  <Route path="/tarteel/offline" element={<TarteelOfflinePage />} />
                   <Route path="/recitation" element={<Quran />} />
                   <Route path="/reading" element={<Reading />} />
                   <Route path="/prayers" element={<Prayers />} />
