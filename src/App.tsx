@@ -116,6 +116,7 @@ const NumberRunnerPage = lazy(() => import("./pages/NumberRunnerPage"));
 const MathShooterPage = lazy(() => import("./pages/MathShooterPage"));
 const MathMemoryPage = lazy(() => import("./pages/MathMemoryPage"));
 const MathBombPage = lazy(() => import("./pages/MathBombPage"));
+const ArabicBubblePopPage = lazy(() => import("./pages/ArabicBubblePopPage"));
 const TetrisIslamPage = lazy(() => import("./pages/TetrisIslamPage"));
 
 function PageLoader() {
