@@ -208,23 +208,28 @@ export default function Prayers() {
       <NeonGrid />
 
       {/* Header */}
-      <div className="px-5 pt-14 pb-3 flex items-center justify-between relative z-10">
-        <h1 className="text-2xl font-bold text-white">{t("prayers.title")}</h1>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate("/athan-settings")}
-            className="flex items-center gap-1.5 text-xs font-medium text-cyan-300 bg-white/[0.08] px-3 py-1.5 rounded-full border border-white/10 active:scale-[0.97] transition-transform"
-          >
-            🕌 {t("athan.title" as any)}
-          </button>
-          <button
-            onClick={() => navigate("/prayer-settings")}
-            className="flex items-center gap-1.5 text-xs font-medium text-cyan-300 bg-white/[0.08] px-3 py-1.5 rounded-full border border-white/10 active:scale-[0.97] transition-transform"
-          >
-            <Settings2 size={14} />
-            {t("prayers.settings.button")}
-          </button>
+      <div className="px-5 pt-14 pb-1 relative z-10">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-white">{t("prayers.title")}</h1>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/athan-settings")}
+              className="flex items-center gap-1.5 text-xs font-medium text-cyan-300 bg-white/[0.08] px-3 py-1.5 rounded-full border border-white/10 active:scale-[0.97] transition-transform"
+            >
+              🕌 {t("athan.title" as any)}
+            </button>
+            <button
+              onClick={() => navigate("/prayer-settings")}
+              className="flex items-center gap-1.5 text-xs font-medium text-cyan-300 bg-white/[0.08] px-3 py-1.5 rounded-full border border-white/10 active:scale-[0.97] transition-transform"
+            >
+              <Settings2 size={14} />
+              {t("prayers.settings.button")}
+            </button>
+          </div>
         </div>
+        <p className="text-xs text-white/40 mt-1">
+          📅 {new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+        </p>
       </div>
 
       <div className="px-5 space-y-4 relative z-10">
@@ -270,22 +275,6 @@ export default function Prayers() {
           </div>
         )}
 
-        {/* Doha info card */}
-        {!loading && times && (
-          <div className="bg-white/[0.05] backdrop-blur-md border border-yellow-400/20 rounded-2xl p-4">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">☀️</span>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-yellow-300/90">{t("prayers.dohaTitle" as any)}</p>
-                <p className="text-xs text-white/50 mt-1 leading-relaxed">{t("prayers.dohaDesc" as any)}</p>
-                <p className="text-[10px] text-yellow-400/60 mt-2 italic">{t("prayers.dohaHadith" as any)}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Hijri Calendar */}
-        <HijriCalendar />
 
         {/* Notifications + Qibla */}
         <div className="grid grid-cols-2 gap-3">
