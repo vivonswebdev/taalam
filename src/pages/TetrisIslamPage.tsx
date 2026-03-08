@@ -168,18 +168,20 @@ export default function TetrisIslamPage() {
   }, [grid, config.formsCount]);
 
   // ─── Start game ──────────────────────────────────────
-  const startGame = () => {
+  const startGame = (startLevel?: number) => {
+    const sl = startLevel ?? (difficulty ? TETRIS_DIFF[difficulty].startLevel : 1);
     const g = createEmptyGrid();
     setGrid(g);
-    setLevel(1);
+    setLevel(sl);
     setScore(0);
     setLinesCleared(0);
     setTotalXp(0);
     setCombo(0);
     setHoldPiece(null);
 
-    const first = randomPieceIdx(getLevelConfig(1).formsCount);
-    const next = randomPieceIdx(getLevelConfig(1).formsCount);
+    const cfg = getLevelConfig(sl);
+    const first = randomPieceIdx(cfg.formsCount);
+    const next = randomPieceIdx(cfg.formsCount);
     const shape = PIECES[first].shape;
     setCurrentPiece(first);
     setCurrentShape(shape);
@@ -188,6 +190,11 @@ export default function TetrisIslamPage() {
     setNextPiece(next);
     setCanHold(true);
     setGameState("playing");
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    startGame(TETRIS_DIFF[d].startLevel);
   };
 
   // ─── Lock piece and check lines ─────────────────────
