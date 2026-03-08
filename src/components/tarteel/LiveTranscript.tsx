@@ -81,9 +81,8 @@ export default function LiveTranscript({ isRecording, verseText }: LiveTranscrip
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-border/60 bg-card overflow-hidden cursor-pointer"
+      className="rounded-2xl border border-border/60 bg-card overflow-hidden"
       dir="rtl"
-      onClick={() => setCollapsed((c) => !c)}
     >
       <AnimatePresence initial={false}>
         {!collapsed && (
@@ -127,7 +126,7 @@ export default function LiveTranscript({ isRecording, verseText }: LiveTranscrip
         )}
       </AnimatePresence>
 
-      {/* Progress bar — always visible */}
+      {/* Progress bar + toggle — always visible */}
       <div className="px-4 py-2">
         <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
           <motion.div
@@ -136,9 +135,18 @@ export default function LiveTranscript({ isRecording, verseText }: LiveTranscrip
             transition={{ duration: 0.3 }}
           />
         </div>
-        <p className="text-[10px] text-center mt-1 text-muted-foreground" dir="ltr">
-          {wordIndex} / {totalWords} {t("tarteelOffline.wordsLabel" as any)}
-        </p>
+        <div className="flex items-center justify-between mt-1" dir="ltr">
+          <p className="text-[10px] text-muted-foreground">
+            {wordIndex} / {totalWords} {t("tarteelOffline.wordsLabel" as any)}
+          </p>
+          <button
+            type="button"
+            onClick={() => setCollapsed((c) => !c)}
+            className="text-[10px] text-primary hover:text-primary/80 transition-colors flex items-center gap-0.5"
+          >
+            {collapsed ? "▲" : "▼"}
+          </button>
+        </div>
       </div>
     </motion.div>
   );
