@@ -9,6 +9,7 @@ const GAME_COLORS: Record<string, string> = {
   calc_merge: "from-blue-500/20 to-indigo-500/20 border-blue-500/40",
   number_runner: "from-green-500/20 to-emerald-500/20 border-green-500/40",
   math_shooter: "from-pink-500/20 to-red-500/20 border-pink-500/40",
+  math_memory: "from-purple-500/20 to-violet-500/20 border-purple-500/40",
 };
 
 const GAME_ROUTES: Record<string, string> = {
@@ -16,6 +17,7 @@ const GAME_ROUTES: Record<string, string> = {
   calc_merge: "/kids-calc-merge",
   number_runner: "/kids-number-runner",
   math_shooter: "/kids-math-shooter",
+  math_memory: "/kids-math-memory",
 };
 
 export default function KidsMathMenuPage() {
