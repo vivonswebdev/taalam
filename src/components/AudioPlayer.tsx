@@ -343,7 +343,7 @@ export default function AudioPlayer({
           <button
             onClick={() => onRequestPrevSurah?.()}
             className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
-            title="Sourate précédente"
+            title={t ? t("audio.prevSurah" as any) : "Previous surah"}
           >
             <ChevronsLeft size={14} />
           </button>
@@ -373,7 +373,7 @@ export default function AudioPlayer({
           <button
             onClick={() => onRequestNextSurah?.()}
             className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
-            title="Sourate suivante"
+            title={t ? t("audio.nextSurah" as any) : "Next surah"}
           >
             <ChevronsRight size={14} />
           </button>
@@ -385,7 +385,7 @@ export default function AudioPlayer({
             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
               isCurrentAyahBookmarked ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             }`}
-            title="Marquer ce verset"
+            title={t ? t("audio.bookmarkVerse" as any) : "Bookmark"}
           >
             {isCurrentAyahBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
           </button>
@@ -394,7 +394,7 @@ export default function AudioPlayer({
             <button
               onClick={() => onGoToBookmark?.()}
               className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0"
-              title="Aller au signet"
+              title={t ? t("audio.goToBookmark" as any) : "Bookmark"}
             >
               <BookmarkCheck size={14} />
             </button>
@@ -405,7 +405,7 @@ export default function AudioPlayer({
             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
               continuousMode ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             }`}
-            title="Lecture continue"
+            title={t ? t("audio.continuousPlay" as any) : "Continuous"}
           >
             <Repeat size={14} />
           </button>

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Baby, User, Globe, BookOpen, Flame } from "lucide-react";
 import { useVoiceProfile, type VoiceType, type SpeakerOrigin, type ScoringMode } from "@/hooks/useVoiceProfile";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface VoiceProfileSettingsProps {
   compact?: boolean;
@@ -8,6 +9,7 @@ interface VoiceProfileSettingsProps {
 
 export default function VoiceProfileSettings({ compact }: VoiceProfileSettingsProps) {
   const { voiceType, setVoiceType, speakerOrigin, setSpeakerOrigin, scoringMode, setScoringMode } = useVoiceProfile();
+  const { t } = useLanguage();
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="space-y-1.5">
@@ -36,57 +38,57 @@ export default function VoiceProfileSettings({ compact }: VoiceProfileSettingsPr
       animate={{ opacity: 1, y: 0 }}
       className={`space-y-3 ${compact ? "" : "bg-card border border-border rounded-2xl p-4"}`}
     >
-      {!compact && <p className="text-sm font-bold text-foreground">⚙️ Profil vocal</p>}
+      {!compact && <p className="text-sm font-bold text-foreground">⚙️ {t("voice.title" as any)}</p>}
 
-      <Section title="Type de voix">
+      <Section title={t("voice.voiceType" as any)}>
         <Chip
           selected={voiceType === "adult"}
           onClick={() => setVoiceType("adult")}
           icon={<User size={14} />}
-          label="Adulte"
+          label={t("voice.adult" as any)}
         />
         <Chip
           selected={voiceType === "child"}
           onClick={() => setVoiceType("child")}
           icon={<Baby size={14} />}
-          label="Enfant"
+          label={t("voice.child" as any)}
         />
       </Section>
 
-      <Section title="Langue d'origine">
+      <Section title={t("voice.originLang" as any)}>
         <Chip
           selected={speakerOrigin === "native"}
           onClick={() => setSpeakerOrigin("native")}
           icon={<Globe size={14} />}
-          label="Arabe natif"
+          label={t("voice.native" as any)}
         />
         <Chip
           selected={speakerOrigin === "non_native"}
           onClick={() => setSpeakerOrigin("non_native")}
           icon={<Globe size={14} />}
-          label="Non natif"
+          label={t("voice.nonNative" as any)}
         />
       </Section>
 
-      <Section title="Mode de scoring">
+      <Section title={t("voice.scoringMode" as any)}>
         <Chip
           selected={scoringMode === "beginner"}
           onClick={() => setScoringMode("beginner")}
           icon={<BookOpen size={14} />}
-          label="Hifz débutant"
+          label={t("voice.beginner" as any)}
         />
         <Chip
           selected={scoringMode === "strict"}
           onClick={() => setScoringMode("strict")}
           icon={<Flame size={14} />}
-          label="Tajwid strict"
+          label={t("voice.strict" as any)}
         />
       </Section>
 
       <p className="text-[10px] text-muted-foreground">
         {scoringMode === "beginner"
-          ? "Mode tolérant : focus sur les mots corrects, moins strict sur le tajwid."
-          : "Mode strict : erreurs de lettres et longues voyelles plus pénalisées."}
+          ? t("voice.beginnerDesc" as any)
+          : t("voice.strictDesc" as any)}
       </p>
     </motion.div>
   );

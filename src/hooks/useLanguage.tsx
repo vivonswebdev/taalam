@@ -3216,9 +3216,62 @@ const translations = {
   "mathGames.botThinking": { fr: "Le bot réfléchit", en: "Bot is thinking", nl: "Bot denkt na", ar: "الروبوت يفكر", tr: "Bot düşünüyor", ur: "بوٹ سوچ رہا ہے" },
   "mathGames.botWins": { fr: "Le bot a gagné !", en: "Bot wins!", nl: "Bot wint!", ar: "فاز الروبوت!", tr: "Bot kazandı!", ur: "بوٹ جیت گیا!" },
   "mathGames.rematch": { fr: "Revanche !", en: "Rematch!", nl: "Herkansing!", ar: "مباراة العودة!", tr: "Rövanş!", ur: "دوبارہ!" },
-} as const;
 
-type TranslationKey = keyof typeof translations;
+  // ═══ VOICE PROFILE ═══
+  "voice.title": { fr: "Profil vocal", en: "Voice Profile", nl: "Spraakprofiel", ar: "الملف الصوتي", tr: "Ses Profili", ur: "آواز پروفائل" },
+  "voice.voiceType": { fr: "Type de voix", en: "Voice type", nl: "Stemtype", ar: "نوع الصوت", tr: "Ses tipi", ur: "آواز کی قسم" },
+  "voice.adult": { fr: "Adulte", en: "Adult", nl: "Volwassene", ar: "بالغ", tr: "Yetişkin", ur: "بالغ" },
+  "voice.child": { fr: "Enfant", en: "Child", nl: "Kind", ar: "طفل", tr: "Çocuk", ur: "بچہ" },
+  "voice.originLang": { fr: "Langue d'origine", en: "Native language", nl: "Moedertaal", ar: "اللغة الأم", tr: "Ana dil", ur: "مادری زبان" },
+  "voice.native": { fr: "Arabe natif", en: "Native Arabic", nl: "Moedertaal Arabisch", ar: "عربي أصلي", tr: "Anadili Arapça", ur: "مادری عربی" },
+  "voice.nonNative": { fr: "Non natif", en: "Non-native", nl: "Niet moedertaal", ar: "غير أصلي", tr: "Anadili değil", ur: "غیر مادری" },
+  "voice.scoringMode": { fr: "Mode de scoring", en: "Scoring mode", nl: "Scoremodus", ar: "وضع التقييم", tr: "Puanlama modu", ur: "اسکورنگ موڈ" },
+  "voice.beginner": { fr: "Hifz débutant", en: "Beginner Hifz", nl: "Beginner Hifz", ar: "حفظ مبتدئ", tr: "Başlangıç Hıfz", ur: "ابتدائی حفظ" },
+  "voice.strict": { fr: "Tajwid strict", en: "Strict Tajwid", nl: "Strikt Tajwid", ar: "تجويد صارم", tr: "Sıkı Tecvid", ur: "سخت تجوید" },
+  "voice.beginnerDesc": { fr: "Mode tolérant : focus sur les mots corrects, moins strict sur le tajwid.", en: "Tolerant mode: focuses on correct words, less strict on tajwid.", nl: "Tolerante modus: focus op correcte woorden, minder strikt op tajwid.", ar: "وضع متسامح: التركيز على الكلمات الصحيحة، أقل صرامة في التجويد.", tr: "Toleranslı mod: doğru kelimelere odaklanır, tecvidde daha az katı.", ur: "نرم موڈ: صحیح الفاظ پر توجہ، تجوید میں کم سختی۔" },
+  "voice.strictDesc": { fr: "Mode strict : erreurs de lettres et longues voyelles plus pénalisées.", en: "Strict mode: letter errors and long vowels penalized more.", nl: "Strenge modus: letterfouten en lange klinkers zwaarder bestraft.", ar: "وضع صارم: أخطاء الحروف والمدود أكثر عقوبة.", tr: "Katı mod: harf hataları ve uzun sesli harfler daha çok cezalandırılır.", ur: "سخت موڈ: حروف کی غلطیاں اور لمبی آوازیں زیادہ سزا۔" },
+
+  // ═══ LIVE QURAN ═══
+  "liveQuran.title": { fr: "Live Coran", en: "Live Quran", nl: "Live Koran", ar: "القرآن مباشر", tr: "Canlı Kur'an", ur: "لائیو قرآن" },
+  "liveQuran.subtitle": { fr: "Écoutez le Coran en continu", en: "Listen to the Quran continuously", nl: "Luister continu naar de Koran", ar: "استمع للقرآن بشكل مستمر", tr: "Kur'an'ı sürekli dinleyin", ur: "قرآن مسلسل سنیں" },
+  "liveQuran.live": { fr: "En direct", en: "Live", nl: "Live", ar: "مباشر", tr: "Canlı", ur: "براہ راست" },
+  "liveQuran.stations": { fr: "Stations disponibles", en: "Available stations", nl: "Beschikbare stations", ar: "المحطات المتاحة", tr: "Mevcut istasyonlar", ur: "دستیاب اسٹیشنز" },
+  "liveQuran.connectionError": { fr: "Impossible de se connecter à cette station. Vérifiez votre connexion internet.", en: "Cannot connect to this station. Check your internet connection.", nl: "Kan geen verbinding maken. Controleer je internetverbinding.", ar: "تعذّر الاتصال بهذه المحطة. تحقق من اتصالك بالإنترنت.", tr: "Bu istasyona bağlanılamıyor. İnternet bağlantınızı kontrol edin.", ur: "اس اسٹیشن سے رابطہ نہیں ہو سکا۔ اپنا انٹرنیٹ چیک کریں۔" },
+  "liveQuran.slowConnection": { fr: "Connexion lente… la station charge.", en: "Slow connection… station loading.", nl: "Trage verbinding… station laden.", ar: "اتصال بطيء… المحطة تُحمّل.", tr: "Yavaş bağlantı… istasyon yükleniyor.", ur: "سست رابطہ… اسٹیشن لوڈ ہو رہا ہے۔" },
+  "liveQuran.playError": { fr: "Impossible de lancer la lecture. Essayez une autre station.", en: "Cannot start playback. Try another station.", nl: "Kan niet afspelen. Probeer een ander station.", ar: "تعذّر بدء التشغيل. جرّب محطة أخرى.", tr: "Oynatılamıyor. Başka bir istasyon deneyin.", ur: "چلانا ممکن نہیں۔ دوسرا اسٹیشن آزمائیں۔" },
+
+  // ═══ CHILD MESSAGES ═══
+  "childMsg.success1": { fr: "Super champion !", en: "Super champion!", nl: "Super kampioen!", ar: "بطل خارق!", tr: "Süper şampiyon!", ur: "سپر چیمپئن!" },
+  "childMsg.success2": { fr: "Mâ shâ'a Llâh !", en: "Masha'Allah!", nl: "Masha'Allah!", ar: "ما شاء الله!", tr: "Maşallah!", ur: "ماشاءاللہ!" },
+  "childMsg.success3": { fr: "Bravo, tu progresses !", en: "Bravo, you're progressing!", nl: "Bravo, je maakt vooruitgang!", ar: "أحسنت، أنت تتقدم!", tr: "Bravo, ilerliyorsun!", ur: "شاباش، آپ ترقی کر رہے ہیں!" },
+  "childMsg.success4": { fr: "Excellent travail !", en: "Excellent work!", nl: "Uitstekend werk!", ar: "عمل ممتاز!", tr: "Mükemmel iş!", ur: "بہترین کام!" },
+  "childMsg.success5": { fr: "Continue comme ça !", en: "Keep it up!", nl: "Ga zo door!", ar: "واصل هكذا!", tr: "Böyle devam et!", ur: "ایسے ہی جاری رکھیں!" },
+  "childMsg.encourage1": { fr: "Tu peux y arriver !", en: "You can do it!", nl: "Je kunt het!", ar: "يمكنك تحقيقها!", tr: "Yapabilirsin!", ur: "آپ کر سکتے ہیں!" },
+  "childMsg.encourage2": { fr: "Réessaie, tu vas réussir !", en: "Try again, you'll succeed!", nl: "Probeer opnieuw, het lukt je!", ar: "حاول مرة أخرى، ستنجح!", tr: "Tekrar dene, başaracaksın!", ur: "دوبارہ کوشش کریں، آپ کامیاب ہوں گے!" },
+  "childMsg.encourage3": { fr: "Ne lâche pas !", en: "Don't give up!", nl: "Geef niet op!", ar: "لا تستسلم!", tr: "Pes etme!", ur: "ہمت نہ ہاریں!" },
+  "childMsg.encourage4": { fr: "Allah est avec les patients", en: "Allah is with the patient", nl: "Allah is met de geduldigen", ar: "الله مع الصابرين", tr: "Allah sabredenlerle beraberdir", ur: "اللہ صبر کرنے والوں کے ساتھ ہے" },
+
+  // ═══ AUDIO PLAYER TOOLTIPS ═══
+  "audio.prevSurah": { fr: "Sourate précédente", en: "Previous surah", nl: "Vorige soera", ar: "السورة السابقة", tr: "Önceki sure", ur: "پچھلی سورۃ" },
+  "audio.nextSurah": { fr: "Sourate suivante", en: "Next surah", nl: "Volgende soera", ar: "السورة التالية", tr: "Sonraki sure", ur: "اگلی سورۃ" },
+  "audio.bookmarkVerse": { fr: "Marquer ce verset", en: "Bookmark this verse", nl: "Dit vers markeren", ar: "وضع إشارة على هذه الآية", tr: "Bu ayeti işaretle", ur: "یہ آیت نشان زد کریں" },
+  "audio.goToBookmark": { fr: "Aller au signet", en: "Go to bookmark", nl: "Ga naar bladwijzer", ar: "اذهب إلى الإشارة", tr: "Yer imine git", ur: "بک مارک پر جائیں" },
+  "audio.continuousPlay": { fr: "Lecture continue", en: "Continuous play", nl: "Doorlopend afspelen", ar: "تشغيل مستمر", tr: "Sürekli çalma", ur: "مسلسل چلائیں" },
+
+  // ═══ SEO ═══
+  "seo.homeTitle": { fr: "Ta'alam - Apprendre le Coran facilement", en: "Ta'alam - Learn the Quran Easily", nl: "Ta'alam - Leer de Koran Eenvoudig", ar: "تعلّم - تعلّم القرآن بسهولة", tr: "Ta'alam - Kur'an'ı Kolayca Öğren", ur: "تعلّم - قرآن آسانی سے سیکھیں" },
+  "seo.homeDesc": { fr: "Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille.", en: "Learn the Quran with Ta'alam: quizzes, voice recitation, memorization and gamified progress for the whole family.", nl: "Leer de Koran met Ta'alam: quizzen, spraakrecitatie, memorisatie en gamified voortgang voor het hele gezin.", ar: "تعلّم القرآن مع تعلّم: اختبارات، تلاوة صوتية، حفظ وتقدم تفاعلي لكل العائلة.", tr: "Ta'alam ile Kur'an öğrenin: testler, sesli tilavet, ezberleme ve tüm aile için oyunlaştırılmış ilerleme.", ur: "تعلّم کے ساتھ قرآن سیکھیں: کوئز، آواز سے تلاوت، حفظ اور پورے خاندان کے لیے گیمیفائیڈ ترقی۔" },
+  "seo.mushafTitle": { fr: "Mushaf - Lecture du Coran", en: "Mushaf - Quran Reading", nl: "Mushaf - Koran Lezen", ar: "المصحف - قراءة القرآن", tr: "Mushaf - Kur'an Okuma", ur: "مصحف - قرآن پڑھنا" },
+  "seo.mushafDesc": { fr: "Lisez le Coran avec tajwid coloré, mode image et audio.", en: "Read the Quran with colored tajwid, image mode and audio.", nl: "Lees de Koran met gekleurde tajwid, beeldmodus en audio.", ar: "اقرأ القرآن بتجويد ملوّن ووضع الصور والصوت.", tr: "Renkli tecvid, resim modu ve sesle Kur'an okuyun.", ur: "رنگین تجوید، تصویری موڈ اور آڈیو کے ساتھ قرآن پڑھیں۔" },
+  "seo.tarteelTitle": { fr: "Tarteel - Récitation vocale du Coran", en: "Tarteel - Quran Voice Recitation", nl: "Tarteel - Spraakrecitatie van de Koran", ar: "ترتيل - تلاوة القرآن الصوتية", tr: "Tarteel - Kur'an Sesli Tilavet", ur: "ترتیل - قرآن آواز سے تلاوت" },
+  "seo.tarteelDesc": { fr: "Récitez le Coran avec correction vocale IA.", en: "Recite the Quran with AI voice correction.", nl: "Reciteer de Koran met AI-spraakcorrectie.", ar: "رتّل القرآن مع تصحيح صوتي بالذكاء الاصطناعي.", tr: "Yapay zeka sesli düzeltme ile Kur'an tilavet edin.", ur: "مصنوعی ذہانت آواز تصحیح کے ساتھ قرآن تلاوت کریں۔" },
+  "seo.kidsTitle": { fr: "Espace Enfants - Apprendre l'Islam en jouant", en: "Kids Zone - Learn Islam by Playing", nl: "Kinderhoek - Leer Islam door te spelen", ar: "ركن الأطفال - تعلّم الإسلام باللعب", tr: "Çocuk Alanı - Oynayarak İslam Öğren", ur: "بچوں کا حصہ - کھیل کھیل میں اسلام سیکھیں" },
+  "seo.kidsDesc": { fr: "Jeux islamiques, quiz prophètes, prière et Coran pour les enfants.", en: "Islamic games, prophet quizzes, prayer and Quran for kids.", nl: "Islamitische spelletjes, profeetquizzen, gebed en Koran voor kinderen.", ar: "ألعاب إسلامية، اختبارات الأنبياء، الصلاة والقرآن للأطفال.", tr: "İslami oyunlar, peygamber testleri, namaz ve çocuklar için Kur'an.", ur: "اسلامی کھیل، انبیاء کے کوئز، نماز اور بچوں کے لیے قرآن۔" },
+  "seo.communityTitle": { fr: "Communauté - Groupes d'étude", en: "Community - Study Groups", nl: "Community - Studiegroepen", ar: "المجتمع - مجموعات الدراسة", tr: "Topluluk - Çalışma Grupları", ur: "کمیونٹی - مطالعہ گروپس" },
+  "seo.communityDesc": { fr: "Rejoignez des groupes d'étude coranique, partagez vos progrès.", en: "Join Quran study groups, share your progress.", nl: "Sluit je aan bij Koran studiegroepen, deel je voortgang.", ar: "انضم إلى مجموعات دراسة القرآن، شارك تقدمك.", tr: "Kur'an çalışma gruplarına katılın, ilerlemenizi paylaşın.", ur: "قرآن مطالعہ گروپس میں شامل ہوں، اپنی پیشرفت شیئر کریں۔" },
+  "seo.moreTitle": { fr: "Plus - Paramètres & Outils", en: "More - Settings & Tools", nl: "Meer - Instellingen & Tools", ar: "المزيد - الإعدادات والأدوات", tr: "Daha Fazla - Ayarlar ve Araçlar", ur: "مزید - ترتیبات اور ٹولز" },
+  "seo.moreDesc": { fr: "Accédez aux paramètres, outils islamiques, prières, calendrier hijri.", en: "Access settings, Islamic tools, prayers, Hijri calendar.", nl: "Ga naar instellingen, islamitische tools, gebeden, Hijri-kalender.", ar: "الوصول إلى الإعدادات والأدوات الإسلامية والصلوات والتقويم الهجري.", tr: "Ayarlara, İslami araçlara, namazlara, Hicri takvime erişin.", ur: "ترتیبات، اسلامی ٹولز، نمازیں، ہجری کیلنڈر تک رسائی۔" },
+} as const;
 
 // ─── Context ────────────────────────────────────────────────
 interface LanguageContextType {

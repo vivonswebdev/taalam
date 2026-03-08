@@ -125,13 +125,13 @@ export default function LiveQuran() {
     audio.onerror = () => {
       setIsLoading(false);
       setIsPlaying(false);
-      setError("Impossible de se connecter à cette station. Vérifiez votre connexion internet.");
+      setError(t("liveQuran.connectionError" as any));
     };
     audio.onstalled = () => {
       // Stream stalled — give it a moment then show error
       setTimeout(() => {
         if (audioRef.current === audio && !audio.paused && audio.readyState < 3) {
-          setError("Connexion lente… la station charge.");
+          setError(t("liveQuran.slowConnection" as any));
         }
       }, 8000);
     };
@@ -139,7 +139,7 @@ export default function LiveQuran() {
     setActiveStation(station);
     audio.play().catch(() => {
       setIsLoading(false);
-      setError("Impossible de lancer la lecture. Essayez une autre station.");
+      setError(t("liveQuran.playError" as any));
     });
   }, []);
 
@@ -164,15 +164,15 @@ export default function LiveQuran() {
       <div className="px-6 pt-14 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-muted-foreground mb-3">
           <ArrowLeft size={20} />
-          <span className="text-sm">Retour</span>
+          <span className="text-sm">{t("common.back" as any)}</span>
         </button>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-900 flex items-center justify-center text-2xl">
             📻
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Live Coran</h1>
-            <p className="text-sm text-muted-foreground">Écoutez le Coran en continu</p>
+            <h1 className="text-xl font-bold text-foreground">{t("liveQuran.title" as any)}</h1>
+            <p className="text-sm text-muted-foreground">{t("liveQuran.subtitle" as any)}</p>
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@ export default function LiveQuran() {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 className="w-2 h-2 rounded-full bg-red-500"
               />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">En direct</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">{t("liveQuran.live" as any)}</span>
             </div>
 
             {/* Station info */}
@@ -254,7 +254,7 @@ export default function LiveQuran() {
 
       {/* Stations list */}
       <div className="px-6">
-        <p className="text-sm font-semibold text-foreground mb-3">Stations disponibles</p>
+        <p className="text-sm font-semibold text-foreground mb-3">{t("liveQuran.stations" as any)}</p>
         <div className="space-y-2">
           {STATIONS.map((station, i) => {
             const isActive = activeStation?.id === station.id;
