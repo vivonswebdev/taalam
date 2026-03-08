@@ -18,6 +18,9 @@ const COUNTRY_FLAGS: Record<string, string> = {
   FR: "🇫🇷", BE: "🇧🇪", MA: "🇲🇦", DZ: "🇩🇿", TN: "🇹🇳", NL: "🇳🇱",
   GB: "🇬🇧", US: "🇺🇸", DE: "🇩🇪", SA: "🇸🇦", AE: "🇦🇪", TR: "🇹🇷",
   EG: "🇪🇬", ID: "🇮🇩", MY: "🇲🇾", PK: "🇵🇰", BD: "🇧🇩", CA: "🇨🇦",
+  JO: "🇯🇴", PS: "🇵🇸", LB: "🇱🇧", IQ: "🇮🇶", SY: "🇸🇾", YE: "🇾🇪",
+  KW: "🇰🇼", QA: "🇶🇦", BH: "🇧🇭", OM: "🇴🇲", SN: "🇸🇳", NG: "🇳🇬",
+  SO: "🇸🇴", SE: "🇸🇪",
 };
 
 function LeaderboardRow({ entry, rank, isMe }: { entry: LeaderboardEntry; rank: number; isMe: boolean }) {

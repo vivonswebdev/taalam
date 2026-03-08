@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getLigue, getHifzLevel, type Ligue } from "@/components/LigueBadge";
+import { getSeedLeaderboardUsers } from "@/data/leaderboardSeedUsers";
 
 export interface LeaderboardEntry {
   id: string;
@@ -74,12 +75,21 @@ async function fetchStreaksForUsers(userIds: string[]): Promise<Map<string, numb
 }
 
 export function useLeaderboard() {
-  const [globalBoard, setGlobalBoard] = useState<LeaderboardEntry[]>([]);
+  const [realGlobal, setRealGlobal] = useState<LeaderboardEntry[]>([]);
   const [countryBoard, setCountryBoard] = useState<LeaderboardEntry[]>([]);
   const [levelBoard, setLevelBoard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<"beginner" | "intermediate" | "advanced">("beginner");
+
+  const seedUsers = useMemo(() => getSeedLeaderboardUsers(), []);
+
+  // Merge real + seed, deduplicate by user_id, sort by xp
+  const globalBoard = useMemo(() => {
+    const realIds = new Set(realGlobal.map((e) => e.user_id));
+    const merged = [...realGlobal, ...seedUsers.filter((s) => !realIds.has(s.user_id))];
+    return merged.sort((a, b) => b.xp_total - a.xp_total);
+  }, [realGlobal, seedUsers]);
 
   const fetchGlobal = useCallback(async () => {
     setLoading(true);
@@ -94,7 +104,7 @@ export function useLeaderboard() {
     const userIds = profiles.map((p: any) => p.user_id);
     const streakMap = await fetchStreaksForUsers(userIds);
 
-    setGlobalBoard(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
+    setRealGlobal(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
     setLoading(false);
   }, []);
 
@@ -112,8 +122,12 @@ export function useLeaderboard() {
     const userIds = profiles.map((p: any) => p.user_id);
     const streakMap = await fetchStreaksForUsers(userIds);
 
-    setCountryBoard(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
-  }, []);
+    const realEntries = profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id)));
+    const realIds = new Set(realEntries.map((e) => e.user_id));
+    const seedForCountry = seedUsers.filter((s) => s.country_code === country && !realIds.has(s.user_id));
+    const merged = [...realEntries, ...seedForCountry].sort((a, b) => b.xp_total - a.xp_total);
+    setCountryBoard(merged);
+  }, [seedUsers]);
 
   const fetchByLevel = useCallback(async (level: "beginner" | "intermediate" | "advanced") => {
     setSelectedLevel(level);
@@ -129,8 +143,13 @@ export function useLeaderboard() {
     const streakMap = await fetchStreaksForUsers(userIds);
 
     const enriched = profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id)));
-    setLevelBoard(enriched.filter((e) => e.level === level).slice(0, 50));
-  }, []);
+    const realIds = new Set(enriched.map((e) => e.user_id));
+    const seedForLevel = seedUsers.filter((s) => s.level === level && !realIds.has(s.user_id));
+    const merged = [...enriched.filter((e) => e.level === level), ...seedForLevel]
+      .sort((a, b) => b.xp_total - a.xp_total)
+      .slice(0, 50);
+    setLevelBoard(merged);
+  }, [seedUsers]);
 
   // Initial fetch
   useEffect(() => { fetchGlobal(); }, [fetchGlobal]);
