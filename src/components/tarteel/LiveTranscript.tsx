@@ -89,10 +89,10 @@ export default function LiveTranscript({ isRecording, verseText }: LiveTranscrip
         {!collapsed && (
           <motion.div
             key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ height: 0, opacity: 0, y: -10 }}
+            animate={{ height: "auto", opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           >
             <div className="p-5 pb-2">
               <p className="text-[10px] text-muted-foreground mb-2 text-center" dir="ltr">
