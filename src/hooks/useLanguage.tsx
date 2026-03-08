@@ -1941,6 +1941,18 @@ const translations = {
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
 
 
+  // ═══ Tarteel Leaderboard ═══
+  "tarteelLb.global": { fr: "Top Global", en: "Global Top", nl: "Wereldwijd Top", ar: "الترتيب العالمي", tr: "Küresel Sıralama", ur: "عالمی درجہ بندی" },
+  "tarteelLb.byCountry": { fr: "Par Pays", en: "By Country", nl: "Per Land", ar: "حسب البلد", tr: "Ülkelere Göre", ur: "ملک کے لحاظ سے" },
+  "tarteelLb.verses": { fr: "versets", en: "verses", nl: "verzen", ar: "آية", tr: "ayet", ur: "آیات" },
+  "tarteelLb.days": { fr: "j", en: "d", nl: "d", ar: "ي", tr: "g", ur: "د" },
+  "tarteelLb.users": { fr: "utilisateurs", en: "users", nl: "gebruikers", ar: "مستخدم", tr: "kullanıcı", ur: "صارفین" },
+  "tarteelLb.avgScore": { fr: "Score moyen", en: "Avg score", nl: "Gem. score", ar: "متوسط النقاط", tr: "Ort. puan", ur: "اوسط اسکور" },
+  "tarteelLb.topPlayer": { fr: "Meilleur", en: "Best", nl: "Beste", ar: "الأفضل", tr: "En iyi", ur: "بہترین" },
+  "tarteelLb.leaderboard": { fr: "Classement", en: "Leaderboard", nl: "Ranglijst", ar: "لوحة المتصدرين", tr: "Sıralama", ur: "لیڈر بورڈ" },
+  "tarteelLb.practice": { fr: "Pratique", en: "Practice", nl: "Oefenen", ar: "تمرين", tr: "Pratik", ur: "مشق" },
+
+
   // Mode Password
   "modePassword.createTitle": { fr: "Créer un mot de passe", en: "Create a password", nl: "Wachtwoord aanmaken", ar: "إنشاء كلمة مرور", tr: "Şifre oluştur", ur: "پاس ورڈ بنائیں" },
   "modePassword.enterTitle": { fr: "Mot de passe requis", en: "Password required", nl: "Wachtwoord vereist", ar: "كلمة المرور مطلوبة", tr: "Şifre gerekli", ur: "پاس ورڈ ضروری ہے" },
