@@ -131,7 +131,7 @@ export default function LiveQuran() {
       // Stream stalled — give it a moment then show error
       setTimeout(() => {
         if (audioRef.current === audio && !audio.paused && audio.readyState < 3) {
-          setError("Connexion lente… la station charge.");
+          setError(t("liveQuran.slowConnection" as any));
         }
       }, 8000);
     };
