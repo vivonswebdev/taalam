@@ -20,6 +20,8 @@ const LEVEL_CONFIG = {
   beginner: { emoji: "🌱", colorClass: "bg-primary/15 text-primary" },
   intermediate: { emoji: "🌿", colorClass: "bg-amber-500/15 text-amber-600 dark:text-amber-400" },
   advanced: { emoji: "🔥", colorClass: "bg-rose-500/15 text-rose-600 dark:text-rose-400" },
+  expert: { emoji: "💎", colorClass: "bg-violet-500/15 text-violet-600 dark:text-violet-400" },
+  master: { emoji: "👑", colorClass: "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400" },
 } as const;
 
 export default function Noorani() {
