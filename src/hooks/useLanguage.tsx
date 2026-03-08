@@ -3164,6 +3164,12 @@ const translations = {
   "kidsGames.tetrisIslam": { fr: "Tetrislam", en: "Tetrislam", nl: "Tetrislam", ar: "تتريسلام", tr: "Tetrislam", ur: "ٹیٹرسلام" },
   "kidsGames.tetrisIslamDesc": { fr: "Remplis le Mushaf !", en: "Fill the Mushaf!", nl: "Vul de Mushaf!", ar: "املأ المصحف!", tr: "Mushaf'ı doldur!", ur: "مصحف بھرو!" },
   "common.comingSoon": { fr: "Bientôt", en: "Soon", nl: "Binnenkort", ar: "قريباً", tr: "Yakında", ur: "جلد" },
+  "kidsGames.arabicBubbles": { fr: "Arabic Bubbles", en: "Arabic Bubbles", nl: "Arabische Bellen", ar: "فقاعات عربية", tr: "Arapça Baloncuklar", ur: "عربی بلبلے" },
+  "kidsGames.arabicBubblesDesc": { fr: "Éclate les bulles !", en: "Pop the bubbles!", nl: "Knal de bellen!", ar: "فرقع الفقاعات!", tr: "Baloncukları patlat!", ur: "بلبلے پھوڑو!" },
+  "kidsGames.findLetter": { fr: "Trouve", en: "Find", nl: "Vind", ar: "ابحث عن", tr: "Bul", ur: "تلاش کرو" },
+  "kidsGames.points": { fr: "points", en: "points", nl: "punten", ar: "نقاط", tr: "puan", ur: "پوائنٹس" },
+  "kidsGames.maxCombo": { fr: "Max combo", en: "Max combo", nl: "Max combo", ar: "أعلى كومبو", tr: "Maks kombo", ur: "زیادہ سے زیادہ کومبو" },
+  "kidsGames.lvl": { fr: "Niv.", en: "Lvl.", nl: "Niv.", ar: "مستوى", tr: "Svye.", ur: "سطح" },
 } as const;
 
 type TranslationKey = keyof typeof translations;

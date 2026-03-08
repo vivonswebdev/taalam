@@ -273,6 +273,7 @@ const App = () => (
                   <Route path="/kids-math-shooter" element={<MathShooterPage />} />
                   <Route path="/kids-math-memory" element={<MathMemoryPage />} />
                   <Route path="/kids-math-bomb" element={<MathBombPage />} />
+                  <Route path="/kids-arabic-bubbles" element={<ArabicBubblePopPage />} />
                   <Route path="/tetris-islam" element={<TetrisIslamPage />} />
                   <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
                   <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />

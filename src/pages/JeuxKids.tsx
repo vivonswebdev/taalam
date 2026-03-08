@@ -20,6 +20,7 @@ const GAMES = [
   { key: "asmaHunt", emoji: "🔎", path: "/kids-asma-hunt", color: "from-yellow-400 to-amber-500" },
   { key: "prayerMaze", emoji: "🧩", path: "/kids-prayer-maze", color: "from-rose-400 to-pink-500" },
   { key: "tetrisIslam", emoji: "🕌", path: "/tetris-islam", color: "from-emerald-400 to-teal-500" },
+  { key: "arabicBubbles", emoji: "🫧", path: "/kids-arabic-bubbles", color: "from-indigo-400 to-purple-500" },
 ] as const;
 
 export default function JeuxKids() {
