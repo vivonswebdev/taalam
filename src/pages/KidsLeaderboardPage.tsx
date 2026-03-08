@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Trophy, Star, Filter, GraduationCap } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowLeft, Trophy, Star, GraduationCap, Globe, Users } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { RARITY_COLORS } from "@/data/achievementsData";
 
 interface LeaderboardEntry {
   id: string;
@@ -39,23 +38,22 @@ export default function KidsLeaderboardPage() {
   const [loading, setLoading] = useState(true);
   const [ageFilter, setAgeFilter] = useState<string | null>(null);
   const [showMineOnly, setShowMineOnly] = useState(false);
+  const [countryFilter, setCountryFilter] = useState<string | null>(null);
   const [classFilter, setClassFilter] = useState<string | null>(null);
   const [classOptions, setClassOptions] = useState<ClassOption[]>([]);
   const [classChildIds, setClassChildIds] = useState<Set<string> | null>(null);
 
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
-  // Fetch classrooms the user is associated with (as teacher or parent)
+  // Fetch classrooms the user is associated with
   useEffect(() => {
     if (!user) return;
     (async () => {
-      // Get classrooms where user is teacher
       const { data: teacherClasses } = await supabase
         .from("classrooms")
         .select("id, name")
         .eq("teacher_id", user.id);
 
-      // Get classrooms where user is member (parent)
       const { data: memberRows } = await supabase
         .from("classroom_members")
         .select("classroom_id")
@@ -71,7 +69,6 @@ export default function KidsLeaderboardPage() {
         parentClasses = (data || []) as ClassOption[];
       }
 
-      // Merge & dedupe
       const all = [...(teacherClasses || []), ...parentClasses] as ClassOption[];
       const unique = Array.from(new Map(all.map(c => [c.id, c])).values());
       setClassOptions(unique);
@@ -96,6 +93,7 @@ export default function KidsLeaderboardPage() {
     })();
   }, [classFilter]);
 
+  // Fetch all children profiles for leaderboard
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -103,10 +101,10 @@ export default function KidsLeaderboardPage() {
         .from("children_profiles")
         .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
         .order("total_points", { ascending: false })
-        .limit(100);
+        .limit(200);
       const profiles = (data as LeaderboardEntry[]) || [];
 
-      // Fetch badges for all children
+      // Fetch badges
       const childIds = profiles.map(p => p.id);
       if (childIds.length > 0) {
         const { data: badges } = await supabase
@@ -127,6 +125,20 @@ export default function KidsLeaderboardPage() {
     })();
   }, []);
 
+  // Unique countries for filter
+  const countries = useMemo(() => {
+    const set = new Set<string>();
+    entries.forEach(e => { if (e.country_code) set.add(e.country_code); });
+    return Array.from(set).sort();
+  }, [entries]);
+
+  // My children count
+  const myChildrenCount = useMemo(() => {
+    if (!user) return 0;
+    return entries.filter(e => e.parent_id === user.id).length;
+  }, [entries, user]);
+
+  // Apply filters
   let filtered = entries;
   if (showMineOnly && user) {
     filtered = filtered.filter(e => e.parent_id === user.id);
@@ -134,6 +146,9 @@ export default function KidsLeaderboardPage() {
   if (ageFilter) {
     const af = AGE_FILTERS.find(a => a.label === ageFilter);
     if (af) filtered = filtered.filter(e => e.age && e.age >= af.min && e.age <= af.max);
+  }
+  if (countryFilter) {
+    filtered = filtered.filter(e => e.country_code === countryFilter);
   }
   if (classFilter && classChildIds) {
     filtered = filtered.filter(e => classChildIds.has(e.id));
@@ -151,17 +166,40 @@ export default function KidsLeaderboardPage() {
         <h1 className="text-lg font-bold text-foreground">{t("kids.leaderboardTitle" as any) || "Classement des Champions"}</h1>
       </div>
 
+      {/* Stats bar */}
+      <div className="px-4 mb-3 flex gap-2">
+        <div className="flex-1 bg-card border border-border rounded-xl p-2.5 text-center">
+          <p className="text-lg font-bold text-foreground">{entries.length}</p>
+          <p className="text-[10px] text-muted-foreground">{t("kids.totalParticipants" as any) || "Participants"}</p>
+        </div>
+        {myChildrenCount > 0 && (
+          <div className="flex-1 bg-primary/10 border border-primary/20 rounded-xl p-2.5 text-center">
+            <p className="text-lg font-bold text-primary">{myChildrenCount}</p>
+            <p className="text-[10px] text-primary/70">{t("kids.myChildren" as any) || "Mes enfants"}</p>
+          </div>
+        )}
+        {activeChildId && activeChildRank >= 0 && (
+          <div className="flex-1 bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5 text-center">
+            <p className="text-lg font-bold text-amber-600">#{activeChildRank + 1}</p>
+            <p className="text-[10px] text-amber-600/70">{t("kids.yourRank" as any) || "Position"}</p>
+          </div>
+        )}
+      </div>
+
       {/* Filters */}
       <div className="px-4 mb-3 space-y-2">
         <div className="flex gap-2 overflow-x-auto no-scrollbar">
-          <button
-            onClick={() => setShowMineOnly(!showMineOnly)}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-              showMineOnly ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"
-            }`}
-          >
-            {t("kids.myChildren" as any) || "Mes enfants"}
-          </button>
+          {myChildrenCount > 0 && (
+            <button
+              onClick={() => setShowMineOnly(!showMineOnly)}
+              className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1 ${
+                showMineOnly ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"
+              }`}
+            >
+              <Users size={12} />
+              {t("kids.myChildren" as any) || "Mes enfants"}
+            </button>
+          )}
           {AGE_FILTERS.map(af => (
             <button
               key={af.label}
@@ -174,6 +212,24 @@ export default function KidsLeaderboardPage() {
             </button>
           ))}
         </div>
+
+        {/* Country filter */}
+        {countries.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            <Globe size={14} className="text-muted-foreground shrink-0 mt-1" />
+            {countries.map(cc => (
+              <button
+                key={cc}
+                onClick={() => setCountryFilter(countryFilter === cc ? null : cc)}
+                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                  countryFilter === cc ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"
+                }`}
+              >
+                {getFlagEmoji(cc)} {cc}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Class filter */}
         {classOptions.length > 0 && (
@@ -200,15 +256,20 @@ export default function KidsLeaderboardPage() {
         <div className="flex flex-col items-center gap-3 py-12">
           <span className="text-5xl">🏆</span>
           <p className="text-sm text-muted-foreground">{t("kids.noEntries" as any) || "Aucun participant"}</p>
+          {myChildrenCount === 0 && user && (
+            <p className="text-xs text-muted-foreground text-center max-w-xs">
+              {t("kids.addChildToJoin" as any) || "Ajoutez un enfant en mode Parent pour rejoindre le classement !"}
+            </p>
+          )}
         </div>
       ) : (
         <div className="px-4 space-y-2">
           {/* Top 3 podium */}
           {filtered.length >= 3 && (
             <div className="flex items-end justify-center gap-3 mb-4 pt-4">
-              <PodiumCard entry={filtered[1]} rank={2} />
-              <PodiumCard entry={filtered[0]} rank={1} />
-              <PodiumCard entry={filtered[2]} rank={3} />
+              <PodiumCard entry={filtered[1]} rank={2} isOwn={user ? filtered[1].parent_id === user.id : false} />
+              <PodiumCard entry={filtered[0]} rank={1} isOwn={user ? filtered[0].parent_id === user.id : false} />
+              <PodiumCard entry={filtered[2]} rank={3} isOwn={user ? filtered[2].parent_id === user.id : false} />
             </div>
           )}
 
@@ -216,6 +277,7 @@ export default function KidsLeaderboardPage() {
           {filtered.slice(filtered.length >= 3 ? 3 : 0).map((entry, i) => {
             const rank = (filtered.length >= 3 ? 3 : 0) + i + 1;
             const isActive = entry.id === activeChildId;
+            const isOwn = user ? entry.parent_id === user.id : false;
             return (
               <motion.div
                 key={entry.id}
@@ -223,7 +285,11 @@ export default function KidsLeaderboardPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.02 }}
                 className={`flex items-center gap-3 py-3 px-4 rounded-2xl border transition-all ${
-                  isActive ? "bg-primary/10 border-primary/30 shadow-sm" : "bg-card border-border"
+                  isActive
+                    ? "bg-primary/10 border-primary/30 shadow-sm"
+                    : isOwn
+                      ? "bg-accent/30 border-accent/40"
+                      : "bg-card border-border"
                 }`}
               >
                 <span className="text-sm font-bold text-muted-foreground w-7 text-center">{rank}</span>
@@ -231,7 +297,10 @@ export default function KidsLeaderboardPage() {
                   {entry.avatar_emoji}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold truncate ${isActive ? "text-primary" : "text-foreground"}`}>{entry.name}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className={`text-sm font-semibold truncate ${isActive ? "text-primary" : "text-foreground"}`}>{entry.name}</p>
+                    {isOwn && <span className="text-[9px] bg-primary/15 text-primary px-1.5 py-0.5 rounded-full font-bold shrink-0">👶</span>}
+                  </div>
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                     {entry.country_code && <span>{getFlagEmoji(entry.country_code)}</span>}
                     {entry.age && <span>{entry.age} {t("profile.yearsOld" as any) || "ans"}</span>}
@@ -253,7 +322,7 @@ export default function KidsLeaderboardPage() {
             );
           })}
 
-          {/* Show active child position if not in top */}
+          {/* Show active child position if scrolled past */}
           {activeChildId && activeChildRank >= 100 && (
             <div className="mt-4 text-center text-sm text-muted-foreground">
               {t("kids.yourRank" as any) || "Votre position"}: #{activeChildRank + 1}
@@ -265,7 +334,8 @@ export default function KidsLeaderboardPage() {
   );
 }
 
-function PodiumCard({ entry, rank }: { entry: LeaderboardEntry; rank: number }) {
+function PodiumCard({ entry, rank, isOwn }: { entry: LeaderboardEntry; rank: number; isOwn: boolean }) {
+  const { t } = useLanguage();
   const medals = ["🥇", "🥈", "🥉"];
   const sizes = rank === 1
     ? "w-20 h-20 text-4xl"
@@ -282,8 +352,11 @@ function PodiumCard({ entry, rank }: { entry: LeaderboardEntry; rank: number }) 
       <span className="text-2xl mb-1">{medals[rank - 1]}</span>
       <div className={`${sizes} rounded-full bg-gradient-to-br from-primary/20 to-accent/10 border-4 ${
         rank === 1 ? "border-amber-400" : rank === 2 ? "border-gray-400" : "border-orange-400"
-      } flex items-center justify-center mb-1`}>
+      } flex items-center justify-center mb-1 relative`}>
         {entry.avatar_emoji}
+        {isOwn && (
+          <span className="absolute -bottom-1 -right-1 text-[10px] bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center">👶</span>
+        )}
       </div>
       <p className="text-xs font-bold text-foreground truncate max-w-[80px]">{entry.name}</p>
       {entry.country_code && <span className="text-[10px]">{getFlagEmoji(entry.country_code)}</span>}
