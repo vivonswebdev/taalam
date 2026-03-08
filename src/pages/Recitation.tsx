@@ -22,6 +22,7 @@ import { useAsrLogging } from "@/hooks/useAsrLogging";
 import Confetti from "@/components/Confetti";
 import StickerReward from "@/components/StickerReward";
 import BottomNav from "@/components/BottomNav";
+import { FloatingParticles } from "@/components/kids/futuristic/FloatingParticles";
 
 type TarteelPhase = "select" | "listen" | "recite" | "results";
 
