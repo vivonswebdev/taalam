@@ -3170,6 +3170,32 @@ const translations = {
   "kidsGames.points": { fr: "points", en: "points", nl: "punten", ar: "نقاط", tr: "puan", ur: "پوائنٹس" },
   "kidsGames.maxCombo": { fr: "Max combo", en: "Max combo", nl: "Max combo", ar: "أعلى كومبو", tr: "Maks kombo", ur: "زیادہ سے زیادہ کومبو" },
   "kidsGames.lvl": { fr: "Niv.", en: "Lvl.", nl: "Niv.", ar: "مستوى", tr: "Svye.", ur: "سطح" },
+  // New Islamic games
+  "kidsGames.quranWordOrder": { fr: "Ordre des Mots", en: "Word Order", nl: "Woordvolgorde", ar: "ترتيب الكلمات", tr: "Kelime Sırası", ur: "الفاظ کی ترتیب" },
+  "kidsGames.quranWordOrderDesc": { fr: "Remets le verset en ordre", en: "Reorder the verse", nl: "Zet het vers in volgorde", ar: "أعد ترتيب الآية", tr: "Ayeti sırala", ur: "آیت کو ترتیب دو" },
+  "kidsGames.duaMatch": { fr: "Dua Match", en: "Dua Match", nl: "Dua Match", ar: "مطابقة الأدعية", tr: "Dua Eşleme", ur: "دعا میچ" },
+  "kidsGames.duaMatchDesc": { fr: "Associe la dua à la situation", en: "Match dua to situation", nl: "Koppel dua aan situatie", ar: "طابق الدعاء بالموقف", tr: "Duayı durumla eşle", ur: "دعا کو صورتحال سے ملاؤ" },
+  "kidsGames.duaMatchHint": { fr: "Relie chaque situation à sa dua !", en: "Match each situation to its dua!", nl: "Koppel elke situatie aan zijn dua!", ar: "اربط كل موقف بدعائه!", tr: "Her durumu duasıyla eşle!", ur: "ہر صورتحال کو اس کی دعا سے ملاؤ!" },
+  "kidsGames.islamicColors": { fr: "Couleurs Tajwid", en: "Tajwid Colors", nl: "Tajwid Kleuren", ar: "ألوان التجويد", tr: "Tecvid Renkleri", ur: "تجوید رنگ" },
+  "kidsGames.islamicColorsDesc": { fr: "Apprends les couleurs du Tajwid", en: "Learn Tajwid colors", nl: "Leer Tajwid kleuren", ar: "تعلّم ألوان التجويد", tr: "Tecvid renklerini öğren", ur: "تجوید کے رنگ سیکھو" },
+  "kidsGames.whatColor": { fr: "Quelle couleur pour cette lettre ?", en: "What color for this letter?", nl: "Welke kleur voor deze letter?", ar: "ما لون هذا الحرف؟", tr: "Bu harfin rengi ne?", ur: "اس حرف کا رنگ کیا ہے؟" },
+  "kidsGames.tapWordsHint": { fr: "Appuie sur les mots dans l'ordre", en: "Tap words in order", nl: "Tik de woorden in volgorde", ar: "اضغط على الكلمات بالترتيب", tr: "Kelimelere sırayla dokun", ur: "الفاظ پر ترتیب سے ٹیپ کرو" },
+  "kidsGames.correct": { fr: "Bravo ! ✅", en: "Correct! ✅", nl: "Goed zo! ✅", ar: "أحسنت! ✅", tr: "Doğru! ✅", ur: "شاباش! ✅" },
+  "kidsGames.tryAgain": { fr: "Réessaie ! ❌", en: "Try again! ❌", nl: "Probeer opnieuw! ❌", ar: "حاول مرة أخرى! ❌", tr: "Tekrar dene! ❌", ur: "دوبارہ کوشش کرو! ❌" },
+  "kidsGames.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
+  "common.undo": { fr: "Annuler", en: "Undo", nl: "Ongedaan maken", ar: "تراجع", tr: "Geri al", ur: "واپس" },
+  "common.next": { fr: "Suivant", en: "Next", nl: "Volgende", ar: "التالي", tr: "İleri", ur: "اگلا" },
+  // New Math games
+  "mathGames.mathRace": { fr: "Math Race", en: "Math Race", nl: "Math Race", ar: "سباق الرياضيات", tr: "Matematik Yarışı", ur: "ریاضی ریس" },
+  "mathGames.mathRaceDesc": { fr: "Course contre le bot !", en: "Race against the bot!", nl: "Race tegen de bot!", ar: "سباق ضد الروبوت!", tr: "Bota karşı yarış!", ur: "بوٹ کے خلاف ریس!" },
+  "mathGames.mathChain": { fr: "Math Chain", en: "Math Chain", nl: "Math Chain", ar: "سلسلة الرياضيات", tr: "Matematik Zinciri", ur: "ریاضی چین" },
+  "mathGames.mathChainDesc": { fr: "Enchaîne les calculs !", en: "Chain the calculations!", nl: "Schakel de berekeningen!", ar: "سلسل الحسابات!", tr: "Hesapları zincirle!", ur: "حساب جوڑو!" },
+  "mathGames.mathDuel": { fr: "Math Duel", en: "Math Duel", nl: "Math Duel", ar: "مبارزة الرياضيات", tr: "Matematik Düello", ur: "ریاضی مقابلہ" },
+  "mathGames.mathDuelDesc": { fr: "Affronte le bot IA !", en: "Challenge the AI bot!", nl: "Daag de AI bot uit!", ar: "تحدَّ الروبوت!", tr: "Yapay zeka bota meydan oku!", ur: "بوٹ سے مقابلہ کرو!" },
+  "mathGames.you": { fr: "Toi", en: "You", nl: "Jij", ar: "أنت", tr: "Sen", ur: "تم" },
+  "mathGames.botThinking": { fr: "Le bot réfléchit", en: "Bot is thinking", nl: "Bot denkt na", ar: "الروبوت يفكر", tr: "Bot düşünüyor", ur: "بوٹ سوچ رہا ہے" },
+  "mathGames.botWins": { fr: "Le bot a gagné !", en: "Bot wins!", nl: "Bot wint!", ar: "فاز الروبوت!", tr: "Bot kazandı!", ur: "بوٹ جیت گیا!" },
+  "mathGames.rematch": { fr: "Revanche !", en: "Rematch!", nl: "Herkansing!", ar: "مباراة العودة!", tr: "Rövanş!", ur: "دوبارہ!" },
 } as const;
 
 type TranslationKey = keyof typeof translations;
