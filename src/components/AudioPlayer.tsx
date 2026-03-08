@@ -385,7 +385,7 @@ export default function AudioPlayer({
             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
               isCurrentAyahBookmarked ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
             }`}
-            title="Marquer ce verset"
+            title={t ? t("audio.bookmarkVerse" as any) : "Bookmark"}
           >
             {isCurrentAyahBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
           </button>
