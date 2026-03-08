@@ -75,12 +75,21 @@ async function fetchStreaksForUsers(userIds: string[]): Promise<Map<string, numb
 }
 
 export function useLeaderboard() {
-  const [globalBoard, setGlobalBoard] = useState<LeaderboardEntry[]>([]);
+  const [realGlobal, setRealGlobal] = useState<LeaderboardEntry[]>([]);
   const [countryBoard, setCountryBoard] = useState<LeaderboardEntry[]>([]);
   const [levelBoard, setLevelBoard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<"beginner" | "intermediate" | "advanced">("beginner");
+
+  const seedUsers = useMemo(() => getSeedLeaderboardUsers(), []);
+
+  // Merge real + seed, deduplicate by user_id, sort by xp
+  const globalBoard = useMemo(() => {
+    const realIds = new Set(realGlobal.map((e) => e.user_id));
+    const merged = [...realGlobal, ...seedUsers.filter((s) => !realIds.has(s.user_id))];
+    return merged.sort((a, b) => b.xp_total - a.xp_total);
+  }, [realGlobal, seedUsers]);
 
   const fetchGlobal = useCallback(async () => {
     setLoading(true);
@@ -95,7 +104,7 @@ export function useLeaderboard() {
     const userIds = profiles.map((p: any) => p.user_id);
     const streakMap = await fetchStreaksForUsers(userIds);
 
-    setGlobalBoard(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
+    setRealGlobal(profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id))));
     setLoading(false);
   }, []);
 
