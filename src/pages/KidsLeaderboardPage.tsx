@@ -94,35 +94,50 @@ export default function KidsLeaderboardPage() {
   }, [classFilter]);
 
   // Fetch all children profiles for leaderboard
+  const fetchEntries = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from("children_profiles")
+      .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
+      .order("total_points", { ascending: false })
+      .limit(200);
+    const profiles = (data as LeaderboardEntry[]) || [];
+
+    // Fetch badges
+    const childIds = profiles.map(p => p.id);
+    if (childIds.length > 0) {
+      const { data: badges } = await supabase
+        .from("child_achievements" as any)
+        .select("child_id, icon, rarity")
+        .in("child_id", childIds);
+      const badgeMap = new Map<string, { icon: string; rarity: string }[]>();
+      ((badges as any[]) || []).forEach((b: any) => {
+        const arr = badgeMap.get(b.child_id) || [];
+        arr.push({ icon: b.icon, rarity: b.rarity });
+        badgeMap.set(b.child_id, arr);
+      });
+      profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
+    }
+
+    setEntries(profiles);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from("children_profiles")
-        .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
-        .order("total_points", { ascending: false })
-        .limit(200);
-      const profiles = (data as LeaderboardEntry[]) || [];
+    fetchEntries();
+  }, []);
 
-      // Fetch badges
-      const childIds = profiles.map(p => p.id);
-      if (childIds.length > 0) {
-        const { data: badges } = await supabase
-          .from("child_achievements" as any)
-          .select("child_id, icon, rarity")
-          .in("child_id", childIds);
-        const badgeMap = new Map<string, { icon: string; rarity: string }[]>();
-        ((badges as any[]) || []).forEach((b: any) => {
-          const arr = badgeMap.get(b.child_id) || [];
-          arr.push({ icon: b.icon, rarity: b.rarity });
-          badgeMap.set(b.child_id, arr);
-        });
-        profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
-      }
-
-      setEntries(profiles);
-      setLoading(false);
-    })();
+  // Auto-refresh on tab visibility change & every 15s
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") fetchEntries();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    const interval = setInterval(fetchEntries, 15000);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      clearInterval(interval);
+    };
   }, []);
 
   // Unique countries for filter
