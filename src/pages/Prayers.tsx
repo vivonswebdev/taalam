@@ -275,22 +275,6 @@ export default function Prayers() {
           </div>
         )}
 
-        {/* Doha info card */}
-        {!loading && times && (
-          <div className="bg-white/[0.05] backdrop-blur-md border border-yellow-400/20 rounded-2xl p-4">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">☀️</span>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-yellow-300/90">{t("prayers.dohaTitle" as any)}</p>
-                <p className="text-xs text-white/50 mt-1 leading-relaxed">{t("prayers.dohaDesc" as any)}</p>
-                <p className="text-[10px] text-yellow-400/60 mt-2 italic">{t("prayers.dohaHadith" as any)}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Hijri Calendar */}
-        <HijriCalendar />
 
         {/* Notifications + Qibla */}
         <div className="grid grid-cols-2 gap-3">
