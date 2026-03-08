@@ -613,6 +613,8 @@ export default function TarteelOfflinePage() {
           <WifiOff size={12} className="shrink-0" />
           <span>{t("tarteelOffline.privacyNote" as any)}</span>
         </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
