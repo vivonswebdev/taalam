@@ -143,8 +143,13 @@ export function useLeaderboard() {
     const streakMap = await fetchStreaksForUsers(userIds);
 
     const enriched = profiles.map((row: any) => enrichEntry(row, streakMap.get(row.user_id)));
-    setLevelBoard(enriched.filter((e) => e.level === level).slice(0, 50));
-  }, []);
+    const realIds = new Set(enriched.map((e) => e.user_id));
+    const seedForLevel = seedUsers.filter((s) => s.level === level && !realIds.has(s.user_id));
+    const merged = [...enriched.filter((e) => e.level === level), ...seedForLevel]
+      .sort((a, b) => b.xp_total - a.xp_total)
+      .slice(0, 50);
+    setLevelBoard(merged);
+  }, [seedUsers]);
 
   // Initial fetch
   useEffect(() => { fetchGlobal(); }, [fetchGlobal]);
