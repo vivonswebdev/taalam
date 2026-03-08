@@ -343,7 +343,7 @@ export default function AudioPlayer({
           <button
             onClick={() => onRequestPrevSurah?.()}
             className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
-            title="Sourate précédente"
+            title={t ? t("audio.prevSurah" as any) : "Previous surah"}
           >
             <ChevronsLeft size={14} />
           </button>
