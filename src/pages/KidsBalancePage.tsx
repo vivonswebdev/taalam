@@ -64,7 +64,7 @@ export default function KidsBalancePage() {
       });
     }, 20);
     return () => clearInterval(timer);
-  }, [cards, gameOver, streak]);
+  }, [cards, gameOver, streak, gameStarted, dc.timerSpeed]);
 
   const handleTimeout = async () => {
     setStreak(0);
