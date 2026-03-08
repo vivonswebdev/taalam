@@ -51,8 +51,8 @@ export default function KidsBalancePage() {
   const currentLevel = 1 + Math.floor(streak / 3);
 
   useEffect(() => {
-    if (gameOver || cards.length === 0) return;
-    const speedMultiplier = 1 + (streak * 0.25);
+    if (gameOver || cards.length === 0 || !gameStarted) return;
+    const speedMultiplier = dc.timerSpeed + (streak * 0.25);
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
