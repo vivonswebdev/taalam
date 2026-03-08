@@ -1731,6 +1731,33 @@ export type Database = {
           },
         ]
       }
+      tarteel_scores: {
+        Row: {
+          accuracy: number
+          ayah: number
+          created_at: string
+          id: string
+          surah: number
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number
+          ayah: number
+          created_at?: string
+          id?: string
+          surah: number
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          ayah?: number
+          created_at?: string
+          id?: string
+          surah?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       task_submissions: {
         Row: {
           assignment_id: string
