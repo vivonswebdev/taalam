@@ -28,7 +28,7 @@ function LeaderboardRow({ entry, rank, isMe }: { entry: LeaderboardEntry; rank: 
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: Math.min(rank * 0.03, 0.5) }}
-      className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+      className={`flex items-center gap-3 p-4 rounded-xl transition-all ${
         isMe
           ? "bg-primary/10 border-2 border-primary ring-1 ring-primary/20"
           : rank <= 3
@@ -36,23 +36,51 @@ function LeaderboardRow({ entry, rank, isMe }: { entry: LeaderboardEntry; rank: 
           : "bg-card border border-border"
       }`}
     >
-      <div className="w-8 text-center">
-        {medal ? <span className="text-lg">{medal}</span> : <span className="text-sm font-bold text-muted-foreground">#{rank}</span>}
-      </div>
-      <span className="text-2xl">{entry.avatar_emoji}</span>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <p className="text-sm font-semibold text-foreground truncate">
-            {entry.display_name}
-            {isMe && <span className="text-xs text-primary ml-1">{t("lb.you")}</span>}
-          </p>
-        </div>
-        <p className="text-xs text-muted-foreground">{entry.xp_total} XP · {Number(entry.mastery_score).toFixed(0)}%</p>
-      </div>
-      <div className="flex items-center gap-1.5">
-        {entry.country_code && (
-          <span className="text-sm">{COUNTRY_FLAGS[entry.country_code] || "🌍"}</span>
+      {/* Rank badge */}
+      <div className="w-10 text-center">
+        {medal ? (
+          <span className="text-2xl">{medal}</span>
+        ) : (
+          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
+            <span className="text-sm font-bold text-muted-foreground">#{rank}</span>
+          </div>
         )}
+      </div>
+      {/* Avatar */}
+      <div className="relative">
+        <span className="text-3xl">{entry.avatar_emoji}</span>
+        {entry.streak_days && entry.streak_days >= 3 && (
+          <span className="absolute -top-1 -right-1 text-xs">🔥</span>
+        )}
+      </div>
+      {/* User info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-sm font-bold text-foreground truncate">
+            {entry.display_name}
+            {isMe && <span className="text-xs text-primary ml-1.5">({t("lb.you")})</span>}
+          </p>
+          {entry.country_code && (
+            <span className="text-base">{COUNTRY_FLAGS[entry.country_code] || "🌍"}</span>
+          )}
+        </div>
+        {/* Stats grid */}
+        <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+          <div>
+            <span className="font-bold text-primary">{entry.xp_total}</span> XP
+          </div>
+          <div>
+            <span className="font-bold text-secondary">{Number(entry.mastery_score).toFixed(0)}%</span> Hifz
+          </div>
+          {entry.streak_days && entry.streak_days > 0 && (
+            <div>
+              <span className="font-bold text-amber-500">{entry.streak_days}🔥</span>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* League badge */}
+      <div className="shrink-0">
         <LigueBadge ligue={entry.ligue} size="sm" />
       </div>
     </motion.div>
