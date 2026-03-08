@@ -35,6 +35,21 @@ const GAME_STYLES: Record<string, { gradient: string; shadow: string; emoji_bg: 
     shadow: "shadow-red-500/30",
     emoji_bg: "bg-red-500/20",
   },
+  math_race: {
+    gradient: "from-sky-400 via-cyan-400 to-teal-400",
+    shadow: "shadow-sky-500/30",
+    emoji_bg: "bg-sky-500/20",
+  },
+  math_chain: {
+    gradient: "from-teal-400 via-emerald-400 to-green-400",
+    shadow: "shadow-teal-500/30",
+    emoji_bg: "bg-teal-500/20",
+  },
+  math_duel: {
+    gradient: "from-red-400 via-orange-400 to-amber-400",
+    shadow: "shadow-red-500/30",
+    emoji_bg: "bg-red-500/20",
+  },
 };
 
 const GAME_ROUTES: Record<string, string> = {
