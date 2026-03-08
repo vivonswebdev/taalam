@@ -125,7 +125,7 @@ export default function LiveQuran() {
     audio.onerror = () => {
       setIsLoading(false);
       setIsPlaying(false);
-      setError("Impossible de se connecter à cette station. Vérifiez votre connexion internet.");
+      setError(t("liveQuran.connectionError" as any));
     };
     audio.onstalled = () => {
       // Stream stalled — give it a moment then show error
