@@ -6,6 +6,7 @@ import TeacherHomePage from "@/pages/TeacherHomePage";
 import SEOHead from "@/components/SEOHead";
 import { useLoginStreak } from "@/hooks/useLoginStreak";
 import LoginBonusPopup from "@/components/LoginBonusPopup";
+import StreakWidget from "@/components/StreakWidget";
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {

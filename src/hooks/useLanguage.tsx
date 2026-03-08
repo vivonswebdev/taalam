@@ -3271,6 +3271,27 @@ const translations = {
   "seo.communityDesc": { fr: "Rejoignez des groupes d'étude coranique, partagez vos progrès.", en: "Join Quran study groups, share your progress.", nl: "Sluit je aan bij Koran studiegroepen, deel je voortgang.", ar: "انضم إلى مجموعات دراسة القرآن، شارك تقدمك.", tr: "Kur'an çalışma gruplarına katılın, ilerlemenizi paylaşın.", ur: "قرآن مطالعہ گروپس میں شامل ہوں، اپنی پیشرفت شیئر کریں۔" },
   "seo.moreTitle": { fr: "Plus - Paramètres & Outils", en: "More - Settings & Tools", nl: "Meer - Instellingen & Tools", ar: "المزيد - الإعدادات والأدوات", tr: "Daha Fazla - Ayarlar ve Araçlar", ur: "مزید - ترتیبات اور ٹولز" },
   "seo.moreDesc": { fr: "Accédez aux paramètres, outils islamiques, prières, calendrier hijri.", en: "Access settings, Islamic tools, prayers, Hijri calendar.", nl: "Ga naar instellingen, islamitische tools, gebeden, Hijri-kalender.", ar: "الوصول إلى الإعدادات والأدوات الإسلامية والصلوات والتقويم الهجري.", tr: "Ayarlara, İslami araçlara, namazlara, Hicri takvime erişin.", ur: "ترتیبات، اسلامی ٹولز، نمازیں، ہجری کیلنڈر تک رسائی۔" },
+
+  // ═══ STREAK WIDGET ═══
+  "streak.days": { fr: "jours", en: "days", nl: "dagen", ar: "يوم", tr: "gün", ur: "دن" },
+  "streak.daysShort": { fr: "j", en: "d", nl: "d", ar: "ي", tr: "g", ur: "د" },
+  "streak.next": { fr: "Prochain", en: "Next", nl: "Volgende", ar: "التالي", tr: "Sonraki", ur: "اگلا" },
+  "streak.title": { fr: "Connexion consécutive", en: "Login streak", nl: "Inlogstreek", ar: "تسجيل دخول متتالي", tr: "Giriş serisi", ur: "لاگ ان سلسلہ" },
+  "streak.keepGoing": { fr: "Continue !", en: "Keep going!", nl: "Ga door!", ar: "واصل!", tr: "Devam et!", ur: "جاری رکھیں!" },
+  "streak.milestone": { fr: "Palier atteint !", en: "Milestone reached!", nl: "Mijlpaal bereikt!", ar: "تم بلوغ مرحلة!", tr: "Dönüm noktası!", ur: "سنگ میل پہنچ گیا!" },
+
+  // ═══ LOGIN BONUS POPUP ═══
+  "loginBonus.title": { fr: "Connexion quotidienne !", en: "Daily Login!", nl: "Dagelijkse login!", ar: "تسجيل دخول يومي!", tr: "Günlük giriş!", ur: "روزانہ لاگ ان!" },
+  "loginBonus.streak": { fr: "Jours consécutifs", en: "Consecutive days", nl: "Opeenvolgende dagen", ar: "أيام متتالية", tr: "Ardışık günler", ur: "مسلسل دن" },
+  "loginBonus.bonus": { fr: "bonus", en: "bonus", nl: "bonus", ar: "مكافأة", tr: "bonus", ur: "بونس" },
+  "loginBonus.keepGoing": { fr: "Continue comme ça, mâ shâ Allâh ! 🌟", en: "Keep it up, Masha'Allah! 🌟", nl: "Ga zo door, Masha'Allah! 🌟", ar: "واصل هكذا، ما شاء الله! 🌟", tr: "Böyle devam et, Maşallah! 🌟", ur: "ایسے ہی جاری رکھیں، ماشاءاللہ! 🌟" },
+  "loginBonus.comeBack": { fr: "Reviens demain pour augmenter ton bonus !", en: "Come back tomorrow to increase your bonus!", nl: "Kom morgen terug voor een hogere bonus!", ar: "عد غداً لزيادة مكافأتك!", tr: "Bonusunu artırmak için yarın gel!", ur: "اپنا بونس بڑھانے کے لیے کل واپس آئیں!" },
+  "loginBonus.days": { fr: "jours", en: "days", nl: "dagen", ar: "يوم", tr: "gün", ur: "دن" },
+
+  // ═══ LEADERBOARD ENHANCEMENTS ═══
+  "lb.weeklyProgress": { fr: "Progression hebdo", en: "Weekly progress", nl: "Wekelijkse voortgang", ar: "التقدم الأسبوعي", tr: "Haftalık ilerleme", ur: "ہفتہ وار پیشرفت" },
+  "lb.sessions": { fr: "sessions", en: "sessions", nl: "sessies", ar: "جلسات", tr: "oturum", ur: "سیشنز" },
+  "lb.streakDays": { fr: "jours de suite", en: "day streak", nl: "dagen op rij", ar: "أيام متتالية", tr: "gün serisi", ur: "مسلسل دن" },
 } as const;
 
 // ─── Context ────────────────────────────────────────────────

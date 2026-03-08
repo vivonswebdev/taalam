@@ -115,6 +115,25 @@ function MyRankCard({ board, userId, ligue }: { board: LeaderboardEntry[]; userI
           <p className="text-xs text-muted-foreground">{LIGUES[ligue].name} · {me?.xp_total} XP</p>
         </div>
       </div>
+
+      {/* Stats row */}
+      {me && (
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="bg-card/60 rounded-lg p-2 text-center">
+            <p className="text-sm font-bold text-primary">{me.xp_total}</p>
+            <p className="text-[9px] text-muted-foreground">XP</p>
+          </div>
+          <div className="bg-card/60 rounded-lg p-2 text-center">
+            <p className="text-sm font-bold text-secondary">{Number(me.mastery_score).toFixed(0)}%</p>
+            <p className="text-[9px] text-muted-foreground">Hifz</p>
+          </div>
+          <div className="bg-card/60 rounded-lg p-2 text-center">
+            <p className="text-sm font-bold text-amber-500">{me.streak_days || 0} 🔥</p>
+            <p className="text-[9px] text-muted-foreground">{t("lb.streakDays" as any)}</p>
+          </div>
+        </div>
+      )}
+
       {pointsToNext !== null && pointsToNext > 0 && (
         <div className="mt-3 flex items-center gap-2 bg-card/60 rounded-lg p-2">
           <ChevronUp size={14} className="text-primary" />
@@ -129,6 +148,24 @@ function MyRankCard({ board, userId, ligue }: { board: LeaderboardEntry[]; userI
           <p className="text-xs text-foreground">
             <span className="font-bold text-secondary">+{xpToNextLigue} XP</span> → {t("lb.nextLeague")} {nextLigueConfig!.name}
           </p>
+        </div>
+      )}
+
+      {/* Weekly progress bar */}
+      {me && (
+        <div className="mt-3 bg-card/60 rounded-lg p-2">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[10px] font-semibold text-muted-foreground">{t("lb.weeklyProgress" as any)}</p>
+            <p className="text-[10px] font-bold text-foreground">{me.sessions_count} {t("lb.sessions" as any)}</p>
+          </div>
+          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-violet-500"
+              initial={false}
+              animate={{ width: `${Math.min(100, (me.sessions_count / 50) * 100)}%` }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
+            />
+          </div>
         </div>
       )}
     </motion.div>
