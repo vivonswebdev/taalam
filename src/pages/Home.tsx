@@ -4,6 +4,8 @@ import { HomeDashboard } from "@/components/dashboard/FeatureBubbles";
 import KidsHomePage from "@/pages/KidsHomePage";
 import TeacherHomePage from "@/pages/TeacherHomePage";
 import SEOHead from "@/components/SEOHead";
+import { useLoginStreak } from "@/hooks/useLoginStreak";
+import LoginBonusPopup from "@/components/LoginBonusPopup";
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {
@@ -29,15 +31,22 @@ class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
 
 export default function Home() {
   const { mode: userMode } = useUserMode();
+  const { bonusResult, dismiss } = useLoginStreak();
 
   if (userMode === "child") {
-    return <KidsHomePage />;
+    return (
+      <>
+        <KidsHomePage />
+        <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
+      </>
+    );
   }
 
   if (userMode === "teacher") {
     return (
       <HomeErrorBoundary>
         <TeacherHomePage />
+        <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
       </HomeErrorBoundary>
     );
   }
@@ -46,6 +55,8 @@ export default function Home() {
     <HomeErrorBoundary>
       <SEOHead title="Ta'alam - Apprendre le Coran facilement" description="Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille." path="/" />
       <HomeDashboard />
+      <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
     </HomeErrorBoundary>
   );
+}
 }
