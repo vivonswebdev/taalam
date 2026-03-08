@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel, generateQuestion, MathQuestion } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const MATH_DIFF: Record<string, { startLevel: number }> = {
+  easy: { startLevel: 1 },
+  medium: { startLevel: 10 },
+  hard: { startLevel: 25 },
+};
 
 const MAX_LIVES = 3;
 const QUESTIONS_PER_LEVEL = 10;
