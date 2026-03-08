@@ -37,6 +37,7 @@ export default function MathShooterPage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "levelComplete" | "gameOver">("menu");
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
