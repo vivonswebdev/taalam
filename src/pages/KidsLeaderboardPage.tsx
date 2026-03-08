@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { getKidsSeedLeaderboard } from "@/data/kidsLeaderboardSeed";
 
 interface LeaderboardEntry {
   id: string;
@@ -93,6 +94,8 @@ export default function KidsLeaderboardPage() {
     })();
   }, [classFilter]);
 
+  const seedKids = useMemo(() => getKidsSeedLeaderboard(), []);
+
   // Fetch all children profiles for leaderboard
   const fetchEntries = async () => {
     setLoading(true);
@@ -119,7 +122,12 @@ export default function KidsLeaderboardPage() {
       profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
     }
 
-    setEntries(profiles);
+    // Merge real + seed (real first, deduplicate by id)
+    const realIds = new Set(profiles.map(p => p.id));
+    const merged = [...profiles, ...seedKids.filter(s => !realIds.has(s.id))];
+    merged.sort((a, b) => b.total_points - a.total_points);
+
+    setEntries(merged);
     setLoading(false);
   };
 
