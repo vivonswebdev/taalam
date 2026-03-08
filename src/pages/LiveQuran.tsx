@@ -192,7 +192,7 @@ export default function LiveQuran() {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 className="w-2 h-2 rounded-full bg-red-500"
               />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">En direct</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">{t("liveQuran.live" as any)}</span>
             </div>
 
             {/* Station info */}
