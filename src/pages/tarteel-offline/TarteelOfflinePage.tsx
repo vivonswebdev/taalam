@@ -55,9 +55,6 @@ function saveHistory(entries: HistoryEntry[]) {
 function getAvailableAyahs(surahNum: string): number[] {
   const surah = quranMinimal[surahNum];
   if (!surah) return [];
-  if (surah.verses) {
-    return Object.keys(surah.verses).map(Number).sort((a, b) => a - b);
-  }
   return Array.from({ length: surah.ayahs }, (_, i) => i + 1);
 }
 
