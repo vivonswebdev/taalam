@@ -53,15 +53,21 @@ export default function QuickCalcPage() {
     setIsCorrect(null);
   }, [level, diff.timePerCalc]);
 
-  const startGame = () => {
+  const startGame = (startLevel?: number) => {
+    const sl = startLevel ?? (difficulty ? MATH_DIFF[difficulty].startLevel : 1);
     setGameState("playing");
-    setLevel(1);
+    setLevel(sl);
     setScore(0);
     setCombo(0);
     setMaxCombo(0);
     setLives(MAX_LIVES);
     setQuestionIndex(0);
     setTotalXp(0);
+  };
+
+  const selectDifficulty = (d: string) => {
+    setDifficulty(d);
+    startGame(MATH_DIFF[d].startLevel);
   };
 
   useEffect(() => {
