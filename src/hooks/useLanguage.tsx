@@ -3216,7 +3216,7 @@ const translations = {
   "mathGames.botThinking": { fr: "Le bot réfléchit", en: "Bot is thinking", nl: "Bot denkt na", ar: "الروبوت يفكر", tr: "Bot düşünüyor", ur: "بوٹ سوچ رہا ہے" },
   "mathGames.botWins": { fr: "Le bot a gagné !", en: "Bot wins!", nl: "Bot wint!", ar: "فاز الروبوت!", tr: "Bot kazandı!", ur: "بوٹ جیت گیا!" },
   "mathGames.rematch": { fr: "Revanche !", en: "Rematch!", nl: "Herkansing!", ar: "مباراة العودة!", tr: "Rövanş!", ur: "دوبارہ!" },
-} as const;
+
   // ═══ VOICE PROFILE ═══
   "voice.title": { fr: "Profil vocal", en: "Voice Profile", nl: "Spraakprofiel", ar: "الملف الصوتي", tr: "Ses Profili", ur: "آواز پروفائل" },
   "voice.voiceType": { fr: "Type de voix", en: "Voice type", nl: "Stemtype", ar: "نوع الصوت", tr: "Ses tipi", ur: "آواز کی قسم" },
@@ -3271,8 +3271,7 @@ const translations = {
   "seo.communityDesc": { fr: "Rejoignez des groupes d'étude coranique, partagez vos progrès.", en: "Join Quran study groups, share your progress.", nl: "Sluit je aan bij Koran studiegroepen, deel je voortgang.", ar: "انضم إلى مجموعات دراسة القرآن، شارك تقدمك.", tr: "Kur'an çalışma gruplarına katılın, ilerlemenizi paylaşın.", ur: "قرآن مطالعہ گروپس میں شامل ہوں، اپنی پیشرفت شیئر کریں۔" },
   "seo.moreTitle": { fr: "Plus - Paramètres & Outils", en: "More - Settings & Tools", nl: "Meer - Instellingen & Tools", ar: "المزيد - الإعدادات والأدوات", tr: "Daha Fazla - Ayarlar ve Araçlar", ur: "مزید - ترتیبات اور ٹولز" },
   "seo.moreDesc": { fr: "Accédez aux paramètres, outils islamiques, prières, calendrier hijri.", en: "Access settings, Islamic tools, prayers, Hijri calendar.", nl: "Ga naar instellingen, islamitische tools, gebeden, Hijri-kalender.", ar: "الوصول إلى الإعدادات والأدوات الإسلامية والصلوات والتقويم الهجري.", tr: "Ayarlara, İslami araçlara, namazlara, Hicri takvime erişin.", ur: "ترتیبات، اسلامی ٹولز، نمازیں، ہجری کیلنڈر تک رسائی۔" },
-
-type TranslationKey = keyof typeof translations;
+} as const;
 
 // ─── Context ────────────────────────────────────────────────
 interface LanguageContextType {
