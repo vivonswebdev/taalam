@@ -139,7 +139,7 @@ export default function LiveQuran() {
     setActiveStation(station);
     audio.play().catch(() => {
       setIsLoading(false);
-      setError("Impossible de lancer la lecture. Essayez une autre station.");
+      setError(t("liveQuran.playError" as any));
     });
   }, []);
 
