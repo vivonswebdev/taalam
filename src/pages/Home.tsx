@@ -38,6 +38,7 @@ class HomeErrorBoundary extends Component<{ children: ReactNode }, { hasError: b
 export default function Home() {
   const { mode: userMode } = useUserMode();
   const { bonusResult, dismiss } = useLoginStreak();
+  const { mode: designMode } = useDesignPreference();
 
   if (userMode === "child") {
     return (
@@ -62,7 +63,19 @@ export default function Home() {
   return (
     <HomeErrorBoundary>
       <SEOHead title="Ta'alam - Apprendre le Coran facilement" description="Apprenez le Coran avec Ta'alam : quiz, récitation vocale, mémorisation et progression gamifiée pour toute la famille." path="/" />
-      <HomeDashboard />
+      <NewDesignBanner />
+      <DesignModeToggle />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={designMode}
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 0.35 }}
+        >
+          {designMode === "futuristic" ? <FuturisticBubbleHome /> : <HomeDashboard />}
+        </motion.div>
+      </AnimatePresence>
       <LoginBonusPopup result={bonusResult} onDismiss={dismiss} />
       <StreakWidget />
     </HomeErrorBoundary>
