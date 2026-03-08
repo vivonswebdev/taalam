@@ -3,6 +3,13 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { ArrowLeft, Check, X, Scale, Star, RotateCcw, Heart, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
+import DifficultySelector from '@/components/DifficultySelector';
+
+const BALANCE_DIFF: Record<string, { lives: number; timerSpeed: number; cardCount: number }> = {
+  easy: { lives: 5, timerSpeed: 0.3, cardCount: 10 },
+  medium: { lives: 3, timerSpeed: 0.5, cardCount: 15 },
+  hard: { lives: 2, timerSpeed: 0.8, cardCount: 20 },
+};
 
 const ACTIONS_DB = [
   { id: 1, tKey: "bismillah", defaultText: "Dire Bismillah avant de manger", emoji: "🍽️", isGood: true },
