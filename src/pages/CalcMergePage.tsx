@@ -7,6 +7,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { getDifficultyForLevel } from "@/data/mathDifficultyConfig";
 import Confetti from "@/components/Confetti";
+import DifficultySelector from "@/components/DifficultySelector";
+
+const CALC_DIFF: Record<string, { winTarget: number; description: string }> = {
+  easy: { winTarget: 64, description: "🎯 64" },
+  medium: { winTarget: 256, description: "🎯 256" },
+  hard: { winTarget: 1024, description: "🎯 1024" },
+};
 
 // --- Types ---
 type CellValue = number | null;
