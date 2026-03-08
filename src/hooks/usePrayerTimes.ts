@@ -4,6 +4,7 @@ import { reverseGeocode } from "@/hooks/useCityAutocomplete";
 
 export interface PrayerTimes {
   Fajr: string;
+  Sunrise: string;
   Dhuhr: string;
   Asr: string;
   Maghrib: string;
@@ -40,6 +41,12 @@ function formatCountdown(ms: number): string {
   return h > 0 ? `${h}h ${String(m).padStart(2, "0")}m` : `${m}m`;
 }
 
+export function calculateDohaTime(sunrise: string): string {
+  const [hours, minutes] = sunrise.split(":").map(Number);
+  const totalMin = hours * 60 + minutes + 15;
+  return `${String(Math.floor(totalMin / 60)).padStart(2, "0")}:${String(totalMin % 60).padStart(2, "0")}`;
+}
+
 export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (city: string, country: string, lat: number, lng: number) => void) {
   const [state, setState] = useState<PrayerTimesState>({
     times: null,
@@ -64,7 +71,7 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (
       const data = await res.json();
       const t = data.data.timings;
       const times: PrayerTimes = {
-        Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
+        Fajr: t.Fajr, Sunrise: t.Sunrise, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
       };
       setState((s) => ({ ...s, times, loading: false, location: { lat, lng }, cityName: knownCity || s.cityName }));
     } catch (e: any) {
@@ -78,7 +85,6 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (
     const school = prayerSettings?.school ?? 0;
     const latAdj = prayerSettings?.latitudeAdjustmentMethod ?? 3;
 
-    // If we have stored coords (from auto-detect or manual selection), use them
     if (prayerSettings?.lat && prayerSettings?.lng) {
       const cityDisplay = prayerSettings.city && prayerSettings.country
         ? `${prayerSettings.city}, ${prayerSettings.country}`
@@ -87,9 +93,7 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (
       return;
     }
 
-    // Legacy city mode (no coords stored)
     if (prayerSettings?.source === "city" && prayerSettings.city.trim()) {
-      // Use AlAdhan city endpoint as fallback
       const fetchByCity = async () => {
         try {
           setState((s) => ({ ...s, loading: true, error: null }));
@@ -109,7 +113,7 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (
           const data = await res.json();
           const t = data.data.timings;
           const times: PrayerTimes = {
-            Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
+            Fajr: t.Fajr, Sunrise: t.Sunrise, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha,
           };
           setState((s) => ({ ...s, times, loading: false, cityName: prayerSettings.city }));
         } catch (e: any) {
@@ -120,12 +124,10 @@ export function usePrayerTimes(prayerSettings?: PrayerSettings, onAutoDetect?: (
       return;
     }
 
-    // GPS mode — auto-detect city
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude, longitude } = pos.coords;
-          // Reverse geocode to get city name
           const geo = await reverseGeocode(latitude, longitude);
           if (geo && onAutoDetect) {
             onAutoDetect(geo.city, geo.country, geo.lat, geo.lng);
