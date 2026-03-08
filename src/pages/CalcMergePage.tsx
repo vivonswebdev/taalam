@@ -159,6 +159,7 @@ export default function CalcMergePage() {
   const { user } = useAuth();
   const activeChildId = localStorage.getItem("taaloum_active_child_id");
 
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [gameState, setGameState] = useState<"menu" | "playing" | "won" | "lost">("menu");
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [score, setScore] = useState(0);
