@@ -126,6 +126,7 @@ const MathRacePage = lazy(() => import("./pages/MathRacePage"));
 const MathChainPage = lazy(() => import("./pages/MathChainPage"));
 const MathDuelPage = lazy(() => import("./pages/MathDuelPage"));
 const TVModePage = lazy(() => import("./pages/TVModePage"));
+const QuranLibraryPage = lazy(() => import("./pages/QuranLibraryPage"));
 
 function PageLoader() {
   return (
@@ -290,6 +291,7 @@ const App = () => (
                   <Route path="/kids-math-chain" element={<MathChainPage />} />
                   <Route path="/kids-math-duel" element={<MathDuelPage />} />
                   <Route path="/tetris-islam" element={<TetrisIslamPage />} />
+                  <Route path="/library" element={<QuranLibraryPage />} />
                   <Route path="/tv" element={<TVModePage />} />
                   <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
                   <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
