@@ -125,6 +125,7 @@ const IslamicColorsPage = lazy(() => import("./pages/IslamicColorsPage"));
 const MathRacePage = lazy(() => import("./pages/MathRacePage"));
 const MathChainPage = lazy(() => import("./pages/MathChainPage"));
 const MathDuelPage = lazy(() => import("./pages/MathDuelPage"));
+const TVModePage = lazy(() => import("./pages/TVModePage"));
 
 function PageLoader() {
   return (
@@ -149,7 +150,7 @@ function AppVersionGuard() {
   return null;
 }
 
-const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf"];
+const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf", "/tv"];
 
 function ConditionalBottomUI() {
   const location = useLocation();
@@ -289,6 +290,7 @@ const App = () => (
                   <Route path="/kids-math-chain" element={<MathChainPage />} />
                   <Route path="/kids-math-duel" element={<MathDuelPage />} />
                   <Route path="/tetris-islam" element={<TetrisIslamPage />} />
+                  <Route path="/tv" element={<TVModePage />} />
                   <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
                   <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
                   <Route path="*" element={<NotFound />} />

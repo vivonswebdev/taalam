@@ -3349,6 +3349,17 @@ const translations = {
   "lb.weeklyProgress": { fr: "Progression hebdo", en: "Weekly progress", nl: "Wekelijkse voortgang", ar: "التقدم الأسبوعي", tr: "Haftalık ilerleme", ur: "ہفتہ وار پیشرفت" },
   "lb.sessions": { fr: "sessions", en: "sessions", nl: "sessies", ar: "جلسات", tr: "oturum", ur: "سیشنز" },
   "lb.streakDays": { fr: "jours de suite", en: "day streak", nl: "dagen op rij", ar: "أيام متتالية", tr: "gün serisi", ur: "مسلسل دن" },
+
+  // ═══ TV MODE ═══
+  "tv.title": { fr: "Mode TV", en: "TV Mode", nl: "TV-modus", ar: "وضع التلفزيون", tr: "TV Modu", ur: "ٹی وی موڈ" },
+  "tv.subtitle": { fr: "Plein écran cinématique", en: "Cinematic fullscreen", nl: "Cinematisch volledig scherm", ar: "شاشة سينمائية كاملة", tr: "Sinematik tam ekran", ur: "سنیماٹک فل سکرین" },
+  "tv.reciter": { fr: "Récitateur", en: "Reciter", nl: "Reciteerder", ar: "القارئ", tr: "Okuyucu", ur: "قاری" },
+  "tv.textSize": { fr: "Taille texte", en: "Text size", nl: "Tekstgrootte", ar: "حجم النص", tr: "Metin boyutu", ur: "متن کا سائز" },
+  "tv.display": { fr: "Affichage", en: "Display", nl: "Weergave", ar: "العرض", tr: "Görüntü", ur: "ڈسپلے" },
+  "tv.translation": { fr: "Traduction", en: "Translation", nl: "Vertaling", ar: "الترجمة", tr: "Çeviri", ur: "ترجمہ" },
+  "tv.transliteration": { fr: "Translitération", en: "Transliteration", nl: "Transliteratie", ar: "النقحرة", tr: "Transliterasyon", ur: "حرف بدل" },
+  "tv.duration": { fr: "Durée par ayah", en: "Duration per ayah", nl: "Duur per ayah", ar: "مدة كل آية", tr: "Ayet başına süre", ur: "فی آیت دورانیہ" },
+  "tv.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "السورة", tr: "Sure", ur: "سورت" },
 } as const;
 
 // ─── Context ────────────────────────────────────────────────

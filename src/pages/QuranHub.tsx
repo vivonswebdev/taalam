@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mic, Radio } from "lucide-react";
+import { Mic, Radio, Tv } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import PageBackground from "@/components/PageBackground";
 import SEOHead from "@/components/SEOHead";
@@ -85,6 +85,19 @@ export default function QuranHub() {
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
               <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort")}</p>
+            </div>
+          </motion.button>
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => navigate("/tv")}
+            className="flex items-center gap-2.5 rounded-xl p-3 bg-gradient-to-r from-slate-800/70 to-slate-900/70 border border-white/10 hover:border-purple-400/40 transition-colors col-span-2">
+            <Tv size={18} className="text-purple-400 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">{t("tv.title")}</p>
+              <p className="text-[10px] text-muted-foreground truncate">{t("tv.subtitle")}</p>
             </div>
           </motion.button>
         </div>
