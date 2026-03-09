@@ -198,30 +198,24 @@ export default function TVModePage() {
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'rgba(255,255,255,0.5)' }} />
         ) : currentAyah ? (
           <>
-            {showArabic && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`arabic-${surahNumber}-${currentAyahIndex}`}
-                  initial={{ opacity: 0, y: 20, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 1.03 }}
-                  transition={{ duration: 0.9, ease: 'easeInOut' }}
-                  style={{ textAlign: 'center', maxWidth: '64rem' }}
+            {showArabic && currentAyah.arabic && (
+              <div
+                key={`arabic-${surahNumber}-${currentAyahIndex}`}
+                style={{ textAlign: 'center', maxWidth: '64rem' }}
+              >
+                <p
+                  className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
+                  style={{
+                    color: '#FFFFFF',
+                    fontWeight: 600,
+                    textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
+                    fontFamily: '"Scheherazade New", "Amiri", serif',
+                  }}
+                  dir="rtl"
                 >
-                  <p
-                    className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
-                    style={{
-                      color: '#FFFFFF',
-                      fontWeight: 600,
-                      textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
-                      fontFamily: '"Scheherazade New", "Amiri", serif',
-                    }}
-                    dir="rtl"
-                  >
-                    {currentAyah.arabic}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
+                  {currentAyah.arabic}
+                </p>
+              </div>
             )}
 
             {showTranslit && currentAyah.transliteration && (
