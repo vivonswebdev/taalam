@@ -290,6 +290,7 @@ const App = () => (
                   <Route path="/kids-math-chain" element={<MathChainPage />} />
                   <Route path="/kids-math-duel" element={<MathDuelPage />} />
                   <Route path="/tetris-islam" element={<TetrisIslamPage />} />
+                  <Route path="/tv" element={<TVModePage />} />
                   <Route path="/parent-invitations" element={<ParentInvitationsPage />} />
                   <Route path="/create-child-for-invite/:inviteId" element={<CreateChildForInvitePage />} />
                   <Route path="*" element={<NotFound />} />
