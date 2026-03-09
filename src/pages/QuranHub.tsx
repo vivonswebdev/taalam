@@ -19,7 +19,8 @@ export default function QuranHub() {
         <p className="text-xs text-muted-foreground mt-0.5">{t("quranHub.subtitle")}</p>
       </div>
 
-      <div className="px-5 grid grid-cols-2 gap-3 flex-1">
+      {/* Primary 2x2 grid — same size cards */}
+      <div className="px-5 grid grid-cols-2 gap-3">
         {/* Mushaf */}
         <motion.button
           initial={{ opacity: 0, y: 12 }}
@@ -27,13 +28,11 @@ export default function QuranHub() {
           transition={{ delay: 0.1 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/mushaf")}
-          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg aspect-square py-[30px]">
-
-          <span className="text-6xl">📖</span>
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-amber-700/50 to-yellow-800/30 border border-amber-400/30 shadow-lg aspect-square">
+          <span className="text-5xl">📖</span>
           <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.mushafTitle")}</p>
-            <p className="text-xs font-semibold text-white/80 mt-1">{t("quranHub.mushafSubtitle")}</p>
-            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.mushafDesc")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.mushafSubtitle")}</p>
           </div>
         </motion.button>
 
@@ -41,16 +40,44 @@ export default function QuranHub() {
         <motion.button
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/reading")}
           className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-emerald-700/50 to-teal-800/30 border border-emerald-400/30 shadow-lg aspect-square">
-
-          <span className="text-6xl">🎧</span>
+          <span className="text-5xl">🎧</span>
           <div className="min-w-0">
             <p className="text-base font-bold text-white">{t("quranHub.readingTitle")}</p>
-            <p className="text-xs font-semibold text-white/80 mt-1">{t("quranHub.readingSubtitle")}</p>
-            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.readingDesc")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.readingSubtitle")}</p>
+          </div>
+        </motion.button>
+
+        {/* Coran TV */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/tv")}
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-purple-700/50 to-indigo-800/30 border border-purple-400/30 shadow-lg aspect-square">
+          <span className="text-5xl">📺</span>
+          <div className="min-w-0">
+            <p className="text-base font-bold text-white">{t("tv.title")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("tv.subtitle")}</p>
+          </div>
+        </motion.button>
+
+        {/* Live Haramain */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/live-haramain")}
+          className="flex flex-col items-center justify-center gap-3 rounded-2xl p-5 text-center bg-gradient-to-br from-rose-700/50 to-red-800/30 border border-rose-400/30 shadow-lg aspect-square">
+          <span className="text-5xl">🕋</span>
+          <div className="min-w-0">
+            <p className="text-base font-bold text-white">{t("dashboard.liveHaramain")}</p>
+            <p className="text-[10px] text-white/50 mt-1 line-clamp-2">{t("quranHub.liveShort")}</p>
           </div>
         </motion.button>
       </div>
@@ -66,7 +93,6 @@ export default function QuranHub() {
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate("/quran")}
             className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors">
-
             <Mic size={18} className="text-primary shrink-0" />
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.tarteelButton")}</p>
@@ -80,29 +106,14 @@ export default function QuranHub() {
             whileTap={{ scale: 0.96 }}
             onClick={() => navigate("/live-quran")}
             className="flex items-center gap-2.5 rounded-xl p-3 bg-card/70 border border-border hover:border-primary/40 transition-colors">
-
             <Radio size={18} className="text-green-500 shrink-0" />
             <div className="min-w-0">
               <p className="text-xs font-semibold text-foreground truncate">{t("quranHub.liveTitle")}</p>
               <p className="text-[10px] text-muted-foreground truncate">{t("quranHub.liveShort")}</p>
             </div>
           </motion.button>
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => navigate("/tv")}
-            className="flex items-center gap-2.5 rounded-xl p-3 bg-gradient-to-r from-slate-800/70 to-slate-900/70 border border-white/10 hover:border-purple-400/40 transition-colors col-span-2">
-            <Tv size={18} className="text-purple-400 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate">{t("tv.title")}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{t("tv.subtitle")}</p>
-            </div>
-          </motion.button>
         </div>
       </div>
     </div>
     </PageBackground>);
-
 }
