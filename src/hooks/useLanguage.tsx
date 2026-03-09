@@ -3351,7 +3351,7 @@ const translations = {
   "lb.streakDays": { fr: "jours de suite", en: "day streak", nl: "dagen op rij", ar: "أيام متتالية", tr: "gün serisi", ur: "مسلسل دن" },
 
   // ═══ TV MODE ═══
-  "tv.title": { fr: "Mode TV", en: "TV Mode", nl: "TV-modus", ar: "وضع التلفزيون", tr: "TV Modu", ur: "ٹی وی موڈ" },
+  "tv.title": { fr: "Coran TV", en: "Quran TV", nl: "Koran TV", ar: "قرآن تي في", tr: "Kur'an TV", ur: "قرآن ٹی وی" },
   "tv.subtitle": { fr: "Plein écran cinématique", en: "Cinematic fullscreen", nl: "Cinematisch volledig scherm", ar: "شاشة سينمائية كاملة", tr: "Sinematik tam ekran", ur: "سنیماٹک فل سکرین" },
   "tv.reciter": { fr: "Récitateur", en: "Reciter", nl: "Reciteerder", ar: "القارئ", tr: "Okuyucu", ur: "قاری" },
   "tv.textSize": { fr: "Taille texte", en: "Text size", nl: "Tekstgrootte", ar: "حجم النص", tr: "Metin boyutu", ur: "متن کا سائز" },
