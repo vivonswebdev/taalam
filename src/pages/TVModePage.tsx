@@ -58,7 +58,7 @@ export default function TVModePage() {
     ]).then(([surah, transData, translitData]) => {
       setSurahName(surah.nameArabic || `سورة ${surahNumber}`);
       const mapped = surah.ayahs.map((a: any, i: number) => ({
-        arabic: a.text,
+        arabic: a.arabic || a.text || '',
         translation: transData?.data?.ayahs?.[i]?.text || '',
         transliteration: translitData?.data?.ayahs?.[i]?.text || '',
       }));
