@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
+// Free nature videos from Pixabay/Pexels CDN (royalty-free)
 const VIDEOS = [
-  '/videos/nature_01.mp4',
-  '/videos/nature_02.mp4',
-  '/videos/nature_03.mp4',
-  '/videos/nature_04.mp4',
-  '/videos/nature_05.mp4',
-  '/videos/nature_06.mp4',
+  'https://cdn.pixabay.com/video/2024/05/31/214698_large.mp4', // ocean waves
+  'https://cdn.pixabay.com/video/2020/07/30/45637-445192781_large.mp4', // forest
+  'https://cdn.pixabay.com/video/2021/08/12/85029-586698744_large.mp4', // clouds sky
+  'https://cdn.pixabay.com/video/2023/09/14/180595-864688154_large.mp4', // sunset
+  'https://cdn.pixabay.com/video/2020/05/25/40130-424930975_large.mp4', // waterfall
+  'https://cdn.pixabay.com/video/2022/07/22/125477-732611081_large.mp4', // stars night
 ];
 
 interface VideoBackgroundProps {
@@ -22,53 +22,48 @@ export const VideoBackground = memo(function VideoBackground({
   opacity = 0.4,
 }: VideoBackgroundProps) {
   const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * VIDEOS.length));
-  const [nextIndex, setNextIndex] = useState(() => (currentIndex + 1) % VIDEOS.length);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [fading, setFading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const nextVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (!autoRotate) return;
     const interval = setInterval(() => {
-      setIsTransitioning(true);
+      setFading(true);
       setTimeout(() => {
-        setCurrentIndex(nextIndex);
-        setNextIndex((nextIndex + 1) % VIDEOS.length);
-        setIsTransitioning(false);
-      }, 1000);
+        setCurrentIndex(prev => (prev + 1) % VIDEOS.length);
+        setFading(false);
+      }, 1200);
     }, intervalSeconds * 1000);
     return () => clearInterval(interval);
-  }, [autoRotate, intervalSeconds, nextIndex]);
+  }, [autoRotate, intervalSeconds]);
+
+  // When video source changes, play it
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [currentIndex]);
 
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
-      <AnimatePresence>
-        <motion.video
-          key={currentIndex}
-          ref={videoRef}
-          src={VIDEOS[currentIndex]}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isTransitioning ? 0 : opacity }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5 }}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'brightness(0.6) saturate(1.2)' }}
-        />
-      </AnimatePresence>
-
       <video
-        ref={nextVideoRef}
-        src={VIDEOS[nextIndex]}
+        ref={videoRef}
+        key={currentIndex}
+        src={VIDEOS[currentIndex]}
+        autoPlay
+        loop
         muted
+        playsInline
         preload="auto"
-        className="hidden"
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+        style={{
+          opacity: fading ? 0 : opacity,
+          filter: 'brightness(0.6) saturate(1.2)',
+        }}
       />
 
+      {/* Gradient overlays for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
       <div
         className="absolute inset-0"
