@@ -150,7 +150,7 @@ function AppVersionGuard() {
   return null;
 }
 
-const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf"];
+const MUSHAF_FULLSCREEN_ROUTES = ["/mushaf", "/tv"];
 
 function ConditionalBottomUI() {
   const location = useLocation();
