@@ -24,6 +24,7 @@ export default function TVModePage() {
   const [showControls, setShowControls] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedReciter, setSelectedReciter] = useState(TV_RECITERS[0]);
+  const [showArabic, setShowArabic] = useState(true);
   const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslit, setShowTranslit] = useState(false);
   const [arabicSize, setArabicSize] = useState<'md' | 'lg' | 'xl'>('xl');
