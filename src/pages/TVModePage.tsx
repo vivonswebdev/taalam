@@ -201,10 +201,6 @@ export default function TVModePage() {
           pointerEvents: 'none',
         }}
       >
-        {/* Debug - remove later */}
-        <p style={{ color: 'yellow', fontSize: '12px', position: 'absolute', top: 10, left: 10, zIndex: 999 }}>
-          loading={String(isLoadingSurah)} ayahs={ayahs.length} idx={currentAyahIndex} showArabic={String(showArabic)} hasArabic={String(!!currentAyah?.arabic)}
-        </p>
 
         {isLoadingSurah ? (
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'rgba(255,255,255,0.5)' }} />
