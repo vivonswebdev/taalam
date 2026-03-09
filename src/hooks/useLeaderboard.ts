@@ -167,6 +167,19 @@ export function useLeaderboard() {
     };
   }, [fetchGlobal]);
 
+  // Realtime subscription for instant leaderboard updates
+  useEffect(() => {
+    const channel = supabase
+      .channel("leaderboard-realtime")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "profiles" },
+        () => { fetchGlobal(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [fetchGlobal]);
+
   return {
     globalBoard, countryBoard, levelBoard,
     loading, selectedCountry, selectedLevel,
