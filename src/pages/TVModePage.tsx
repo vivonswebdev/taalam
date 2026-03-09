@@ -180,10 +180,21 @@ export default function TVModePage() {
       {/* Subtle overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" style={{ zIndex: 1 }} />
 
-      {/* Content — only Arabic text centered */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-8 md:px-20" style={{ zIndex: 10 }}>
+      {/* Content — Arabic text centered */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 2rem',
+        }}
+      >
         {isLoadingSurah ? (
-          <Loader2 className="w-8 h-8 text-white/40 animate-spin" />
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'rgba(255,255,255,0.5)' }} />
         ) : currentAyah ? (
           <>
             <AnimatePresence mode="wait">
@@ -193,12 +204,14 @@ export default function TVModePage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 1.03 }}
                 transition={{ duration: 0.9, ease: 'easeInOut' }}
-                className="text-center max-w-5xl"
+                style={{ textAlign: 'center', maxWidth: '64rem' }}
               >
                 <p
-                  className={`font-arabic text-white font-semibold leading-loose ${arabicSizes[arabicSize]}`}
+                  className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
                   style={{
-                    textShadow: '0 4px 40px rgba(0,0,0,0.8), 0 2px 15px rgba(0,0,0,0.6)',
+                    color: '#FFFFFF',
+                    fontWeight: 600,
+                    textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
                     fontFamily: '"Scheherazade New", "Amiri", serif',
                   }}
                   dir="rtl"
@@ -213,7 +226,7 @@ export default function TVModePage() {
                 key={`translit-${currentAyahIndex}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-white/50 text-base italic text-center mt-4 max-w-3xl"
+                style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', fontStyle: 'italic', textAlign: 'center', marginTop: '1rem', maxWidth: '48rem' }}
               >
                 {currentAyah.transliteration}
               </motion.p>
@@ -225,14 +238,17 @@ export default function TVModePage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-white/70 text-lg md:text-xl text-center max-w-3xl font-light mt-4"
-                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}
+                style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.25rem', textAlign: 'center', maxWidth: '48rem', fontWeight: 300, marginTop: '1rem', textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}
               >
                 {currentAyah.translation}
               </motion.p>
             )}
           </>
-        ) : null}
+        ) : (
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '1rem' }}>
+            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+          </p>
+        )}
 
         {/* Minimal progress bar at bottom of content area */}
         {ayahs.length > 0 && !showControls && (

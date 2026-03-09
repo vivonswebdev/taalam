@@ -83,7 +83,7 @@ export const VideoBackground = memo(function VideoBackground({
           height: 'auto',
           objectFit: 'cover',
           opacity: opacity,
-          filter: 'brightness(0.7) saturate(1.3)',
+          filter: 'brightness(0.9) saturate(1.2)',
         }}
         onError={() => {
           console.error('Video error, skipping to next');
