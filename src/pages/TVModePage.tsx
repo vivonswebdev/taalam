@@ -58,7 +58,7 @@ export default function TVModePage() {
     ]).then(([surah, transData, translitData]) => {
       setSurahName(surah.nameArabic || `سورة ${surahNumber}`);
       const mapped = surah.ayahs.map((a: any, i: number) => ({
-        arabic: a.text,
+        arabic: a.arabic || a.text || '',
         translation: transData?.data?.ayahs?.[i]?.text || '',
         transliteration: translitData?.data?.ayahs?.[i]?.text || '',
       }));
@@ -169,31 +169,39 @@ export default function TVModePage() {
 
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden bg-black select-none"
-      style={{ cursor: showControls ? 'default' : 'none' }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        backgroundColor: '#000',
+        cursor: showControls ? 'default' : 'none',
+        userSelect: 'none',
+      }}
       onMouseMove={resetControlsTimer}
       onClick={resetControlsTimer}
       onTouchStart={resetControlsTimer}
     >
-       {/* Video background */}
+      {/* Video background */}
       <VideoBackground opacity={0.65} intervalSeconds={35} autoRotate={isPlaying} />
-
-      {/* Subtle overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" style={{ zIndex: 1 }} />
 
       {/* Content — Arabic text centered */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          zIndex: 10,
+          zIndex: 5,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           padding: '0 2rem',
+          pointerEvents: 'none',
         }}
       >
+
         {isLoadingSurah ? (
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'rgba(255,255,255,0.5)' }} />
         ) : currentAyah ? (
