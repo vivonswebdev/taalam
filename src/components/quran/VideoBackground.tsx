@@ -41,7 +41,7 @@ export const VideoBackground = memo(function VideoBackground({
   }, [autoRotate, intervalSeconds, nextIndex]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden -z-10">
+    <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
       <AnimatePresence>
         <motion.video
           key={currentIndex}

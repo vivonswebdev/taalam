@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { fetchFullSurah } from '@/lib/quranData';
 import { RECITERS_LIST } from '@/data/reciters';
+import { Loader2 } from 'lucide-react';
 import {
   Play, Pause, SkipForward, SkipBack,
   Volume2, VolumeX, X, Settings,
@@ -15,7 +16,7 @@ const TV_RECITERS = RECITERS_LIST.filter(r => r.popular && r.category !== 'kids'
 export default function TVModePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentAyahIndex, setCurrentAyahIndex] = useState(0);
@@ -23,14 +24,16 @@ export default function TVModePage() {
   const [showControls, setShowControls] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedReciter, setSelectedReciter] = useState(TV_RECITERS[0]);
-  const [showTranslation, setShowTranslation] = useState(true);
+  const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslit, setShowTranslit] = useState(false);
   const [arabicSize, setArabicSize] = useState<'md' | 'lg' | 'xl'>('xl');
-  const [ayahDuration, setAyahDuration] = useState(8);
   const [surahNumber, setSurahNumber] = useState(1);
   const [ayahs, setAyahs] = useState<{ arabic: string; translation?: string; transliteration?: string }[]>([]);
   const [surahName, setSurahName] = useState('');
   const [isLoadingSurah, setIsLoadingSurah] = useState(true);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(0);
 
   const controlsTimer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -54,19 +57,108 @@ export default function TVModePage() {
     }).catch(() => setIsLoadingSurah(false));
   }, [surahNumber]);
 
-  // Audio playback per ayah
+  // Next/Prev ayah with useCallback to avoid stale closures
+  const nextAyah = useCallback(() => {
+    setAudioProgress(0);
+    setAyahs(prev => {
+      // Use functional updates to read latest state
+      setCurrentAyahIndex(ci => {
+        if (ci < prev.length - 1) {
+          return ci + 1;
+        } else {
+          setSurahNumber(sn => sn < 114 ? sn + 1 : 1);
+          return 0;
+        }
+      });
+      return prev;
+    });
+  }, []);
+
+  const prevAyah = useCallback(() => {
+    setAudioProgress(0);
+    setCurrentAyahIndex(prev => {
+      if (prev > 0) return prev - 1;
+      setSurahNumber(sn => sn > 1 ? sn - 1 : sn);
+      return 0;
+    });
+  }, []);
+
+  // Audio playback — listen to 'ended' event instead of fixed timer
   useEffect(() => {
-    if (!ayahs.length || isMuted) return;
+    if (!ayahs.length || !isPlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      return;
+    }
+
     const surahStr = String(surahNumber).padStart(3, '0');
     const ayahStr = String(currentAyahIndex + 1).padStart(3, '0');
-    // Use everyayah.com CDN
     const reciterFolder = getEveryAyahFolder(selectedReciter.id);
     const url = `https://everyayah.com/data/${reciterFolder}/${surahStr}${ayahStr}.mp3`;
+
+    // Clean up previous
     if (audioRef.current) {
-      audioRef.current.src = url;
-      audioRef.current.play().catch(() => {});
+      audioRef.current.pause();
+      audioRef.current.src = '';
     }
-  }, [currentAyahIndex, surahNumber, selectedReciter, ayahs.length, isMuted]);
+
+    setAudioLoading(true);
+    setAudioProgress(0);
+    setAudioDuration(0);
+
+    const audio = new Audio(url);
+    audio.volume = isMuted ? 0 : 1;
+    audioRef.current = audio;
+
+    const onEnded = () => {
+      nextAyah();
+    };
+
+    const onTimeUpdate = () => {
+      if (audio.duration > 0) {
+        setAudioProgress((audio.currentTime / audio.duration) * 100);
+        setAudioDuration(audio.duration);
+      }
+    };
+
+    const onCanPlay = () => {
+      setAudioLoading(false);
+    };
+
+    const onError = () => {
+      setAudioLoading(false);
+      // Fallback: advance after 5s on error
+      setTimeout(() => nextAyah(), 5000);
+    };
+
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('canplaythrough', onCanPlay);
+    audio.addEventListener('error', onError);
+
+    audio.play().catch(() => {
+      setAudioLoading(false);
+    });
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('canplaythrough', onCanPlay);
+      audio.removeEventListener('error', onError);
+      audio.src = '';
+    };
+  }, [currentAyahIndex, surahNumber, selectedReciter, ayahs.length, isMuted, isPlaying, nextAyah]);
+
+  const togglePlay = useCallback(() => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+    } else {
+      audioRef.current?.play().catch(() => {});
+    }
+    setIsPlaying(prev => !prev);
+  }, [isPlaying]);
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
@@ -79,39 +171,12 @@ export default function TVModePage() {
     return () => clearTimeout(controlsTimer.current);
   }, [resetControlsTimer]);
 
-  // Auto-advance ayah
+  // Update mute on existing audio
   useEffect(() => {
-    if (!isPlaying || !ayahs.length) return;
-    const timer = setTimeout(() => {
-      if (currentAyahIndex < ayahs.length - 1) {
-        setCurrentAyahIndex(prev => prev + 1);
-      } else {
-        // Next surah
-        if (surahNumber < 114) {
-          setSurahNumber(prev => prev + 1);
-        } else {
-          setSurahNumber(1);
-        }
-      }
-    }, ayahDuration * 1000);
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentAyahIndex, ayahDuration, ayahs.length, surahNumber]);
-
-  const nextAyah = () => {
-    if (currentAyahIndex < ayahs.length - 1) {
-      setCurrentAyahIndex(prev => prev + 1);
-    } else if (surahNumber < 114) {
-      setSurahNumber(prev => prev + 1);
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : 1;
     }
-  };
-
-  const prevAyah = () => {
-    if (currentAyahIndex > 0) {
-      setCurrentAyahIndex(prev => prev - 1);
-    } else if (surahNumber > 1) {
-      setSurahNumber(prev => prev - 1);
-    }
-  };
+  }, [isMuted]);
 
   const currentAyah = ayahs[currentAyahIndex];
   const arabicSizes = { md: 'text-3xl md:text-4xl', lg: 'text-4xl md:text-6xl', xl: 'text-5xl md:text-7xl' };
@@ -124,13 +189,14 @@ export default function TVModePage() {
       onClick={resetControlsTimer}
       onTouchStart={resetControlsTimer}
     >
-      <audio ref={audioRef} />
-
+      {/* Video background — z-index 0 */}
       <VideoBackground opacity={0.45} intervalSeconds={35} autoRotate={isPlaying} />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 z-0" />
+      {/* Overlay — z-index 1 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" style={{ zIndex: 1 }} />
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 md:px-20">
+      {/* Content — z-index 10 */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-20" style={{ zIndex: 10 }}>
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -211,21 +277,31 @@ export default function TVModePage() {
           </>
         ) : null}
 
-        {/* Progress bar */}
+        {/* Real audio progress bar */}
         {ayahs.length > 0 && (
           <div className="mt-10 w-full max-w-md">
-            <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
-              <motion.div
-                key={`progress-${surahNumber}-${currentAyahIndex}`}
-                className="h-full bg-gradient-to-r from-cyan-400 to-purple-400"
-                initial={{ width: '0%' }}
-                animate={{ width: '100%' }}
-                transition={{ duration: ayahDuration, ease: 'linear' }}
+            <div className="relative w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+              {audioLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
+                </div>
+              )}
+              <div
+                className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-200"
+                style={{ width: `${audioProgress}%` }}
               />
             </div>
-            <p className="text-center text-white/40 text-xs mt-2">
-              {currentAyahIndex + 1} / {ayahs.length}
-            </p>
+            <div className="flex items-center justify-between mt-1.5">
+              <span className="text-white/40 text-[10px]">
+                {audioDuration > 0 ? `${Math.floor((audioProgress / 100) * audioDuration)}s` : '--'}
+              </span>
+              <span className="text-white/40 text-[10px]">
+                {currentAyahIndex + 1} / {ayahs.length}
+              </span>
+              <span className="text-white/40 text-[10px]">
+                {audioDuration > 0 ? `${Math.floor(audioDuration)}s` : '--'}
+              </span>
+            </div>
           </div>
         )}
       </div>
@@ -237,7 +313,8 @@ export default function TVModePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-6"
+            className="absolute bottom-0 left-0 right-0 p-4 md:p-6"
+            style={{ zIndex: 20 }}
           >
             <div className="max-w-3xl mx-auto bg-black/60 backdrop-blur-2xl rounded-3xl p-4 border border-white/10">
               <div className="flex items-center justify-between">
@@ -246,7 +323,7 @@ export default function TVModePage() {
                     <SkipBack className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => setIsPlaying(!isPlaying)}
+                    onClick={togglePlay}
                     className="p-3.5 rounded-full bg-white text-black hover:scale-105 transition shadow-lg"
                   >
                     {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
@@ -332,21 +409,8 @@ export default function TVModePage() {
                         </label>
                       </div>
 
-                      {/* Speed */}
-                      <div>
-                        <p className="text-white/60 text-xs mb-2">{t("tv.duration")}</p>
-                        {[5, 8, 12, 15].map(sec => (
-                          <button
-                            key={sec}
-                            onClick={() => setAyahDuration(sec)}
-                            className={`w-full text-left px-3 py-1 rounded-lg text-xs transition mb-1 ${
-                              ayahDuration === sec ? 'bg-white text-black font-bold' : 'text-white/70 hover:bg-white/10'
-                            }`}
-                          >
-                            {sec}s
-                          </button>
-                        ))}
-                      </div>
+                      {/* Empty placeholder for grid alignment */}
+                      <div />
                     </div>
 
                     {/* Surah selector */}
@@ -385,7 +449,8 @@ export default function TVModePage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-0 left-0 right-0 z-20 p-4 md:p-6 flex items-center justify-between"
+            className="absolute top-0 left-0 right-0 p-4 md:p-6 flex items-center justify-between"
+            style={{ zIndex: 20 }}
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 flex items-center justify-center">
@@ -403,7 +468,6 @@ export default function TVModePage() {
   );
 }
 
-// Map reciter IDs to everyayah.com folder names
 function getEveryAyahFolder(reciterId: string): string {
   const map: Record<string, string> = {
     'ar.alafasy': 'Alafasy_128kbps',
