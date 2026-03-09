@@ -1947,6 +1947,28 @@ const translations = {
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
 
 
+  // Library
+  "library.title": { fr: "Bibliothèque Éducative", en: "Educational Library", ar: "المكتبة التعليمية", nl: "Educatieve bibliotheek", ur: "تعلیمی لائبریری", tr: "Eğitim Kütüphanesi" },
+  "library.subtitle": { fr: "Vidéos éducatives Coran multi-langue", en: "Multi-language Quran educational videos", ar: "فيديوهات تعليمية للقرآن بعدة لغات", nl: "Meertalige educatieve Koranvideo's", ur: "کثیر لسانی قرآنی تعلیمی ویڈیوز", tr: "Çok dilli Kur'an eğitim videoları" },
+  "library.search": { fr: "Rechercher une playlist…", en: "Search a playlist…", ar: "ابحث عن قائمة تشغيل…", nl: "Zoek een playlist…", ur: "پلے لسٹ تلاش کریں…", tr: "Playlist ara…" },
+  "library.allLanguages": { fr: "Toutes", en: "All", ar: "الكل", nl: "Alle", ur: "سب", tr: "Hepsi" },
+  "library.allCategories": { fr: "Tout", en: "All", ar: "الكل", nl: "Alles", ur: "سب", tr: "Hepsi" },
+  "library.videos": { fr: "vidéos", en: "videos", ar: "فيديو", nl: "video's", ur: "ویڈیوز", tr: "video" },
+  "library.playlists": { fr: "playlists", en: "playlists", ar: "قوائم", nl: "playlists", ur: "پلے لسٹس", tr: "playlist" },
+  "library.noResults": { fr: "Aucune playlist trouvée", en: "No playlist found", ar: "لم يتم العثور على قوائم", nl: "Geen playlist gevonden", ur: "کوئی پلے لسٹ نہیں ملی", tr: "Playlist bulunamadı" },
+  "library.beginner": { fr: "Débutant", en: "Beginner", ar: "مبتدئ", nl: "Beginner", ur: "ابتدائی", tr: "Başlangıç" },
+  "library.intermediate": { fr: "Intermédiaire", en: "Intermediate", ar: "متوسط", nl: "Gemiddeld", ur: "درمیانی", tr: "Orta" },
+  "library.advanced": { fr: "Avancé", en: "Advanced", ar: "متقدم", nl: "Gevorderd", ur: "اعلی", tr: "İleri" },
+  "library.catTajweed": { fr: "Tajweed", en: "Tajweed", ar: "تجويد", nl: "Tajweed", ur: "تجوید", tr: "Tecvid" },
+  "library.catTafsir": { fr: "Tafsir", en: "Tafsir", ar: "تفسير", nl: "Tafsir", ur: "تفسیر", tr: "Tefsir" },
+  "library.catMemorization": { fr: "Mémorisation", en: "Memorization", ar: "حفظ", nl: "Memorisatie", ur: "حفظ", tr: "Ezberleme" },
+  "library.catHistory": { fr: "Histoire", en: "History", ar: "تاريخ", nl: "Geschiedenis", ur: "تاریخ", tr: "Tarih" },
+  "library.catKids": { fr: "Enfants", en: "Kids", ar: "أطفال", nl: "Kinderen", ur: "بچے", tr: "Çocuklar" },
+  "library.catGeneral": { fr: "Général", en: "General", ar: "عام", nl: "Algemeen", ur: "عمومی", tr: "Genel" },
+  "library.hubTitle": { fr: "Bibliothèque", en: "Library", ar: "المكتبة", nl: "Bibliotheek", ur: "لائبریری", tr: "Kütüphane" },
+  "library.hubSubtitle": { fr: "Vidéos éducatives Coran", en: "Quran educational videos", ar: "فيديوهات تعليمية للقرآن", nl: "Koran educatieve video's", ur: "قرآنی تعلیمی ویڈیوز", tr: "Kur'an eğitim videoları" },
+
+
   // Mode Password
   "modePassword.createTitle": { fr: "Créer un mot de passe", en: "Create a password", nl: "Wachtwoord aanmaken", ar: "إنشاء كلمة مرور", tr: "Şifre oluştur", ur: "پاس ورڈ بنائیں" },
   "modePassword.enterTitle": { fr: "Mot de passe requis", en: "Password required", nl: "Wachtwoord vereist", ar: "كلمة المرور مطلوبة", tr: "Şifre gerekli", ur: "پاس ورڈ ضروری ہے" },

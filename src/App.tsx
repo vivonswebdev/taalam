@@ -126,6 +126,7 @@ const MathRacePage = lazy(() => import("./pages/MathRacePage"));
 const MathChainPage = lazy(() => import("./pages/MathChainPage"));
 const MathDuelPage = lazy(() => import("./pages/MathDuelPage"));
 const TVModePage = lazy(() => import("./pages/TVModePage"));
+const QuranLibraryPage = lazy(() => import("./pages/QuranLibraryPage"));
 
 function PageLoader() {
   return (
