@@ -24,6 +24,7 @@ export default function TVModePage() {
   const [showControls, setShowControls] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedReciter, setSelectedReciter] = useState(TV_RECITERS[0]);
+  const [showArabic, setShowArabic] = useState(true);
   const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslit, setShowTranslit] = useState(false);
   const [arabicSize, setArabicSize] = useState<'md' | 'lg' | 'xl'>('xl');
@@ -197,29 +198,31 @@ export default function TVModePage() {
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'rgba(255,255,255,0.5)' }} />
         ) : currentAyah ? (
           <>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`arabic-${surahNumber}-${currentAyahIndex}`}
-                initial={{ opacity: 0, y: 20, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 1.03 }}
-                transition={{ duration: 0.9, ease: 'easeInOut' }}
-                style={{ textAlign: 'center', maxWidth: '64rem' }}
-              >
-                <p
-                  className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
-                  style={{
-                    color: '#FFFFFF',
-                    fontWeight: 600,
-                    textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
-                    fontFamily: '"Scheherazade New", "Amiri", serif',
-                  }}
-                  dir="rtl"
+            {showArabic && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`arabic-${surahNumber}-${currentAyahIndex}`}
+                  initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 1.03 }}
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
+                  style={{ textAlign: 'center', maxWidth: '64rem' }}
                 >
-                  {currentAyah.arabic}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+                  <p
+                    className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
+                    style={{
+                      color: '#FFFFFF',
+                      fontWeight: 600,
+                      textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
+                      fontFamily: '"Scheherazade New", "Amiri", serif',
+                    }}
+                    dir="rtl"
+                  >
+                    {currentAyah.arabic}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            )}
 
             {showTranslit && currentAyah.transliteration && (
               <motion.p
@@ -384,6 +387,10 @@ export default function TVModePage() {
                       {/* Display options */}
                       <div>
                         <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.display")}</p>
+                        <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
+                          <input type="checkbox" checked={showArabic} onChange={e => setShowArabic(e.target.checked)} className="accent-white w-3 h-3" />
+                          <span className="text-white/70 text-[11px]">عربي</span>
+                        </label>
                         <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
                           <input type="checkbox" checked={showTranslation} onChange={e => setShowTranslation(e.target.checked)} className="accent-white w-3 h-3" />
                           <span className="text-white/70 text-[11px]">{t("tv.translation")}</span>
