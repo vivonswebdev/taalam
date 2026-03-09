@@ -41,6 +41,7 @@ const CATEGORIES: Category[] = [
   emoji: "📖",
   features: [
   { id: "quran", nameKey: "dashboard.tarteel", emoji: "📖", path: "/quran", gradient: "from-blue-400 to-cyan-500" },
+  { id: "library", nameKey: "library.hubTitle", emoji: "📚", path: "/library", gradient: "from-indigo-400 to-purple-500" },
   { id: "coranTv", nameKey: "tv.title", emoji: "📺", path: "/tv", gradient: "from-purple-500 to-indigo-600" },
   { id: "listenTest", nameKey: "dashboard.shazamCoran", emoji: "🎵", path: "/find-ayah", gradient: "from-fuchsia-400 to-pink-500" },
   { id: "reading", nameKey: "dashboard.reading", emoji: "📚", path: "/reading", gradient: "from-emerald-400 to-green-500" },
@@ -68,17 +69,17 @@ const CATEGORIES: Category[] = [
   titleKey: "home.cat.pratique",
   emoji: "🕌",
   features: [
+  { id: "athan", nameKey: "dashboard.athan", emoji: "📢", path: "/prayers", gradient: "from-amber-400 to-orange-500" },
+  { id: "mosques", nameKey: "dashboard.mosques", emoji: "🕌", path: "/kids-mosque-map", gradient: "from-teal-400 to-cyan-500" },
+  { id: "liveHaramain", nameKey: "dashboard.liveHaramain", emoji: "🕋", path: "/live-haramain", gradient: "from-rose-500 to-red-500" },
+  { id: "zakat", nameKey: "dashboard.zakat", emoji: "💰", path: "/zakat", gradient: "from-green-400 to-emerald-500" },
+  { id: "tasbih", nameKey: "dashboard.tasbih", emoji: "📿", path: "/tasbih", gradient: "from-purple-400 to-indigo-500" },
   { id: "moods", nameKey: "dashboard.moods", emoji: "💎", path: "/moods", gradient: "from-pink-400 to-rose-500" },
   { id: "habits", nameKey: "dashboard.habits", emoji: "✅", path: "/habits", gradient: "from-emerald-400 to-teal-500" },
   { id: "athkar", nameKey: "home.cat.athkar", emoji: "🤲", path: "/athkar/morning", gradient: "from-amber-300 to-orange-400" },
   { id: "qibla", nameKey: "dashboard.qibla", emoji: "🧭", path: "/qibla", gradient: "from-sky-400 to-blue-500" },
-  { id: "zakat", nameKey: "dashboard.zakat", emoji: "💰", path: "/zakat", gradient: "from-green-400 to-emerald-500" },
-  { id: "tasbih", nameKey: "dashboard.tasbih", emoji: "📿", path: "/tasbih", gradient: "from-purple-400 to-indigo-500" },
   { id: "calendar", nameKey: "dashboard.calendar", emoji: "🌙", path: "/islamic-calendar", gradient: "from-indigo-400 to-violet-500" },
-  { id: "stories", nameKey: "dashboard.stories", emoji: "📜", path: "/kids-stories", gradient: "from-orange-300 to-amber-400" },
-  { id: "mosques", nameKey: "dashboard.mosques", emoji: "🕌", path: "/kids-mosque-map", gradient: "from-teal-400 to-cyan-500" },
-  { id: "liveHaramain", nameKey: "dashboard.liveHaramain", emoji: "🕋", path: "/live-haramain", gradient: "from-rose-500 to-red-500" },
-  { id: "athan", nameKey: "dashboard.athan", emoji: "📢", path: "/prayers", gradient: "from-amber-400 to-orange-500" }]
+  { id: "stories", nameKey: "dashboard.stories", emoji: "📜", path: "/kids-stories", gradient: "from-orange-300 to-amber-400" }]
 
 },
 {
