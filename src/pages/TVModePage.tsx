@@ -214,7 +214,7 @@ export default function TVModePage() {
                 <p
                   className={`font-arabic leading-loose ${arabicSizes[arabicSize]}`}
                   style={{
-                    color: '#FFFFFF',
+                    color: 'rgba(255,255,255,0.75)',
                     fontWeight: 600,
                     textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
                     fontFamily: '"Scheherazade New", "Amiri", serif',
