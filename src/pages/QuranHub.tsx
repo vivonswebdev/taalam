@@ -82,6 +82,23 @@ export default function QuranHub() {
         </motion.button>
       </div>
 
+      {/* Bibliothèque Éducative — full-width card */}
+      <div className="px-5 pt-3">
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/library")}
+          className="flex items-center gap-4 w-full rounded-2xl p-4 text-left bg-gradient-to-r from-indigo-700/40 to-purple-800/30 border border-indigo-400/30 shadow-lg">
+          <span className="text-4xl">📚</span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-white">{t("library.hubTitle")}</p>
+            <p className="text-[10px] text-white/50 mt-0.5">{t("library.hubSubtitle")}</p>
+          </div>
+        </motion.button>
+      </div>
+
       {/* Raccourcis rapides */}
       <div className="px-5 pt-3">
         <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1 mb-2">{t("quranHub.quickLinks")}</p>
