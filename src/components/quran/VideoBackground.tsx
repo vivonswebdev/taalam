@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, memo } from 'react';
 
-// Free nature videos from Pixabay/Pexels CDN (royalty-free)
+// Pexels CDN - Vidéos nature HD libres de droits - CORS OK
 const VIDEOS = [
-  'https://cdn.pixabay.com/video/2024/05/31/214698_large.mp4', // ocean waves
-  'https://cdn.pixabay.com/video/2020/07/30/45637-445192781_large.mp4', // forest
-  'https://cdn.pixabay.com/video/2021/08/12/85029-586698744_large.mp4', // clouds sky
-  'https://cdn.pixabay.com/video/2023/09/14/180595-864688154_large.mp4', // sunset
-  'https://cdn.pixabay.com/video/2020/05/25/40130-424930975_large.mp4', // waterfall
-  'https://cdn.pixabay.com/video/2022/07/22/125477-732611081_large.mp4', // stars night
+  'https://videos.pexels.com/video-files/854011/854011-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/1448735/1448735-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4',
+  'https://videos.pexels.com/video-files/2169880/2169880-hd_1920_1080_30fps.mp4',
+  'https://videos.pexels.com/video-files/3048175/3048175-hd_1920_1080_30fps.mp4',
+  'https://videos.pexels.com/video-files/857251/857251-hd_1920_1080_25fps.mp4',
 ];
 
 interface VideoBackgroundProps {
@@ -19,56 +19,84 @@ interface VideoBackgroundProps {
 export const VideoBackground = memo(function VideoBackground({
   autoRotate = true,
   intervalSeconds = 40,
-  opacity = 0.4,
+  opacity = 0.5,
 }: VideoBackgroundProps) {
   const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * VIDEOS.length));
-  const [fading, setFading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Rotation
   useEffect(() => {
     if (!autoRotate) return;
     const interval = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setCurrentIndex(prev => (prev + 1) % VIDEOS.length);
-        setFading(false);
-      }, 1200);
+      setCurrentIndex(prev => (prev + 1) % VIDEOS.length);
     }, intervalSeconds * 1000);
     return () => clearInterval(interval);
   }, [autoRotate, intervalSeconds]);
 
-  // When video source changes, play it
+  // Autoplay with fallback for browser policies
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    vid.load();
+    vid.play().catch(() => {
+      const start = () => {
+        vid.play().catch(() => {});
+        document.removeEventListener('click', start);
+        document.removeEventListener('touchstart', start);
+      };
+      document.addEventListener('click', start, { once: true });
+      document.addEventListener('touchstart', start, { once: true });
+    });
   }, [currentIndex]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+      }}
+    >
       <video
-        ref={videoRef}
         key={currentIndex}
+        ref={videoRef}
         src={VIDEOS[currentIndex]}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
-        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         style={{
-          opacity: fading ? 0 : opacity,
-          filter: 'brightness(0.6) saturate(1.2)',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          minWidth: '100%',
+          minHeight: '100%',
+          width: 'auto',
+          height: 'auto',
+          objectFit: 'cover',
+          opacity: opacity,
+          filter: 'brightness(0.7) saturate(1.3)',
+        }}
+        onError={() => {
+          console.error('Video error, skipping to next');
+          setCurrentIndex(prev => (prev + 1) % VIDEOS.length);
         }}
       />
 
-      {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
       <div
-        className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%)',
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%)',
+          zIndex: 1,
         }}
       />
     </div>
