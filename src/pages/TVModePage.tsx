@@ -174,8 +174,8 @@ export default function TVModePage() {
       onClick={resetControlsTimer}
       onTouchStart={resetControlsTimer}
     >
-      {/* Video background */}
-      <VideoBackground opacity={0.5} intervalSeconds={35} autoRotate={isPlaying} />
+       {/* Video background */}
+      <VideoBackground opacity={0.65} intervalSeconds={35} autoRotate={isPlaying} />
 
       {/* Subtle overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" style={{ zIndex: 1 }} />
