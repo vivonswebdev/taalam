@@ -386,6 +386,10 @@ export default function TVModePage() {
                       <div>
                         <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.display")}</p>
                         <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
+                          <input type="checkbox" checked={showArabic} onChange={e => setShowArabic(e.target.checked)} className="accent-white w-3 h-3" />
+                          <span className="text-white/70 text-[11px]">عربي</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
                           <input type="checkbox" checked={showTranslation} onChange={e => setShowTranslation(e.target.checked)} className="accent-white w-3 h-3" />
                           <span className="text-white/70 text-[11px]">{t("tv.translation")}</span>
                         </label>
