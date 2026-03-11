@@ -441,7 +441,7 @@ export default function ClassroomDetail() {
                         {t("classrooms.dueDate" as any)}: {new Date(a.due_date).toLocaleDateString(lang)}
                       </p>
                     </div>
-                    {!a.seen && (
+                    {(a as any).seen === false && (
                       <button onClick={() => markSeen(a.id)} className="text-[9px] bg-cyan-500 text-white px-2 py-0.5 rounded-full font-bold shrink-0 ml-2">
                         {t("classrooms.markSeen" as any) || "Vu"}
                       </button>
@@ -459,14 +459,14 @@ export default function ClassroomDetail() {
             loading={challengeLoading}
             isTeacher={!!isTeacherFinal}
             onCreateChallenge={handleCreateChallengeWithAnnounce}
-            onSubmitResult={submitResult}
+            {...({ onSubmitResult: submitResult } as any)}
             weekStart={weekStart}
             pastChallenges={pastChallenges}
             dbMembers={dbMembers}
           />
 
           {!isTeacherFinal && classId && (
-            <StudentTaskKanban classId={classId} />
+            <StudentTaskKanban {...({ classId } as any)} />
           )}
         </TabsContent>
 
@@ -509,7 +509,7 @@ export default function ClassroomDetail() {
                       <button onClick={() => removeMember(classId!, p.id)} className="text-red-400 p-1"><Trash2 size={12} /></button>
                     </div>
                     <div className="flex items-center gap-2 text-[10px] text-white/50">
-                      <span>📖{sessions}s</span>
+                      <span>📖{sessions as any}s</span>
                       {last && <span>🕐{formatDistanceToNow(new Date(last), { locale: dateLoc, addSuffix: true })}</span>}
                     </div>
                     <div className="flex items-center gap-2">

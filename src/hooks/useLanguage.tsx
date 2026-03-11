@@ -2116,8 +2116,6 @@ const translations = {
   "mushaf.switchToTextMode": { fr: "Passer en mode Texte", en: "Switch to Text Mode", nl: "Overschakelen naar Tekstmodus", ar: "التبديل إلى وضع النص", tr: "Metin Moduna Geç", ur: "ٹیکسٹ موڈ پر جائیں" },
   "mushaf.mushafEdition": { fr: "Édition du Mushaf", en: "Mushaf Edition", nl: "Mushaf Editie", ar: "نسخة المصحف", tr: "Mushaf Baskısı", ur: "مصحف ایڈیشن" },
   "mushaf.change": { fr: "Changer", en: "Change", nl: "Wijzigen", ar: "تغيير", tr: "Değiştir", ur: "تبدیل کریں" },
-  "common.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
-  "common.cancel": { fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء", tr: "İptal", ur: "منسوخ" },
 
   // Home cards (v3)
   "home.findAyahTitle": { fr: "Trouver mon ayah", en: "Find my ayah", nl: "Vind mijn ayah", ar: "ابحث عن آيتي", tr: "Ayetimi bul", ur: "میری آیت تلاش کریں" },
@@ -3281,7 +3279,6 @@ const translations = {
   "kidsGames.tryAgain": { fr: "Réessaie ! ❌", en: "Try again! ❌", nl: "Probeer opnieuw! ❌", ar: "حاول مرة أخرى! ❌", tr: "Tekrar dene! ❌", ur: "دوبارہ کوشش کرو! ❌" },
   "kidsGames.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
   "common.undo": { fr: "Annuler", en: "Undo", nl: "Ongedaan maken", ar: "تراجع", tr: "Geri al", ur: "واپس" },
-  "common.next": { fr: "Suivant", en: "Next", nl: "Volgende", ar: "التالي", tr: "İleri", ur: "اگلا" },
   "kidsGames.wordsPerVerse": { fr: "mots/verset", en: "words/verse", nl: "woorden/vers", ar: "كلمات/آية", tr: "kelime/ayet", ur: "الفاظ/آیت" },
   "kidsGames.chainSteps": { fr: "étapes", en: "steps", nl: "stappen", ar: "خطوات", tr: "adım", ur: "قدم" },
   // New Math games
@@ -3359,14 +3356,6 @@ const translations = {
   "streak.keepGoing": { fr: "Continue !", en: "Keep going!", nl: "Ga door!", ar: "واصل!", tr: "Devam et!", ur: "جاری رکھیں!" },
   "streak.milestone": { fr: "Palier atteint !", en: "Milestone reached!", nl: "Mijlpaal bereikt!", ar: "تم بلوغ مرحلة!", tr: "Dönüm noktası!", ur: "سنگ میل پہنچ گیا!" },
 
-  // ═══ LOGIN BONUS POPUP ═══
-  "loginBonus.title": { fr: "Connexion quotidienne !", en: "Daily Login!", nl: "Dagelijkse login!", ar: "تسجيل دخول يومي!", tr: "Günlük giriş!", ur: "روزانہ لاگ ان!" },
-  "loginBonus.streak": { fr: "Jours consécutifs", en: "Consecutive days", nl: "Opeenvolgende dagen", ar: "أيام متتالية", tr: "Ardışık günler", ur: "مسلسل دن" },
-  "loginBonus.bonus": { fr: "bonus", en: "bonus", nl: "bonus", ar: "مكافأة", tr: "bonus", ur: "بونس" },
-  "loginBonus.keepGoing": { fr: "Continue comme ça, mâ shâ Allâh ! 🌟", en: "Keep it up, Masha'Allah! 🌟", nl: "Ga zo door, Masha'Allah! 🌟", ar: "واصل هكذا، ما شاء الله! 🌟", tr: "Böyle devam et, Maşallah! 🌟", ur: "ایسے ہی جاری رکھیں، ماشاءاللہ! 🌟" },
-  "loginBonus.comeBack": { fr: "Reviens demain pour augmenter ton bonus !", en: "Come back tomorrow to increase your bonus!", nl: "Kom morgen terug voor een hogere bonus!", ar: "عد غداً لزيادة مكافأتك!", tr: "Bonusunu artırmak için yarın gel!", ur: "اپنا بونس بڑھانے کے لیے کل واپس آئیں!" },
-  "loginBonus.days": { fr: "jours", en: "days", nl: "dagen", ar: "يوم", tr: "gün", ur: "دن" },
-
   // ═══ LEADERBOARD ENHANCEMENTS ═══
   "lb.weeklyProgress": { fr: "Progression hebdo", en: "Weekly progress", nl: "Wekelijkse voortgang", ar: "التقدم الأسبوعي", tr: "Haftalık ilerleme", ur: "ہفتہ وار پیشرفت" },
   "lb.sessions": { fr: "sessions", en: "sessions", nl: "sessies", ar: "جلسات", tr: "oturum", ur: "سیشنز" },
@@ -3384,11 +3373,13 @@ const translations = {
   "tv.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "السورة", tr: "Sure", ur: "سورت" },
 } as const;
 
+export type TranslationKey = keyof typeof translations;
+
 // ─── Context ────────────────────────────────────────────────
 interface LanguageContextType {
   lang: Lang;
   setLang: (lang: Lang) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: string) => string;
   dir: "ltr" | "rtl";
   isRTL: boolean;
 }
@@ -3409,10 +3400,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const t = useCallback((key: TranslationKey): string => {
-    const entry = translations[key];
+  const t = useCallback((key: string): string => {
+    const entry = (translations as any)[key];
     if (!entry) return key;
-    return (entry as any)[lang] || entry.fr;
+    return entry[lang] || entry.fr;
   }, [lang]);
 
   const langInfo = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
@@ -3434,8 +3425,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 const fallbackContext: LanguageContextType = {
   lang: "fr",
   setLang: () => {},
-  t: (key: TranslationKey) => {
-    const entry = translations[key];
+  t: (key: string) => {
+    const entry = (translations as any)[key];
     return entry?.fr || key;
   },
   dir: "ltr",

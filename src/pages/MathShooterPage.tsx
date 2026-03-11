@@ -307,7 +307,7 @@ export default function MathShooterPage() {
           <p className="text-sm font-semibold text-green-500">+{totalXp} XP {t("mathGames.earned" as any) || "gagnés"} !</p>
         )}
         <div className="flex gap-3 w-full max-w-sm">
-          <button onClick={startGame} className="flex-1 py-3 bg-primary text-primary-foreground rounded-xl font-bold text-sm">
+          <button onClick={() => startGame()} className="flex-1 py-3 bg-primary text-primary-foreground rounded-xl font-bold text-sm">
             {t("mathGames.retry" as any) || "🔄 Rejouer"}
           </button>
           <button onClick={() => navigate(-1)} className="flex-1 py-3 bg-card border border-border text-foreground rounded-xl font-bold text-sm">
