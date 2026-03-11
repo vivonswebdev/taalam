@@ -3279,7 +3279,6 @@ const translations = {
   "kidsGames.tryAgain": { fr: "Réessaie ! ❌", en: "Try again! ❌", nl: "Probeer opnieuw! ❌", ar: "حاول مرة أخرى! ❌", tr: "Tekrar dene! ❌", ur: "دوبارہ کوشش کرو! ❌" },
   "kidsGames.level": { fr: "Niveau", en: "Level", nl: "Niveau", ar: "مستوى", tr: "Seviye", ur: "سطح" },
   "common.undo": { fr: "Annuler", en: "Undo", nl: "Ongedaan maken", ar: "تراجع", tr: "Geri al", ur: "واپس" },
-  "common.next": { fr: "Suivant", en: "Next", nl: "Volgende", ar: "التالي", tr: "İleri", ur: "اگلا" },
   "kidsGames.wordsPerVerse": { fr: "mots/verset", en: "words/verse", nl: "woorden/vers", ar: "كلمات/آية", tr: "kelime/ayet", ur: "الفاظ/آیت" },
   "kidsGames.chainSteps": { fr: "étapes", en: "steps", nl: "stappen", ar: "خطوات", tr: "adım", ur: "قدم" },
   // New Math games
