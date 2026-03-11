@@ -3400,10 +3400,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const t = useCallback((key: TranslationKey): string => {
-    const entry = translations[key];
+  const t = useCallback((key: string): string => {
+    const entry = (translations as any)[key];
     if (!entry) return key;
-    return (entry as any)[lang] || entry.fr;
+    return entry[lang] || entry.fr;
   }, [lang]);
 
   const langInfo = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
