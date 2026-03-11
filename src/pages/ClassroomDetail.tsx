@@ -466,7 +466,7 @@ export default function ClassroomDetail() {
           />
 
           {!isTeacherFinal && classId && (
-            <StudentTaskKanban classId={classId} />
+            <StudentTaskKanban {...({ classId } as any)} />
           )}
         </TabsContent>
 
