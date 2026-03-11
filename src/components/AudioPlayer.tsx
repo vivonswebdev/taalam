@@ -52,6 +52,7 @@ export default function AudioPlayer({
   onGoToBookmark,
   hasBookmark,
 }: AudioPlayerProps) {
+  const { t } = useLanguage();
   const [internalContinuous, setInternalContinuous] = useState(true);
   const continuousMode = externalContinuous ?? internalContinuous;
   const setContinuousMode = onContinuousModeChange ?? setInternalContinuous;

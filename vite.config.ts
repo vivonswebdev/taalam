@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
 // ✅ VERSION APP — incrémenter à chaque déploiement important
-const APP_VERSION = "2.1.1";
+const APP_VERSION = "2.2.0";
 
 export default defineConfig(({ mode }) => ({
   server: {

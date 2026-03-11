@@ -3373,6 +3373,8 @@ const translations = {
   "tv.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "السورة", tr: "Sure", ur: "سورت" },
 } as const;
 
+export type TranslationKey = keyof typeof translations;
+
 // ─── Context ────────────────────────────────────────────────
 interface LanguageContextType {
   lang: Lang;
