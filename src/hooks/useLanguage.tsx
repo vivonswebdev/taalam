@@ -3379,7 +3379,7 @@ export type TranslationKey = keyof typeof translations;
 interface LanguageContextType {
   lang: Lang;
   setLang: (lang: Lang) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: string) => string;
   dir: "ltr" | "rtl";
   isRTL: boolean;
 }
