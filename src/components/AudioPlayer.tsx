@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Play, Pause, SkipForward, SkipBack, Gauge, User, Repeat, Bookmark, BookmarkCheck, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const RECITERS = [
   { id: "ar.alafasy", name: "Al-Afasy", label: "مشاري العفاسي" },
