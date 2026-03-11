@@ -122,7 +122,7 @@ export default function MushafReaderV2() {
   }, [pinchHandlers]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    pinchHandlers.onTouchEnd(e);
+    pinchHandlers.onTouchEnd();
     swipeHandlers.onTouchEnd(e);
   }, [pinchHandlers, swipeHandlers]);
 
