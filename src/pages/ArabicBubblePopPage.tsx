@@ -348,7 +348,7 @@ export default function ArabicBubblePopPage() {
           </div>
           <div className="flex gap-3 mt-4">
             <button
-              onClick={startGame}
+              onClick={() => startGame()}
               className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-bold active:scale-95 transition-transform flex items-center gap-2"
             >
               <RotateCcw size={16} /> {t("mathGames.retry" as any) || "🔄 Rejouer"}
