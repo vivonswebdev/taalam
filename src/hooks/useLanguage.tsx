@@ -2116,8 +2116,6 @@ const translations = {
   "mushaf.switchToTextMode": { fr: "Passer en mode Texte", en: "Switch to Text Mode", nl: "Overschakelen naar Tekstmodus", ar: "التبديل إلى وضع النص", tr: "Metin Moduna Geç", ur: "ٹیکسٹ موڈ پر جائیں" },
   "mushaf.mushafEdition": { fr: "Édition du Mushaf", en: "Mushaf Edition", nl: "Mushaf Editie", ar: "نسخة المصحف", tr: "Mushaf Baskısı", ur: "مصحف ایڈیشن" },
   "mushaf.change": { fr: "Changer", en: "Change", nl: "Wijzigen", ar: "تغيير", tr: "Değiştir", ur: "تبدیل کریں" },
-  "common.save": { fr: "Enregistrer", en: "Save", nl: "Opslaan", ar: "حفظ", tr: "Kaydet", ur: "محفوظ کریں" },
-  "common.cancel": { fr: "Annuler", en: "Cancel", nl: "Annuleren", ar: "إلغاء", tr: "İptal", ur: "منسوخ" },
 
   // Home cards (v3)
   "home.findAyahTitle": { fr: "Trouver mon ayah", en: "Find my ayah", nl: "Vind mijn ayah", ar: "ابحث عن آيتي", tr: "Ayetimi bul", ur: "میری آیت تلاش کریں" },
