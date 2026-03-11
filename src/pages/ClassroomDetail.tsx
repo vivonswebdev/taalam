@@ -509,7 +509,7 @@ export default function ClassroomDetail() {
                       <button onClick={() => removeMember(classId!, p.id)} className="text-red-400 p-1"><Trash2 size={12} /></button>
                     </div>
                     <div className="flex items-center gap-2 text-[10px] text-white/50">
-                      <span>📖{sessions}s</span>
+                      <span>📖{sessions as any}s</span>
                       {last && <span>🕐{formatDistanceToNow(new Date(last), { locale: dateLoc, addSuffix: true })}</span>}
                     </div>
                     <div className="flex items-center gap-2">

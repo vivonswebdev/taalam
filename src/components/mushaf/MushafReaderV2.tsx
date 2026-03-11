@@ -226,11 +226,13 @@ export default function MushafReaderV2() {
       onTouchEnd={handleTouchEnd}
     >
       {/* Download prompt */}
-      <OfflineDownloadPrompt
-        open={showDownloadPrompt}
-        onComplete={() => setShowDownloadPrompt(false)}
-        onSkip={() => setShowDownloadPrompt(false)}
-      />
+      {showDownloadPrompt && (
+        <OfflineDownloadPrompt
+          onDownload={() => setShowDownloadPrompt(false)}
+          onDismiss={() => setShowDownloadPrompt(false)}
+          downloadedJuz={[]}
+        />
+      )}
 
       {/* Header */}
       <div
