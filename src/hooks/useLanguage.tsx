@@ -3356,14 +3356,6 @@ const translations = {
   "streak.keepGoing": { fr: "Continue !", en: "Keep going!", nl: "Ga door!", ar: "واصل!", tr: "Devam et!", ur: "جاری رکھیں!" },
   "streak.milestone": { fr: "Palier atteint !", en: "Milestone reached!", nl: "Mijlpaal bereikt!", ar: "تم بلوغ مرحلة!", tr: "Dönüm noktası!", ur: "سنگ میل پہنچ گیا!" },
 
-  // ═══ LOGIN BONUS POPUP ═══
-  "loginBonus.title": { fr: "Connexion quotidienne !", en: "Daily Login!", nl: "Dagelijkse login!", ar: "تسجيل دخول يومي!", tr: "Günlük giriş!", ur: "روزانہ لاگ ان!" },
-  "loginBonus.streak": { fr: "Jours consécutifs", en: "Consecutive days", nl: "Opeenvolgende dagen", ar: "أيام متتالية", tr: "Ardışık günler", ur: "مسلسل دن" },
-  "loginBonus.bonus": { fr: "bonus", en: "bonus", nl: "bonus", ar: "مكافأة", tr: "bonus", ur: "بونس" },
-  "loginBonus.keepGoing": { fr: "Continue comme ça, mâ shâ Allâh ! 🌟", en: "Keep it up, Masha'Allah! 🌟", nl: "Ga zo door, Masha'Allah! 🌟", ar: "واصل هكذا، ما شاء الله! 🌟", tr: "Böyle devam et, Maşallah! 🌟", ur: "ایسے ہی جاری رکھیں، ماشاءاللہ! 🌟" },
-  "loginBonus.comeBack": { fr: "Reviens demain pour augmenter ton bonus !", en: "Come back tomorrow to increase your bonus!", nl: "Kom morgen terug voor een hogere bonus!", ar: "عد غداً لزيادة مكافأتك!", tr: "Bonusunu artırmak için yarın gel!", ur: "اپنا بونس بڑھانے کے لیے کل واپس آئیں!" },
-  "loginBonus.days": { fr: "jours", en: "days", nl: "dagen", ar: "يوم", tr: "gün", ur: "دن" },
-
   // ═══ LEADERBOARD ENHANCEMENTS ═══
   "lb.weeklyProgress": { fr: "Progression hebdo", en: "Weekly progress", nl: "Wekelijkse voortgang", ar: "التقدم الأسبوعي", tr: "Haftalık ilerleme", ur: "ہفتہ وار پیشرفت" },
   "lb.sessions": { fr: "sessions", en: "sessions", nl: "sessies", ar: "جلسات", tr: "oturum", ur: "سیشنز" },
