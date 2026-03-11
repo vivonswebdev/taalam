@@ -3425,8 +3425,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 const fallbackContext: LanguageContextType = {
   lang: "fr",
   setLang: () => {},
-  t: (key: TranslationKey) => {
-    const entry = translations[key];
+  t: (key: string) => {
+    const entry = (translations as any)[key];
     return entry?.fr || key;
   },
   dir: "ltr",
