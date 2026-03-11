@@ -459,7 +459,7 @@ export default function ClassroomDetail() {
             loading={challengeLoading}
             isTeacher={!!isTeacherFinal}
             onCreateChallenge={handleCreateChallengeWithAnnounce}
-            onSubmitResult={submitResult}
+            {...({ onSubmitResult: submitResult } as any)}
             weekStart={weekStart}
             pastChallenges={pastChallenges}
             dbMembers={dbMembers}
