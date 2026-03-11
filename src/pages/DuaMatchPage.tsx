@@ -37,7 +37,8 @@ function shuffle<T>(arr: T[]): T[] {
 
 export default function DuaMatchPage() {
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
+  const language = lang;
   const { addXP } = useXP();
 
   const [difficulty, setDifficulty] = useState<string | null>(null);
