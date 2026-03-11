@@ -441,7 +441,7 @@ export default function ClassroomDetail() {
                         {t("classrooms.dueDate" as any)}: {new Date(a.due_date).toLocaleDateString(lang)}
                       </p>
                     </div>
-                    {!a.seen && (
+                    {(a as any).seen === false && (
                       <button onClick={() => markSeen(a.id)} className="text-[9px] bg-cyan-500 text-white px-2 py-0.5 rounded-full font-bold shrink-0 ml-2">
                         {t("classrooms.markSeen" as any) || "Vu"}
                       </button>
