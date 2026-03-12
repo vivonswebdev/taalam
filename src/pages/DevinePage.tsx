@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IslamicGuesser, Question, Answer } from '@/utils/islamic-guesser';
-import { IslamicPersonality } from '@/data/islamic-personalities';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import type { IslamicPersonality } from '@/data/islamic-personalities';
+import { IslamicGuesser, type Question, type Answer } from '@/utils/islamic-guesser';
 
 type GameState = 'intro' | 'playing' | 'guessing' | 'result' | 'failed';
 
