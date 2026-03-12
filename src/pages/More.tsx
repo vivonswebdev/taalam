@@ -74,6 +74,7 @@ export default function More() {
         { emoji: "🎯", labelKey: "more.hifzSrs", descKey: "more.hifzSrsDesc", path: "/hifz-today", adultsOnly: true },
         { emoji: "📖", labelKey: "more.noorani", descKey: "more.nooraniDesc", path: "/noorani" },
         { emoji: "🎙️", labelKey: "more.recitation", descKey: "more.recitationDesc", path: "/recitation" },
+        { emoji: "🕌", labelKey: "more.devine", descKey: "more.devineDesc", path: "/devine" },
       ],
     },
     {
