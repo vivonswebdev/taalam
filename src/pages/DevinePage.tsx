@@ -118,7 +118,7 @@ export default function DevinePage() {
             </h1>
             <p className="text-xl font-bold text-white/80">Kashif</p>
             <p className="text-white/50 text-sm text-center">
-              Je lis dans les pensées... islamiquement 🔮
+              Je devine ta personnalité islamique ☪️
             </p>
 
             {/* How to play */}
@@ -127,7 +127,7 @@ export default function DevinePage() {
               {[
                 { n: '1', icon: '🧠', t: 'Pense à une personnalité islamique' },
                 { n: '2', icon: '❓', t: 'Réponds à mes questions par Oui / Non' },
-                { n: '3', icon: '🔮', t: 'Je vais deviner en moins de 20 questions !' },
+                { n: '3', icon: '🕌', t: 'Je vais deviner en moins de 20 questions !' },
               ].map(item => (
                 <div key={item.n} className="flex items-center gap-3 text-sm text-white/80">
                   <span className="w-6 h-6 rounded-full bg-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center">
@@ -160,7 +160,7 @@ export default function DevinePage() {
             <motion.button onClick={startGame} whileTap={{ scale: 0.95 }}
               className="w-full max-w-sm py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-lg shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2">
               <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                🔮
+                🌙
               </motion.span>
               Commencer
             </motion.button>
@@ -177,7 +177,7 @@ export default function DevinePage() {
             className="flex flex-col items-center justify-center gap-6 pt-32">
             <motion.span className="text-8xl" animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 1.2, repeat: Infinity }}>
-              🔮
+              🕌
             </motion.span>
             <div className="flex gap-1.5">
               {[0, 1, 2].map(i => (
@@ -217,7 +217,7 @@ export default function DevinePage() {
                   {confidence >= 80 ? '😈' :
                    confidence >= 60 ? '😏' :
                    confidence >= 40 ? '🤔' :
-                   confidence >= 20 ? '🧐' : '🔮'}
+                   confidence >= 20 ? '🧐' : '🌙'}
                 </span>
                 <span className="text-xs text-white/70">
                   {confidence >= 80 ? "Je suis presque certain !" :
@@ -270,7 +270,7 @@ export default function DevinePage() {
           <motion.div key="guess" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }} className="flex flex-col items-center gap-5 pt-6">
             <motion.span className="text-6xl" animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.8 }}>🔮</motion.span>
+              transition={{ duration: 0.8 }}>☪️</motion.span>
 
             <p className="text-white/50 text-sm">
               Après {questionCount} questions...
