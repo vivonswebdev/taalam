@@ -61,7 +61,8 @@ const CATEGORIES: Category[] = [
   { id: "hifzMap", nameKey: "dashboard.hifzMap", emoji: "🗺️", path: "/hifz-map", gradient: "from-amber-400 to-orange-500" },
   { id: "noorani", nameKey: "dashboard.noorani", emoji: "📚", path: "/noorani", gradient: "from-indigo-400 to-blue-500" },
   { id: "study", nameKey: "home.cat.study", emoji: "✍️", path: "/study", gradient: "from-cyan-400 to-sky-500" },
-  { id: "findAyah", nameKey: "dashboard.findAyah", emoji: "🔍", path: "/find-ayah", gradient: "from-lime-400 to-green-500" }]
+  { id: "findAyah", nameKey: "dashboard.findAyah", emoji: "🔍", path: "/find-ayah", gradient: "from-lime-400 to-green-500" },
+  { id: "devine", nameKey: "more.devine", emoji: "🕌", path: "/devine", gradient: "from-violet-400 to-indigo-500" }]
 
 },
 {
