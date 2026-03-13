@@ -178,6 +178,7 @@ const App = () => (
           <ActiveChildProvider>
           <UserModeProvider>
           <AppVersionGuard />
+          <UpdateBanner />
           <Toaster />
           <Sonner />
           <BrowserRouter>

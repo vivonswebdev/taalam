@@ -26,36 +26,48 @@
       margin: 0 auto 1rem;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    button {
-      background: white; color: #1a6b3c; border: none;
-      padding: 12px 24px; border-radius: 8px;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
-      display: none;
+    .back-link {
+      display: inline-block; margin-top: 1.5rem;
+      color: rgba(255,255,255,0.8); text-decoration: underline;
+      font-size: 0.9rem;
     }
-    button:hover { opacity: 0.9; }
+    .back-link:hover { color: white; }
+    .steps { text-align: left; font-size: 0.85rem; opacity: 0.85; margin-top: 1rem; }
+    .steps li { margin-bottom: 0.5rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="loader" id="loader"></div>
     <h1>🔄 Mise à jour en cours</h1>
-    <p id="status">Nettoyage du cache et rechargement…</p>
-    <button id="btn" onclick="window.location.href='/'">Recharger manuellement</button>
+    <p id="status">Suppression du cache…</p>
+    <ol class="steps" id="steps">
+      <li id="s1">⏳ Suppression des caches…</li>
+      <li id="s2">⏳ Désinscription Service Workers…</li>
+      <li id="s3">⏳ Nettoyage localStorage…</li>
+      <li id="s4">⏳ Redirection…</li>
+    </ol>
+    <a href="/" class="back-link">← Retour à l'app</a>
   </div>
   <script>
     (async () => {
+      function done(id) { document.getElementById(id).textContent = document.getElementById(id).textContent.replace('⏳', '✅'); }
       try {
-        // Clear all caches
+        // 1. Clear all caches
         if ('caches' in window) {
           const names = await caches.keys();
           await Promise.all(names.map(n => caches.delete(n)));
         }
-        // Unregister all service workers
+        done('s1');
+
+        // 2. Unregister all service workers
         if ('serviceWorker' in navigator) {
           const regs = await navigator.serviceWorker.getRegistrations();
           await Promise.all(regs.map(r => r.unregister()));
         }
-        // Preserve auth tokens
+        done('s2');
+
+        // 3. Preserve auth tokens, clear rest
         const authKeys = [];
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
@@ -63,12 +75,14 @@
         }
         localStorage.clear();
         authKeys.forEach(([k, v]) => { if (v) localStorage.setItem(k, v); });
+        done('s3');
 
-        document.getElementById('status').textContent = '✅ Cache vidé ! Redirection…';
-        setTimeout(() => { window.location.href = '/?v=' + Date.now(); }, 1500);
+        // 4. Redirect
+        document.getElementById('status').textContent = '✅ Terminé ! Redirection…';
+        done('s4');
+        setTimeout(() => { window.location.href = '/?v=' + Date.now(); }, 1000);
       } catch (e) {
-        document.getElementById('status').textContent = '❌ Erreur — utilisez le bouton ci-dessous';
-        document.getElementById('btn').style.display = 'inline-block';
+        document.getElementById('status').textContent = '❌ Erreur — cliquez sur le lien ci-dessous';
         document.getElementById('loader').style.display = 'none';
       }
     })();
