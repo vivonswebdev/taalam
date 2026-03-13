@@ -127,7 +127,7 @@ export default function DevinePage() {
               {[
                 { n: '1', icon: '🧠', t: 'Pense à une personnalité islamique' },
                 { n: '2', icon: '❓', t: 'Réponds à mes questions par Oui / Non' },
-                { n: '3', icon: '🔮', t: 'Je vais deviner en moins de 20 questions !' },
+                { n: '3', icon: '🕌', t: 'Je vais deviner en moins de 20 questions !' },
               ].map(item => (
                 <div key={item.n} className="flex items-center gap-3 text-sm text-white/80">
                   <span className="w-6 h-6 rounded-full bg-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-center">
