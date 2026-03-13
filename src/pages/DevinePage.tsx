@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { IslamicPersonality } from '@/data/islamic-personalities';
 import { IslamicGuesser, type Question, type Answer } from '@/utils/islamic-guesser';
@@ -22,6 +22,8 @@ const CATEGORIES = [
   { emoji: '👑', label: 'Califes' },
   { emoji: '🌍', label: 'Explorateurs' },
 ];
+
+const MAX_QUESTIONS = 20;
 
 export default function DevinePage() {
   const navigate = useNavigate();
@@ -48,10 +50,11 @@ export default function DevinePage() {
     guesser.applyAnswer(currentQuestion, answer);
 
     if (guesser.getRemainingCount() === 0) {
+      setCurrentGuess(guesser.getBestGuess());
       setGameState('failed');
       return;
     }
-    if (guesser.canGuess() || questionCount >= 20) {
+    if (guesser.canGuess() || questionCount >= MAX_QUESTIONS) {
       setCurrentGuess(guesser.getBestGuess());
       setGameState('guessing');
       return;
@@ -71,6 +74,8 @@ export default function DevinePage() {
     setGameState('result');
   }, []);
 
+  const confidence = guesser?.getConfidence() ?? 0;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-purple-950 to-slate-950 text-white">
       {/* Header */}
@@ -78,7 +83,7 @@ export default function DevinePage() {
         <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-lg font-bold">🕌 Devine qui suis-je ?</h1>
+        <h1 className="text-lg font-bold">🕌 Kashif كاشف</h1>
       </div>
 
       <div className="px-4 pb-28">
@@ -88,10 +93,10 @@ export default function DevinePage() {
             <motion.div key="intro" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col items-center gap-6 pt-8">
               <div className="text-7xl animate-bounce">🕌</div>
               <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
-                Devine qui suis-je ?
+                Kashif كاشف
               </h2>
               <p className="text-white/60 text-center text-sm">
-                Style Akinator — Personnalités Islamiques
+                Devine la personnalité islamique
               </p>
               <p className="text-white/80 text-center text-sm max-w-xs">
                 Pense à une personnalité islamique (prophète, compagnon, savant...) et je vais essayer de la deviner !
@@ -115,7 +120,7 @@ export default function DevinePage() {
             <motion.div key={currentQuestion.id} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.3 }} className="flex flex-col gap-5 pt-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="px-3 py-1 rounded-full bg-white/10 font-semibold">
-                  Question {questionCount} / 20
+                  Question {questionCount} / {MAX_QUESTIONS}
                 </span>
                 <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-semibold">
                   🎯 {guesser.getRemainingCount()} candidats
@@ -129,6 +134,14 @@ export default function DevinePage() {
                   animate={{ width: `${guesser.getProgress()}%` }}
                 />
               </div>
+              {/* Confidence indicator */}
+              {confidence > 30 && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="flex items-center gap-2 text-xs text-amber-300/80">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Confiance : {Math.round(confidence)}%</span>
+                </motion.div>
+              )}
               {/* Question card */}
               <div className="bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col items-center gap-4">
                 <span className="text-5xl">🤔</span>
@@ -164,6 +177,10 @@ export default function DevinePage() {
                 {currentGuess.name}
               </h2>
               <p className="text-xl font-bold text-white/80 font-arabic">{currentGuess.nameAr}</p>
+              {/* Confidence badge */}
+              <div className="px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-sm font-semibold">
+                🎯 Confiance : {Math.round(confidence)}%
+              </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 max-w-xs">
                 <p className="text-sm text-amber-300 text-center">💡 {currentGuess.hint}</p>
               </div>
@@ -186,14 +203,14 @@ export default function DevinePage() {
                 <>
                   <motion.div className="text-7xl" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 0.5 }}>🏆</motion.div>
                   <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent">
-                    J'ai trouvé ! 🎉
+                    Kashif a trouvé ! 🎉
                   </h2>
                   <p className="text-white/60">en seulement {questionCount} questions</p>
                 </>
               ) : (
                 <>
                   <div className="text-7xl">😅</div>
-                  <h2 className="text-2xl font-extrabold text-center text-red-400">Je me suis trompé !</h2>
+                  <h2 className="text-2xl font-extrabold text-center text-red-400">Kashif s'est trompé !</h2>
                   <p className="text-white/60 text-center text-sm">
                     Cette personnalité n'est pas encore dans ma base de données
                   </p>
@@ -216,7 +233,7 @@ export default function DevinePage() {
           {gameState === 'failed' && (
             <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-5 pt-12">
               <div className="text-7xl">🤷</div>
-              <h2 className="text-2xl font-extrabold text-red-400">Je ne sais pas !</h2>
+              <h2 className="text-2xl font-extrabold text-red-400">Kashif ne sait pas !</h2>
               <p className="text-white/60 text-center text-sm max-w-xs">
                 Cette personnalité est trop rare ou pas encore dans ma base de données. Je vais apprendre !
               </p>
