@@ -131,7 +131,7 @@ export default function DevinePage() {
                 <motion.div
                   className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${guesser.getProgress()}%` }}
+                  animate={{ width: `${Math.min((guesser.getAskedCount() / MAX_QUESTIONS) * 100, 100)}%` }}
                 />
               </div>
               {/* Confidence indicator */}
