@@ -217,7 +217,7 @@ export default function DevinePage() {
                   {confidence >= 80 ? '😈' :
                    confidence >= 60 ? '😏' :
                    confidence >= 40 ? '🤔' :
-                   confidence >= 20 ? '🧐' : '🔮'}
+                   confidence >= 20 ? '🧐' : '🌙'}
                 </span>
                 <span className="text-xs text-white/70">
                   {confidence >= 80 ? "Je suis presque certain !" :
