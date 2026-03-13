@@ -177,7 +177,7 @@ export default function DevinePage() {
             className="flex flex-col items-center justify-center gap-6 pt-32">
             <motion.span className="text-8xl" animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 1.2, repeat: Infinity }}>
-              🔮
+              🕌
             </motion.span>
             <div className="flex gap-1.5">
               {[0, 1, 2].map(i => (
