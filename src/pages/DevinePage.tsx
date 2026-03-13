@@ -118,7 +118,7 @@ export default function DevinePage() {
             </h1>
             <p className="text-xl font-bold text-white/80">Kashif</p>
             <p className="text-white/50 text-sm text-center">
-              Je lis dans les pensées... islamiquement 🔮
+              Je devine ta personnalité islamique ☪️
             </p>
 
             {/* How to play */}
