@@ -160,7 +160,7 @@ export default function DevinePage() {
             <motion.button onClick={startGame} whileTap={{ scale: 0.95 }}
               className="w-full max-w-sm py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-lg shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2">
               <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                🔮
+                🌙
               </motion.span>
               Commencer
             </motion.button>
