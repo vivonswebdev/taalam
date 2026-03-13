@@ -32,30 +32,93 @@ export const QUESTIONS: Question[] = [
   { id: 'q21', text: 'Est-il connu pour sa sagesse et philosophie ?', attribute: 'knownForWisdom' },
   { id: 'q22', text: 'A-t-il migré à Médine (Hégire) ?', attribute: 'migratedToMedina' },
   { id: 'q23', text: "A-t-il vécu avant l'Islam ?", attribute: 'livedBeforeIslam' },
+  { id: 'q24', text: 'Est-ce un compagnon (Sahabi) ?', attribute: 'isSahabi' },
+  { id: 'q25', text: 'Est-ce un savant ou érudit ?', attribute: 'isScholar' },
+  { id: 'q26', text: 'Est-il connu pour le jihad ?', attribute: 'knownForJihad' },
+  { id: 'q27', text: 'Est-il connu pour la poésie ?', attribute: 'knownForPoetry' },
+  { id: 'q28', text: 'Vient-il de Médine ?', attribute: 'isFromMedina' },
+  { id: 'q29', text: "A-t-il vécu après l'an 600 après J.C. ?", attribute: 'livedAfter600AD' },
 ];
 
+/**
+ * Bayesian Kashif Engine — picks the question that maximises expected
+ * information gain (entropy reduction) over the current probability
+ * distribution, then updates probabilities with soft likelihoods so
+ * "maybe" / "don't know" answers degrade gracefully.
+ */
 export class IslamicGuesser {
-  private remaining: IslamicPersonality[];
+  /** Log-probabilities for each personality (unnormalised). */
+  private logProbs: Float64Array;
   private askedQuestions: Set<string> = new Set();
 
+  // Likelihood parameters (log-space)
+  private static readonly L_YES_MATCH  = Math.log(0.95);
+  private static readonly L_YES_MISS   = Math.log(0.05);
+  private static readonly L_NO_MATCH   = Math.log(0.05);
+  private static readonly L_NO_MISS    = Math.log(0.95);
+  private static readonly L_MAYBE_MATCH = Math.log(0.65);
+  private static readonly L_MAYBE_MISS  = Math.log(0.35);
+  // "don't know" → uniform, no update
+
   constructor() {
-    this.remaining = [...ISLAMIC_PERSONALITIES];
+    this.logProbs = new Float64Array(ISLAMIC_PERSONALITIES.length);
+    // uniform prior
   }
+
+  /* ── helpers ─────────────────────────────────────────────── */
+
+  private normalise(): number[] {
+    const max = this.logProbs.reduce((a, b) => Math.max(a, b), -Infinity);
+    const exps = Array.from(this.logProbs, v => Math.exp(v - max));
+    const sum = exps.reduce((a, b) => a + b, 0);
+    return exps.map(e => e / sum);
+  }
+
+  /* ── question selection (max info gain) ──────────────────── */
 
   getNextQuestion(): Question | null {
     const available = QUESTIONS.filter(q => !this.askedQuestions.has(q.id));
-    if (available.length === 0 || this.remaining.length <= 1) return null;
+    if (available.length === 0) return null;
+
+    const probs = this.normalise();
 
     let bestQuestion: Question = available[0];
-    let bestScore = -1;
+    let bestGain = -Infinity;
+
+    const currentEntropy = this.entropy(probs);
 
     for (const question of available) {
-      const yesCount = this.remaining.filter(p => p.attributes[question.attribute]).length;
-      const noCount = this.remaining.length - yesCount;
-      const total = this.remaining.length;
-      const balance = Math.min(yesCount, noCount) / Math.max(total, 1);
-      if (balance > bestScore) {
-        bestScore = balance;
+      // Compute P(yes) = Σ p_i · attr_i  ;  P(no) = 1 - P(yes)
+      let pYes = 0;
+      for (let i = 0; i < probs.length; i++) {
+        if (ISLAMIC_PERSONALITIES[i].attributes[question.attribute]) {
+          pYes += probs[i];
+        }
+      }
+      const pNo = 1 - pYes;
+
+      // Expected posterior entropy for "yes"
+      const posteriorYes = probs.map((p, i) => {
+        const has = ISLAMIC_PERSONALITIES[i].attributes[question.attribute];
+        return p * (has ? 0.95 : 0.05);
+      });
+      const sumYes = posteriorYes.reduce((a, b) => a + b, 0);
+      const normYes = sumYes > 0 ? posteriorYes.map(p => p / sumYes) : posteriorYes;
+      const hYes = this.entropy(normYes);
+
+      // Expected posterior entropy for "no"
+      const posteriorNo = probs.map((p, i) => {
+        const has = ISLAMIC_PERSONALITIES[i].attributes[question.attribute];
+        return p * (has ? 0.05 : 0.95);
+      });
+      const sumNo = posteriorNo.reduce((a, b) => a + b, 0);
+      const normNo = sumNo > 0 ? posteriorNo.map(p => p / sumNo) : posteriorNo;
+      const hNo = this.entropy(normNo);
+
+      const expectedGain = currentEntropy - (pYes * hYes + pNo * hNo);
+
+      if (expectedGain > bestGain) {
+        bestGain = expectedGain;
         bestQuestion = question;
       }
     }
@@ -64,28 +127,79 @@ export class IslamicGuesser {
     return bestQuestion;
   }
 
+  private entropy(probs: number[]): number {
+    let h = 0;
+    for (const p of probs) {
+      if (p > 1e-12) h -= p * Math.log2(p);
+    }
+    return h;
+  }
+
+  /* ── update ──────────────────────────────────────────────── */
+
   applyAnswer(question: Question, answer: Answer): void {
-    if (answer === 'yes') {
-      this.remaining = this.remaining.filter(p => p.attributes[question.attribute]);
-    } else if (answer === 'no') {
-      this.remaining = this.remaining.filter(p => !p.attributes[question.attribute]);
+    if (answer === 'dontknow') return; // no update
+
+    for (let i = 0; i < ISLAMIC_PERSONALITIES.length; i++) {
+      const has = ISLAMIC_PERSONALITIES[i].attributes[question.attribute];
+      switch (answer) {
+        case 'yes':
+          this.logProbs[i] += has ? IslamicGuesser.L_YES_MATCH : IslamicGuesser.L_YES_MISS;
+          break;
+        case 'no':
+          this.logProbs[i] += has ? IslamicGuesser.L_NO_MATCH : IslamicGuesser.L_NO_MISS;
+          break;
+        case 'maybe':
+          this.logProbs[i] += has ? IslamicGuesser.L_MAYBE_MATCH : IslamicGuesser.L_MAYBE_MISS;
+          break;
+      }
     }
   }
 
+  /* ── guess logic ─────────────────────────────────────────── */
+
   canGuess(): boolean {
-    return this.remaining.length === 1 ||
-      (this.remaining.length <= 3 && this.askedQuestions.size >= 5);
+    const probs = this.normalise();
+    const sorted = [...probs].sort((a, b) => b - a);
+    // Guess if top candidate has ≥ 60% probability or big lead
+    if (sorted[0] >= 0.6) return true;
+    if (sorted.length >= 2 && sorted[0] > sorted[1] * 3 && this.askedQuestions.size >= 4) return true;
+    return false;
   }
 
   getBestGuess(): IslamicPersonality | null {
-    return this.remaining.length > 0 ? this.remaining[0] : null;
+    const probs = this.normalise();
+    let bestIdx = 0;
+    for (let i = 1; i < probs.length; i++) {
+      if (probs[i] > probs[bestIdx]) bestIdx = i;
+    }
+    return ISLAMIC_PERSONALITIES[bestIdx];
+  }
+
+  getTopGuesses(n = 3): { personality: IslamicPersonality; probability: number }[] {
+    const probs = this.normalise();
+    return probs
+      .map((p, i) => ({ personality: ISLAMIC_PERSONALITIES[i], probability: p }))
+      .sort((a, b) => b.probability - a.probability)
+      .slice(0, n);
+  }
+
+  getConfidence(): number {
+    const probs = this.normalise();
+    return Math.max(...probs) * 100;
   }
 
   getRemainingCount(): number {
-    return this.remaining.length;
+    const probs = this.normalise();
+    // Count candidates with > 1% probability
+    return probs.filter(p => p > 0.01).length;
   }
 
   getProgress(): number {
     return Math.min((this.askedQuestions.size / QUESTIONS.length) * 100, 100);
+  }
+
+  getAskedCount(): number {
+    return this.askedQuestions.size;
   }
 }
