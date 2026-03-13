@@ -112,20 +112,6 @@ export default function DevinePage() {
           <motion.div key="intro" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             className="flex flex-col items-center gap-6 pt-4">
 
-            {/* Orbital logo */}
-            <div className="relative w-40 h-40">
-              {[0, 1, 2].map(i => (
-                <motion.div key={i}
-                  className="absolute inset-0 rounded-full border border-amber-400/20"
-                  style={{ scale: 1 + i * 0.25 }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8 + i * 4, repeat: Infinity, ease: 'linear' }}
-                />
-              ))}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-7xl">🔮</span>
-              </div>
-            </div>
 
             <h1 className="text-4xl font-black bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent font-arabic">
               كاشف
