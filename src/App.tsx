@@ -14,6 +14,7 @@ import { useAppVersion } from "./hooks/useAppVersion";
 import BottomNav from "./components/BottomNav";
 import MiniPlayer from "./components/MiniPlayer";
 import DedicationPopup from "./components/DedicationPopup";
+import { UpdateBanner } from "./components/app/UpdateBanner";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
