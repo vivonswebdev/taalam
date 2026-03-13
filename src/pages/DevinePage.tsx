@@ -270,7 +270,7 @@ export default function DevinePage() {
           <motion.div key="guess" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }} className="flex flex-col items-center gap-5 pt-6">
             <motion.span className="text-6xl" animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.8 }}>🔮</motion.span>
+              transition={{ duration: 0.8 }}>☪️</motion.span>
 
             <p className="text-white/50 text-sm">
               Après {questionCount} questions...
