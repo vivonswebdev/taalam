@@ -282,7 +282,7 @@ export function HomeDashboard() {
         )}
 
         {/* Basmala */}
-        <p className="font-arabic text-xl text-primary text-center mb-3 px-5">
+        <p className="font-arabic text-xl text-primary text-center mt-3 mb-3 px-5">
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
         </p>
 
