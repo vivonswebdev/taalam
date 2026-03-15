@@ -11,6 +11,7 @@ import ProfileBubble from "@/components/ProfileBubble";
 import WeakSurahsSection from "@/components/WeakSurahsSection";
 import DailyTarteelChallenge from "@/components/DailyTarteelChallenge";
 import PageBackground from "@/components/PageBackground";
+import NextPrayerWidget from "@/components/home/NextPrayerWidget";
 import taaloumLogo from "@/assets/taaloum-logo.png";
 import { Flame } from "lucide-react";
 
