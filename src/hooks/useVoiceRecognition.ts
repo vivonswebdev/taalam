@@ -465,8 +465,69 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     setIsListening(false);
   }, []);
 
+  // ─── Capacitor native speech recognition ──────────────────
+  const startCapacitor = useCallback(async () => {
+    console.info("[VoiceRecognition] Starting Capacitor SpeechRecognition");
+    try {
+      const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+
+      const permResult = await SpeechRecognition.requestPermissions();
+      if (permResult.speechRecognition !== "granted") {
+        setPermissionDenied(true);
+        onErrorRef.current?.("not-allowed");
+        return;
+      }
+
+      setTranscript("");
+      setPermissionDenied(false);
+      isListeningRef.current = true;
+      capacitorListeningRef.current = true;
+      setIsListening(true);
+      setMode("native");
+
+      SpeechRecognition.addListener("partialResults", (data: any) => {
+        const partial = data?.matches?.[0] || data?.value || "";
+        if (partial) {
+          setTranscript(partial);
+          onResultRef.current?.(partial);
+        }
+      });
+
+      await SpeechRecognition.start({
+        language: lang,
+        partialResults: true,
+        popup: false,
+      });
+    } catch (e: any) {
+      console.error("[VoiceRecognition] Capacitor start error:", e);
+      capacitorListeningRef.current = false;
+      isListeningRef.current = false;
+      setIsListening(false);
+      onErrorRef.current?.("capacitor-error");
+    }
+  }, [lang]);
+
+  const stopCapacitor = useCallback(async () => {
+    console.info("[VoiceRecognition] Stopping Capacitor SpeechRecognition");
+    try {
+      const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+      await SpeechRecognition.stop();
+      await SpeechRecognition.removeAllListeners();
+    } catch {}
+    capacitorListeningRef.current = false;
+    isListeningRef.current = false;
+    setIsListening(false);
+    onEndRef.current?.();
+  }, []);
+
   // ─── Public API: auto-select native or server ─────────────
   const start = useCallback(() => {
+    // On native platform → use Capacitor speech recognition
+    if (isNativePlatform) {
+      startCapacitor();
+      return;
+    }
+
     // If user toggled "force server" or native SR failed previously, use server
     if (forceServer || forceServerRef.current) {
       console.info("[VoiceRecognition] Using server STT (forced)");
@@ -484,10 +545,17 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       setMode("server");
       startServer();
     }
-  }, [startNative, startServer, forceServer]);
+  }, [startCapacitor, startNative, startServer, forceServer]);
 
   const stop = useCallback(() => {
     console.info("[VoiceRecognition] Stop requested");
+
+    // On native platform → stop Capacitor
+    if (isNativePlatform && capacitorListeningRef.current) {
+      stopCapacitor();
+      return;
+    }
+
     if (activeEngineRef.current === "server") {
       stopServer();
       return;
@@ -498,7 +566,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     }
     stopNative();
     stopServer();
-  }, [stopNative, stopServer]);
+  }, [stopCapacitor, stopNative, stopServer]);
 
   return { isListening, transcript, isSupported, permissionDenied, mode, start, stop };
 }
