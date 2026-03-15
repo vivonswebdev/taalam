@@ -85,6 +85,13 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       if (nativeNoEndTimerRef.current) clearTimeout(nativeNoEndTimerRef.current);
       try { recognitionRef.current?.abort(); } catch {}
       cleanupServer();
+      // Cleanup Capacitor speech
+      if (capacitorListeningRef.current) {
+        import("@capacitor-community/speech-recognition").then(({ SpeechRecognition }) => {
+          SpeechRecognition.stop().catch(() => {});
+        }).catch(() => {});
+        capacitorListeningRef.current = false;
+      }
     };
   }, []);
 
