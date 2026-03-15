@@ -57,17 +57,25 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const hasNativeSR = useRef(false);
   const forceServerRef = useRef(false);
 
+  // ─── Capacitor native speech recognition refs ─────────────
+  const capacitorListeningRef = useRef(false);
+
   useEffect(() => { onResultRef.current = onResult; }, [onResult]);
   useEffect(() => { onEndRef.current = onEnd; }, [onEnd]);
   useEffect(() => { onErrorRef.current = onError; }, [onError]);
 
   useEffect(() => {
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const native = !!SR;
-    hasNativeSR.current = native;
-    // Supported if either native SR or getUserMedia available
-    setIsSupported(native || !!navigator.mediaDevices?.getUserMedia);
-    setMode(native ? "native" : "server");
+    if (isNativePlatform) {
+      // On native, we always support speech recognition via Capacitor plugin
+      setIsSupported(true);
+      setMode("native");
+    } else {
+      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const native = !!SR;
+      hasNativeSR.current = native;
+      setIsSupported(native || !!navigator.mediaDevices?.getUserMedia);
+      setMode(native ? "native" : "server");
+    }
   }, []);
 
   useEffect(() => {
