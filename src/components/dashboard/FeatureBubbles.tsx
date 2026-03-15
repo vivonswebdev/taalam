@@ -261,6 +261,9 @@ export function HomeDashboard() {
 
         <StatsHeader t={t} />
 
+        {/* Next prayer countdown */}
+        <NextPrayerWidget />
+
         {/* Signup banner for guests */}
         {!user && (
           <div className="px-5 mb-3">
