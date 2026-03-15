@@ -19,7 +19,7 @@ export default function NextPrayerWidget() {
   return (
     <button
       onClick={() => navigate("/prayers")}
-      className="mx-5 mt-3 flex flex-col items-center gap-1 rounded-2xl p-3 bg-gradient-to-r from-primary/12 to-accent/8 border border-primary/15 shadow-sm active:scale-[0.98] transition-transform"
+      className="mx-auto mt-3 flex flex-col items-center gap-1 rounded-2xl p-3 bg-gradient-to-r from-primary/12 to-accent/8 border border-primary/15 shadow-sm active:scale-[0.98] transition-transform w-fit px-6"
     >
       <p className="text-xs font-bold text-foreground">
         {t("prayer.next" as any)} · {t(`prayers.${nextPrayer.name.toLowerCase()}` as any)} · {nextPrayer.time}
