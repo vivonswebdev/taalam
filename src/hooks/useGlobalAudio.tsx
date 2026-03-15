@@ -329,6 +329,10 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     currentAyahRef.current = startAyah;
     isPlayingRef.current = true;
 
+    // Safari fix: create & unlock Audio element immediately within user gesture
+    const unlockAudio = new Audio();
+    unlockAudio.play().catch(() => {});
+
     setState(prev => ({
       ...prev,
       isPlaying: true,
@@ -349,8 +353,49 @@ export function GlobalAudioProvider({ children }: { children: React.ReactNode })
     const urls = await fetchUrls(surahNum, reciterEditionRef.current);
     if (urls.length === 0) return;
     audioUrlsRef.current = urls;
-    playAyahInternal(startAyah, urls);
-  }, [stopAudio, fetchUrls, playAyahInternal]);
+
+    // Reuse the unlocked audio element for first ayah on Safari
+    if (urls[startAyah]) {
+      stopAudio();
+      unlockAudio.src = urls[startAyah];
+      unlockAudio.preload = "auto";
+      audioRef.current = unlockAudio;
+      currentAyahRef.current = startAyah;
+
+      setState(prev => ({ ...prev, currentAyah: startAyah, isPlaying: true }));
+      onAyahChange.current?.(surahNumberRef.current, startAyah);
+
+      unlockAudio.onended = () => {
+        const rm = repeatModeRef.current;
+        if (rm === "ayah") {
+          playAyahInternal(startAyah, urls);
+          return;
+        }
+        if (rm === "range" && repeatRangeRef.current) {
+          const { start, end } = repeatRangeRef.current;
+          if (startAyah >= end) {
+            playAyahInternal(start, urls);
+            return;
+          }
+        }
+        playAyahInternal(startAyah + 1, urls);
+      };
+      unlockAudio.onerror = () => playAyahInternal(startAyah + 1, urls);
+
+      startProgressInterval();
+      unlockAudio.play().catch((err) => {
+        if (err?.name === "NotAllowedError") {
+          stopAudio();
+          isPlayingRef.current = false;
+          setState(prev => ({ ...prev, isPlaying: false }));
+          return;
+        }
+        playAyahInternal(startAyah + 1, urls);
+      });
+    } else {
+      playAyahInternal(startAyah, urls);
+    }
+  }, [stopAudio, fetchUrls, playAyahInternal, startProgressInterval]);
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
