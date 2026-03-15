@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
 
 export interface WordResult {
   word: string;
@@ -13,6 +14,8 @@ interface UseVoiceRecognitionOptions {
   onEnd?: () => void;
   onError?: (error: string) => void;
 }
+
+const isNativePlatform = Capacitor.isNativePlatform();
 
 // ─── Constants for server fallback ──────────────────────────
 const MAX_RECORDING_DURATION_MS = 60_000;
