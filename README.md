@@ -1,8 +1,8 @@
-# 📖 Taaloum - Application d'apprentissage du Coran
+# 📖 Ta'alam - Application d'apprentissage du Coran
 
 ## 🌟 Vue d'ensemble
 
-Taaloum est une application web progressive (PWA) complète pour l'apprentissage, la mémorisation et la pratique du Coran. Elle combine des fonctionnalités pédagogiques avancées avec une interface intuitive adaptée aux apprenants de tous âges.
+Ta'alam est une application web progressive (PWA) complète pour l'apprentissage, la mémorisation et la pratique du Coran. Elle combine des fonctionnalités pédagogiques avancées avec une interface intuitive adaptée aux apprenants de tous âges.
 
 ## 🎯 Fonctionnalités principales
 
@@ -350,7 +350,7 @@ Ce projet est sous licence privée. Tous droits réservés.
 
 Pour toute question ou support :
 - GitHub Issues : [Issues](https://github.com/vivonswebdev/taaloum/issues)
-- Email : support@taaloum.app
+- Email : support@taalam.eu
 
 ## 🙏 Remerciements
 
