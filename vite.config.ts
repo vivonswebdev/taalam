@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => ({
         "@capacitor/local-notifications",
         "@capacitor/push-notifications",
         "@capacitor-community/speech-recognition",
+        "@capacitor/status-bar",
       ],
       output: {
         assetFileNames: (assetInfo) => {

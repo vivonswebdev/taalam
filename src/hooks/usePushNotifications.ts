@@ -88,16 +88,35 @@ export function usePushNotifications() {
     setLoading(true);
     try {
       if (isNative) {
-        const { PushNotifications } = await import("@capacitor/push-notifications");
-        const permResult = await PushNotifications.requestPermissions();
+        try {
+          const { PushNotifications } = await import("@capacitor/push-notifications");
+          const permResult = await PushNotifications.requestPermissions();
 
-        if (permResult.receive === "granted") {
-          setPushState("granted");
-          await PushNotifications.register();
-          return true;
-        } else {
-          setPushState("denied");
-          return false;
+          if (permResult.receive === "granted") {
+            setPushState("granted");
+            await PushNotifications.register();
+            return true;
+          } else {
+            setPushState("denied");
+            return false;
+          }
+        } catch (pushErr) {
+          // Push not available — fallback to LocalNotifications
+          console.warn("[Push] PushNotifications unavailable, falling back to LocalNotifications:", pushErr);
+          try {
+            const { LocalNotifications } = await import("@capacitor/local-notifications");
+            const localPerm = await LocalNotifications.requestPermissions();
+            if (localPerm.display === "granted") {
+              setPushState("granted");
+              return true;
+            }
+            setPushState("denied");
+            return false;
+          } catch (localErr) {
+            console.warn("[Push] LocalNotifications also unavailable:", localErr);
+            setPushState("unsupported");
+            return false;
+          }
         }
       }
 

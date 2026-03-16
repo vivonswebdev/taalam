@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 
 export type TarteelWordStatus = "correct" | "almost" | "wrong" | "pending";
 
