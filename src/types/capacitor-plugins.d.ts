@@ -18,6 +18,7 @@ declare module "@capacitor/local-notifications" {
   export const LocalNotifications: {
     requestPermissions(): Promise<PermissionStatus>;
     checkPermissions(): Promise<PermissionStatus>;
+    createChannel(channel: { id: string; name: string; importance: number; sound?: string; description?: string }): Promise<void>;
     schedule(options: { notifications: LocalNotification[] }): Promise<any>;
     cancel(options: { notifications: { id: number }[] }): Promise<void>;
     getPending(): Promise<{ notifications: { id: number }[] }>;
