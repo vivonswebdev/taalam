@@ -106,10 +106,21 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
     };
   }, [cleanupRecognition]);
 
-  const stopMicro = useCallback(() => {
+  const stopMicro = useCallback(async () => {
     shouldKeepListeningRef.current = false;
     setIsListening(false);
     cleanupRecognition();
+
+    // Also stop native speech if running
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+        await SpeechRecognition.stop();
+        await SpeechRecognition.removeAllListeners();
+      } catch {
+        // no-op
+      }
+    }
   }, [cleanupRecognition]);
 
   const resetAyah = useCallback(() => {
