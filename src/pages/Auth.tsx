@@ -612,14 +612,7 @@ export default function Auth() {
                 <button onClick={() => setMode("forgot")} className="w-full text-xs text-center text-primary font-medium">
                   Mot de passe oublié ?
                 </button>
-                <DemoLoginBanner onDemoLogin={(demoEmail, demoPwd) => {
-                  setEmail(demoEmail);
-                  setPassword(demoPwd);
-                  setTimeout(() => {
-                    const btn = document.querySelector<HTMLButtonElement>('[data-demo-login]');
-                    if (btn) btn.click();
-                  }, 100);
-                }} />
+                <DemoLoginBanner />
               </motion.div>
             )}
           </>
