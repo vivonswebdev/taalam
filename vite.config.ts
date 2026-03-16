@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 600,
     cssCodeSplit: true,
     rollupOptions: {
+      external: [
+        "@capacitor/local-notifications",
+        "@capacitor/push-notifications",
+        "@capacitor-community/speech-recognition",
+      ],
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) return 'assets/css/[name]-[hash][extname]';

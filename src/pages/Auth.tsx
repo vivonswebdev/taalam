@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import DemoLoginBanner from "@/components/DemoLoginBanner";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Mail, Sparkles, Eye, EyeOff, KeyRound, Check, Globe } from "lucide-react";
@@ -611,6 +612,7 @@ export default function Auth() {
                 <button onClick={() => setMode("forgot")} className="w-full text-xs text-center text-primary font-medium">
                   Mot de passe oublié ?
                 </button>
+                <DemoLoginBanner />
               </motion.div>
             )}
           </>
