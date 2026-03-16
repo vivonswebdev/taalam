@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 
 export type TarteelWordStatus = "correct" | "almost" | "wrong" | "pending";
 
@@ -105,10 +106,21 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
     };
   }, [cleanupRecognition]);
 
-  const stopMicro = useCallback(() => {
+  const stopMicro = useCallback(async () => {
     shouldKeepListeningRef.current = false;
     setIsListening(false);
     cleanupRecognition();
+
+    // Also stop native speech if running
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+        await SpeechRecognition.stop();
+        await SpeechRecognition.removeAllListeners();
+      } catch {
+        // no-op
+      }
+    }
   }, [cleanupRecognition]);
 
   const resetAyah = useCallback(() => {
@@ -130,10 +142,58 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
     setAyah(currentAyahIndex + 1);
   }, [currentAyahIndex, setAyah]);
 
-  const startMicro = useCallback(() => {
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
+  const startMicro = useCallback(async () => {
     console.log("[Tarteel] start #", currentAyahIndex + 1);
+
+    cleanupRecognition();
+    activeAyahRef.current = currentAyahIndex;
+    shouldKeepListeningRef.current = true;
+    setTranscript("");
+    setWordResults([]);
+    setShowArabic(false);
+    setRecognitionError(null);
+    setIsListening(true);
+
+    // ─── Native Capacitor path ────────────────────────────
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+
+        // Check & request permission first
+        const permStatus = await SpeechRecognition.checkPermissions();
+        if (permStatus.speechRecognition !== "granted") {
+          const req = await SpeechRecognition.requestPermissions();
+          if (req.speechRecognition !== "granted") {
+            setRecognitionError("not-allowed");
+            setIsListening(false);
+            return;
+          }
+        }
+
+        // Listen for partial results
+        await SpeechRecognition.addListener("partialResults", (data) => {
+          const text = data.matches?.[0] || "";
+          console.log("[Tarteel] native partial:", text);
+          setTranscript(text);
+          setWordResults(buildWordResults(currentAyahText, text));
+          setRecognitionError(null);
+        });
+
+        await SpeechRecognition.start({
+          language: lang,
+          popup: false,
+          partialResults: true,
+          maxResults: 1,
+        });
+        return;
+      } catch (e) {
+        console.warn("[Tarteel] Native speech failed, falling back to Web API:", e);
+        // Fall through to Web API
+      }
+    }
+
+    // ─── Web Speech API path ──────────────────────────────
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SR) {
       setRecognitionError("not-supported");
@@ -141,11 +201,7 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
       return;
     }
 
-    cleanupRecognition();
-
     const recognition: SpeechRecognition = new SR();
-    activeAyahRef.current = currentAyahIndex;
-    shouldKeepListeningRef.current = true;
 
     recognition.lang = lang;
     recognition.continuous = true;
@@ -187,11 +243,6 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
     };
 
     recognitionRef.current = recognition;
-    setTranscript("");
-    setWordResults([]);
-    setShowArabic(false);
-    setRecognitionError(null);
-    setIsListening(true);
 
     try {
       recognition.start();

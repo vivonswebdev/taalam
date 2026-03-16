@@ -7,6 +7,18 @@ html {
   touch-action: pan-x pan-y pinch-zoom;
 }
 
+/* ═══ SAFE AREA (Notch / Dynamic Island) ═══ */
+#root {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 [data-mushaf-page] {
   touch-action: manipulation pinch-zoom;
   user-select: text;
