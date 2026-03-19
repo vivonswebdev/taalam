@@ -10,7 +10,7 @@ import { generateTTS } from "@/services/elevenLabsTTS";
 /* ────── Voice config ────── */
 const VOICE_CONFIG = {
   adult: { voiceId: "nPczCjzI2devNBz1zQrb", stability: 0.50, similarity_boost: 0.75, speed: 0.85 },
-  child: { voiceId: "EXAVITQu4vr4xnSDxMaL", stability: 0.45, similarity_boost: 0.80, speed: 1.0 },
+  child: { voiceId: "4p5WXd3ZuWR9pPtRQuxC", stability: 0.45, similarity_boost: 0.80, speed: 1.0 },
 };
 
 /* ────── Category colours ────── */
@@ -249,7 +249,7 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
 /* ══════════════════════════════
    Main export — List + Filters
    ══════════════════════════════ */
-const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals"] as const;
+const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals", "history"] as const;
 
 export default function IslamicStoriesPlayer() {
   const { t } = useLanguage();

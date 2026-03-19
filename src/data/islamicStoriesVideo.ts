@@ -27,7 +27,7 @@ export type IslamicStoryVideo = {
 // Voice IDs for ElevenLabs
 export const VOICE_IDS = {
   adult: "nPczCjzI2devNBz1zQrb", // Brian - calm male
-  child: "EXAVITQu4vr4xnSDxMaL", // Sarah - young female
+  child: "4p5WXd3ZuWR9pPtRQuxC", // Amir - young boy
 } as const;
 
 export const VOICE_SETTINGS = {
@@ -44,7 +44,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "pillars",
     ageRange: "6-9",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/3629519/3629519-uhd_2560_1440_30fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/3629519/3629519-hd_1920_1080_30fps.mp4",
     videoPoster: "https://images.pexels.com/videos/3629519/free-video-3629519.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Baba, c'est quoi l'Islam ?", en: "Baba, what is Islam?", ar: "بابا، ما هو الإسلام؟", nl: "Baba, wat is de Islam?", tr: "Baba, İslam nedir?", ur: "بابا، اسلام کیا ہے؟" } },
@@ -74,8 +74,8 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "prophets",
     ageRange: "6-9",
     durationSec: 150,
-    videoUrl: "https://videos.pexels.com/video-files/1851190/1851190-uhd_2560_1440_24fps.mp4",
-    videoPoster: "https://images.pexels.com/videos/1851190/free-video-1851190.jpg?auto=compress&w=600",
+    videoUrl: "https://videos.pexels.com/video-files/855564/855564-hd_1920_1080_24fps.mp4",
+    videoPoster: "https://images.pexels.com/videos/855564/free-video-855564.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Baba, pourquoi les gens adoraient des statues ?", en: "Baba, why did people worship statues?", ar: "بابا، لماذا كان الناس يعبدون التماثيل؟", nl: "Baba, waarom aanbaden mensen beelden?", tr: "Baba, insanlar neden putlara tapıyordu?", ur: "بابا، لوگ مورتیوں کی پوجا کیوں کرتے تھے؟" } },
       { speaker: "adult", startSec: 4, endSec: 12, translations: { fr: "C'est une grande question. Il y a longtemps, la plupart des gens le faisaient. Mais un garçon courageux nommé Ibrahim questionnait tout.", en: "That's a big question. Long ago, most people did. But there was one brave boy named Ibrahim who questioned everything.", ar: "هذا سؤال كبير. قديماً، كان معظم الناس يفعلون ذلك. لكن كان هناك فتى شجاع اسمه إبراهيم كان يسأل عن كل شيء.", nl: "Dat is een grote vraag. Lang geleden deden de meeste mensen dat. Maar er was een dappere jongen genaamd Ibrahim die alles in twijfel trok.", tr: "Bu büyük bir soru. Uzun zaman önce çoğu insan öyle yapıyordu. Ama her şeyi sorgulayan İbrahim adında cesur bir çocuk vardı.", ur: "یہ ایک بڑا سوال ہے۔ بہت پہلے، اکثر لوگ ایسا کرتے تھے۔ لیکن ایک بہادر لڑکا تھا جس کا نام ابراہیم تھا جو ہر چیز پر سوال کرتا تھا۔" } },
@@ -152,8 +152,8 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "quran",
     ageRange: "7-10",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/2611510/2611510-uhd_2560_1440_24fps.mp4",
-    videoPoster: "https://images.pexels.com/videos/2611510/free-video-2611510.jpg?auto=compress&w=600",
+    videoUrl: "https://videos.pexels.com/video-files/4763824/4763824-hd_1920_1080_24fps.mp4",
+    videoPoster: "https://images.pexels.com/videos/4763824/free-video-4763824.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Est-ce qu'Allah a un nom ?", en: "Does Allah have a name?", ar: "هل لله اسم؟", nl: "Heeft Allah een naam?", tr: "Allah'ın bir adı var mı?", ur: "کیا اللہ کا کوئی نام ہے؟" } },
       { speaker: "adult", startSec: 4, endSec: 12, translations: { fr: "Allah a quatre-vingt-dix-neuf beaux noms. Chacun nous dit quelque chose d'incroyable sur Lui.", en: "Allah has ninety-nine beautiful names. Each one tells us something amazing about Him.", ar: "لله تسعة وتسعون اسماً حسناً. كل اسم يخبرنا شيئاً مذهلاً عنه.", nl: "Allah heeft negenennegentig prachtige namen. Elk vertelt ons iets geweldigs over Hem.", tr: "Allah'ın doksan dokuz güzel ismi var. Her biri bize O'nun hakkında harika bir şey anlatıyor.", ur: "اللہ کے ننانوے خوبصورت نام ہیں۔ ہر ایک ہمیں اس کے بارے میں حیرت انگیز بات بتاتا ہے۔" } },

@@ -26,7 +26,7 @@ const CAT_STYLES: Record<string, string> = {
   morals: "bg-pink-500/20 text-pink-300 border-pink-500/30",
   history: "bg-violet-500/20 text-violet-300 border-violet-500/30",
 };
-const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals"] as const;
+const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals", "history"] as const;
 
 /* ══════════════════════════════
    Story Card
