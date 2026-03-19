@@ -152,8 +152,8 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "quran",
     ageRange: "7-10",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/2611510/2611510-uhd_2560_1440_24fps.mp4",
-    videoPoster: "https://images.pexels.com/videos/2611510/free-video-2611510.jpg?auto=compress&w=600",
+    videoUrl: "https://videos.pexels.com/video-files/4763824/4763824-hd_1920_1080_24fps.mp4",
+    videoPoster: "https://images.pexels.com/videos/4763824/free-video-4763824.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Est-ce qu'Allah a un nom ?", en: "Does Allah have a name?", ar: "هل لله اسم؟", nl: "Heeft Allah een naam?", tr: "Allah'ın bir adı var mı?", ur: "کیا اللہ کا کوئی نام ہے؟" } },
       { speaker: "adult", startSec: 4, endSec: 12, translations: { fr: "Allah a quatre-vingt-dix-neuf beaux noms. Chacun nous dit quelque chose d'incroyable sur Lui.", en: "Allah has ninety-nine beautiful names. Each one tells us something amazing about Him.", ar: "لله تسعة وتسعون اسماً حسناً. كل اسم يخبرنا شيئاً مذهلاً عنه.", nl: "Allah heeft negenennegentig prachtige namen. Elk vertelt ons iets geweldigs over Hem.", tr: "Allah'ın doksan dokuz güzel ismi var. Her biri bize O'nun hakkında harika bir şey anlatıyor.", ur: "اللہ کے ننانوے خوبصورت نام ہیں۔ ہر ایک ہمیں اس کے بارے میں حیرت انگیز بات بتاتا ہے۔" } },
