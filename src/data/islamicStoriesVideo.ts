@@ -44,7 +44,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "pillars",
     ageRange: "6-9",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/3629519/3629519-uhd_2560_1440_30fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/3629519/3629519-hd_1920_1080_30fps.mp4",
     videoPoster: "https://images.pexels.com/videos/3629519/free-video-3629519.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Baba, c'est quoi l'Islam ?", en: "Baba, what is Islam?", ar: "بابا، ما هو الإسلام؟", nl: "Baba, wat is de Islam?", tr: "Baba, İslam nedir?", ur: "بابا، اسلام کیا ہے؟" } },
