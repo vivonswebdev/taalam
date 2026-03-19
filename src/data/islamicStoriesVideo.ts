@@ -27,7 +27,7 @@ export type IslamicStoryVideo = {
 // Voice IDs for ElevenLabs
 export const VOICE_IDS = {
   adult: "nPczCjzI2devNBz1zQrb", // Brian - calm male
-  child: "4p5WXd3ZuWR9pPtRQuxC", // Amir - young boy
+  child: "EXAVITQu4vr4xnSDxMaL", // Sarah - young feminine voice
 } as const;
 
 export const VOICE_SETTINGS = {
