@@ -29,6 +29,7 @@ export default function TVModePage() {
   const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslit, setShowTranslit] = useState(false);
   const [arabicSize, setArabicSize] = useState<'md' | 'lg' | 'xl'>('md');
+  const [arabicFont, setArabicFont] = useState<string>('scheherazade');
   const [surahNumber, setSurahNumber] = useState(1);
   const [ayahs, setAyahs] = useState<{ arabic: string; translation?: string; transliteration?: string }[]>([]);
   const [surahName, setSurahName] = useState('');
