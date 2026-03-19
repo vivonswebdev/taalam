@@ -2312,6 +2312,27 @@ const translations = {
   "kidsCards.leaderboard": { fr: "Mon Classement", en: "My Ranking", nl: "Mijn Ranglijst", ar: "ترتيبي", tr: "Sıralamam", ur: "میری درجہ بندی" },
   "kidsCards.leaderboardDesc": { fr: "Top classe · Monte !", en: "Top of class · Rise!", nl: "Top van de klas · Stijg!", ar: "الأفضل بالفصل · تقدّم!", tr: "Sınıf birincisi · Yüksel!", ur: "کلاس میں اول · آگے بڑھو!" },
 
+  // ═══ Islamic Stories ═══
+  "islamicStories.title": { fr: "Histoires Islamiques", en: "Islamic Stories", nl: "Islamitische Verhalen", ar: "قصص إسلامية", tr: "İslami Hikayeler", ur: "اسلامی کہانیاں" },
+  "islamicStories.subtitle": { fr: "Dialogues audio pour enfants", en: "Audio dialogues for kids", nl: "Audiodialogen voor kinderen", ar: "حوارات صوتية للأطفال", tr: "Çocuklar için sesli diyaloglar", ur: "بچوں کے لیے آڈیو مکالمے" },
+  "islamicStories.speakerAdult": { fr: "👨 Parent", en: "👨 Parent", nl: "👨 Ouder", ar: "👨 الأب", tr: "👨 Ebeveyn", ur: "👨 والد" },
+  "islamicStories.speakerChild": { fr: "👧 Enfant", en: "👧 Child", nl: "👧 Kind", ar: "👧 الطفل", tr: "👧 Çocuk", ur: "👧 بچہ" },
+  "islamicStories.offlineNote": { fr: "Voix Web Speech — Fonctionne hors ligne", en: "Web Speech voice — Works offline", nl: "Web Speech stem — Werkt offline", ar: "صوت Web Speech — يعمل بدون إنترنت", tr: "Web Speech sesi — Çevrimdışı çalışır", ur: "Web Speech آواز — آف لائن کام کرتا ہے" },
+  "islamicStories.fivePillars": { fr: "Les 5 Piliers de l'Islam", en: "The 5 Pillars of Islam", nl: "De 5 Zuilen van de Islam", ar: "أركان الإسلام الخمسة", tr: "İslam'ın 5 Şartı", ur: "اسلام کے 5 ارکان" },
+  "islamicStories.ibrahim": { fr: "Ibrahim et les Étoiles", en: "Ibrahim and the Stars", nl: "Ibrahim en de Sterren", ar: "إبراهيم والنجوم", tr: "İbrahim ve Yıldızlar", ur: "ابراہیم اور ستارے" },
+  "islamicStories.nuh": { fr: "Nuh et l'Arche", en: "Nuh and the Ark", nl: "Nuh en de Ark", ar: "نوح والسفينة", tr: "Nuh ve Gemi", ur: "نوح اور کشتی" },
+  "islamicStories.salah": { fr: "Pourquoi on prie ?", en: "Why Do We Pray?", nl: "Waarom bidden we?", ar: "لماذا نصلي؟", tr: "Neden Namaz Kılıyoruz?", ur: "ہم نماز کیوں پڑھتے ہیں؟" },
+  "islamicStories.namesAllah": { fr: "Les 99 Noms d'Allah", en: "The 99 Names of Allah", nl: "De 99 Namen van Allah", ar: "أسماء الله الحسنى", tr: "Allah'ın 99 İsmi", ur: "اللہ کے 99 نام" },
+  "islamicStories.cat.pillars": { fr: "🕌 Piliers", en: "🕌 Pillars", nl: "🕌 Zuilen", ar: "🕌 أركان", tr: "🕌 Şartlar", ur: "🕌 ارکان" },
+  "islamicStories.cat.prophets": { fr: "⭐ Prophètes", en: "⭐ Prophets", nl: "⭐ Profeten", ar: "⭐ أنبياء", tr: "⭐ Peygamberler", ur: "⭐ انبیاء" },
+  "islamicStories.cat.quran": { fr: "📖 Coran", en: "📖 Quran", nl: "📖 Koran", ar: "📖 قرآن", tr: "📖 Kur'an", ur: "📖 قرآن" },
+  "islamicStories.cat.morals": { fr: "🌸 Morales", en: "🌸 Morals", nl: "🌸 Moraal", ar: "🌸 أخلاق", tr: "🌸 Ahlak", ur: "🌸 اخلاقیات" },
+  "islamicStories.filter.all": { fr: "✨ Tout", en: "✨ All", nl: "✨ Alles", ar: "✨ الكل", tr: "✨ Tümü", ur: "✨ سب" },
+  "islamicStories.filter.pillars": { fr: "🕌 Piliers", en: "🕌 Pillars", nl: "🕌 Zuilen", ar: "🕌 أركان", tr: "🕌 Şartlar", ur: "🕌 ارکان" },
+  "islamicStories.filter.prophets": { fr: "⭐ Prophètes", en: "⭐ Prophets", nl: "⭐ Profeten", ar: "⭐ أنبياء", tr: "⭐ Peygamberler", ur: "⭐ انبیاء" },
+  "islamicStories.filter.quran": { fr: "📖 Coran", en: "📖 Quran", nl: "📖 Koran", ar: "📖 قرآن", tr: "📖 Kur'an", ur: "📖 قرآن" },
+  "islamicStories.filter.morals": { fr: "🌸 Morales", en: "🌸 Morals", nl: "🌸 Moraal", ar: "🌸 أخلاق", tr: "🌸 Ahlak", ur: "🌸 اخلاقیات" },
+
   // ═══ Moods Tabs & Sections ═══
   "moods.tabMoods": { fr: "États du cœur", en: "Heart states", nl: "Hartstoestanden", ar: "أحوال القلب", tr: "Kalp halleri", ur: "دل کے احوال" },
   "moods.tabMaladies": { fr: "Maladies", en: "Ailments", nl: "Ziekten", ar: "الأمراض", tr: "Hastalıklar", ur: "بیماریاں" },
