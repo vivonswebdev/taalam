@@ -128,7 +128,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "pillars",
     ageRange: "5-8",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_30fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4",
     videoPoster: "https://images.pexels.com/videos/3571264/free-video-3571264.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Pourquoi on prie cinq fois par jour ?", en: "Why do we pray five times a day?", ar: "لماذا نصلي خمس مرات في اليوم؟", nl: "Waarom bidden we vijf keer per dag?", tr: "Neden günde beş vakit namaz kılıyoruz?", ur: "ہم دن میں پانچ بار نماز کیوں پڑھتے ہیں؟" } },
