@@ -14,6 +14,17 @@ import {
 
 const TV_RECITERS = RECITERS_LIST.filter(r => r.category !== 'kids');
 
+const ARABIC_FONTS = [
+  { id: 'scheherazade', label: 'Scheherazade', family: '"Scheherazade New", serif' },
+  { id: 'amiri', label: 'Amiri', family: '"Amiri", serif' },
+  { id: 'noto-naskh', label: 'Noto Naskh', family: '"Noto Naskh Arabic", serif' },
+  { id: 'noto-nastaliq', label: 'Nastaliq', family: '"Noto Nastaliq Urdu", serif' },
+  { id: 'lateef', label: 'Lateef', family: '"Lateef", serif' },
+  { id: 'reem-kufi', label: 'Reem Kufi', family: '"Reem Kufi", sans-serif' },
+  { id: 'aref-ruqaa', label: 'Ruqaa', family: '"Aref Ruqaa", serif' },
+  { id: 'kitab', label: 'Kitab', family: '"Kitab", "Amiri Quran", serif' },
+] as const;
+
 export default function TVModePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -29,6 +40,7 @@ export default function TVModePage() {
   const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslit, setShowTranslit] = useState(false);
   const [arabicSize, setArabicSize] = useState<'md' | 'lg' | 'xl'>('md');
+  const [arabicFont, setArabicFont] = useState<string>('scheherazade');
   const [surahNumber, setSurahNumber] = useState(1);
   const [ayahs, setAyahs] = useState<{ arabic: string; translation?: string; transliteration?: string }[]>([]);
   const [surahName, setSurahName] = useState('');
@@ -212,6 +224,12 @@ export default function TVModePage() {
       onClick={resetControlsTimer}
       onTouchStart={resetControlsTimer}
     >
+      {/* Google Fonts for Arabic styles */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New&family=Noto+Naskh+Arabic&family=Noto+Nastaliq+Urdu&family=Lateef&family=Reem+Kufi&family=Aref+Ruqaa&display=swap"
+      />
+
       {/* Video background */}
       <VideoBackground opacity={0.65} intervalSeconds={35} autoRotate={isPlaying} />
 
@@ -245,7 +263,7 @@ export default function TVModePage() {
                     color: 'rgba(255,255,255,0.75)',
                     fontWeight: 600,
                     textShadow: '0 4px 40px rgba(0,0,0,0.9), 0 2px 15px rgba(0,0,0,0.7)',
-                    fontFamily: '"Scheherazade New", "Amiri", serif',
+                    fontFamily: ARABIC_FONTS.find(f => f.id === arabicFont)?.family || '"Scheherazade New", serif',
                   }}
                   dir="rtl"
                 >
@@ -447,6 +465,22 @@ export default function TVModePage() {
                               }`}
                             >
                               {size === 'md' ? 'A' : size === 'lg' ? 'A+' : 'A++'}
+                            </button>
+                          ))}
+                        </div>
+
+                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1 mt-2.5">{t("tv.fontStyle" as any) || "خط"}</p>
+                        <div className="space-y-0.5 max-h-24 overflow-y-auto">
+                          {ARABIC_FONTS.map(f => (
+                            <button
+                              key={f.id}
+                              onClick={() => setArabicFont(f.id)}
+                              className={`w-full text-left px-2 py-1 rounded text-[11px] transition flex items-center gap-2 ${
+                                arabicFont === f.id ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
+                              }`}
+                            >
+                              <span style={{ fontFamily: f.family }} className="text-sm" dir="rtl">بسم</span>
+                              <span>{f.label}</span>
                             </button>
                           ))}
                         </div>
