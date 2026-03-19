@@ -224,6 +224,12 @@ export default function TVModePage() {
       onClick={resetControlsTimer}
       onTouchStart={resetControlsTimer}
     >
+      {/* Google Fonts for Arabic styles */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New&family=Noto+Naskh+Arabic&family=Noto+Nastaliq+Urdu&family=Lateef&family=Reem+Kufi&family=Aref+Ruqaa&display=swap"
+      />
+
       {/* Video background */}
       <VideoBackground opacity={0.65} intervalSeconds={35} autoRotate={isPlaying} />
 
