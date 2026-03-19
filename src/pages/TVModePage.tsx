@@ -462,6 +462,22 @@ export default function TVModePage() {
                             </button>
                           ))}
                         </div>
+
+                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1 mt-2.5">{t("tv.fontStyle" as any) || "خط"}</p>
+                        <div className="space-y-0.5 max-h-24 overflow-y-auto">
+                          {ARABIC_FONTS.map(f => (
+                            <button
+                              key={f.id}
+                              onClick={() => setArabicFont(f.id)}
+                              className={`w-full text-left px-2 py-1 rounded text-[11px] transition flex items-center gap-2 ${
+                                arabicFont === f.id ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
+                              }`}
+                            >
+                              <span style={{ fontFamily: f.family }} className="text-sm" dir="rtl">بسم</span>
+                              <span>{f.label}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </motion.div>
