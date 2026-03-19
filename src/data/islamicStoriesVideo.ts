@@ -100,7 +100,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "prophets",
     ageRange: "5-8",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/1918465/1918465-uhd_2560_1440_24fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/1918465/1918465-hd_1920_1080_24fps.mp4",
     videoPoster: "https://images.pexels.com/videos/1918465/free-video-1918465.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Raconte-moi une histoire avec des animaux !", en: "Tell me a story about animals!", ar: "أخبرني قصة عن الحيوانات!", nl: "Vertel me een verhaal over dieren!", tr: "Bana hayvanlar hakkında bir hikaye anlat!", ur: "مجھے جانوروں کی کہانی سناؤ!" } },
