@@ -36,6 +36,7 @@ export default function TVModePage() {
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
 
   // Surah list for picker
   const [allSurahs, setAllSurahs] = useState<SurahMeta[]>([]);
