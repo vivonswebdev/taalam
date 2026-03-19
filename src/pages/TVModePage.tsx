@@ -14,6 +14,17 @@ import {
 
 const TV_RECITERS = RECITERS_LIST.filter(r => r.category !== 'kids');
 
+const ARABIC_FONTS = [
+  { id: 'scheherazade', label: 'Scheherazade', family: '"Scheherazade New", serif' },
+  { id: 'amiri', label: 'Amiri', family: '"Amiri", serif' },
+  { id: 'noto-naskh', label: 'Noto Naskh', family: '"Noto Naskh Arabic", serif' },
+  { id: 'noto-nastaliq', label: 'Nastaliq', family: '"Noto Nastaliq Urdu", serif' },
+  { id: 'lateef', label: 'Lateef', family: '"Lateef", serif' },
+  { id: 'reem-kufi', label: 'Reem Kufi', family: '"Reem Kufi", sans-serif' },
+  { id: 'aref-ruqaa', label: 'Ruqaa', family: '"Aref Ruqaa", serif' },
+  { id: 'kitab', label: 'Kitab', family: '"Kitab", "Amiri Quran", serif' },
+] as const;
+
 export default function TVModePage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
