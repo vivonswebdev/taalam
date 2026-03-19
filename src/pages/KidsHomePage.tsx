@@ -239,7 +239,11 @@ export default function KidsHomePage() {
         <div className="mt-6">
           <IslamicStoriesPlayer />
         </div>
-      </div>
+
+        {/* Video Stories Section */}
+        <div className="mt-6 pb-4">
+          <IslamicStoryVideoPlayer />
+        </div>
     </>
   );
 }
