@@ -27,7 +27,7 @@ export type IslamicStoryVideo = {
 // Voice IDs for ElevenLabs
 export const VOICE_IDS = {
   adult: "nPczCjzI2devNBz1zQrb", // Brian - calm male
-  child: "4p5WXd3ZuWR9pPtRQuxC", // Amir - young boy
+  child: "EXAVITQu4vr4xnSDxMaL", // Sarah - young feminine voice
 } as const;
 
 export const VOICE_SETTINGS = {
@@ -100,7 +100,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "prophets",
     ageRange: "5-8",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/1918465/1918465-uhd_2560_1440_24fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/1918465/1918465-hd_1920_1080_24fps.mp4",
     videoPoster: "https://images.pexels.com/videos/1918465/free-video-1918465.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Raconte-moi une histoire avec des animaux !", en: "Tell me a story about animals!", ar: "أخبرني قصة عن الحيوانات!", nl: "Vertel me een verhaal over dieren!", tr: "Bana hayvanlar hakkında bir hikaye anlat!", ur: "مجھے جانوروں کی کہانی سناؤ!" } },
@@ -128,7 +128,7 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "pillars",
     ageRange: "5-8",
     durationSec: 120,
-    videoUrl: "https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_30fps.mp4",
+    videoUrl: "https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4",
     videoPoster: "https://images.pexels.com/videos/3571264/free-video-3571264.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Pourquoi on prie cinq fois par jour ?", en: "Why do we pray five times a day?", ar: "لماذا نصلي خمس مرات في اليوم؟", nl: "Waarom bidden we vijf keer per dag?", tr: "Neden günde beş vakit namaz kılıyoruz?", ur: "ہم دن میں پانچ بار نماز کیوں پڑھتے ہیں؟" } },
