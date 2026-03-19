@@ -8,6 +8,7 @@ import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import KidsPrayerTracker from "@/components/kids/KidsPrayerTracker";
 import KidsRamadanTracker from "@/components/kids/KidsRamadanTracker";
 import IslamicStoriesPlayer from "@/components/kids/IslamicStoriesPlayer";
+import IslamicStoryVideoPlayer from "@/components/kids/IslamicStoryVideoPlayer";
 import { GlassCard } from "@/components/kids/futuristic/GlassCard";
 import { FloatingParticles } from "@/components/kids/futuristic/FloatingParticles";
 
@@ -237,6 +238,11 @@ export default function KidsHomePage() {
         {/* Islamic Stories Section */}
         <div className="mt-6">
           <IslamicStoriesPlayer />
+        </div>
+
+        {/* Video Stories Section */}
+        <div className="mt-6 pb-4">
+          <IslamicStoryVideoPlayer />
         </div>
       </div>
     </>

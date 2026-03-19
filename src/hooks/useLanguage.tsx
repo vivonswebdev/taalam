@@ -2333,7 +2333,19 @@ const translations = {
   "islamicStories.filter.quran": { fr: "📖 Coran", en: "📖 Quran", nl: "📖 Koran", ar: "📖 قرآن", tr: "📖 Kur'an", ur: "📖 قرآن" },
   "islamicStories.filter.morals": { fr: "🌸 Morales", en: "🌸 Morals", nl: "🌸 Moraal", ar: "🌸 أخلاق", tr: "🌸 Ahlak", ur: "🌸 اخلاقیات" },
 
-  // ═══ Moods Tabs & Sections ═══
+  // ═══ Video Stories ═══
+  "videoStories.title": { fr: "Histoires Vidéo", en: "Video Stories", nl: "Videoverhalen", ar: "قصص فيديو", tr: "Video Hikayeleri", ur: "ویڈیو کہانیاں" },
+  "videoStories.subtitle": { fr: "Vidéos nature HD + voix réelles ElevenLabs", en: "HD nature videos + real ElevenLabs voices", nl: "HD natuurvideo's + echte ElevenLabs stemmen", ar: "فيديوهات طبيعة عالية الدقة + أصوات حقيقية", tr: "HD doğa videoları + gerçek ElevenLabs sesleri", ur: "HD قدرتی ویڈیوز + حقیقی ElevenLabs آوازیں" },
+  "videoStories.langs": { fr: "langues", en: "languages", nl: "talen", ar: "لغات", tr: "dil", ur: "زبانیں" },
+  "videoStories.generateVoice": { fr: "🎙️ Générer les voix", en: "🎙️ Generate voices", nl: "🎙️ Stemmen genereren", ar: "🎙️ توليد الأصوات", tr: "🎙️ Sesleri oluştur", ur: "🎙️ آوازیں بنائیں" },
+  "videoStories.generating": { fr: "Génération en cours…", en: "Generating…", nl: "Genereren…", ar: "جارٍ التوليد…", tr: "Oluşturuluyor…", ur: "بنایا جا رہا ہے…" },
+  "videoStories.fivePillars": { fr: "Les 5 Piliers de l'Islam", en: "The 5 Pillars of Islam", nl: "De 5 Zuilen van de Islam", ar: "أركان الإسلام الخمسة", tr: "İslam'ın 5 Şartı", ur: "اسلام کے 5 ارکان" },
+  "videoStories.ibrahim": { fr: "Ibrahim et les Étoiles", en: "Ibrahim and the Stars", nl: "Ibrahim en de Sterren", ar: "إبراهيم والنجوم", tr: "İbrahim ve Yıldızlar", ur: "ابراہیم اور ستارے" },
+  "videoStories.nuh": { fr: "Nuh et le Bateau", en: "Nuh and the Ark", nl: "Noeh en de Ark", ar: "نوح والسفينة", tr: "Nuh ve Gemi", ur: "نوح اور کشتی" },
+  "videoStories.salah": { fr: "Comment faire la Salah", en: "How to Pray Salah", nl: "Hoe Salah te bidden", ar: "كيف تصلي الصلاة", tr: "Namaz Nasıl Kılınır", ur: "نماز کیسے پڑھیں" },
+  "videoStories.namesAllah": { fr: "Les 99 Noms d'Allah", en: "The 99 Names of Allah", nl: "De 99 Namen van Allah", ar: "أسماء الله الحسنى", tr: "Allah'ın 99 İsmi", ur: "اللہ کے 99 نام" },
+
+
   "moods.tabMoods": { fr: "États du cœur", en: "Heart states", nl: "Hartstoestanden", ar: "أحوال القلب", tr: "Kalp halleri", ur: "دل کے احوال" },
   "moods.tabMaladies": { fr: "Maladies", en: "Ailments", nl: "Ziekten", ar: "الأمراض", tr: "Hastalıklar", ur: "بیماریاں" },
   "moods.tabAthkar": { fr: "Athkâr", en: "Adhkar", nl: "Adhkar", ar: "الأذكار", tr: "Zikirler", ur: "اذکار" },
