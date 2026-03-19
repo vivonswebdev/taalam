@@ -2318,6 +2318,7 @@ const translations = {
   "islamicStories.speakerAdult": { fr: "👨 Parent", en: "👨 Parent", nl: "👨 Ouder", ar: "👨 الأب", tr: "👨 Ebeveyn", ur: "👨 والد" },
   "islamicStories.speakerChild": { fr: "👧 Enfant", en: "👧 Child", nl: "👧 Kind", ar: "👧 الطفل", tr: "👧 Çocuk", ur: "👧 بچہ" },
   "islamicStories.offlineNote": { fr: "Voix Web Speech — Fonctionne hors ligne", en: "Web Speech voice — Works offline", nl: "Web Speech stem — Werkt offline", ar: "صوت Web Speech — يعمل بدون إنترنت", tr: "Web Speech sesi — Çevrimdışı çalışır", ur: "Web Speech آواز — آف لائن کام کرتا ہے" },
+  "islamicStories.realVoices": { fr: "Voix réelles haute qualité", en: "High quality real voices", nl: "Echte stemmen van hoge kwaliteit", ar: "أصوات حقيقية عالية الجودة", tr: "Yüksek kaliteli gerçek sesler", ur: "اعلیٰ معیار کی حقیقی آوازیں" },
   "islamicStories.fivePillars": { fr: "Les 5 Piliers de l'Islam", en: "The 5 Pillars of Islam", nl: "De 5 Zuilen van de Islam", ar: "أركان الإسلام الخمسة", tr: "İslam'ın 5 Şartı", ur: "اسلام کے 5 ارکان" },
   "islamicStories.ibrahim": { fr: "Ibrahim et les Étoiles", en: "Ibrahim and the Stars", nl: "Ibrahim en de Sterren", ar: "إبراهيم والنجوم", tr: "İbrahim ve Yıldızlar", ur: "ابراہیم اور ستارے" },
   "islamicStories.nuh": { fr: "Nuh et l'Arche", en: "Nuh and the Ark", nl: "Nuh en de Ark", ar: "نوح والسفينة", tr: "Nuh ve Gemi", ur: "نوح اور کشتی" },

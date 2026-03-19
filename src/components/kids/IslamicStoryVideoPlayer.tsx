@@ -88,7 +88,7 @@ function VideoPlayer({
   const { t, lang } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  const autoGenerateRef = useRef(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSubs, setShowSubs] = useState(true);
