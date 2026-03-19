@@ -1,11 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipForward, SkipBack, ArrowLeft, Volume2 } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, ArrowLeft, Volume2, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ISLAMIC_STORIES, type IslamicStory } from "@/data/islamicStories";
-import { useStoryNarration } from "@/hooks/useStoryNarration";
+import { generateTTS } from "@/services/elevenLabsTTS";
+
+/* ────── Voice config ────── */
+const VOICE_CONFIG = {
+  adult: { voiceId: "nPczCjzI2devNBz1zQrb", stability: 0.50, similarity_boost: 0.75, speed: 0.85 },
+  child: { voiceId: "EXAVITQu4vr4xnSDxMaL", stability: 0.45, similarity_boost: 0.80, speed: 1.0 },
+};
 
 /* ────── Category colours ────── */
 const CAT_STYLES: Record<string, string> = {
@@ -44,68 +50,109 @@ function StoryCard({ story, onSelect }: { story: IslamicStory; onSelect: () => v
 }
 
 /* ══════════════════════════════
-   Story Player (dialogue)
+   Story Player (dialogue) — ElevenLabs voices
    ══════════════════════════════ */
 function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => void }) {
   const { t } = useLanguage();
   const [currentLine, setCurrentLine] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const narration = useStoryNarration();
+  const [isLoading, setIsLoading] = useState(false);
+  const [audioCache, setAudioCache] = useState<Record<number, string>>({});
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playingRef = useRef(false);
 
   const line = story.dialogue[currentLine];
   const progress = ((currentLine + 1) / story.dialogue.length) * 100;
 
-  const speakLine = useCallback(
-    (index: number) => {
-      window.speechSynthesis.cancel();
-      const dl = story.dialogue[index];
-      const utter = new SpeechSynthesisUtterance(dl.text);
-      utter.lang = "en-US";
-
-      if (dl.speaker === "adult") {
-        utter.pitch = 1.0;
-        utter.rate = 0.95;
-      } else {
-        utter.pitch = 1.6;
-        utter.rate = 1.1;
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
+      playingRef.current = false;
+    };
+  }, []);
 
-      utter.onend = () => {
-        if (index < story.dialogue.length - 1) {
+  const getAudioUrl = useCallback(async (index: number): Promise<string> => {
+    if (audioCache[index]) return audioCache[index];
+    const dl = story.dialogue[index];
+    const cfg = VOICE_CONFIG[dl.speaker];
+    const url = await generateTTS(dl.text, cfg.voiceId, {
+      stability: cfg.stability,
+      similarity_boost: cfg.similarity_boost,
+      speed: cfg.speed,
+    });
+    setAudioCache(prev => ({ ...prev, [index]: url }));
+    return url;
+  }, [audioCache, story.dialogue]);
+
+  const playLine = useCallback(async (index: number) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    setIsLoading(true);
+    try {
+      const url = await getAudioUrl(index);
+      if (!playingRef.current) return; // stopped while loading
+
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        if (index < story.dialogue.length - 1 && playingRef.current) {
           setTimeout(() => {
             setCurrentLine(index + 1);
-            speakLine(index + 1);
-          }, 600);
+            playLine(index + 1);
+          }, 500);
         } else {
           setIsPlaying(false);
+          playingRef.current = false;
         }
       };
-      utter.onerror = () => setIsPlaying(false);
+      audio.onerror = () => {
+        setIsPlaying(false);
+        playingRef.current = false;
+        setIsLoading(false);
+      };
 
-      window.speechSynthesis.speak(utter);
-    },
-    [story.dialogue],
-  );
+      setIsLoading(false);
+      await audio.play();
+    } catch (err) {
+      console.error("TTS playback error:", err);
+      setIsLoading(false);
+      setIsPlaying(false);
+      playingRef.current = false;
+    }
+  }, [getAudioUrl, story.dialogue.length]);
 
   const handlePlay = () => {
+    playingRef.current = true;
     setIsPlaying(true);
-    speakLine(currentLine);
+    playLine(currentLine);
   };
+
   const handlePause = () => {
-    window.speechSynthesis.cancel();
+    playingRef.current = false;
+    if (audioRef.current) audioRef.current.pause();
     setIsPlaying(false);
   };
+
   const handleNext = () => {
-    window.speechSynthesis.cancel();
+    if (audioRef.current) audioRef.current.pause();
     const next = Math.min(currentLine + 1, story.dialogue.length - 1);
     setCurrentLine(next);
-    if (isPlaying) speakLine(next);
+    if (playingRef.current) playLine(next);
   };
+
   const handlePrev = () => {
-    window.speechSynthesis.cancel();
+    if (audioRef.current) audioRef.current.pause();
     const prev = Math.max(currentLine - 1, 0);
     setCurrentLine(prev);
-    if (isPlaying) speakLine(prev);
+    if (playingRef.current) playLine(prev);
   };
 
   return (
@@ -120,7 +167,7 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
         <Button
           size="icon"
           variant="ghost"
-          onClick={() => { window.speechSynthesis.cancel(); onClose(); }}
+          onClick={() => { handlePause(); onClose(); }}
           className="text-white hover:bg-white/10"
         >
           <ArrowLeft size={20} />
@@ -176,9 +223,16 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
         <Button
           size="icon"
           onClick={isPlaying ? handlePause : handlePlay}
+          disabled={isLoading}
           className="h-14 w-14 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 text-white shadow-lg"
         >
-          {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-0.5" />}
+          {isLoading ? (
+            <Loader2 size={24} className="animate-spin" />
+          ) : isPlaying ? (
+            <Pause size={24} />
+          ) : (
+            <Play size={24} className="ml-0.5" />
+          )}
         </Button>
         <Button size="icon" variant="ghost" onClick={handleNext} className="text-white/60 hover:bg-white/10">
           <SkipForward size={20} />
@@ -186,7 +240,7 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
       </div>
 
       <p className="text-[10px] text-white/30 text-center flex items-center justify-center gap-1">
-        <Volume2 size={12} /> {t("islamicStories.offlineNote" as any)}
+        <Volume2 size={12} /> 🎙️ ElevenLabs — {t("islamicStories.realVoices" as any)}
       </p>
     </motion.div>
   );

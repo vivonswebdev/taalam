@@ -88,7 +88,7 @@ function VideoPlayer({
   const { t, lang } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  const autoGenerateRef = useRef(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSubs, setShowSubs] = useState(true);
@@ -111,12 +111,18 @@ function VideoPlayer({
     return () => video.removeEventListener("timeupdate", handler);
   }, []);
 
-  const togglePlay = useCallback(() => {
+
+  const togglePlay = useCallback(async () => {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
       video.play();
       setIsPlaying(true);
+      // Start auto-generating all voices in background
+      if (!autoGenerateRef.current) {
+        autoGenerateRef.current = true;
+        generateAll();
+      }
     } else {
       video.pause();
       setIsPlaying(false);
