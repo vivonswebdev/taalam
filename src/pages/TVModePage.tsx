@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 import {
   Play, Pause, SkipForward, SkipBack,
   Volume2, VolumeX, X, Settings, Search,
+  Maximize, Minimize, Airplay,
 } from 'lucide-react';
 
 const TV_RECITERS = RECITERS_LIST.filter(r => r.popular && r.category !== 'kids').slice(0, 8);
