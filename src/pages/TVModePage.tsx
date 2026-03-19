@@ -475,6 +475,15 @@ function getEveryAyahFolder(reciterId: string): string {
     'ar.ajmi': 'Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net',
     'ar.rifai': 'Hani_Rifai_192kbps',
     'ar.shatri': 'Abu_Bakr_Ash-Shaatree_128kbps',
+    'ar.kalbani': 'Adel_Kalbani_128kbps',
+    'ar.harraz': 'Hisham_Al-Harraz',
+    'ar.qazabri': 'Omar_Al-Qazabri',
+    'ar.tablawi': 'Mohammad_al_Tablaway_128kbps',
+    'ar.basfar': 'Abdullah_Basfar_192kbps',
+    'ar.budair': 'Abdullah_Al-Budair',
+    'ar.jibreen': 'Abdullah_Al-Juheni_128kbps',
+    'ar.mujawwad': 'Abdul_Basit_Mujawwad_128kbps',
+    'ar.taha': 'Muhammad_Jibreel_128kbps',
   };
   return map[reciterId] || 'Alafasy_128kbps';
 }
