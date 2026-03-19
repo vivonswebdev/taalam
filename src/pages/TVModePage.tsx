@@ -151,6 +151,32 @@ export default function TVModePage() {
     controlsTimer.current = setTimeout(() => setShowControls(false), 4000);
   }, []);
 
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().then(() => setIsFullscreen(false));
+    } else {
+      document.documentElement.requestFullscreen?.().then(() => setIsFullscreen(true));
+    }
+  }, []);
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
+  const startAirplay = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio && (audio as any).webkitShowPlaybackTargetPicker) {
+      (audio as any).webkitShowPlaybackTargetPicker();
+    } else if (typeof navigator !== 'undefined' && (navigator as any).presentation) {
+      const request = new (window as any).PresentationRequest([window.location.href]);
+      request.start().catch(() => {});
+    } else {
+      alert('AirPlay / Cast non disponible sur cet appareil');
+    }
+  }, []);
+
   useEffect(() => {
     resetControlsTimer();
     return () => clearTimeout(controlsTimer.current);
