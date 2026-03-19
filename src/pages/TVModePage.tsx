@@ -12,7 +12,7 @@ import {
   Maximize, Minimize, Airplay,
 } from 'lucide-react';
 
-const TV_RECITERS = RECITERS_LIST.filter(r => r.popular && r.category !== 'kids').slice(0, 8);
+const TV_RECITERS = RECITERS_LIST.filter(r => r.category !== 'kids');
 
 export default function TVModePage() {
   const navigate = useNavigate();
