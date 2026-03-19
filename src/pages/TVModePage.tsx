@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 import {
   Play, Pause, SkipForward, SkipBack,
   Volume2, VolumeX, X, Settings, Search,
+  Maximize, Minimize, Airplay,
 } from 'lucide-react';
 
 const TV_RECITERS = RECITERS_LIST.filter(r => r.popular && r.category !== 'kids').slice(0, 8);
@@ -35,6 +36,7 @@ export default function TVModePage() {
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
 
   // Surah list for picker
   const [allSurahs, setAllSurahs] = useState<SurahMeta[]>([]);
@@ -147,6 +149,32 @@ export default function TVModePage() {
     setShowControls(true);
     clearTimeout(controlsTimer.current);
     controlsTimer.current = setTimeout(() => setShowControls(false), 4000);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().then(() => setIsFullscreen(false));
+    } else {
+      document.documentElement.requestFullscreen?.().then(() => setIsFullscreen(true));
+    }
+  }, []);
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
+  const startAirplay = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio && (audio as any).webkitShowPlaybackTargetPicker) {
+      (audio as any).webkitShowPlaybackTargetPicker();
+    } else if (typeof navigator !== 'undefined' && (navigator as any).presentation) {
+      const request = new (window as any).PresentationRequest([window.location.href]);
+      request.start().catch(() => {});
+    } else {
+      alert('AirPlay / Cast non disponible sur cet appareil');
+    }
   }, []);
 
   useEffect(() => {
@@ -319,6 +347,12 @@ export default function TVModePage() {
                 <div className="flex items-center gap-1.5">
                   <button onClick={() => setIsMuted(!isMuted)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+                  <button onClick={startAirplay} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="AirPlay / Cast">
+                    <Airplay className="w-4 h-4" />
+                  </button>
+                  <button onClick={toggleFullscreen} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="Plein écran">
+                    {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
                   </button>
                   <button onClick={() => setShowSettings(!showSettings)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     <Settings className="w-4 h-4" />
