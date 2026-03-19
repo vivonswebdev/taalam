@@ -348,6 +348,12 @@ export default function TVModePage() {
                   <button onClick={() => setIsMuted(!isMuted)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                   </button>
+                  <button onClick={startAirplay} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="AirPlay / Cast">
+                    <Airplay className="w-4 h-4" />
+                  </button>
+                  <button onClick={toggleFullscreen} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="Plein écran">
+                    {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                  </button>
                   <button onClick={() => setShowSettings(!showSettings)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     <Settings className="w-4 h-4" />
                   </button>
