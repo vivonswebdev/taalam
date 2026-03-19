@@ -233,6 +233,11 @@ export default function KidsHomePage() {
             );
           })}
         </div>
+
+        {/* Islamic Stories Section */}
+        <div className="mt-6">
+          <IslamicStoriesPlayer />
+        </div>
       </div>
     </>
   );
