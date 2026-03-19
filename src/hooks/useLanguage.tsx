@@ -2333,6 +2333,9 @@ const translations = {
   "islamicStories.filter.prophets": { fr: "⭐ Prophètes", en: "⭐ Prophets", nl: "⭐ Profeten", ar: "⭐ أنبياء", tr: "⭐ Peygamberler", ur: "⭐ انبیاء" },
   "islamicStories.filter.quran": { fr: "📖 Coran", en: "📖 Quran", nl: "📖 Koran", ar: "📖 قرآن", tr: "📖 Kur'an", ur: "📖 قرآن" },
   "islamicStories.filter.morals": { fr: "🌸 Morales", en: "🌸 Morals", nl: "🌸 Moraal", ar: "🌸 أخلاق", tr: "🌸 Ahlak", ur: "🌸 اخلاقیات" },
+  "islamicStories.filter.history": { fr: "🕋 Histoire", en: "🕋 History", nl: "🕋 Geschiedenis", ar: "🕋 تاريخ", tr: "🕋 Tarih", ur: "🕋 تاریخ" },
+  "islamicStories.hajarHajj": { fr: "Hajar et le Hajj", en: "Hajar and the Hajj", nl: "Hajar en de Hadj", ar: "هاجر والحج", tr: "Hacer ve Hac", ur: "ہاجرہ اور حج" },
+  "islamicStories.cat.history": { fr: "🕋 Histoire", en: "🕋 History", nl: "🕋 Geschiedenis", ar: "🕋 تاريخ", tr: "🕋 Tarih", ur: "🕋 تاریخ" },
 
   // ═══ Video Stories ═══
   "videoStories.title": { fr: "Histoires Vidéo", en: "Video Stories", nl: "Videoverhalen", ar: "قصص فيديو", tr: "Video Hikayeleri", ur: "ویڈیو کہانیاں" },
