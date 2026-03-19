@@ -1,29 +1,86 @@
-import { supabase } from "@/integrations/supabase/client";
+import Dexie, { type Table } from "dexie";
 
-const CACHE_PREFIX = "tts_cache_";
+/* ────── IndexedDB schema for TTS audio cache ────── */
+interface TTSCacheEntry {
+  key: string;           // hash of voiceId + text
+  audioBase64: string;   // base64 audio data
+  voiceId: string;
+  textPreview: string;   // first 60 chars for debugging
+  createdAt: number;
+  sizeBytes: number;
+}
+
+class TTSDatabase extends Dexie {
+  cache!: Table<TTSCacheEntry, string>;
+
+  constructor() {
+    super("taalam_tts_cache");
+    this.version(1).stores({
+      cache: "key, voiceId, createdAt",
+    });
+  }
+}
+
+const db = new TTSDatabase();
+
+// Max cache size: 200MB
+const MAX_CACHE_BYTES = 200 * 1024 * 1024;
+
+/* ────── helpers ────── */
+function makeCacheKey(voiceId: string, text: string): string {
+  // Simple hash for cache key
+  const raw = `${voiceId}:${text}`;
+  let hash = 0;
+  for (let i = 0; i < raw.length; i++) {
+    hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
+  }
+  return `tts_${Math.abs(hash).toString(36)}`;
+}
+
+/* ────── Public API ────── */
 
 /**
- * Generate TTS audio via edge function (ElevenLabs)
- * Returns a blob URL for playback
+ * Generate TTS audio via edge function (ElevenLabs).
+ * Audio is cached in IndexedDB for offline playback.
+ * Returns a data URI for immediate playback.
  */
 export async function generateTTS(
   text: string,
   voiceId: string,
   settings?: { stability?: number; similarity_boost?: number; speed?: number }
 ): Promise<string> {
-  // Check cache first
-  const cacheKey = CACHE_PREFIX + btoa(unescape(encodeURIComponent(`${voiceId}:${text}`))).slice(0, 80);
-  const cached = localStorage.getItem(cacheKey);
-  if (cached) {
-    try {
-      // Convert base64 back to blob URL
-      const audioUrl = `data:audio/mpeg;base64,${cached}`;
-      return audioUrl;
-    } catch {
-      localStorage.removeItem(cacheKey);
+  const cacheKey = makeCacheKey(voiceId, text);
+
+  // 1. Check IndexedDB cache
+  try {
+    const cached = await db.cache.get(cacheKey);
+    if (cached) {
+      return `data:audio/mpeg;base64,${cached.audioBase64}`;
     }
+  } catch {
+    // DB error — continue to fetch
   }
 
+  // 2. Also check legacy localStorage cache & migrate
+  const legacyKey = "tts_cache_" + btoa(unescape(encodeURIComponent(`${voiceId}:${text}`))).slice(0, 80);
+  const legacyCached = localStorage.getItem(legacyKey);
+  if (legacyCached) {
+    // Migrate to IndexedDB
+    try {
+      await db.cache.put({
+        key: cacheKey,
+        audioBase64: legacyCached,
+        voiceId,
+        textPreview: text.slice(0, 60),
+        createdAt: Date.now(),
+        sizeBytes: legacyCached.length,
+      });
+      localStorage.removeItem(legacyKey);
+    } catch { /* ignore */ }
+    return `data:audio/mpeg;base64,${legacyCached}`;
+  }
+
+  // 3. Fetch from edge function
   const response = await fetch(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
     {
@@ -51,14 +108,20 @@ export async function generateTTS(
   const data = await response.json();
   if (!data.audioContent) throw new Error("No audio returned");
 
-  // Cache in localStorage (limit: ~5MB per entry, prune old if needed)
+  // 4. Store in IndexedDB
   try {
-    localStorage.setItem(cacheKey, data.audioContent);
+    await db.cache.put({
+      key: cacheKey,
+      audioBase64: data.audioContent,
+      voiceId,
+      textPreview: text.slice(0, 60),
+      createdAt: Date.now(),
+      sizeBytes: data.audioContent.length,
+    });
+    // Prune if over limit
+    pruneCache();
   } catch {
-    // Storage full — clear oldest TTS caches
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX));
-    keys.slice(0, Math.ceil(keys.length / 2)).forEach((k) => localStorage.removeItem(k));
-    try { localStorage.setItem(cacheKey, data.audioContent); } catch { /* ignore */ }
+    // Storage error — still return audio
   }
 
   return `data:audio/mpeg;base64,${data.audioContent}`;
@@ -73,7 +136,6 @@ export async function preGenerateStoryAudio(
   voiceSettings: Record<string, { stability: number; similarity_boost: number; speed: number }>
 ): Promise<string[]> {
   const urls: string[] = [];
-
   for (const line of lines) {
     const voiceId = voiceIds[line.speaker];
     const settings = voiceSettings[line.speaker];
@@ -85,6 +147,59 @@ export async function preGenerateStoryAudio(
       urls.push("");
     }
   }
-
   return urls;
+}
+
+/**
+ * Check if a specific audio is cached offline
+ */
+export async function isTTSCached(voiceId: string, text: string): Promise<boolean> {
+  try {
+    const entry = await db.cache.get(makeCacheKey(voiceId, text));
+    return !!entry;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Get total cache size and entry count
+ */
+export async function getTTSCacheStats(): Promise<{ count: number; sizeBytes: number }> {
+  try {
+    const all = await db.cache.toArray();
+    return {
+      count: all.length,
+      sizeBytes: all.reduce((sum, e) => sum + e.sizeBytes, 0),
+    };
+  } catch {
+    return { count: 0, sizeBytes: 0 };
+  }
+}
+
+/**
+ * Clear all TTS cache
+ */
+export async function clearTTSCache(): Promise<void> {
+  try {
+    await db.cache.clear();
+    // Also clean legacy localStorage
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith("tts_cache_"))
+      .forEach((k) => localStorage.removeItem(k));
+  } catch { /* ignore */ }
+}
+
+/** Remove oldest entries if over size limit */
+async function pruneCache() {
+  try {
+    const all = await db.cache.orderBy("createdAt").toArray();
+    let totalSize = all.reduce((sum, e) => sum + e.sizeBytes, 0);
+    let i = 0;
+    while (totalSize > MAX_CACHE_BYTES && i < all.length) {
+      totalSize -= all[i].sizeBytes;
+      await db.cache.delete(all[i].key);
+      i++;
+    }
+  } catch { /* ignore */ }
 }
