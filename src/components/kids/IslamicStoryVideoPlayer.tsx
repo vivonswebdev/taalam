@@ -85,7 +85,7 @@ function VideoStoryCard({
 function VideoPlayer({
   story, onClose,
 }: { story: IslamicStoryVideo; onClose: () => void }) {
-  const { t, language } = useLanguage();
+  const { t, lang } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
