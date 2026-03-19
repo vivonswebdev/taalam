@@ -92,7 +92,7 @@ function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSubs, setShowSubs] = useState(true);
-  const [subLang, setSubLang] = useState<LangKey>((language as LangKey) || "fr");
+  const [subLang, setSubLang] = useState<LangKey>((lang as LangKey) || "fr");
   const [ttsLoading, setTtsLoading] = useState(false);
   const [ttsLineIdx, setTtsLineIdx] = useState(-1);
   const [generatedAudios, setGeneratedAudios] = useState<Record<number, string>>({});
