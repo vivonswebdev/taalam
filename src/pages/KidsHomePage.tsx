@@ -244,6 +244,7 @@ export default function KidsHomePage() {
         <div className="mt-6 pb-4">
           <IslamicStoryVideoPlayer />
         </div>
+      </div>
     </>
   );
 }
