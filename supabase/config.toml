@@ -15,3 +15,5 @@ project_id = "usgqmmfigvkmxneoegig"
     verify_jwt = false
   [functions.score-tajwid]
     verify_jwt = false
+  [functions.elevenlabs-tts]
+    verify_jwt = false
