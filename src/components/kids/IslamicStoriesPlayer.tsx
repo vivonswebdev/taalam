@@ -249,7 +249,7 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
 /* ══════════════════════════════
    Main export — List + Filters
    ══════════════════════════════ */
-const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals"] as const;
+const FILTER_KEYS = ["all", "pillars", "prophets", "quran", "morals", "history"] as const;
 
 export default function IslamicStoriesPlayer() {
   const { t } = useLanguage();
