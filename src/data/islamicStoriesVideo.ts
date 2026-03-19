@@ -74,8 +74,8 @@ export const ISLAMIC_STORIES_VIDEO: IslamicStoryVideo[] = [
     category: "prophets",
     ageRange: "6-9",
     durationSec: 150,
-    videoUrl: "https://videos.pexels.com/video-files/1851190/1851190-uhd_2560_1440_24fps.mp4",
-    videoPoster: "https://images.pexels.com/videos/1851190/free-video-1851190.jpg?auto=compress&w=600",
+    videoUrl: "https://videos.pexels.com/video-files/855564/855564-hd_1920_1080_24fps.mp4",
+    videoPoster: "https://images.pexels.com/videos/855564/free-video-855564.jpg?auto=compress&w=600",
     subtitles: [
       { speaker: "child", startSec: 0, endSec: 4, translations: { fr: "Baba, pourquoi les gens adoraient des statues ?", en: "Baba, why did people worship statues?", ar: "بابا، لماذا كان الناس يعبدون التماثيل؟", nl: "Baba, waarom aanbaden mensen beelden?", tr: "Baba, insanlar neden putlara tapıyordu?", ur: "بابا، لوگ مورتیوں کی پوجا کیوں کرتے تھے؟" } },
       { speaker: "adult", startSec: 4, endSec: 12, translations: { fr: "C'est une grande question. Il y a longtemps, la plupart des gens le faisaient. Mais un garçon courageux nommé Ibrahim questionnait tout.", en: "That's a big question. Long ago, most people did. But there was one brave boy named Ibrahim who questioned everything.", ar: "هذا سؤال كبير. قديماً، كان معظم الناس يفعلون ذلك. لكن كان هناك فتى شجاع اسمه إبراهيم كان يسأل عن كل شيء.", nl: "Dat is een grote vraag. Lang geleden deden de meeste mensen dat. Maar er was een dappere jongen genaamd Ibrahim die alles in twijfel trok.", tr: "Bu büyük bir soru. Uzun zaman önce çoğu insan öyle yapıyordu. Ama her şeyi sorgulayan İbrahim adında cesur bir çocuk vardı.", ur: "یہ ایک بڑا سوال ہے۔ بہت پہلے، اکثر لوگ ایسا کرتے تھے۔ لیکن ایک بہادر لڑکا تھا جس کا نام ابراہیم تھا جو ہر چیز پر سوال کرتا تھا۔" } },
