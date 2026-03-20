@@ -37,12 +37,29 @@ export default function KidsPrayerTracker() {
   const { times, loading } = usePrayerTimes(settings);
   const [checked, setChecked] = useState<string[]>(loadChecked);
   const [justChecked, setJustChecked] = useState<string | null>(null);
+  // How many prayers are revealed (starts at 1 = Fajr only)
+  const [revealedCount, setRevealedCount] = useState(1);
 
   useEffect(() => { saveChecked(checked); }, [checked]);
 
+  // Sync revealedCount with already-checked prayers on mount
+  useEffect(() => {
+    const checkedCount = checked.length;
+    // Reveal at least checkedCount + 1 (next prayer to validate), capped at 5
+    setRevealedCount(Math.min(checkedCount + 1, 5));
+  }, []); // only on mount
+
   const toggle = useCallback((name: string) => {
     if (checked.includes(name)) return;
-    setChecked(prev => [...prev, name]);
+    setChecked(prev => {
+      const newChecked = [...prev, name];
+      // Reveal the next prayer after checking this one
+      const idx = PRAYER_KEYS.indexOf(name as any);
+      if (idx < PRAYER_KEYS.length - 1) {
+        setRevealedCount(prev => Math.max(prev, idx + 2));
+      }
+      return newChecked;
+    });
     setJustChecked(name);
     toast.success(`${t("kidsPrayerTracker.validated" as any)} +5⭐`);
     setTimeout(() => setJustChecked(null), 1200);
@@ -61,6 +78,8 @@ export default function KidsPrayerTracker() {
 
   if (loading || !times || dismissed) return null;
 
+  const visiblePrayers = PRAYER_KEYS.slice(0, revealedCount);
+
   return (
     <AnimatePresence>
     <motion.div
@@ -78,12 +97,17 @@ export default function KidsPrayerTracker() {
       </div>
 
       <div className="space-y-2">
-        {PRAYER_KEYS.map((name) => {
+        <AnimatePresence initial={false}>
+        {visiblePrayers.map((name) => {
           const isDone = checked.includes(name);
           const isJust = justChecked === name;
           return (
             <motion.button
               key={name}
+              initial={{ opacity: 0, height: 0, y: -10 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
               onClick={() => toggle(name)}
               whileTap={{ scale: 0.96 }}
               className={`w-full p-3 rounded-2xl flex items-center justify-between transition-all ${
@@ -135,6 +159,7 @@ export default function KidsPrayerTracker() {
             </motion.button>
           );
         })}
+        </AnimatePresence>
       </div>
 
       {completedCount === 5 && (
