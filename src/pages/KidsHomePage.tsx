@@ -6,7 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useNooraniProgress } from "@/hooks/useNooraniProgress";
 import { useKidsChecklist } from "@/hooks/useKidsChecklist";
 import KidsPrayerTracker from "@/components/kids/KidsPrayerTracker";
-import KidsRamadanTracker from "@/components/kids/KidsRamadanTracker";
+
 import IslamicStoriesPlayer from "@/components/kids/IslamicStoriesPlayer";
 import IslamicStoryVideoPlayer from "@/components/kids/IslamicStoryVideoPlayer";
 import { GlassCard } from "@/components/kids/futuristic/GlassCard";
