@@ -169,7 +169,6 @@ export default function KidsHomePage() {
         {/* Prayer & Ramadan Trackers */}
         <div className="relative z-10">
           <KidsPrayerTracker />
-          <KidsRamadanTracker />
         </div>
 
         {/* Cards Grid */}
