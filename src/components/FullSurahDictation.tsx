@@ -256,64 +256,70 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setPhase("feedback");
   }, [voice, currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx]);
 
-  // Hard mode: silently compute feedback for current ayah and advance
-  const hardModeAdvance = useCallback(() => {
-    if (!currentAyah) return;
-    const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
-    const wordResults = result.wordResults.map(wr => ({
-      word: wr.word,
-      status: (wr.status === "correct" ? "correct" : wr.status === "missing" ? "missing" : wr.status === "extra" ? "extra" : "incorrect") as "correct" | "incorrect" | "missing" | "extra",
-    }));
-    const tajwidWords = analyzeAyahTajwid(currentAyah.arabic);
-    const tajwidErrors: { word: string; ruleName: string }[] = [];
-    wordResults.forEach((wr, i) => {
-      if (wr.status !== "correct" && tajwidWords[i]?.rules?.length > 0) {
-        tajwidErrors.push({ word: wr.word, ruleName: tajwidWords[i].rules[0].name });
+  // Hard mode: compute feedback for ALL block ayahs at once from liveWords, then show summary
+  const hardModeFinish = useCallback(() => {
+    voice.stop();
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    const results: AyahFeedbackData[] = [];
+
+    blockAyahs.forEach((ayah, idx) => {
+      const ayahLW = liveWords[idx] || [];
+      const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+      const wordResults = ayah.arabic.split(/\s+/).filter(Boolean).map((word, wi) => {
+        const lw = ayahLW[wi];
+        const status = !lw || lw.status === "pending" ? "missing" as const
+          : lw.status === "correct" ? "correct" as const
+          : "incorrect" as const;
+        return { word, status };
+      });
+      const tajwidErrors: { word: string; ruleName: string }[] = [];
+      wordResults.forEach((wr, i) => {
+        if (wr.status !== "correct" && tajwidWords[i]?.rules?.length > 0) {
+          tajwidErrors.push({ word: wr.word, ruleName: tajwidWords[i].rules[0].name });
+        }
+      });
+      const correctCount = wordResults.filter(w => w.status === "correct").length;
+      const totalWords = wordResults.length;
+      const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
+      const globalIdx = currentBlock.start + idx;
+      results.push({ ayahIdx: globalIdx, score, wordResults, tajwidErrors });
+
+      const xpKey = `${currentBlockIdx}-${idx}`;
+      if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
+        xpAwardedRef.current.add(xpKey);
+        xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
       }
     });
-    const correctCount = wordResults.filter(w => w.status === "correct").length;
-    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
-    const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
-    const feedbackData: AyahFeedbackData = { ayahIdx: absoluteAyahIdx, score, wordResults, tajwidErrors };
-    setBlockResults(prev => [...prev, feedbackData]);
 
-    const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
-    if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
-      xpAwardedRef.current.add(xpKey);
-      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
-    }
-
-    // Advance to next ayah or finish block
-    if (currentAyahIdx + 1 >= blockAyahCount) {
-      voice.stop();
-      setAllResults(prev => {
-        const merged = [...prev, ...blockResults, feedbackData];
-        return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
-      });
-      setPhase("blockSummary");
-    } else {
-      setCurrentAyahIdx(prev => prev + 1);
-      setLiveTranscript("");
-    }
-  }, [currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx, blockAyahCount, blockResults, voice, xp]);
+    setBlockResults(results);
+    setAllResults(prev => {
+      const merged = [...prev, ...results];
+      return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
+    });
+    setPhase("blockSummary");
+  }, [voice, surah.ayahs, currentBlock, liveWords, currentBlockIdx, xp]);
 
   // Auto-stop recording when all words are matched
   useEffect(() => {
-    if (phase !== "recording" || !currentAyah) return;
-    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
-    if (totalMatched >= totalWords && totalWords > 0) {
-      autoStopRef.current = setTimeout(() => {
-        if (hardMode) {
-          hardModeAdvance();
-        } else {
-          stopRecording();
-        }
-      }, 600);
+    if (phase !== "recording") return;
+    if (hardMode) {
+      // In hard mode, check total words across entire block
+      const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+      const totalBlockWords = blockAyahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0);
+      if (totalMatched >= totalBlockWords && totalBlockWords > 0) {
+        autoStopRef.current = setTimeout(() => hardModeFinish(), 800);
+      }
+    } else {
+      if (!currentAyah) return;
+      const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+      if (totalMatched >= totalWords && totalWords > 0) {
+        autoStopRef.current = setTimeout(() => stopRecording(), 600);
+      }
     }
     return () => {
       if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
     };
-  }, [phase, totalMatched, currentAyah, stopRecording, hardMode, hardModeAdvance]);
+  }, [phase, totalMatched, currentAyah, stopRecording, hardMode, hardModeFinish, surah.ayahs, currentBlock]);
 
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
