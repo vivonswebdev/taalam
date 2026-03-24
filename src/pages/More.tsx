@@ -166,7 +166,7 @@ export default function More() {
 
   const content = (
     <>
-      <SEOHead title="Plus - Paramètres & Outils" description="Accédez aux paramètres, outils islamiques, prières, calendrier hijri et plus encore." path="/more" />
+      <SEOHead title={t("seo.more" as any)} description={t("seo.moreDesc" as any)} path="/more" />
       <div className={`min-h-screen pb-24 ${isKids ? cosmicBg : ""}`}>
         {/* Subtle grid overlay for kids */}
         {isKids && (

@@ -380,10 +380,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     results.forEach(r => r.tajwidErrors.forEach(te => { ruleCount[te.ruleName] = (ruleCount[te.ruleName] || 0) + 1; }));
     const topTajwidErrors = Object.entries(ruleCount).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([rule, count]) => ({ rule, count }));
     const tips: string[] = [];
-    if (topTajwidErrors.length > 0) tips.push(`Revoir la règle « ${topTajwidErrors[0].rule} » – ${topTajwidErrors[0].count} erreur(s) détectée(s).`);
-    if (worstAyahs.length > 0) tips.push(`Réécouter l'audio modèle pour l'Ayah ${worstAyahs[0].ayahIdx + 1} avant de refaire la dictée.`);
-    if (avgScore < 70) tips.push("Essaie de réciter plus lentement en te concentrant sur chaque mot.");
-    if (avgScore >= 70 && avgScore < 90) tips.push("Très bien ! Continue à pratiquer pour atteindre 90% et plus.");
+    if (topTajwidErrors.length > 0) tips.push(`${t("dictation.tipRuleError" as any)} « ${topTajwidErrors[0].rule} » – ${topTajwidErrors[0].count} ${t("dictation.errors" as any)}.`);
+    if (worstAyahs.length > 0) tips.push(`${t("dictation.tipRelistenModel" as any)} ${worstAyahs[0].ayahIdx + 1} ${t("dictation.tipRelistenSuffix" as any)}`);
+    if (avgScore < 70) tips.push(t("dictation.tipSlower" as any));
+    if (avgScore >= 70 && avgScore < 90) tips.push(t("dictation.tipGood" as any));
     return { avgScore, tajwidScore, worstAyahs, topTajwidErrors, tips };
   };
 
@@ -417,11 +417,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       <div className="space-y-5">
         <div className="text-center">
           <p className="font-arabic text-3xl text-primary">{surah.nameArabic}</p>
-          <p className="text-sm text-muted-foreground mt-1">📚 Sourate complète · {surah.ayahs.length} versets</p>
+          <p className="text-sm text-muted-foreground mt-1">📚 {t("dictation.fullSurah" as any)} · {surah.ayahs.length} {t("dictation.verses" as any)}</p>
         </div>
 
         <div className="bg-accent/30 rounded-xl p-3 text-center">
-          <p className="text-xs text-muted-foreground">Cette sourate est découpée en <span className="font-bold text-foreground">{blocks.length} blocs</span> de dictée</p>
+          <p className="text-xs text-muted-foreground">{t("dictation.blockSplit" as any)} <span className="font-bold text-foreground">{blocks.length} {t("dictation.blocks" as any)}</span> {t("dictation.blocksOf" as any)}</p>
         </div>
 
         <ReciterPicker selected={reciter} onChange={setReciter} compact />
@@ -449,7 +449,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                   {blockDone ? "✓" : idx + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-foreground">Bloc {idx + 1} / {blocks.length}</p>
+                  <p className="text-sm font-bold text-foreground">{t("dictation.block" as any)} {idx + 1} / {blocks.length}</p>
                   <p className="text-xs text-muted-foreground">{block.label}</p>
                 </div>
                 {blockScore !== null && (
@@ -463,10 +463,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
         <div className="flex gap-3 pt-2">
           <button onClick={onBack} className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            ← Retour
+            ← {t("dictation.back" as any)}
           </button>
           <button onClick={() => startBlock(0)} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            Commencer
+            {t("dictation.start" as any)}
           </button>
         </div>
       </div>
@@ -486,7 +486,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <div className="flex-1 text-center">
             <p className="font-arabic text-xl text-primary">{surah.nameArabic}</p>
             {blocks.length > 1 && (
-              <p className="text-[11px] text-muted-foreground">Bloc {currentBlockIdx + 1} / {blocks.length} · {currentBlock.label}</p>
+              <p className="text-[11px] text-muted-foreground">{t("dictation.block" as any)} {currentBlockIdx + 1} / {blocks.length} · {currentBlock.label}</p>
             )}
           </div>
           <div className="w-8" />
@@ -496,11 +496,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="bg-accent/30 rounded-xl p-3 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
             <Eye size={15} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">Lis, écoute et mémorise</span>
+            <span className="text-sm font-semibold text-foreground">{t("dictation.readListenMemorise" as any)}</span>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Écoute et lis {blockAyahs.length === 1 ? "ce verset" : `ces ${blockAyahs.length} versets`}. 
-            Quand tu es prêt, lance la dictée de mémoire.
+            {t("dictation.readListenDesc" as any)}
           </p>
         </div>
 
@@ -518,7 +517,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 : "bg-primary/15 text-primary border border-primary/30"
             }`}
           >
-            {isListening ? <><Pause size={14} /> Arrêter</> : <><Play size={14} /> Tout écouter</>}
+            {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
           </motion.button>
         </div>
 
@@ -597,11 +596,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                   ))}
                 </div>
                 <span className="text-xs font-semibold text-foreground">
-                  {isAudioLoading ? "Chargement..." : `Écoute Ayah ${listeningAyahIdx + 1}`}
+                  {isAudioLoading ? t("dictation.loading" as any) : `${t("dictation.listeningAyah" as any)} ${listeningAyahIdx + 1}`}
                 </span>
               </div>
               <button onClick={stopListening} className="text-xs text-destructive font-semibold px-2 py-1 rounded-lg bg-destructive/10">
-                Arrêter
+                {t("dictation.stop" as any)}
               </button>
             </motion.div>
           )}
@@ -610,7 +609,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {/* Hint: tap ayah to listen */}
         {!isListening && (
           <p className="text-[10px] text-muted-foreground text-center">
-            💡 Touche un verset pour l'écouter individuellement
+            💡 {t("dictation.tapToListen" as any)}
           </p>
         )}
 
@@ -619,8 +618,8 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <div className="flex items-center gap-2">
             <span className="text-lg">🔥</span>
             <div>
-              <p className="text-xs font-bold text-foreground">Mode Hard</p>
-              <p className="text-[10px] text-muted-foreground">Récitation continue, correction à la fin</p>
+              <p className="text-xs font-bold text-foreground">{t("dictation.hardMode" as any)}</p>
+              <p className="text-[10px] text-muted-foreground">{t("dictation.hardModeDesc" as any)}</p>
             </div>
           </div>
           <button
@@ -641,10 +640,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
           >
             <Mic size={24} />
-            Commencer la dictée {hardMode && "🔥"}
+            {t("dictation.startDictation" as any)} {hardMode && "🔥"}
           </motion.button>
           <p className="text-[11px] text-muted-foreground text-center mt-2">
-            {hardMode ? "Récite tout le bloc sans interruption" : "Le texte sera masqué et tu réciteras de mémoire"}
+            {hardMode ? t("dictation.textHiddenHintHard" as any) : t("dictation.textHiddenHint" as any)}
           </p>
         </div>
       </motion.div>
@@ -786,14 +785,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           }
         }}
           className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-destructive text-destructive-foreground font-bold animate-pulse`}>
-          <MicOff size={24} /> Arrêter
+          <MicOff size={24} /> {t("dictation.stop" as any)}
         </motion.button>
 
         {micError === "not-allowed" && (
           <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-1">
             <AlertCircle size={18} className="inline" />
-            <p className="text-sm font-semibold">Microphone refusé</p>
-            <p className="text-xs opacity-80">Autorise l'accès micro dans les réglages du navigateur.</p>
+            <p className="text-sm font-semibold">{t("dictation.micDenied" as any)}</p>
+            <p className="text-xs opacity-80">{t("dictation.micDeniedDesc" as any)}</p>
           </div>
         )}
       </motion.div>
@@ -813,7 +812,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="text-center py-2">
           <span className="text-3xl">{emoji}</span>
           <p className="text-sm font-semibold text-foreground mt-1">
-            {lastResult.score >= 90 ? "Excellent ! Macha Allah !" : lastResult.score >= 70 ? `Très bien, ${lastResult.score}% correct !` : `${lastResult.score}% – Continue !`}
+            {lastResult.score >= 90 ? t("dictation.excellent" as any) : lastResult.score >= 70 ? `${t("dictation.veryGood" as any)}, ${lastResult.score}% ${t("dictation.correct" as any)} !` : `${lastResult.score}% – ${t("dictation.continue" as any)}`}
           </p>
           <p className="text-[11px] text-muted-foreground mt-0.5">Ayah {absoluteAyahIdx + 1} · {currentAyahIdx + 1}/{blockAyahCount}</p>
         </div>
@@ -859,7 +858,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             .then(data => { if (data.data?.audio) safePlay(data.data.audio); })
             .catch(() => {});
         }} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium">
-          <Volume2 size={15} /> Réécouter le verset
+          <Volume2 size={15} /> {t("dictation.relistenVerse" as any)}
         </button>
 
         {/* Actions */}
@@ -868,7 +867,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             Réessayer
           </button>
           <button onClick={nextAyah} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            {isLast ? "Résumé du bloc" : "Verset suivant →"}
+            {isLast ? t("dictation.blockSummary" as any) : `${t("dictation.nextVerse" as any)} →`}
           </button>
         </div>
       </motion.div>
@@ -884,7 +883,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="text-center py-4">
           <span className="text-4xl">{summary.avgScore >= 80 ? "🎉" : summary.avgScore >= 60 ? "💪" : "📖"}</span>
           <h2 className="text-xl font-bold text-foreground mt-2">
-            {blocks.length === 1 ? "Dictée terminée !" : `Bloc ${currentBlockIdx + 1} terminé !`}
+            {blocks.length === 1 ? t("dictation.dictationDone" as any) : `${t("dictation.block" as any)} ${currentBlockIdx + 1} ${t("dictation.blockDone" as any)}`}
           </h2>
           <p className="text-xs text-muted-foreground mt-1">{currentBlock.label} · {surah.nameArabic}</p>
         </div>
@@ -937,7 +936,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {/* Actions */}
         <div className="flex gap-3">
           <button onClick={() => startBlock(currentBlockIdx)} className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            <RotateCcw size={14} className="inline mr-1" /> Refaire
+            <RotateCcw size={14} className="inline mr-1" /> {t("dictation.redo" as any)}
           </button>
           {blocks.length === 1 ? (
             onRequestNextSurah && (
@@ -947,7 +946,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             )
           ) : (
             <button onClick={goNextBlock} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-              {isLastBlock ? "Résumé final 🎉" : `Bloc ${currentBlockIdx + 2} →`}
+              {isLastBlock ? `${t("dictation.finalSummary" as any)} 🎉` : `${t("dictation.block" as any)} ${currentBlockIdx + 2} →`}
             </button>
           )}
         </div>
@@ -957,7 +956,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             Voir tous les blocs
           </button>
         )}
-        <button onClick={onBack} className="w-full py-2 text-sm text-muted-foreground underline">← Retour</button>
+        <button onClick={onBack} className="w-full py-2 text-sm text-muted-foreground underline">← {t("dictation.back" as any)}</button>
       </motion.div>
     );
   }
@@ -969,7 +968,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5 py-4">
         <div className="text-center">
           <span className="text-5xl">🏆</span>
-          <h2 className="text-xl font-bold text-foreground mt-3">Sourate terminée !</h2>
+          <h2 className="text-xl font-bold text-foreground mt-3">{t("dictation.surahDone" as any)}</h2>
           <p className="font-arabic text-2xl text-primary mt-1">{surah.nameArabic}</p>
           <p className="text-xs text-muted-foreground mt-1">{surah.ayahs.length} versets · {blocks.length} blocs</p>
         </div>
@@ -1018,7 +1017,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="flex gap-3">
           <button onClick={() => { setAllResults([]); setBlockResults([]); setPhase("overview"); }}
             className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            <RotateCcw size={14} className="inline mr-1" /> Recommencer
+            <RotateCcw size={14} className="inline mr-1" /> {t("dictation.restart" as any)}
           </button>
           {onRequestNextSurah && (
             <button onClick={onRequestNextSurah}
@@ -1028,7 +1027,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           )}
         </div>
 
-        <button onClick={onBack} className="w-full py-2.5 text-sm text-muted-foreground underline">← Retour</button>
+        <button onClick={onBack} className="w-full py-2.5 text-sm text-muted-foreground underline">← {t("dictation.back" as any)}</button>
       </motion.div>
     );
   }
