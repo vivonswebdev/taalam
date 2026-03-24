@@ -768,8 +768,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {/* Stop button */}
         <motion.button whileTap={{ scale: 0.95 }} onClick={() => {
           if (hardMode) {
-            // In hard mode, stop recording and compute feedback for current ayah, then show summary
-            hardModeAdvance();
+            hardModeFinish();
           } else {
             stopRecording();
           }
