@@ -234,8 +234,20 @@ function AsmaPhonothequeView({ onMount }: { onMount?: (stop: () => void) => void
   }, [isLooping, speed, stopAll]);
 
   useEffect(() => {
+    onMount?.(stopAll);
     return () => { stopAll(); };
-  }, [stopAll]);
+  }, [stopAll, onMount]);
+
+  const playNasheed = useCallback(() => {
+    stopAll();
+    const audio = new Audio(NASHEED_URL);
+    audio.playbackRate = speed;
+    audio.loop = isLooping;
+    audioRef.current = audio;
+    setPlayingGroup("nasheed");
+    audio.onended = () => { if (!isLooping) setPlayingGroup(null); };
+    audio.play().catch(() => setPlayingGroup(null));
+  }, [speed, isLooping, stopAll]);
 
   const groups = Array.from({ length: 10 }, (_, i) => ({
     id: `${i * 10 + 1}-${Math.min((i + 1) * 10, 99)}`,
