@@ -373,6 +373,12 @@ export default function AsmaUlHusnaPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [tab, setTab] = useState<"learn" | "phono">("learn");
+  const stopFnRef = useRef<(() => void) | null>(null);
+
+  const handleTabChange = (newTab: "learn" | "phono") => {
+    stopFnRef.current?.();
+    setTab(newTab);
+  };
 
   return (
     <div className="min-h-screen pb-24 bg-gradient-to-b from-[hsl(40,50%,10%)] via-[hsl(35,40%,14%)] to-[hsl(30,35%,8%)]">
@@ -398,7 +404,7 @@ export default function AsmaUlHusnaPage() {
           {(["learn", "phono"] as const).map(tabId => (
             <button
               key={tabId}
-              onClick={() => setTab(tabId)}
+              onClick={() => handleTabChange(tabId)}
               className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
                 tab === tabId
                   ? "bg-white/20 text-white shadow-md border border-white/20"
@@ -411,7 +417,7 @@ export default function AsmaUlHusnaPage() {
         </div>
       </div>
 
-      {tab === "learn" ? <AsmaLearnView /> : <AsmaPhonothequeView />}
+      {tab === "learn" ? <AsmaLearnView /> : <AsmaPhonothequeView onMount={(stop) => { stopFnRef.current = stop; }} />}
     </div>
   );
 }
