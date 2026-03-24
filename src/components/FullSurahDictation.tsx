@@ -618,8 +618,8 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <div className="flex items-center gap-2">
             <span className="text-lg">🔥</span>
             <div>
-              <p className="text-xs font-bold text-foreground">Mode Hard</p>
-              <p className="text-[10px] text-muted-foreground">Récitation continue, correction à la fin</p>
+              <p className="text-xs font-bold text-foreground">{t("dictation.hardMode" as any)}</p>
+              <p className="text-[10px] text-muted-foreground">{t("dictation.hardModeDesc" as any)}</p>
             </div>
           </div>
           <button
