@@ -240,13 +240,35 @@ function AsmaPhonothequeView({ onMount }: { onMount?: (stop: () => void) => void
 
   const playNasheed = useCallback(() => {
     stopAll();
-    const audio = new Audio(NASHEED_URL);
-    audio.playbackRate = speed;
-    audio.loop = isLooping;
-    audioRef.current = audio;
+    let currentIdx = 0; // 0.mp3 = "Allah", then 1-99 = the 99 names
+    const totalFiles = 100;
+
+    const playNext = () => {
+      if (currentIdx >= totalFiles) {
+        if (isLooping) {
+          currentIdx = 0;
+        } else {
+          setPlayingGroup(null);
+          return;
+        }
+      }
+      const audio = new Audio(`${NASHEED_BASE_URL}/${currentIdx}.mp3`);
+      audio.playbackRate = speed;
+      audioRef.current = audio;
+      audio.onended = () => {
+        currentIdx++;
+        playNext();
+      };
+      audio.onerror = () => {
+        currentIdx++;
+        if (currentIdx < totalFiles) playNext();
+        else setPlayingGroup(null);
+      };
+      audio.play().catch(() => setPlayingGroup(null));
+    };
+
     setPlayingGroup("nasheed");
-    audio.onended = () => { if (!isLooping) setPlayingGroup(null); };
-    audio.play().catch(() => setPlayingGroup(null));
+    playNext();
   }, [speed, isLooping, stopAll]);
 
   const groups = Array.from({ length: 10 }, (_, i) => ({
