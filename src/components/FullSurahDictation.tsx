@@ -81,6 +81,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [blockResults, setBlockResults] = useState<AyahFeedbackData[]>([]);
   const [allResults, setAllResults] = useState<AyahFeedbackData[]>([]);
+  const [hardMode, setHardMode] = useState(false);
 
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<string>>(new Set());
@@ -240,19 +241,64 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setPhase("feedback");
   }, [voice, currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx]);
 
+  // Hard mode: silently compute feedback for current ayah and advance
+  const hardModeAdvance = useCallback(() => {
+    if (!currentAyah) return;
+    const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
+    const wordResults = result.wordResults.map(wr => ({
+      word: wr.word,
+      status: (wr.status === "correct" ? "correct" : wr.status === "missing" ? "missing" : wr.status === "extra" ? "extra" : "incorrect") as "correct" | "incorrect" | "missing" | "extra",
+    }));
+    const tajwidWords = analyzeAyahTajwid(currentAyah.arabic);
+    const tajwidErrors: { word: string; ruleName: string }[] = [];
+    wordResults.forEach((wr, i) => {
+      if (wr.status !== "correct" && tajwidWords[i]?.rules?.length > 0) {
+        tajwidErrors.push({ word: wr.word, ruleName: tajwidWords[i].rules[0].name });
+      }
+    });
+    const correctCount = wordResults.filter(w => w.status === "correct").length;
+    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+    const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
+    const feedbackData: AyahFeedbackData = { ayahIdx: absoluteAyahIdx, score, wordResults, tajwidErrors };
+    setBlockResults(prev => [...prev, feedbackData]);
+
+    const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
+    if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
+      xpAwardedRef.current.add(xpKey);
+      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
+    }
+
+    // Advance to next ayah or finish block
+    if (currentAyahIdx + 1 >= blockAyahCount) {
+      voice.stop();
+      setAllResults(prev => {
+        const merged = [...prev, ...blockResults, feedbackData];
+        return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
+      });
+      setPhase("blockSummary");
+    } else {
+      setCurrentAyahIdx(prev => prev + 1);
+      setLiveTranscript("");
+    }
+  }, [currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx, blockAyahCount, blockResults, voice, xp]);
+
   // Auto-stop recording when all words are matched
   useEffect(() => {
     if (phase !== "recording" || !currentAyah) return;
     const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
     if (totalMatched >= totalWords && totalWords > 0) {
       autoStopRef.current = setTimeout(() => {
-        stopRecording();
+        if (hardMode) {
+          hardModeAdvance();
+        } else {
+          stopRecording();
+        }
       }, 600);
     }
     return () => {
       if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
     };
-  }, [phase, totalMatched, currentAyah, stopRecording]);
+  }, [phase, totalMatched, currentAyah, stopRecording, hardMode, hardModeAdvance]);
 
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
@@ -547,6 +593,23 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </p>
         )}
 
+        {/* Hard mode toggle */}
+        <div className="flex items-center justify-between bg-accent/40 border border-border/40 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔥</span>
+            <div>
+              <p className="text-xs font-bold text-foreground">Mode Hard</p>
+              <p className="text-[10px] text-muted-foreground">Récitation continue, correction à la fin</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setHardMode(h => !h)}
+            className={`w-11 h-6 rounded-full transition-colors relative ${hardMode ? "bg-primary" : "bg-muted"}`}
+          >
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${hardMode ? "translate-x-5" : "translate-x-0.5"}`} />
+          </button>
+        </div>
+
         {/* Big start button */}
         <div className="pt-2 pb-4">
           <motion.button
@@ -557,10 +620,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
           >
             <Mic size={24} />
-            Commencer la dictée
+            Commencer la dictée {hardMode && "🔥"}
           </motion.button>
           <p className="text-[11px] text-muted-foreground text-center mt-2">
-            Le texte sera masqué et tu réciteras de mémoire
+            {hardMode ? "Récite tout le bloc sans interruption" : "Le texte sera masqué et tu réciteras de mémoire"}
           </p>
         </div>
       </motion.div>
@@ -599,7 +662,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 className="w-1.5 h-4 bg-primary rounded-full" />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}</span>
+          <span className="text-xs text-muted-foreground">
+            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}
+          </span>
         </div>
 
         {/* ─── Full block mushaf view with current ayah live feedback ─── */}
@@ -680,7 +745,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         </div>
 
         {/* Stop button */}
-        <motion.button whileTap={{ scale: 0.95 }} onClick={stopRecording}
+        <motion.button whileTap={{ scale: 0.95 }} onClick={() => {
+          if (hardMode) {
+            // In hard mode, stop recording and compute feedback for current ayah, then show summary
+            hardModeAdvance();
+          } else {
+            stopRecording();
+          }
+        }}
           className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-destructive text-destructive-foreground font-bold animate-pulse`}>
           <MicOff size={24} /> Arrêter
         </motion.button>
