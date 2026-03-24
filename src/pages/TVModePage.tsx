@@ -314,6 +314,15 @@ export default function TVModePage() {
         )}
       </div>
 
+      {/* Fixed close button — always visible on mobile */}
+      <button
+        onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ''; } navigate(-1); }}
+        className="fixed top-4 right-4 z-30 p-3 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-90 transition"
+        style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top, 0px))' }}
+      >
+        <X className="w-5 h-5" />
+      </button>
+
       {/* Controls — appear on mouse/touch */}
       <AnimatePresence>
         {showControls && (
@@ -321,13 +330,13 @@ export default function TVModePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-0 left-0 right-0 p-4 md:p-6"
-            style={{ zIndex: 20 }}
+            className="absolute bottom-0 left-0 right-0 p-3 md:p-6"
+            style={{ zIndex: 20, paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
           >
             <div className="max-w-2xl mx-auto bg-black/50 backdrop-blur-xl rounded-2xl p-3 border border-white/10">
               {/* Main controls row */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1">
                   <button onClick={prevAyah} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     <SkipBack className="w-4 h-4" />
                   </button>
@@ -340,7 +349,7 @@ export default function TVModePage() {
                 </div>
 
                 {/* Audio progress */}
-                <div className="flex-1 mx-4">
+                <div className="flex-1 mx-2 min-w-0">
                   <div className="relative w-full h-1 bg-white/15 rounded-full overflow-hidden">
                     {audioLoading && (
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -362,26 +371,17 @@ export default function TVModePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1">
                   <button onClick={() => setIsMuted(!isMuted)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                  </button>
-                  <button onClick={startAirplay} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="AirPlay / Cast">
-                    <Airplay className="w-4 h-4" />
-                  </button>
-                  <button onClick={toggleFullscreen} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition" title="Plein écran">
-                    {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
                   </button>
                   <button onClick={() => setShowSettings(!showSettings)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
                     <Settings className="w-4 h-4" />
                   </button>
-                  <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-white/5 hover:bg-white/15 text-white/60 transition">
-                    <X className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
 
-              {/* Settings panel */}
+              {/* Settings panel — scrollable on mobile */}
               <AnimatePresence>
                 {showSettings && (
                   <motion.div
@@ -390,99 +390,115 @@ export default function TVModePage() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-3 mt-3 border-t border-white/10 grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {/* Reciter */}
-                      <div>
-                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.reciter")}</p>
-                        <div className="space-y-0.5 max-h-28 overflow-y-auto">
-                          {TV_RECITERS.map(r => (
-                            <button
-                              key={r.id}
-                              onClick={() => setSelectedReciter(r)}
-                              className={`w-full text-left px-2 py-1 rounded text-[11px] transition ${
-                                selectedReciter.id === r.id ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
-                              }`}
-                            >
-                              {r.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Surah picker */}
-                      <div>
-                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.surah")}</p>
-                        <div className="relative mb-1.5">
-                          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30" />
-                          <input
-                            type="text"
-                            value={surahSearch}
-                            onChange={e => setSurahSearch(e.target.value)}
-                            placeholder="..."
-                            className="w-full bg-white/5 border border-white/10 rounded pl-6 pr-2 py-1 text-[11px] text-white outline-none focus:border-white/30"
-                          />
-                        </div>
-                        <div className="space-y-0.5 max-h-28 overflow-y-auto">
-                          {filteredSurahs.slice(0, 30).map(s => (
-                            <button
-                              key={s.number}
-                              onClick={() => { setSurahNumber(s.number); setSurahSearch(''); }}
-                              className={`w-full text-left px-2 py-1 rounded text-[11px] transition flex items-center gap-1.5 ${
-                                surahNumber === s.number ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
-                              }`}
-                            >
-                              <span className="text-[9px] w-5 text-center opacity-60">{s.number}</span>
-                              <span className="font-arabic text-xs">{s.nameArabic}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Display options */}
-                      <div>
-                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.display")}</p>
-                        <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
-                          <input type="checkbox" checked={showArabic} onChange={e => setShowArabic(e.target.checked)} className="accent-white w-3 h-3" />
-                          <span className="text-white/70 text-[11px]">عربي</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer mb-1.5">
-                          <input type="checkbox" checked={showTranslation} onChange={e => setShowTranslation(e.target.checked)} className="accent-white w-3 h-3" />
-                          <span className="text-white/70 text-[11px]">{t("tv.translation")}</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer mb-2">
-                          <input type="checkbox" checked={showTranslit} onChange={e => setShowTranslit(e.target.checked)} className="accent-white w-3 h-3" />
-                          <span className="text-white/70 text-[11px]">{t("tv.transliteration")}</span>
-                        </label>
-
-                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">{t("tv.textSize")}</p>
-                        <div className="flex gap-1">
-                          {(['md', 'lg', 'xl'] as const).map(size => (
-                            <button
-                              key={size}
-                              onClick={() => setArabicSize(size)}
-                              className={`px-2 py-0.5 rounded text-[10px] transition ${
-                                arabicSize === size ? 'bg-white text-black font-bold' : 'text-white/50 bg-white/5 hover:bg-white/10'
-                              }`}
-                            >
-                              {size === 'md' ? 'A' : size === 'lg' ? 'A+' : 'A++'}
-                            </button>
-                          ))}
+                    <div className="pt-3 mt-3 border-t border-white/10 max-h-[45vh] overflow-y-auto overscroll-contain">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Reciter */}
+                        <div>
+                          <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.reciter")}</p>
+                          <div className="space-y-0.5 max-h-32 overflow-y-auto">
+                            {TV_RECITERS.map(r => (
+                              <button
+                                key={r.id}
+                                onClick={() => setSelectedReciter(r)}
+                                className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition ${
+                                  selectedReciter.id === r.id ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
+                                }`}
+                              >
+                                {r.name}
+                              </button>
+                            ))}
+                          </div>
                         </div>
 
-                        <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1 mt-2.5">{t("tv.fontStyle" as any) || "خط"}</p>
-                        <div className="space-y-0.5 max-h-24 overflow-y-auto">
-                          {ARABIC_FONTS.map(f => (
-                            <button
-                              key={f.id}
-                              onClick={() => setArabicFont(f.id)}
-                              className={`w-full text-left px-2 py-1 rounded text-[11px] transition flex items-center gap-2 ${
-                                arabicFont === f.id ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
-                              }`}
-                            >
-                              <span style={{ fontFamily: f.family }} className="text-sm" dir="rtl">بسم</span>
-                              <span>{f.label}</span>
-                            </button>
-                          ))}
+                        {/* Surah picker */}
+                        <div>
+                          <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.surah")}</p>
+                          <div className="relative mb-1.5">
+                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30" />
+                            <input
+                              type="text"
+                              value={surahSearch}
+                              onChange={e => setSurahSearch(e.target.value)}
+                              placeholder="..."
+                              className="w-full bg-white/5 border border-white/10 rounded pl-6 pr-2 py-1.5 text-xs text-white outline-none focus:border-white/30"
+                            />
+                          </div>
+                          <div className="space-y-0.5 max-h-32 overflow-y-auto">
+                            {filteredSurahs.slice(0, 30).map(s => (
+                              <button
+                                key={s.number}
+                                onClick={() => { setSurahNumber(s.number); setSurahSearch(''); }}
+                                className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition flex items-center gap-1.5 ${
+                                  surahNumber === s.number ? 'bg-white text-black font-bold' : 'text-white/60 hover:bg-white/10'
+                                }`}
+                              >
+                                <span className="text-[9px] w-5 text-center opacity-60">{s.number}</span>
+                                <span className="font-arabic text-xs">{s.nameArabic}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Display options */}
+                        <div>
+                          <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1.5">{t("tv.display")}</p>
+                          <div className="flex flex-wrap gap-3 mb-2">
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" checked={showArabic} onChange={e => setShowArabic(e.target.checked)} className="accent-white w-3.5 h-3.5" />
+                              <span className="text-white/70 text-xs">عربي</span>
+                            </label>
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" checked={showTranslation} onChange={e => setShowTranslation(e.target.checked)} className="accent-white w-3.5 h-3.5" />
+                              <span className="text-white/70 text-xs">{t("tv.translation")}</span>
+                            </label>
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" checked={showTranslit} onChange={e => setShowTranslit(e.target.checked)} className="accent-white w-3.5 h-3.5" />
+                              <span className="text-white/70 text-xs">{t("tv.transliteration")}</span>
+                            </label>
+                          </div>
+
+                          <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">{t("tv.textSize")}</p>
+                          <div className="flex gap-1 mb-2">
+                            {(['md', 'lg', 'xl'] as const).map(size => (
+                              <button
+                                key={size}
+                                onClick={() => setArabicSize(size)}
+                                className={`px-3 py-1 rounded text-xs transition ${
+                                  arabicSize === size ? 'bg-white text-black font-bold' : 'text-white/50 bg-white/5 hover:bg-white/10'
+                                }`}
+                              >
+                                {size === 'md' ? 'A' : size === 'lg' ? 'A+' : 'A++'}
+                              </button>
+                            ))}
+                          </div>
+
+                          <p className="text-white/50 text-[10px] uppercase tracking-wider mb-1">{t("tv.fontStyle" as any) || "خط"}</p>
+                          <div className="flex flex-wrap gap-1">
+                            {ARABIC_FONTS.map(f => (
+                              <button
+                                key={f.id}
+                                onClick={() => setArabicFont(f.id)}
+                                className={`px-2 py-1 rounded text-[11px] transition flex items-center gap-1.5 ${
+                                  arabicFont === f.id ? 'bg-white text-black font-bold' : 'text-white/60 bg-white/5 hover:bg-white/10'
+                                }`}
+                              >
+                                <span style={{ fontFamily: f.family }} className="text-sm" dir="rtl">بسم</span>
+                                <span>{f.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Extra actions row */}
+                        <div className="md:col-span-3 flex items-center gap-2 pt-2 border-t border-white/10">
+                          <button onClick={startAirplay} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
+                            <Airplay className="w-3.5 h-3.5" />
+                            AirPlay
+                          </button>
+                          <button onClick={toggleFullscreen} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
+                            {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
+                            {isFullscreen ? 'Quitter' : 'Plein écran'}
+                          </button>
                         </div>
                       </div>
                     </div>
