@@ -463,10 +463,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
         <div className="flex gap-3 pt-2">
           <button onClick={onBack} className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            ← Retour
+            ← {t("dictation.back" as any)}
           </button>
           <button onClick={() => startBlock(0)} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            Commencer
+            {t("dictation.start" as any)}
           </button>
         </div>
       </div>
