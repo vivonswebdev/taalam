@@ -239,8 +239,8 @@ function AsmaPhonothequeView() {
 
   const groups = Array.from({ length: 10 }, (_, i) => ({
     id: `${i * 10 + 1}-${Math.min((i + 1) * 10, 99)}`,
-    start: i * 10 + 1,
-    end: Math.min((i + 1) * 10, 99),
+    startIdx: i * 10,          // array index
+    endIdx: Math.min((i + 1) * 10 - 1, 98),
   }));
 
   const favNames = ASMA_UL_HUSNA.filter(n => favorites.includes(n.id));
