@@ -7,7 +7,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FAVORITES_KEY = "taalam_asma_favorites";
-const AUDIO_BASE = "https://cdn.islamic.network/quran/audio/128/ar.alafasy/";
+const NASHEED_URL = "/audio/asma/000-all-asma-nasheed.mp3";
 
 function getFavorites(): number[] {
   try {

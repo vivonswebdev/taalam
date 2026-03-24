@@ -413,3 +413,8 @@ const RAW_ASMA: RawAsma[] = [
     explanation: { fr: "Il est infiniment patient.", en: "He is infinitely patient.", ar: "صبور إلى ما لا نهاية.", nl: "Hij is oneindig geduldig.", tr: "Sonsuz derecede sabırlıdır.", ur: "وہ بے حد صبر کرنے والا ہے۔" },
   },
 ];
+
+export const ASMA_UL_HUSNA: AsmaName[] = RAW_ASMA.map(a => ({
+  ...a,
+  audioUrl: audioPath(a.id, a.transliteration),
+}));
