@@ -322,7 +322,7 @@ function AsmaPhonothequeView() {
                 <span className="text-xs text-white/50 flex-1">{n.transliteration}</span>
                 <button
                   onClick={() => {
-                    const audio = new Audio(`https://cdn.islamic.network/quran/audio/64/ar.alafasy/${n.id}.mp3`);
+                    const audio = new Audio(n.audioUrl);
                     audio.playbackRate = speed;
                     audio.play().catch(() => {});
                   }}
