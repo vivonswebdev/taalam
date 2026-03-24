@@ -3424,6 +3424,8 @@ const translations = {
   "asma.loop": { fr: "Répéter", en: "Loop", ar: "تكرار", nl: "Herhalen", tr: "Tekrarla", ur: "دہرائیں" },
   "asma.byGroup": { fr: "Par groupe de 10", en: "By group of 10", ar: "مجموعات من ١٠", nl: "Per groep van 10", tr: "10'lu gruplar", ur: "10 کے گروپ" },
   "asma.favorites": { fr: "Mes favoris", en: "My favorites", ar: "المفضلة", nl: "Mijn favorieten", tr: "Favorilerim", ur: "میرے پسندیدہ" },
+  "asma.nasheedTitle": { fr: "Nasheed complet des 99 Noms", en: "Full 99 Names Nasheed", ar: "نشيد أسماء الله الحسنى كاملاً", nl: "Volledig 99 Namen Nasheed", tr: "99 İsim Neşîdi", ur: "99 ناموں کا مکمل نشید" },
+  "asma.nasheedDesc": { fr: "Voix douce pour enfants, idéal en fond ou pour mémoriser", en: "Soft voice for children, ideal for background or memorization", ar: "صوت هادئ للأطفال، مثالي للحفظ", nl: "Zachte stem voor kinderen, ideaal als achtergrond", tr: "Çocuklar için yumuşak ses, ezberlemeye ideal", ur: "بچوں کے لیے نرم آواز، حفظ کے لیے مثالی" },
 } as const;
 
 export type TranslationKey = keyof typeof translations;
