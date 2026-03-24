@@ -171,7 +171,7 @@ export default function Moods() {
   return (
     <div className="min-h-screen pb-24 bg-gradient-to-b from-[hsl(260,50%,12%)] via-[hsl(240,40%,18%)] to-[hsl(220,35%,10%)]">
       <NeonGrid />
-      <SEOHead title="États du Cœur - Moods & Athkâr" description="Trouvez la paix intérieure avec des invocations, remèdes spirituels et athkâr du Coran et de la Sunnah." path="/moods" />
+      <SEOHead title={t("seo.moods" as any)} description={t("seo.moodsDesc" as any)} path="/moods" />
 
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-4 relative z-10">

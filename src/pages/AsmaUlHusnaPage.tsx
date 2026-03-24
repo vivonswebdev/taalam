@@ -404,7 +404,7 @@ export default function AsmaUlHusnaPage() {
 
   return (
     <div className="min-h-screen pb-24 bg-gradient-to-b from-[hsl(40,50%,10%)] via-[hsl(35,40%,14%)] to-[hsl(30,35%,8%)]">
-      <SEOHead title="99 Noms d'Allah - Asma ul Husna" description="Apprenez les 99 Noms d'Allah avec audio, arabe, phonétique et traduction." path="/moods/asma-ul-husna" />
+      <SEOHead title={t("seo.asma" as any)} description={t("seo.asmaDesc" as any)} path="/moods/asma-ul-husna" />
 
       {/* Google Font for Arabic */}
       <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet" />
