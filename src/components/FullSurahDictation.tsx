@@ -662,7 +662,9 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 className="w-1.5 h-4 bg-primary rounded-full" />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}</span>
+          <span className="text-xs text-muted-foreground">
+            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}
+          </span>
         </div>
 
         {/* ─── Full block mushaf view with current ayah live feedback ─── */}
