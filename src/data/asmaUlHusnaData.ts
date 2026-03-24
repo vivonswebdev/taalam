@@ -13,7 +13,9 @@ function audioPath(id: number, translit: string): string {
   return `/audio/asma/${String(id).padStart(3, "0")}-${slug}.mp3`;
 }
 
-export const ASMA_UL_HUSNA: AsmaName[] = [
+type RawAsma = Omit<AsmaName, "audioUrl">;
+
+const RAW_ASMA: RawAsma[] = [
   { id: 1, arabic: "الرحمن", transliteration: "Ar-Rahman",
     meaning: { fr: "Le Tout Miséricordieux", en: "The Most Gracious", ar: "الرحمن", nl: "De Meest Barmhartige", tr: "Rahman", ur: "بے حد مہربان" },
     explanation: { fr: "Allah est miséricordieux envers toutes ses créatures.", en: "Allah is merciful to all His creation.", ar: "الله رحيم بجميع مخلوقاته.", nl: "Allah is barmhartig voor al Zijn schepping.", tr: "Allah tüm yaratıklarına merhametlidir.", ur: "اللہ تمام مخلوقات پر مہربان ہے۔" },
