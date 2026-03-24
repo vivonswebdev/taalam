@@ -653,9 +653,12 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
   // ─── RECORDING PHASE (full block visible, current ayah highlighted) ───
   if (phase === "recording" && currentAyah) {
-    const words = currentAyah.arabic.split(/\s+/).filter(Boolean);
-    const ayahLiveWords = liveWords[0] || [];
     const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    const activeIdx = hardMode ? hardModeCurrentIdx : currentAyahIdx;
+    const totalBlockWords = blockAyahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0);
+    const progressWords = hardMode ? totalMatched : totalMatched;
+    const progressTotal = hardMode ? totalBlockWords : currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Block progress */}
@@ -665,11 +668,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </button>
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>{blocks.length > 1 ? `Bloc ${currentBlockIdx + 1}/${blocks.length} · ` : ""}Ayah {currentAyahIdx + 1}/{blockAyahCount}</span>
-              <span>{Math.round(((currentAyahIdx) / blockAyahCount) * 100)}%</span>
+              <span>{blocks.length > 1 ? `Bloc ${currentBlockIdx + 1}/${blocks.length} · ` : ""}Ayah {activeIdx + 1}/{blockAyahCount}</span>
+              <span>{Math.round((progressWords / Math.max(1, progressTotal)) * 100)}%</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${(currentAyahIdx / blockAyahCount) * 100}%` }} />
+              <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${(progressWords / Math.max(1, progressTotal)) * 100}%` }} />
             </div>
           </div>
         </div>
@@ -684,7 +687,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             ))}
           </div>
           <span className="text-xs text-muted-foreground">
-            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}
+            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {activeIdx + 1}/{blockAyahCount}
           </span>
         </div>
 
@@ -695,20 +698,29 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             <div className="font-arabic text-[1.25rem] sm:text-xl leading-[2.6] sm:leading-[2.8] text-justify">
               {blockAyahs.map((ayah, idx) => {
                 const globalIdx = currentBlock.start + idx;
-                const isCurrent = idx === currentAyahIdx;
-                const isDone = idx < currentAyahIdx;
-                const isFuture = idx > currentAyahIdx;
+                const isCurrent = idx === activeIdx;
+                const isDone = idx < activeIdx;
                 const ayahWords = ayah.arabic.split(/\s+/).filter(Boolean);
+                // In hard mode, liveWords[idx] has per-ayah feedback; in normal mode, liveWords[0] is for current ayah only
+                const ayahLW = hardMode ? (liveWords[idx] || []) : (isCurrent ? (liveWords[0] || []) : []);
 
                 return (
                   <span key={globalIdx} className="inline">
-                    {isCurrent ? (
-                      // Current ayah: live word feedback (hidden until revealed)
-                      <span className="inline bg-primary/5 rounded-sm ring-1 ring-primary/20">
+                    {(isCurrent || (hardMode && isDone)) ? (
+                      // Current or done ayah in hard mode: show live word feedback
+                      <span className={`inline ${isCurrent ? "bg-primary/5 rounded-sm ring-1 ring-primary/20" : ""}`}>
                         {ayahWords.map((word, wi) => {
-                          const lw = ayahLiveWords[wi];
+                          const lw = ayahLW[wi];
                           const status = lw?.status || "pending";
                           const isPending = status === "pending";
+                          // In hard mode, done ayahs show revealed words
+                          if (isDone && hardMode) {
+                            return (
+                              <span key={wi} className={`inline-block px-0.5 rounded ${getLiveWordColor(status)}`}>
+                                {word}{" "}
+                              </span>
+                            );
+                          }
                           return (
                             <motion.span key={wi}
                               initial={!isPending ? { scale: 1.08 } : false}
@@ -723,14 +735,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                         })}
                       </span>
                     ) : isDone ? (
-                      // Already recited: success style
+                      // Normal mode done: success style
                       <span className="inline text-success/60">
                         {ayah.arabic}{" "}
                       </span>
                     ) : (
                       // Future: hidden
                       <span className="inline">
-                        {ayah.arabic.split(/\s+/).filter(Boolean).map((w, wi) => (
+                        {ayahWords.map((w, wi) => (
                           <span key={wi} className="inline-block px-0.5 text-transparent select-none bg-muted/20 rounded mx-0.5">████</span>
                         ))}{" "}
                       </span>
@@ -756,13 +768,13 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
         </div>
 
-        {/* Word progress for current ayah */}
+        {/* Word progress */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
             <motion.div className="h-full bg-primary rounded-full"
-              animate={{ width: `${(totalMatched / Math.max(1, words.length)) * 100}%` }} />
+              animate={{ width: `${(progressWords / Math.max(1, progressTotal)) * 100}%` }} />
           </div>
-          <span className="text-xs text-muted-foreground font-mono">{totalMatched}/{words.length}</span>
+          <span className="text-xs text-muted-foreground font-mono">{progressWords}/{progressTotal}</span>
         </div>
 
         {/* Stop button */}
