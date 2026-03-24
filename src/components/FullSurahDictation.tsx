@@ -380,10 +380,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     results.forEach(r => r.tajwidErrors.forEach(te => { ruleCount[te.ruleName] = (ruleCount[te.ruleName] || 0) + 1; }));
     const topTajwidErrors = Object.entries(ruleCount).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([rule, count]) => ({ rule, count }));
     const tips: string[] = [];
-    if (topTajwidErrors.length > 0) tips.push(`Revoir la règle « ${topTajwidErrors[0].rule} » – ${topTajwidErrors[0].count} erreur(s) détectée(s).`);
-    if (worstAyahs.length > 0) tips.push(`Réécouter l'audio modèle pour l'Ayah ${worstAyahs[0].ayahIdx + 1} avant de refaire la dictée.`);
-    if (avgScore < 70) tips.push("Essaie de réciter plus lentement en te concentrant sur chaque mot.");
-    if (avgScore >= 70 && avgScore < 90) tips.push("Très bien ! Continue à pratiquer pour atteindre 90% et plus.");
+    if (topTajwidErrors.length > 0) tips.push(`${t("dictation.tipRuleError" as any)} « ${topTajwidErrors[0].rule} » – ${topTajwidErrors[0].count} ${t("dictation.errors" as any)}.`);
+    if (worstAyahs.length > 0) tips.push(`${t("dictation.tipRelistenModel" as any)} ${worstAyahs[0].ayahIdx + 1} ${t("dictation.tipRelistenSuffix" as any)}`);
+    if (avgScore < 70) tips.push(t("dictation.tipSlower" as any));
+    if (avgScore >= 70 && avgScore < 90) tips.push(t("dictation.tipGood" as any));
     return { avgScore, tajwidScore, worstAyahs, topTajwidErrors, tips };
   };
 
