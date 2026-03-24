@@ -785,7 +785,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           }
         }}
           className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-destructive text-destructive-foreground font-bold animate-pulse`}>
-          <MicOff size={24} /> Arrêter
+          <MicOff size={24} /> {t("dictation.stop" as any)}
         </motion.button>
 
         {micError === "not-allowed" && (
