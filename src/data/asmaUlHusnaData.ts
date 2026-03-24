@@ -4,6 +4,13 @@ export interface AsmaName {
   transliteration: string;
   meaning: { fr: string; en: string; ar: string; nl: string; tr: string; ur: string };
   explanation: { fr: string; en: string; ar: string; nl: string; tr: string; ur: string };
+  audioUrl: string;
+}
+
+/** Generate local audio path from id and transliteration */
+function audioPath(id: number, translit: string): string {
+  const slug = translit.toLowerCase().replace(/[''`]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  return `/audio/asma/${String(id).padStart(3, "0")}-${slug}.mp3`;
 }
 
 export const ASMA_UL_HUSNA: AsmaName[] = [
