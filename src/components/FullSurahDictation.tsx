@@ -640,10 +640,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
           >
             <Mic size={24} />
-            Commencer la dictée {hardMode && "🔥"}
+            {t("dictation.startDictation" as any)} {hardMode && "🔥"}
           </motion.button>
           <p className="text-[11px] text-muted-foreground text-center mt-2">
-            {hardMode ? "Récite tout le bloc sans interruption" : "Le texte sera masqué et tu réciteras de mémoire"}
+            {hardMode ? t("dictation.textHiddenHintHard" as any) : t("dictation.textHiddenHint" as any)}
           </p>
         </div>
       </motion.div>
