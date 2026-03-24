@@ -297,7 +297,7 @@ function AsmaPhonothequeView() {
           {groups.map(g => (
             <button
               key={g.id}
-              onClick={() => playingGroup === g.id ? stopAll() : playGroup(g.id, g.start, g.end)}
+              onClick={() => playingGroup === g.id ? stopAll() : playGroup(g.id, g.startIdx, g.endIdx)}
               className={`flex items-center gap-2 p-3 rounded-xl border transition-colors ${
                 playingGroup === g.id
                   ? "bg-amber-500/20 border-amber-400/40"
