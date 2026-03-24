@@ -52,10 +52,7 @@ function AsmaLearnView() {
 
   const playAudio = useCallback(() => {
     stopAudio();
-    // Use a simple TTS-like approach: play the name's audio
-    const audio = new Audio();
-    // We'll use a simple approach - generate speech from Arabic text
-    audio.src = `https://cdn.islamic.network/quran/audio/64/ar.alafasy/${name.id}.mp3`;
+    const audio = new Audio(name.audioUrl);
     audioRef.current = audio;
 
     audio.onended = () => {
@@ -68,7 +65,7 @@ function AsmaLearnView() {
     };
 
     audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-  }, [name.id, isLooping, stopAudio]);
+  }, [name.audioUrl, isLooping, stopAudio]);
 
   useEffect(() => {
     return () => { stopAudio(); };
