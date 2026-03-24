@@ -7,7 +7,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FAVORITES_KEY = "taalam_asma_favorites";
-const NASHEED_URL = "/audio/asma/000-all-asma-nasheed.mp3";
+const NASHEED_BASE_URL = "https://cdn.jsdelivr.net/gh/soachishti/Asma-ul-Husna@master/audio";
 
 function getFavorites(): number[] {
   try {
