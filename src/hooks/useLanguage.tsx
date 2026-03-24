@@ -3506,9 +3506,8 @@ const translations = {
 
   "hifz.forgotten": { fr: "Oublié", en: "Forgotten", ar: "نسيت", nl: "Vergeten", tr: "Unutuldu", ur: "بھول گئے" },
   "hifz.veryHard": { fr: "Très dur", en: "Very hard", ar: "صعب جداً", nl: "Heel moeilijk", tr: "Çok zor", ur: "بہت مشکل" },
-  "hifz.hard": { fr: "Dur", en: "Hard", ar: "صعب", nl: "Moeilijk", tr: "Zor", ur: "مشکل" },
-  "hifz.medium": { fr: "Moyen", en: "Medium", ar: "متوسط", nl: "Gemiddeld", tr: "Orta", ur: "درمیانہ" },
-  "hifz.good": { fr: "Bien", en: "Good", ar: "جيد", nl: "Goed", tr: "İyi", ur: "اچھا" },
+  "hifz.hard2": { fr: "Dur", en: "Hard", ar: "صعب", nl: "Moeilijk", tr: "Zor", ur: "مشکل" },
+  "hifz.good2": { fr: "Bien", en: "Good", ar: "جيد", nl: "Goed", tr: "İyi", ur: "اچھا" },
   "hifz.perfect": { fr: "Parfait", en: "Perfect", ar: "ممتاز", nl: "Perfect", tr: "Mükemmel", ur: "بہترین" },
   "hifz.loadingReview": { fr: "Chargement…", en: "Loading…", ar: "جارٍ التحميل…", nl: "Laden…", tr: "Yükleniyor…", ur: "لوڈ ہو رہا ہے…" },
   "hifz.startReview": { fr: "Commencer la révision", en: "Start review", ar: "بدء المراجعة", nl: "Begin revisie", tr: "Tekrara başla", ur: "مراجعہ شروع کریں" },
