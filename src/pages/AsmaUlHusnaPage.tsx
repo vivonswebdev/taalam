@@ -7,7 +7,7 @@ import SEOHead from "@/components/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FAVORITES_KEY = "taalam_asma_favorites";
-const AUDIO_BASE = "https://cdn.islamic.network/quran/audio/128/ar.alafasy/";
+const NASHEED_URL = "/audio/asma/000-all-asma-nasheed.mp3";
 
 function getFavorites(): number[] {
   try {
@@ -52,10 +52,7 @@ function AsmaLearnView() {
 
   const playAudio = useCallback(() => {
     stopAudio();
-    // Use a simple TTS-like approach: play the name's audio
-    const audio = new Audio();
-    // We'll use a simple approach - generate speech from Arabic text
-    audio.src = `https://cdn.islamic.network/quran/audio/64/ar.alafasy/${name.id}.mp3`;
+    const audio = new Audio(name.audioUrl);
     audioRef.current = audio;
 
     audio.onended = () => {
@@ -68,7 +65,7 @@ function AsmaLearnView() {
     };
 
     audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-  }, [name.id, isLooping, stopAudio]);
+  }, [name.audioUrl, isLooping, stopAudio]);
 
   useEffect(() => {
     return () => { stopAudio(); };
@@ -190,7 +187,7 @@ function AsmaLearnView() {
 }
 
 // ─── Phonothèque Tab ─────────────────────────────────────────
-function AsmaPhonothequeView() {
+function AsmaPhonothequeView({ onMount }: { onMount?: (stop: () => void) => void }) {
   const { t, lang } = useLanguage();
   const [playingGroup, setPlayingGroup] = useState<string | null>(null);
   const [isLooping, setIsLooping] = useState(false);
@@ -206,25 +203,27 @@ function AsmaPhonothequeView() {
     setPlayingGroup(null);
   }, []);
 
-  const playGroup = useCallback((groupId: string, startId: number, endId: number) => {
+  const playGroup = useCallback((groupId: string, startIdx: number, endIdx: number) => {
     stopAll();
-    let currentId = startId;
+    let currentIdx = startIdx;
 
     const playNext = () => {
-      if (currentId > endId) {
+      if (currentIdx > endIdx) {
         if (isLooping) {
-          currentId = startId;
+          currentIdx = startIdx;
         } else {
           setPlayingGroup(null);
           return;
         }
       }
 
-      const audio = new Audio(`https://cdn.islamic.network/quran/audio/64/ar.alafasy/${currentId}.mp3`);
+      const name = ASMA_UL_HUSNA[currentIdx];
+      if (!name) { setPlayingGroup(null); return; }
+      const audio = new Audio(name.audioUrl);
       audio.playbackRate = speed;
       audioRef.current = audio;
       audio.onended = () => {
-        currentId++;
+        currentIdx++;
         playNext();
       };
       audio.play().catch(() => setPlayingGroup(null));
@@ -235,13 +234,25 @@ function AsmaPhonothequeView() {
   }, [isLooping, speed, stopAll]);
 
   useEffect(() => {
+    onMount?.(stopAll);
     return () => { stopAll(); };
-  }, [stopAll]);
+  }, [stopAll, onMount]);
+
+  const playNasheed = useCallback(() => {
+    stopAll();
+    const audio = new Audio(NASHEED_URL);
+    audio.playbackRate = speed;
+    audio.loop = isLooping;
+    audioRef.current = audio;
+    setPlayingGroup("nasheed");
+    audio.onended = () => { if (!isLooping) setPlayingGroup(null); };
+    audio.play().catch(() => setPlayingGroup(null));
+  }, [speed, isLooping, stopAll]);
 
   const groups = Array.from({ length: 10 }, (_, i) => ({
     id: `${i * 10 + 1}-${Math.min((i + 1) * 10, 99)}`,
-    start: i * 10 + 1,
-    end: Math.min((i + 1) * 10, 99),
+    startIdx: i * 10,          // array index
+    endIdx: Math.min((i + 1) * 10 - 1, 98),
   }));
 
   const favNames = ASMA_UL_HUSNA.filter(n => favorites.includes(n.id));
@@ -250,7 +261,7 @@ function AsmaPhonothequeView() {
     <div className="flex flex-col gap-4 px-4 pb-6">
       {/* All 99 */}
       <button
-        onClick={() => playingGroup === "all" ? stopAll() : playGroup("all", 1, 99)}
+        onClick={() => playingGroup === "all" ? stopAll() : playGroup("all", 0, 98)}
         className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-colors ${
           playingGroup === "all"
             ? "bg-amber-500/20 border-amber-400/40"
@@ -266,7 +277,24 @@ function AsmaPhonothequeView() {
         </div>
       </button>
 
-      {/* Controls */}
+      {/* Nasheed */}
+      <button
+        onClick={() => playingGroup === "nasheed" ? stopAll() : playNasheed()}
+        className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-colors ${
+          playingGroup === "nasheed"
+            ? "bg-emerald-500/20 border-emerald-400/40"
+            : "bg-white/[0.06] border-white/10 hover:border-white/20"
+        }`}
+      >
+        <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+          {playingGroup === "nasheed" ? <Pause size={20} className="text-white" /> : <Play size={20} className="text-white" />}
+        </div>
+        <div className="flex-1 text-left">
+          <p className="text-sm font-bold text-white">{t("asma.nasheedTitle")}</p>
+          <p className="text-[10px] text-white/50">{t("asma.nasheedDesc")}</p>
+        </div>
+      </button>
+
       <div className="flex items-center gap-2">
         <button
           onClick={() => setIsLooping(!isLooping)}
@@ -298,7 +326,7 @@ function AsmaPhonothequeView() {
           {groups.map(g => (
             <button
               key={g.id}
-              onClick={() => playingGroup === g.id ? stopAll() : playGroup(g.id, g.start, g.end)}
+              onClick={() => playingGroup === g.id ? stopAll() : playGroup(g.id, g.startIdx, g.endIdx)}
               className={`flex items-center gap-2 p-3 rounded-xl border transition-colors ${
                 playingGroup === g.id
                   ? "bg-amber-500/20 border-amber-400/40"
@@ -323,7 +351,7 @@ function AsmaPhonothequeView() {
                 <span className="text-xs text-white/50 flex-1">{n.transliteration}</span>
                 <button
                   onClick={() => {
-                    const audio = new Audio(`https://cdn.islamic.network/quran/audio/64/ar.alafasy/${n.id}.mp3`);
+                    const audio = new Audio(n.audioUrl);
                     audio.playbackRate = speed;
                     audio.play().catch(() => {});
                   }}
@@ -345,6 +373,12 @@ export default function AsmaUlHusnaPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [tab, setTab] = useState<"learn" | "phono">("learn");
+  const stopFnRef = useRef<(() => void) | null>(null);
+
+  const handleTabChange = (newTab: "learn" | "phono") => {
+    stopFnRef.current?.();
+    setTab(newTab);
+  };
 
   return (
     <div className="min-h-screen pb-24 bg-gradient-to-b from-[hsl(40,50%,10%)] via-[hsl(35,40%,14%)] to-[hsl(30,35%,8%)]">
@@ -370,7 +404,7 @@ export default function AsmaUlHusnaPage() {
           {(["learn", "phono"] as const).map(tabId => (
             <button
               key={tabId}
-              onClick={() => setTab(tabId)}
+              onClick={() => handleTabChange(tabId)}
               className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
                 tab === tabId
                   ? "bg-white/20 text-white shadow-md border border-white/20"
@@ -383,7 +417,7 @@ export default function AsmaUlHusnaPage() {
         </div>
       </div>
 
-      {tab === "learn" ? <AsmaLearnView /> : <AsmaPhonothequeView />}
+      {tab === "learn" ? <AsmaLearnView /> : <AsmaPhonothequeView onMount={(stop) => { stopFnRef.current = stop; }} />}
     </div>
   );
 }

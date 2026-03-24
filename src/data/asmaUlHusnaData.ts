@@ -4,9 +4,18 @@ export interface AsmaName {
   transliteration: string;
   meaning: { fr: string; en: string; ar: string; nl: string; tr: string; ur: string };
   explanation: { fr: string; en: string; ar: string; nl: string; tr: string; ur: string };
+  audioUrl: string;
 }
 
-export const ASMA_UL_HUSNA: AsmaName[] = [
+/** Generate local audio path from id and transliteration */
+function audioPath(id: number, translit: string): string {
+  const slug = translit.toLowerCase().replace(/[''`]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  return `/audio/asma/${String(id).padStart(3, "0")}-${slug}.mp3`;
+}
+
+type RawAsma = Omit<AsmaName, "audioUrl">;
+
+const RAW_ASMA: RawAsma[] = [
   { id: 1, arabic: "الرحمن", transliteration: "Ar-Rahman",
     meaning: { fr: "Le Tout Miséricordieux", en: "The Most Gracious", ar: "الرحمن", nl: "De Meest Barmhartige", tr: "Rahman", ur: "بے حد مہربان" },
     explanation: { fr: "Allah est miséricordieux envers toutes ses créatures.", en: "Allah is merciful to all His creation.", ar: "الله رحيم بجميع مخلوقاته.", nl: "Allah is barmhartig voor al Zijn schepping.", tr: "Allah tüm yaratıklarına merhametlidir.", ur: "اللہ تمام مخلوقات پر مہربان ہے۔" },
@@ -404,3 +413,8 @@ export const ASMA_UL_HUSNA: AsmaName[] = [
     explanation: { fr: "Il est infiniment patient.", en: "He is infinitely patient.", ar: "صبور إلى ما لا نهاية.", nl: "Hij is oneindig geduldig.", tr: "Sonsuz derecede sabırlıdır.", ur: "وہ بے حد صبر کرنے والا ہے۔" },
   },
 ];
+
+export const ASMA_UL_HUSNA: AsmaName[] = RAW_ASMA.map(a => ({
+  ...a,
+  audioUrl: audioPath(a.id, a.transliteration),
+}));
