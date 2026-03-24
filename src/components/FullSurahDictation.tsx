@@ -449,7 +449,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                   {blockDone ? "✓" : idx + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-foreground">Bloc {idx + 1} / {blocks.length}</p>
+                  <p className="text-sm font-bold text-foreground">{t("dictation.block" as any)} {idx + 1} / {blocks.length}</p>
                   <p className="text-xs text-muted-foreground">{block.label}</p>
                 </div>
                 {blockScore !== null && (
