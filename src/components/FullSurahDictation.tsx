@@ -596,11 +596,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                   ))}
                 </div>
                 <span className="text-xs font-semibold text-foreground">
-                  {isAudioLoading ? "Chargement..." : `Écoute Ayah ${listeningAyahIdx + 1}`}
+                  {isAudioLoading ? t("dictation.loading" as any) : `${t("dictation.listeningAyah" as any)} ${listeningAyahIdx + 1}`}
                 </span>
               </div>
               <button onClick={stopListening} className="text-xs text-destructive font-semibold px-2 py-1 rounded-lg bg-destructive/10">
-                Arrêter
+                {t("dictation.stop" as any)}
               </button>
             </motion.div>
           )}
