@@ -203,25 +203,27 @@ function AsmaPhonothequeView() {
     setPlayingGroup(null);
   }, []);
 
-  const playGroup = useCallback((groupId: string, startId: number, endId: number) => {
+  const playGroup = useCallback((groupId: string, startIdx: number, endIdx: number) => {
     stopAll();
-    let currentId = startId;
+    let currentIdx = startIdx;
 
     const playNext = () => {
-      if (currentId > endId) {
+      if (currentIdx > endIdx) {
         if (isLooping) {
-          currentId = startId;
+          currentIdx = startIdx;
         } else {
           setPlayingGroup(null);
           return;
         }
       }
 
-      const audio = new Audio(`https://cdn.islamic.network/quran/audio/64/ar.alafasy/${currentId}.mp3`);
+      const name = ASMA_UL_HUSNA[currentIdx];
+      if (!name) { setPlayingGroup(null); return; }
+      const audio = new Audio(name.audioUrl);
       audio.playbackRate = speed;
       audioRef.current = audio;
       audio.onended = () => {
-        currentId++;
+        currentIdx++;
         playNext();
       };
       audio.play().catch(() => setPlayingGroup(null));
