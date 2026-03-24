@@ -968,7 +968,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-5 py-4">
         <div className="text-center">
           <span className="text-5xl">🏆</span>
-          <h2 className="text-xl font-bold text-foreground mt-3">Sourate terminée !</h2>
+          <h2 className="text-xl font-bold text-foreground mt-3">{t("dictation.surahDone" as any)}</h2>
           <p className="font-arabic text-2xl text-primary mt-1">{surah.nameArabic}</p>
           <p className="text-xs text-muted-foreground mt-1">{surah.ayahs.length} versets · {blocks.length} blocs</p>
         </div>
