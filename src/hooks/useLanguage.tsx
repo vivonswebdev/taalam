@@ -3410,6 +3410,20 @@ const translations = {
   "tv.transliteration": { fr: "Translitération", en: "Transliteration", nl: "Transliteratie", ar: "النقحرة", tr: "Transliterasyon", ur: "حرف بدل" },
   "tv.duration": { fr: "Durée par ayah", en: "Duration per ayah", nl: "Duur per ayah", ar: "مدة كل آية", tr: "Ayet başına süre", ur: "فی آیت دورانیہ" },
   "tv.surah": { fr: "Sourate", en: "Surah", nl: "Soera", ar: "السورة", tr: "Sure", ur: "سورت" },
+
+  // ═══ ASMA UL HUSNA ═══
+  "asma.title": { fr: "Les 99 Noms d'Allah", en: "The 99 Names of Allah", ar: "أسماء الله الحسنى", nl: "De 99 Namen van Allah", tr: "Allah'ın 99 İsmi", ur: "اللہ کے 99 نام" },
+  "asma.subtitle": { fr: "Écoute, regarde, répète avec ton cœur", en: "Listen, look, repeat with your heart", ar: "استمع وانظر وردد بقلبك", nl: "Luister, kijk, herhaal met je hart", tr: "Dinle, bak, kalbinle tekrarla", ur: "سنو، دیکھو، دل سے دہراؤ" },
+  "asma.cardTitle": { fr: "Les 99 Noms d'Allah", en: "The 99 Names of Allah", ar: "أسماء الله الحسنى", nl: "De 99 Namen van Allah", tr: "Allah'ın 99 İsmi", ur: "اللہ کے 99 نام" },
+  "asma.cardSubtitle": { fr: "Écoute, regarde, répète avec ton cœur", en: "Listen, look, repeat with your heart", ar: "استمع وانظر وردد بقلبك", nl: "Luister, kijk, herhaal met je hart", tr: "Dinle, bak, kalbinle tekrarla", ur: "سنو، دیکھو، دل سے دہراؤ" },
+  "asma.tagPhonetic": { fr: "Phonétique", en: "Phonetic", ar: "صوتيات", nl: "Fonetiek", tr: "Fonetik", ur: "صوتیات" },
+  "asma.tabLearn": { fr: "Apprendre", en: "Learn", ar: "تعلّم", nl: "Leren", tr: "Öğren", ur: "سیکھو" },
+  "asma.tabPhono": { fr: "Phonothèque", en: "Audio Library", ar: "المكتبة الصوتية", nl: "Audiobibliotheek", tr: "Ses Kütüphanesi", ur: "آڈیو لائبریری" },
+  "asma.playAll": { fr: "Tous les 99 Noms", en: "All 99 Names", ar: "جميع الأسماء الـ٩٩", nl: "Alle 99 Namen", tr: "Tüm 99 İsim", ur: "تمام 99 نام" },
+  "asma.playAllDesc": { fr: "Écouter les 99 Noms en continu", en: "Listen to all 99 Names continuously", ar: "استمع لجميع الأسماء متواصلة", nl: "Luister naar alle 99 Namen", tr: "Tüm 99 ismi dinle", ur: "تمام 99 نام مسلسل سنیں" },
+  "asma.loop": { fr: "Répéter", en: "Loop", ar: "تكرار", nl: "Herhalen", tr: "Tekrarla", ur: "دہرائیں" },
+  "asma.byGroup": { fr: "Par groupe de 10", en: "By group of 10", ar: "مجموعات من ١٠", nl: "Per groep van 10", tr: "10'lu gruplar", ur: "10 کے گروپ" },
+  "asma.favorites": { fr: "Mes favoris", en: "My favorites", ar: "المفضلة", nl: "Mijn favorieten", tr: "Favorilerim", ur: "میرے پسندیدہ" },
 } as const;
 
 export type TranslationKey = keyof typeof translations;

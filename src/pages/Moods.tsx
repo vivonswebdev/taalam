@@ -207,6 +207,27 @@ export default function Moods() {
       {activeTab === "moods" && (
         <div className="relative z-10">
           <RecentMoodsSection />
+
+          {/* 99 Names special card */}
+          <div className="px-4 pt-2 pb-2">
+            <button
+              onClick={() => navigate("/moods/asma-ul-husna")}
+              className="relative w-full flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-amber-500/30 via-yellow-500/20 to-orange-500/30 border border-amber-400/30 backdrop-blur-md overflow-hidden transition-transform active:scale-[0.98]"
+            >
+              <span className="text-4xl">🕌</span>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-bold text-white">{t("asma.cardTitle")}</p>
+                <p className="text-[10px] text-white/60">{t("asma.cardSubtitle")}</p>
+                <div className="flex gap-1 mt-1">
+                  {["Audio", "Arabe", t("asma.tagPhonetic")].map(tag => (
+                    <span key={tag} className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/10 text-white/50 font-medium">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <span className="text-2xl font-extrabold text-amber-300/60">99</span>
+            </button>
+          </div>
+
           <div className="grid grid-cols-3 gap-3 px-4 pt-2 pb-4">
             {allMoods.map((mood) => {
               const titleKey = `mood.${mood.id}` as any;

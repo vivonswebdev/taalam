@@ -219,6 +219,7 @@ const App = () => (
                   <Route path="/perfect-leaderboard" element={<PerfectLeaderboard />} />
                   <Route path="/listen-test" element={<ListenTestQuiz />} />
                   <Route path="/moods" element={<Moods />} />
+                  <Route path="/moods/asma-ul-husna" element={<AsmaUlHusnaPage />} />
                   <Route path="/moods/:id" element={<MoodDetail />} />
                   <Route path="/moods/:id/read" element={<MoodRead />} />
                   <Route path="/maladies/:id" element={<MaladieDetail />} />
