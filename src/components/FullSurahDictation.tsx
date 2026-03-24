@@ -791,8 +791,8 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {micError === "not-allowed" && (
           <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-center space-y-1">
             <AlertCircle size={18} className="inline" />
-            <p className="text-sm font-semibold">Microphone refusé</p>
-            <p className="text-xs opacity-80">Autorise l'accès micro dans les réglages du navigateur.</p>
+            <p className="text-sm font-semibold">{t("dictation.micDenied" as any)}</p>
+            <p className="text-xs opacity-80">{t("dictation.micDeniedDesc" as any)}</p>
           </div>
         )}
       </motion.div>
