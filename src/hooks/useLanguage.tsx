@@ -1945,7 +1945,7 @@ const translations = {
   "more.modeActive": { fr: "Actif", en: "Active", nl: "Actief", ar: "نشط", tr: "Aktif", ur: "فعال" },
   "more.modeSolo.title": { fr: "Mode solo", en: "Solo mode", nl: "Solomodus", ar: "الوضع الفردي", tr: "Bireysel mod", ur: "سولو موڈ" },
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
-
+  "recitation.listenVerse": { fr: "Écouter", en: "Listen", nl: "Luister", ar: "استمع", tr: "Dinle", ur: "سنیں" },
 
   // Library
   "library.title": { fr: "Bibliothèque Éducative", en: "Educational Library", ar: "المكتبة التعليمية", nl: "Educatieve bibliotheek", ur: "تعلیمی لائبریری", tr: "Eğitim Kütüphanesi" },
