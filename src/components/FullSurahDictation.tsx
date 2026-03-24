@@ -812,7 +812,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="text-center py-2">
           <span className="text-3xl">{emoji}</span>
           <p className="text-sm font-semibold text-foreground mt-1">
-            {lastResult.score >= 90 ? "Excellent ! Macha Allah !" : lastResult.score >= 70 ? `Très bien, ${lastResult.score}% correct !` : `${lastResult.score}% – Continue !`}
+            {lastResult.score >= 90 ? t("dictation.excellent" as any) : lastResult.score >= 70 ? `${t("dictation.veryGood" as any)}, ${lastResult.score}% ${t("dictation.correct" as any)} !` : `${lastResult.score}% – ${t("dictation.continue" as any)}`}
           </p>
           <p className="text-[11px] text-muted-foreground mt-0.5">Ayah {absoluteAyahIdx + 1} · {currentAyahIdx + 1}/{blockAyahCount}</p>
         </div>
