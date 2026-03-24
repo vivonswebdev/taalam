@@ -1017,7 +1017,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="flex gap-3">
           <button onClick={() => { setAllResults([]); setBlockResults([]); setPhase("overview"); }}
             className="flex-1 py-3 rounded-2xl border-2 border-border text-foreground font-semibold text-sm">
-            <RotateCcw size={14} className="inline mr-1" /> Recommencer
+            <RotateCcw size={14} className="inline mr-1" /> {t("dictation.restart" as any)}
           </button>
           {onRequestNextSurah && (
             <button onClick={onRequestNextSurah}
