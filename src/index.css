@@ -201,6 +201,7 @@ a[role="button"],
     direction: rtl;
     line-height: 2.4;
     text-align: right;
+    font-size: 2em;
   }
   .font-arabic {
     font-family: 'Amiri', 'Traditional Arabic', 'Arabic Typesetting', serif;
@@ -209,6 +210,7 @@ a[role="button"],
     line-height: 2;
     letter-spacing: 0.02em;
     font-feature-settings: "liga" 1, "calt" 1;
+    font-size: 2em;
   }
   .glass-nav {
     backdrop-filter: blur(16px);
