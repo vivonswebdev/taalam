@@ -129,6 +129,7 @@ const MathDuelPage = lazy(() => import("./pages/MathDuelPage"));
 const TVModePage = lazy(() => import("./pages/TVModePage"));
 const QuranLibraryPage = lazy(() => import("./pages/QuranLibraryPage"));
 const DevinePage = lazy(() => import("./pages/DevinePage"));
+const AsmaUlHusnaPage = lazy(() => import("./pages/AsmaUlHusnaPage"));
 
 function PageLoader() {
   return (
@@ -218,6 +219,7 @@ const App = () => (
                   <Route path="/perfect-leaderboard" element={<PerfectLeaderboard />} />
                   <Route path="/listen-test" element={<ListenTestQuiz />} />
                   <Route path="/moods" element={<Moods />} />
+                  <Route path="/moods/asma-ul-husna" element={<AsmaUlHusnaPage />} />
                   <Route path="/moods/:id" element={<MoodDetail />} />
                   <Route path="/moods/:id/read" element={<MoodRead />} />
                   <Route path="/maladies/:id" element={<MaladieDetail />} />
