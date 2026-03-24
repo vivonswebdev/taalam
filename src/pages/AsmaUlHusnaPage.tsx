@@ -277,7 +277,24 @@ function AsmaPhonothequeView({ onMount }: { onMount?: (stop: () => void) => void
         </div>
       </button>
 
-      {/* Controls */}
+      {/* Nasheed */}
+      <button
+        onClick={() => playingGroup === "nasheed" ? stopAll() : playNasheed()}
+        className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-colors ${
+          playingGroup === "nasheed"
+            ? "bg-emerald-500/20 border-emerald-400/40"
+            : "bg-white/[0.06] border-white/10 hover:border-white/20"
+        }`}
+      >
+        <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+          {playingGroup === "nasheed" ? <Pause size={20} className="text-white" /> : <Play size={20} className="text-white" />}
+        </div>
+        <div className="flex-1 text-left">
+          <p className="text-sm font-bold text-white">{t("asma.nasheedTitle")}</p>
+          <p className="text-[10px] text-white/50">{t("asma.nasheedDesc")}</p>
+        </div>
+      </button>
+
       <div className="flex items-center gap-2">
         <button
           onClick={() => setIsLooping(!isLooping)}
