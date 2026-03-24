@@ -7,10 +7,9 @@ export interface AsmaName {
   audioUrl: string;
 }
 
-/** Generate local audio path from id and transliteration */
-function audioPath(id: number, translit: string): string {
-  const slug = translit.toLowerCase().replace(/[''`]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-  return `/audio/asma/${String(id).padStart(3, "0")}-${slug}.mp3`;
+/** Stream audio from GitHub CDN (soachishti/Asma-ul-Husna) — files are 0-indexed */
+function audioPath(id: number, _translit: string): string {
+  return `https://raw.githubusercontent.com/soachishti/Asma-ul-Husna/master/audio/${id - 1}.mp3`;
 }
 
 type RawAsma = Omit<AsmaName, "audioUrl">;
