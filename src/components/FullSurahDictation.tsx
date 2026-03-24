@@ -867,7 +867,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             Réessayer
           </button>
           <button onClick={nextAyah} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-            {isLast ? "Résumé du bloc" : "Verset suivant →"}
+            {isLast ? t("dictation.blockSummary" as any) : `${t("dictation.nextVerse" as any)} →`}
           </button>
         </div>
       </motion.div>
