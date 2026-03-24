@@ -417,7 +417,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
       <div className="space-y-5">
         <div className="text-center">
           <p className="font-arabic text-3xl text-primary">{surah.nameArabic}</p>
-          <p className="text-sm text-muted-foreground mt-1">📚 Sourate complète · {surah.ayahs.length} versets</p>
+          <p className="text-sm text-muted-foreground mt-1">📚 {t("dictation.fullSurah" as any)} · {surah.ayahs.length} {t("dictation.verses" as any)}</p>
         </div>
 
         <div className="bg-accent/30 rounded-xl p-3 text-center">
