@@ -81,7 +81,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const [reciter, setReciter] = useState<ReciterOption>(getStoredReciter);
   const [blockResults, setBlockResults] = useState<AyahFeedbackData[]>([]);
   const [allResults, setAllResults] = useState<AyahFeedbackData[]>([]);
-  const [hardMode, setHardMode] = useState(false);
+  const [hardMode, setHardMode] = useState(true);
 
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<string>>(new Set());
