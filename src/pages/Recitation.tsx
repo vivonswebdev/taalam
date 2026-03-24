@@ -695,9 +695,35 @@ export default function Recitation() {
                   <span className={`inline-flex items-center justify-center ${isChildMode ? "w-10 h-10 text-lg" : "w-8 h-8 text-sm"} rounded-full bg-primary text-primary-foreground font-bold`}>
                     {selectedSurah.ayahs[recitingAyah].number}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">
-                    {t("detail.verses")} {recitingAyah + 1}/{selectedSurah.ayahs.length}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        if (preListening) {
+                          preListenRef.current?.pause();
+                          preListenRef.current = null;
+                          setPreListening(false);
+                        } else {
+                          playPreListenAyah(
+                            selectedSurah.number,
+                            selectedSurah.ayahs[recitingAyah].number,
+                            () => {}
+                          );
+                        }
+                      }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                        preListening
+                          ? "bg-primary text-primary-foreground animate-pulse"
+                          : "bg-primary/10 text-primary hover:bg-primary/20"
+                      }`}
+                    >
+                      <Volume2 size={14} />
+                      {preListening ? t("dictation.listening") : t("recitation.listenVerse")}
+                    </motion.button>
+                    <span className="text-xs text-muted-foreground font-medium">
+                      {recitingAyah + 1}/{selectedSurah.ayahs.length}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Arabic text: visible before mic, hidden/revealed during recitation */}

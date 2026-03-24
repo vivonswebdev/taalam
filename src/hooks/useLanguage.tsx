@@ -173,6 +173,7 @@ const translations = {
   "recitation.changeSurah": { fr: "Changer de sourate", en: "Change surah", nl: "Andere soera", ar: "تغيير السورة", tr: "Sure değiştir", ur: "سورۃ تبدیل کریں" },
   "recitation.hafiz": { fr: "Hâfiz en herbe", en: "Budding Hafiz", nl: "Aankomend Hafiz", ar: "حافظ ناشئ", tr: "Gelecek Hafız", ur: "نئے حافظ" },
   "recitation.daysOfStreak": { fr: "jour(s) de streak", en: "day(s) streak", nl: "dag(en) reeks", ar: "يوم/أيام سلسلة", tr: "gün seri", ur: "دن سلسلہ" },
+  "recitation.listenVerse": { fr: "Écouter", en: "Listen", nl: "Luister", ar: "استمع", tr: "Dinle", ur: "سنیں" },
 
   // Progress
   "progress.title": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
@@ -1945,7 +1946,6 @@ const translations = {
   "more.modeActive": { fr: "Actif", en: "Active", nl: "Actief", ar: "نشط", tr: "Aktif", ur: "فعال" },
   "more.modeSolo.title": { fr: "Mode solo", en: "Solo mode", nl: "Solomodus", ar: "الوضع الفردي", tr: "Bireysel mod", ur: "سولو موڈ" },
   "more.modeSolo.desc": { fr: "Apprentissage personnel du Coran.", en: "Personal Quran learning.", nl: "Persoonlijk Koran leren.", ar: "تعلّم القرآن الشخصي.", tr: "Kişisel Kur'an öğrenimi.", ur: "ذاتی قرآن سیکھنا۔" },
-
 
   // Library
   "library.title": { fr: "Bibliothèque Éducative", en: "Educational Library", ar: "المكتبة التعليمية", nl: "Educatieve bibliotheek", ur: "تعلیمی لائبریری", tr: "Eğitim Kütüphanesi" },
