@@ -858,7 +858,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             .then(data => { if (data.data?.audio) safePlay(data.data.audio); })
             .catch(() => {});
         }} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-muted text-foreground text-sm font-medium">
-          <Volume2 size={15} /> Réécouter le verset
+          <Volume2 size={15} /> {t("dictation.relistenVerse" as any)}
         </button>
 
         {/* Actions */}
