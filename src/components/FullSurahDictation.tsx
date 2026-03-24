@@ -96,9 +96,24 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const currentAyah = surah.ayahs[absoluteAyahIdx];
   const blockAyahCount = currentBlock.end - currentBlock.start + 1;
 
-  // Live feedback
-  const singleAyahTexts = useMemo(() => currentAyah ? [currentAyah.arabic] : [], [currentAyah]);
-  const { liveWords, totalMatched } = useLiveWordFeedback(singleAyahTexts, liveTranscript);
+  // Live feedback — in hard mode, track ALL block ayahs at once
+  const blockAyahTexts = useMemo(() => {
+    if (!hardMode) return currentAyah ? [currentAyah.arabic] : [];
+    return surah.ayahs.slice(currentBlock.start, currentBlock.end + 1).map(a => a.arabic);
+  }, [hardMode, currentAyah, surah.ayahs, currentBlock]);
+  const { liveWords, totalMatched } = useLiveWordFeedback(blockAyahTexts, liveTranscript);
+
+  // In hard mode, derive currentAyahIdx from cumulative matched words
+  const hardModeCurrentIdx = useMemo(() => {
+    if (!hardMode) return currentAyahIdx;
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    let cumWords = 0;
+    for (let i = 0; i < blockAyahs.length; i++) {
+      cumWords += blockAyahs[i].arabic.split(/\s+/).filter(Boolean).length;
+      if (totalMatched < cumWords) return i;
+    }
+    return blockAyahs.length - 1;
+  }, [hardMode, currentAyahIdx, surah.ayahs, currentBlock, totalMatched]);
 
   const voice = useVoiceRecognition({
     lang: "ar-SA",
