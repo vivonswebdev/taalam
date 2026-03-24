@@ -421,7 +421,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         </div>
 
         <div className="bg-accent/30 rounded-xl p-3 text-center">
-          <p className="text-xs text-muted-foreground">Cette sourate est découpée en <span className="font-bold text-foreground">{blocks.length} blocs</span> de dictée</p>
+          <p className="text-xs text-muted-foreground">{t("dictation.blockSplit" as any)} <span className="font-bold text-foreground">{blocks.length} {t("dictation.blocks" as any)}</span> {t("dictation.blocksOf" as any)}</p>
         </div>
 
         <ReciterPicker selected={reciter} onChange={setReciter} compact />
