@@ -173,6 +173,7 @@ const translations = {
   "recitation.changeSurah": { fr: "Changer de sourate", en: "Change surah", nl: "Andere soera", ar: "تغيير السورة", tr: "Sure değiştir", ur: "سورۃ تبدیل کریں" },
   "recitation.hafiz": { fr: "Hâfiz en herbe", en: "Budding Hafiz", nl: "Aankomend Hafiz", ar: "حافظ ناشئ", tr: "Gelecek Hafız", ur: "نئے حافظ" },
   "recitation.daysOfStreak": { fr: "jour(s) de streak", en: "day(s) streak", nl: "dag(en) reeks", ar: "يوم/أيام سلسلة", tr: "gün seri", ur: "دن سلسلہ" },
+  "recitation.listenVerse": { fr: "Écouter", en: "Listen", nl: "Luister", ar: "استمع", tr: "Dinle", ur: "سنیں" },
 
   // Progress
   "progress.title": { fr: "Progression", en: "Progress", nl: "Voortgang", ar: "التقدم", tr: "İlerleme", ur: "پیشرفت" },
