@@ -956,7 +956,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             Voir tous les blocs
           </button>
         )}
-        <button onClick={onBack} className="w-full py-2 text-sm text-muted-foreground underline">← Retour</button>
+        <button onClick={onBack} className="w-full py-2 text-sm text-muted-foreground underline">← {t("dictation.back" as any)}</button>
       </motion.div>
     );
   }
