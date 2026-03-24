@@ -883,7 +883,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="text-center py-4">
           <span className="text-4xl">{summary.avgScore >= 80 ? "🎉" : summary.avgScore >= 60 ? "💪" : "📖"}</span>
           <h2 className="text-xl font-bold text-foreground mt-2">
-            {blocks.length === 1 ? "Dictée terminée !" : `Bloc ${currentBlockIdx + 1} terminé !`}
+            {blocks.length === 1 ? t("dictation.dictationDone" as any) : `${t("dictation.block" as any)} ${currentBlockIdx + 1} ${t("dictation.blockDone" as any)}`}
           </h2>
           <p className="text-xs text-muted-foreground mt-1">{currentBlock.label} · {surah.nameArabic}</p>
         </div>
