@@ -609,7 +609,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         {/* Hint: tap ayah to listen */}
         {!isListening && (
           <p className="text-[10px] text-muted-foreground text-center">
-            💡 Touche un verset pour l'écouter individuellement
+            💡 {t("dictation.tapToListen" as any)}
           </p>
         )}
 
