@@ -593,6 +593,23 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </p>
         )}
 
+        {/* Hard mode toggle */}
+        <div className="flex items-center justify-between bg-accent/40 border border-border/40 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔥</span>
+            <div>
+              <p className="text-xs font-bold text-foreground">Mode Hard</p>
+              <p className="text-[10px] text-muted-foreground">Récitation continue, correction à la fin</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setHardMode(h => !h)}
+            className={`w-11 h-6 rounded-full transition-colors relative ${hardMode ? "bg-primary" : "bg-muted"}`}
+          >
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${hardMode ? "translate-x-5" : "translate-x-0.5"}`} />
+          </button>
+        </div>
+
         {/* Big start button */}
         <div className="pt-2 pb-4">
           <motion.button
@@ -603,10 +620,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
           >
             <Mic size={24} />
-            Commencer la dictée
+            Commencer la dictée {hardMode && "🔥"}
           </motion.button>
           <p className="text-[11px] text-muted-foreground text-center mt-2">
-            Le texte sera masqué et tu réciteras de mémoire
+            {hardMode ? "Récite tout le bloc sans interruption" : "Le texte sera masqué et tu réciteras de mémoire"}
           </p>
         </div>
       </motion.div>
