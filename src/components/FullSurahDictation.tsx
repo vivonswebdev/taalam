@@ -517,7 +517,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                 : "bg-primary/15 text-primary border border-primary/30"
             }`}
           >
-            {isListening ? <><Pause size={14} /> Arrêter</> : <><Play size={14} /> Tout écouter</>}
+            {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
           </motion.button>
         </div>
 
