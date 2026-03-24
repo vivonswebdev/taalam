@@ -96,9 +96,24 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const currentAyah = surah.ayahs[absoluteAyahIdx];
   const blockAyahCount = currentBlock.end - currentBlock.start + 1;
 
-  // Live feedback
-  const singleAyahTexts = useMemo(() => currentAyah ? [currentAyah.arabic] : [], [currentAyah]);
-  const { liveWords, totalMatched } = useLiveWordFeedback(singleAyahTexts, liveTranscript);
+  // Live feedback — in hard mode, track ALL block ayahs at once
+  const blockAyahTexts = useMemo(() => {
+    if (!hardMode) return currentAyah ? [currentAyah.arabic] : [];
+    return surah.ayahs.slice(currentBlock.start, currentBlock.end + 1).map(a => a.arabic);
+  }, [hardMode, currentAyah, surah.ayahs, currentBlock]);
+  const { liveWords, totalMatched } = useLiveWordFeedback(blockAyahTexts, liveTranscript);
+
+  // In hard mode, derive currentAyahIdx from cumulative matched words
+  const hardModeCurrentIdx = useMemo(() => {
+    if (!hardMode) return currentAyahIdx;
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    let cumWords = 0;
+    for (let i = 0; i < blockAyahs.length; i++) {
+      cumWords += blockAyahs[i].arabic.split(/\s+/).filter(Boolean).length;
+      if (totalMatched < cumWords) return i;
+    }
+    return blockAyahs.length - 1;
+  }, [hardMode, currentAyahIdx, surah.ayahs, currentBlock, totalMatched]);
 
   const voice = useVoiceRecognition({
     lang: "ar-SA",
@@ -241,64 +256,70 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setPhase("feedback");
   }, [voice, currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx]);
 
-  // Hard mode: silently compute feedback for current ayah and advance
-  const hardModeAdvance = useCallback(() => {
-    if (!currentAyah) return;
-    const result = compareSurahDictation([currentAyah.arabic], liveTranscript);
-    const wordResults = result.wordResults.map(wr => ({
-      word: wr.word,
-      status: (wr.status === "correct" ? "correct" : wr.status === "missing" ? "missing" : wr.status === "extra" ? "extra" : "incorrect") as "correct" | "incorrect" | "missing" | "extra",
-    }));
-    const tajwidWords = analyzeAyahTajwid(currentAyah.arabic);
-    const tajwidErrors: { word: string; ruleName: string }[] = [];
-    wordResults.forEach((wr, i) => {
-      if (wr.status !== "correct" && tajwidWords[i]?.rules?.length > 0) {
-        tajwidErrors.push({ word: wr.word, ruleName: tajwidWords[i].rules[0].name });
+  // Hard mode: compute feedback for ALL block ayahs at once from liveWords, then show summary
+  const hardModeFinish = useCallback(() => {
+    voice.stop();
+    const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    const results: AyahFeedbackData[] = [];
+
+    blockAyahs.forEach((ayah, idx) => {
+      const ayahLW = liveWords[idx] || [];
+      const tajwidWords = analyzeAyahTajwid(ayah.arabic);
+      const wordResults = ayah.arabic.split(/\s+/).filter(Boolean).map((word, wi) => {
+        const lw = ayahLW[wi];
+        const status = !lw || lw.status === "pending" ? "missing" as const
+          : lw.status === "correct" ? "correct" as const
+          : "incorrect" as const;
+        return { word, status };
+      });
+      const tajwidErrors: { word: string; ruleName: string }[] = [];
+      wordResults.forEach((wr, i) => {
+        if (wr.status !== "correct" && tajwidWords[i]?.rules?.length > 0) {
+          tajwidErrors.push({ word: wr.word, ruleName: tajwidWords[i].rules[0].name });
+        }
+      });
+      const correctCount = wordResults.filter(w => w.status === "correct").length;
+      const totalWords = wordResults.length;
+      const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
+      const globalIdx = currentBlock.start + idx;
+      results.push({ ayahIdx: globalIdx, score, wordResults, tajwidErrors });
+
+      const xpKey = `${currentBlockIdx}-${idx}`;
+      if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
+        xpAwardedRef.current.add(xpKey);
+        xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
       }
     });
-    const correctCount = wordResults.filter(w => w.status === "correct").length;
-    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
-    const score = Math.round((correctCount / Math.max(1, totalWords)) * 100);
-    const feedbackData: AyahFeedbackData = { ayahIdx: absoluteAyahIdx, score, wordResults, tajwidErrors };
-    setBlockResults(prev => [...prev, feedbackData]);
 
-    const xpKey = `${currentBlockIdx}-${currentAyahIdx}`;
-    if (!xpAwardedRef.current.has(xpKey) && score >= 50) {
-      xpAwardedRef.current.add(xpKey);
-      xp.addXp(Math.max(1, Math.round(correctCount / 3)), "tarteel_ayah_correct");
-    }
-
-    // Advance to next ayah or finish block
-    if (currentAyahIdx + 1 >= blockAyahCount) {
-      voice.stop();
-      setAllResults(prev => {
-        const merged = [...prev, ...blockResults, feedbackData];
-        return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
-      });
-      setPhase("blockSummary");
-    } else {
-      setCurrentAyahIdx(prev => prev + 1);
-      setLiveTranscript("");
-    }
-  }, [currentAyah, liveTranscript, absoluteAyahIdx, currentBlockIdx, currentAyahIdx, blockAyahCount, blockResults, voice, xp]);
+    setBlockResults(results);
+    setAllResults(prev => {
+      const merged = [...prev, ...results];
+      return merged.filter((v, i, a) => a.findIndex(x => x.ayahIdx === v.ayahIdx) === i);
+    });
+    setPhase("blockSummary");
+  }, [voice, surah.ayahs, currentBlock, liveWords, currentBlockIdx, xp]);
 
   // Auto-stop recording when all words are matched
   useEffect(() => {
-    if (phase !== "recording" || !currentAyah) return;
-    const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
-    if (totalMatched >= totalWords && totalWords > 0) {
-      autoStopRef.current = setTimeout(() => {
-        if (hardMode) {
-          hardModeAdvance();
-        } else {
-          stopRecording();
-        }
-      }, 600);
+    if (phase !== "recording") return;
+    if (hardMode) {
+      // In hard mode, check total words across entire block
+      const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+      const totalBlockWords = blockAyahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0);
+      if (totalMatched >= totalBlockWords && totalBlockWords > 0) {
+        autoStopRef.current = setTimeout(() => hardModeFinish(), 800);
+      }
+    } else {
+      if (!currentAyah) return;
+      const totalWords = currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+      if (totalMatched >= totalWords && totalWords > 0) {
+        autoStopRef.current = setTimeout(() => stopRecording(), 600);
+      }
     }
     return () => {
       if (autoStopRef.current) { clearTimeout(autoStopRef.current); autoStopRef.current = null; }
     };
-  }, [phase, totalMatched, currentAyah, stopRecording, hardMode, hardModeAdvance]);
+  }, [phase, totalMatched, currentAyah, stopRecording, hardMode, hardModeFinish, surah.ayahs, currentBlock]);
 
   const nextAyah = useCallback(() => {
     if (currentAyahIdx + 1 >= blockAyahCount) {
@@ -632,9 +653,12 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
 
   // ─── RECORDING PHASE (full block visible, current ayah highlighted) ───
   if (phase === "recording" && currentAyah) {
-    const words = currentAyah.arabic.split(/\s+/).filter(Boolean);
-    const ayahLiveWords = liveWords[0] || [];
     const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
+    const activeIdx = hardMode ? hardModeCurrentIdx : currentAyahIdx;
+    const totalBlockWords = blockAyahs.reduce((a, ay) => a + ay.arabic.split(/\s+/).filter(Boolean).length, 0);
+    const progressWords = hardMode ? totalMatched : totalMatched;
+    const progressTotal = hardMode ? totalBlockWords : currentAyah.arabic.split(/\s+/).filter(Boolean).length;
+
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Block progress */}
@@ -644,11 +668,11 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </button>
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>{blocks.length > 1 ? `Bloc ${currentBlockIdx + 1}/${blocks.length} · ` : ""}Ayah {currentAyahIdx + 1}/{blockAyahCount}</span>
-              <span>{Math.round(((currentAyahIdx) / blockAyahCount) * 100)}%</span>
+              <span>{blocks.length > 1 ? `Bloc ${currentBlockIdx + 1}/${blocks.length} · ` : ""}Ayah {activeIdx + 1}/{blockAyahCount}</span>
+              <span>{Math.round((progressWords / Math.max(1, progressTotal)) * 100)}%</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${(currentAyahIdx / blockAyahCount) * 100}%` }} />
+              <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${(progressWords / Math.max(1, progressTotal)) * 100}%` }} />
             </div>
           </div>
         </div>
@@ -663,7 +687,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             ))}
           </div>
           <span className="text-xs text-muted-foreground">
-            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {currentAyahIdx + 1}/{blockAyahCount}
+            {hardMode ? "🔥 Mode Hard · " : ""}Récite le bloc · verset {activeIdx + 1}/{blockAyahCount}
           </span>
         </div>
 
@@ -674,20 +698,29 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             <div className="font-arabic text-[1.25rem] sm:text-xl leading-[2.6] sm:leading-[2.8] text-justify">
               {blockAyahs.map((ayah, idx) => {
                 const globalIdx = currentBlock.start + idx;
-                const isCurrent = idx === currentAyahIdx;
-                const isDone = idx < currentAyahIdx;
-                const isFuture = idx > currentAyahIdx;
+                const isCurrent = idx === activeIdx;
+                const isDone = idx < activeIdx;
                 const ayahWords = ayah.arabic.split(/\s+/).filter(Boolean);
+                // In hard mode, liveWords[idx] has per-ayah feedback; in normal mode, liveWords[0] is for current ayah only
+                const ayahLW = hardMode ? (liveWords[idx] || []) : (isCurrent ? (liveWords[0] || []) : []);
 
                 return (
                   <span key={globalIdx} className="inline">
-                    {isCurrent ? (
-                      // Current ayah: live word feedback (hidden until revealed)
-                      <span className="inline bg-primary/5 rounded-sm ring-1 ring-primary/20">
+                    {(isCurrent || (hardMode && isDone)) ? (
+                      // Current or done ayah in hard mode: show live word feedback
+                      <span className={`inline ${isCurrent ? "bg-primary/5 rounded-sm ring-1 ring-primary/20" : ""}`}>
                         {ayahWords.map((word, wi) => {
-                          const lw = ayahLiveWords[wi];
+                          const lw = ayahLW[wi];
                           const status = lw?.status || "pending";
                           const isPending = status === "pending";
+                          // In hard mode, done ayahs show revealed words
+                          if (isDone && hardMode) {
+                            return (
+                              <span key={wi} className={`inline-block px-0.5 rounded ${getLiveWordColor(status)}`}>
+                                {word}{" "}
+                              </span>
+                            );
+                          }
                           return (
                             <motion.span key={wi}
                               initial={!isPending ? { scale: 1.08 } : false}
@@ -702,14 +735,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
                         })}
                       </span>
                     ) : isDone ? (
-                      // Already recited: success style
+                      // Normal mode done: success style
                       <span className="inline text-success/60">
                         {ayah.arabic}{" "}
                       </span>
                     ) : (
                       // Future: hidden
                       <span className="inline">
-                        {ayah.arabic.split(/\s+/).filter(Boolean).map((w, wi) => (
+                        {ayahWords.map((w, wi) => (
                           <span key={wi} className="inline-block px-0.5 text-transparent select-none bg-muted/20 rounded mx-0.5">████</span>
                         ))}{" "}
                       </span>
@@ -735,20 +768,19 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20" />
         </div>
 
-        {/* Word progress for current ayah */}
+        {/* Word progress */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
             <motion.div className="h-full bg-primary rounded-full"
-              animate={{ width: `${(totalMatched / Math.max(1, words.length)) * 100}%` }} />
+              animate={{ width: `${(progressWords / Math.max(1, progressTotal)) * 100}%` }} />
           </div>
-          <span className="text-xs text-muted-foreground font-mono">{totalMatched}/{words.length}</span>
+          <span className="text-xs text-muted-foreground font-mono">{progressWords}/{progressTotal}</span>
         </div>
 
         {/* Stop button */}
         <motion.button whileTap={{ scale: 0.95 }} onClick={() => {
           if (hardMode) {
-            // In hard mode, stop recording and compute feedback for current ayah, then show summary
-            hardModeAdvance();
+            hardModeFinish();
           } else {
             stopRecording();
           }
