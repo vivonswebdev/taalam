@@ -743,7 +743,14 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         </div>
 
         {/* Stop button */}
-        <motion.button whileTap={{ scale: 0.95 }} onClick={stopRecording}
+        <motion.button whileTap={{ scale: 0.95 }} onClick={() => {
+          if (hardMode) {
+            // In hard mode, stop recording and compute feedback for current ayah, then show summary
+            hardModeAdvance();
+          } else {
+            stopRecording();
+          }
+        }}
           className={`w-full flex items-center justify-center gap-3 ${isChildMode ? "py-5 text-xl" : "py-4 text-lg"} rounded-2xl bg-destructive text-destructive-foreground font-bold animate-pulse`}>
           <MicOff size={24} /> Arrêter
         </motion.button>
