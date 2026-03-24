@@ -946,7 +946,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
             )
           ) : (
             <button onClick={goNextBlock} className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm">
-              {isLastBlock ? "Résumé final 🎉" : `Bloc ${currentBlockIdx + 2} →`}
+              {isLastBlock ? `${t("dictation.finalSummary" as any)} 🎉` : `${t("dictation.block" as any)} ${currentBlockIdx + 2} →`}
             </button>
           )}
         </div>
