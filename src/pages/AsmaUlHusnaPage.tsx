@@ -187,7 +187,7 @@ function AsmaLearnView() {
 }
 
 // ─── Phonothèque Tab ─────────────────────────────────────────
-function AsmaPhonothequeView() {
+function AsmaPhonothequeView({ onMount }: { onMount?: (stop: () => void) => void }) {
   const { t, lang } = useLanguage();
   const [playingGroup, setPlayingGroup] = useState<string | null>(null);
   const [isLooping, setIsLooping] = useState(false);
