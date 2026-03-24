@@ -496,11 +496,10 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
         <div className="bg-accent/30 rounded-xl p-3 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
             <Eye size={15} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">Lis, écoute et mémorise</span>
+            <span className="text-sm font-semibold text-foreground">{t("dictation.readListenMemorise" as any)}</span>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Écoute et lis {blockAyahs.length === 1 ? "ce verset" : `ces ${blockAyahs.length} versets`}. 
-            Quand tu es prêt, lance la dictée de mémoire.
+            {t("dictation.readListenDesc" as any)}
           </p>
         </div>
 
