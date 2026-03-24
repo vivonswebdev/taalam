@@ -249,7 +249,7 @@ function AsmaPhonothequeView() {
     <div className="flex flex-col gap-4 px-4 pb-6">
       {/* All 99 */}
       <button
-        onClick={() => playingGroup === "all" ? stopAll() : playGroup("all", 1, 99)}
+        onClick={() => playingGroup === "all" ? stopAll() : playGroup("all", 0, 98)}
         className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-colors ${
           playingGroup === "all"
             ? "bg-amber-500/20 border-amber-400/40"
