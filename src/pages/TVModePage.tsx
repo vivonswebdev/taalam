@@ -509,17 +509,6 @@ export default function TVModePage() {
                           </div>
                         </div>
 
-                        {/* Extra actions row */}
-                        <div className="md:col-span-3 flex items-center gap-2 pt-2 border-t border-white/10">
-                          <button onClick={startAirplay} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
-                            <Airplay className="w-3.5 h-3.5" />
-                            AirPlay
-                          </button>
-                          <button onClick={toggleFullscreen} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
-                            {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
-                            {isFullscreen ? 'Quitter' : 'Plein écran'}
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -527,6 +516,7 @@ export default function TVModePage() {
               </AnimatePresence>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
