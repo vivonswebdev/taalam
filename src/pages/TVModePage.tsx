@@ -314,18 +314,38 @@ export default function TVModePage() {
         )}
       </div>
 
-      {/* Fixed close button — always visible on mobile */}
-      <button
-        onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ''; } navigate(-1); }}
-        className="fixed top-4 right-4 z-30 p-3 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-90 transition"
-        style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top, 0px))' }}
-      >
-        <X className="w-5 h-5" />
-      </button>
-
       {/* Controls — appear on mouse/touch */}
       <AnimatePresence>
         {showControls && (
+          <>
+            {/* Close button — top right, only visible with controls */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ''; } navigate(-1); }}
+              className="fixed z-30 p-3 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-90 transition"
+              style={{ top: 'calc(1rem + env(safe-area-inset-top, 0px))', right: '1rem' }}
+            >
+              <X className="w-5 h-5" />
+            </motion.button>
+
+            {/* Top-right action buttons: AirPlay + Fullscreen */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed z-30 flex items-center gap-2"
+              style={{ top: 'calc(1rem + env(safe-area-inset-top, 0px))', left: '1rem' }}
+            >
+              <button onClick={startAirplay} className="p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-90 transition">
+                <Airplay className="w-4 h-4" />
+              </button>
+              <button onClick={toggleFullscreen} className="p-2.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-90 transition">
+                {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+              </button>
+            </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -489,17 +509,6 @@ export default function TVModePage() {
                           </div>
                         </div>
 
-                        {/* Extra actions row */}
-                        <div className="md:col-span-3 flex items-center gap-2 pt-2 border-t border-white/10">
-                          <button onClick={startAirplay} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
-                            <Airplay className="w-3.5 h-3.5" />
-                            AirPlay
-                          </button>
-                          <button onClick={toggleFullscreen} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs transition">
-                            {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
-                            {isFullscreen ? 'Quitter' : 'Plein écran'}
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -507,6 +516,7 @@ export default function TVModePage() {
               </AnimatePresence>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
