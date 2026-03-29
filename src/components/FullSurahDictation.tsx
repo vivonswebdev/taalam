@@ -82,6 +82,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
   const [blockResults, setBlockResults] = useState<AyahFeedbackData[]>([]);
   const [allResults, setAllResults] = useState<AyahFeedbackData[]>([]);
   const [hardMode, setHardMode] = useState(true);
+  const [hasPreListened, setHasPreListened] = useState(false);
 
   const preListenAudioRef = useRef<HTMLAudioElement | null>(null);
   const xpAwardedRef = useRef<Set<string>>(new Set());
@@ -165,7 +166,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
     let idx = startFrom;
     const playNext = () => {
-      if (idx >= blockAyahs.length) { setIsListening(false); setListeningAyahIdx(null); return; }
+      if (idx >= blockAyahs.length) { setIsListening(false); setListeningAyahIdx(null); setHasPreListened(true); return; }
       const globalIdx = currentBlock.start + idx;
       setListeningAyahIdx(globalIdx);
       setIsListening(true);
@@ -202,6 +203,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setBlockResults([]);
     setLiveTranscript("");
     setPhase("reading");
+    setHasPreListened(false);
   }, [stopListening]);
 
   // ─── Start dictation (from reading → recording on first ayah) ───
@@ -503,23 +505,57 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </p>
         </div>
 
-        {/* Reciter picker + Play all */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
-            <ReciterPicker selected={reciter} onChange={setReciter} compact />
+        {/* Step 1: Écouter d'abord */}
+        {!hasPreListened && !isListening && (
+          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">1</span>
+              <span className="text-sm font-bold text-foreground">{t("dictation.step1Title" as any)}</span>
+            </div>
+            <p className="text-xs text-muted-foreground">{t("dictation.preListenHint" as any)}</p>
+            <div className="flex gap-2">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => playAllBlock(0)}
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm"
+              >
+                <Volume2 size={16} />
+                {t("dictation.listenAll" as any)}
+              </motion.button>
+              <button
+                onClick={() => setHasPreListened(true)}
+                className="px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold text-sm"
+              >
+                {t("dictation.skip" as any)}
+              </button>
+            </div>
           </div>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => isListening ? stopListening() : playAllBlock(0)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-              isListening
-                ? "bg-destructive/15 text-destructive border border-destructive/30"
-                : "bg-primary/15 text-primary border border-primary/30"
-            }`}
-          >
-            {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
-          </motion.button>
-        </div>
+        )}
+
+        {/* Reciter picker + Play all (after first listen or during) */}
+        {(hasPreListened || isListening) && (
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <ReciterPicker selected={reciter} onChange={setReciter} compact />
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => isListening ? stopListening() : playAllBlock(0)}
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                isListening
+                  ? "bg-destructive/15 text-destructive border border-destructive/30"
+                  : "bg-primary/15 text-primary border border-primary/30"
+              }`}
+            >
+              {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
+            </motion.button>
+          </div>
+        )}
+
+        {/* Reciter picker when pre-listening */}
+        {!hasPreListened && !isListening && (
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
+        )}
 
         {/* ─── Mushaf-style text (continuous flow like a Quran page) ─── */}
         <div className="bg-card border-2 border-primary/10 rounded-2xl overflow-hidden">
@@ -630,21 +666,30 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </button>
         </div>
 
-        {/* Big start button */}
+        {/* Big start button — only enabled after pre-listen */}
         <div className="pt-2 pb-4">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => { stopListening(); currentAyahIdx > 0 ? startRecording() : startDictation(); }}
-            className={`w-full flex items-center justify-center gap-3 ${
-              isChildMode ? "py-6 text-xl" : "py-5 text-lg"
-            } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
-          >
-            <Mic size={24} />
-            {t("dictation.startDictation" as any)} {hardMode && "🔥"}
-          </motion.button>
-          <p className="text-[11px] text-muted-foreground text-center mt-2">
-            {hardMode ? t("dictation.textHiddenHintHard" as any) : t("dictation.textHiddenHint" as any)}
-          </p>
+          {hasPreListened ? (
+            <>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
+                <span className="text-sm font-bold text-foreground">{t("dictation.step2Title" as any)}</span>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={() => { stopListening(); currentAyahIdx > 0 ? startRecording() : startDictation(); }}
+                className={`w-full flex items-center justify-center gap-3 ${
+                  isChildMode ? "py-6 text-xl" : "py-5 text-lg"
+                } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
+              >
+                <Mic size={24} />
+                {t("dictation.startDictation" as any)} {hardMode && "🔥"}
+              </motion.button>
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-2">
+              🎧 {t("dictation.listenFirstHint" as any)}
+            </p>
+          )}
         </div>
       </motion.div>
     );
