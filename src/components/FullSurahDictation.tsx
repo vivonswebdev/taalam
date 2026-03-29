@@ -505,23 +505,57 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </p>
         </div>
 
-        {/* Reciter picker + Play all */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
-            <ReciterPicker selected={reciter} onChange={setReciter} compact />
+        {/* Step 1: Écouter d'abord */}
+        {!hasPreListened && !isListening && (
+          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">1</span>
+              <span className="text-sm font-bold text-foreground">{t("dictation.step1Title" as any)}</span>
+            </div>
+            <p className="text-xs text-muted-foreground">{t("dictation.preListenHint" as any)}</p>
+            <div className="flex gap-2">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => playAllBlock(0)}
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm"
+              >
+                <Volume2 size={16} />
+                {t("dictation.listenAll" as any)}
+              </motion.button>
+              <button
+                onClick={() => setHasPreListened(true)}
+                className="px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold text-sm"
+              >
+                {t("dictation.skip" as any)}
+              </button>
+            </div>
           </div>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => isListening ? stopListening() : playAllBlock(0)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-              isListening
-                ? "bg-destructive/15 text-destructive border border-destructive/30"
-                : "bg-primary/15 text-primary border border-primary/30"
-            }`}
-          >
-            {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
-          </motion.button>
-        </div>
+        )}
+
+        {/* Reciter picker + Play all (after first listen or during) */}
+        {(hasPreListened || isListening) && (
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <ReciterPicker selected={reciter} onChange={setReciter} compact />
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => isListening ? stopListening() : playAllBlock(0)}
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                isListening
+                  ? "bg-destructive/15 text-destructive border border-destructive/30"
+                  : "bg-primary/15 text-primary border border-primary/30"
+              }`}
+            >
+              {isListening ? <><Pause size={14} /> {t("dictation.stopListening" as any)}</> : <><Play size={14} /> {t("dictation.listenAll" as any)}</>}
+            </motion.button>
+          </div>
+        )}
+
+        {/* Reciter picker when pre-listening */}
+        {!hasPreListened && !isListening && (
+          <ReciterPicker selected={reciter} onChange={setReciter} compact />
+        )}
 
         {/* ─── Mushaf-style text (continuous flow like a Quran page) ─── */}
         <div className="bg-card border-2 border-primary/10 rounded-2xl overflow-hidden">
