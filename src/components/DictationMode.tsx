@@ -360,10 +360,15 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={playCurrentAyah}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm"
+              disabled={isPreListening}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-semibold text-sm ${
+                isPreListening
+                  ? "bg-primary/70 text-primary-foreground animate-pulse"
+                  : "bg-primary text-primary-foreground"
+              }`}
             >
               <Volume2 size={18} />
-              {t("dictation.listenVerse")}
+              {isPreListening ? t("dictation.listening") : t("dictation.listenVerse")}
             </motion.button>
             <button
               onClick={() => { setHasListened(true); setAyahPhase("recite"); }}
