@@ -87,22 +87,37 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       preListenAudioRef.current.pause();
       preListenAudioRef.current = null;
     }
-    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.data?.audio) {
-          const audio = new Audio(data.data.audio);
-          preListenAudioRef.current = audio;
-          audio.onended = () => {
-            preListenAudioRef.current = null;
+
+    // Use direct CDN URL to avoid async fetch breaking autoplay policy
+    const ayahGlobalNumber = currentAyah.numberInQuran || currentAyah.number;
+    const cdnUrl = `https://cdn.islamic.network/quran/audio/128/${reciter.apiEdition}/${ayahGlobalNumber}.mp3`;
+    const audio = new Audio(cdnUrl);
+    preListenAudioRef.current = audio;
+    audio.onended = () => {
+      preListenAudioRef.current = null;
+      setHasListened(true);
+    };
+    audio.onerror = () => {
+      // Fallback: try API fetch if CDN fails
+      preListenAudioRef.current = null;
+      fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.data?.audio) {
+            const fallbackAudio = new Audio(data.data.audio);
+            preListenAudioRef.current = fallbackAudio;
+            fallbackAudio.onended = () => { preListenAudioRef.current = null; setHasListened(true); };
+            fallbackAudio.play().catch(() => setHasListened(true));
+          } else {
             setHasListened(true);
-          };
-          audio.play().catch(() => setHasListened(true));
-        } else {
-          setHasListened(true);
-        }
-      })
-      .catch(() => setHasListened(true));
+          }
+        })
+        .catch(() => setHasListened(true));
+    };
+    audio.play().catch(() => {
+      // If autoplay blocked, try via API
+      audio.onerror?.(new Event("error") as any);
+    });
   }, [surah.number, currentAyah, reciter]);
 
   // ─── Start recording ───
