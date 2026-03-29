@@ -90,35 +90,33 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       preListenAudioRef.current = null;
     }
     setIsPreListening(true);
+
+    // iOS Safari: create & unlock Audio synchronously in user-gesture context
+    const audio = new Audio();
+    audio.preload = "auto";
+    preListenAudioRef.current = audio;
+
+    const done = (success: boolean) => {
+      preListenAudioRef.current = null;
+      setIsPreListening(false);
+      setHasListened(true);
+    };
+
+    audio.onended = () => done(true);
+    audio.onerror = () => done(false);
+
+    // Fetch the audio URL then assign it
     fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
       .then(r => r.json())
       .then(data => {
         if (data.data?.audio) {
-          const audio = new Audio(data.data.audio);
-          preListenAudioRef.current = audio;
-          audio.onended = () => {
-            preListenAudioRef.current = null;
-            setIsPreListening(false);
-            setHasListened(true);
-          };
-          audio.onerror = () => {
-            preListenAudioRef.current = null;
-            setIsPreListening(false);
-            setHasListened(true);
-          };
-          audio.play().catch(() => {
-            setIsPreListening(false);
-            setHasListened(true);
-          });
+          audio.src = data.data.audio;
+          audio.play().catch(() => done(false));
         } else {
-          setIsPreListening(false);
-          setHasListened(true);
+          done(false);
         }
       })
-      .catch(() => {
-        setIsPreListening(false);
-        setHasListened(true);
-      });
+      .catch(() => done(false));
   }, [surah.number, currentAyah, reciter]);
 
   // ─── Start recording ───
