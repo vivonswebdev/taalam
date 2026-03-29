@@ -166,7 +166,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     const blockAyahs = surah.ayahs.slice(currentBlock.start, currentBlock.end + 1);
     let idx = startFrom;
     const playNext = () => {
-      if (idx >= blockAyahs.length) { setIsListening(false); setListeningAyahIdx(null); return; }
+      if (idx >= blockAyahs.length) { setIsListening(false); setListeningAyahIdx(null); setHasPreListened(true); return; }
       const globalIdx = currentBlock.start + idx;
       setListeningAyahIdx(globalIdx);
       setIsListening(true);
@@ -203,6 +203,7 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
     setBlockResults([]);
     setLiveTranscript("");
     setPhase("reading");
+    setHasPreListened(false);
   }, [stopListening]);
 
   // ─── Start dictation (from reading → recording on first ayah) ───
