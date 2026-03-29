@@ -36,7 +36,7 @@ export function useAuth() {
         if (!alreadyGreeted) {
           sessionStorage.setItem("taalam_welcomed", "true");
           const name = session.user.user_metadata?.display_name || "";
-          toast.success(name ? `Bienvenue de retour, ${name} 🌙` : "Bienvenue de retour 🌙");
+          toast.success(name ? `Bienvenue de retour, ${name} 🌙` : "Bienvenue de retour 🌙", { duration: 800 });
         }
       }
     });
