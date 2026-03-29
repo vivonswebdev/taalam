@@ -67,16 +67,24 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     "ar.husary": "Husary_128kbps",
     "ar.alafasy": "Alafasy_128kbps",
     "ar.minshawi": "Minshawy_Murattal_128kbps",
-    "ar.abdulbasitmurattal": "Abdul_Basit_Murattal_128kbps",
+    "ar.abdulbasitmurattal": "Abdul_Basit_Murattal_192kbps",
     "ar.abdurrahmaansudais": "Abdurrahmaan_As-Sudais_192kbps",
   };
 
-  const getAudioUrl = useCallback((surahNum: number, ayahNum: number) => {
-    const folder = EVERYAYAH_RECITERS[reciter.apiEdition] || "Alafasy_128kbps";
+  const buildEveryayahUrl = useCallback((folder: string, surahNum: number, ayahNum: number) => {
     const s = String(surahNum).padStart(3, "0");
     const a = String(ayahNum).padStart(3, "0");
     return `https://everyayah.com/data/${folder}/${s}${a}.mp3`;
-  }, [reciter]);
+  }, []);
+
+  const getAudioUrl = useCallback((surahNum: number, ayahNum: number) => {
+    const folder = EVERYAYAH_RECITERS[reciter.apiEdition] || "Alafasy_128kbps";
+    return buildEveryayahUrl(folder, surahNum, ayahNum);
+  }, [reciter, buildEveryayahUrl]);
+
+  const getFallbackAudioUrl = useCallback((surahNum: number, ayahNum: number) => {
+    return buildEveryayahUrl("Alafasy_128kbps", surahNum, ayahNum);
+  }, [buildEveryayahUrl]);
 
   // Single-ayah arrays for live feedback
   const singleAyahTexts = useMemo(() => currentAyah ? [currentAyah.arabic] : [], [currentAyah]);
@@ -108,8 +116,9 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     }
     setIsPreListening(true);
 
-    const url = getAudioUrl(surah.number, currentAyah.number);
-    const audio = new Audio(url);
+    const primaryUrl = getAudioUrl(surah.number, currentAyah.number);
+    const fallbackUrl = getFallbackAudioUrl(surah.number, currentAyah.number);
+    const audio = new Audio(primaryUrl);
     audio.preload = "auto";
     preListenAudioRef.current = audio;
 
@@ -119,10 +128,27 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
       setHasListened(true);
     };
 
+    let hasRetried = false;
     audio.onended = done;
-    audio.onerror = done;
-    audio.play().catch(done);
-  }, [surah.number, currentAyah, getAudioUrl]);
+    audio.onerror = () => {
+      if (!hasRetried && primaryUrl !== fallbackUrl) {
+        hasRetried = true;
+        audio.src = fallbackUrl;
+        audio.play().catch(done);
+        return;
+      }
+      done();
+    };
+    audio.play().catch(() => {
+      if (!hasRetried && primaryUrl !== fallbackUrl) {
+        hasRetried = true;
+        audio.src = fallbackUrl;
+        audio.play().catch(done);
+        return;
+      }
+      done();
+    });
+  }, [surah.number, currentAyah, getAudioUrl, getFallbackAudioUrl]);
 
   // ─── Download all surah audio for offline use ───
   const downloadSurahAudio = useCallback(async () => {
@@ -132,19 +158,35 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
     try {
       const cache = await caches.open("offline-audio-v2");
       for (let i = 0; i < surah.ayahs.length; i++) {
-        const url = getAudioUrl(surah.number, surah.ayahs[i].number);
-        const existing = await cache.match(url);
-        if (!existing) {
+        const primaryUrl = getAudioUrl(surah.number, surah.ayahs[i].number);
+        const fallbackUrl = getFallbackAudioUrl(surah.number, surah.ayahs[i].number);
+        const existingPrimary = await cache.match(primaryUrl);
+        const existingFallback = await cache.match(fallbackUrl);
+
+        if (!existingPrimary && !existingFallback) {
           try {
-            const res = await fetch(url);
-            if (res.ok) await cache.put(url, res);
-          } catch {}
+            const res = await fetch(primaryUrl);
+            if (res.ok) {
+              await cache.put(primaryUrl, res);
+            } else if (primaryUrl !== fallbackUrl) {
+              const fallbackRes = await fetch(fallbackUrl);
+              if (fallbackRes.ok) await cache.put(fallbackUrl, fallbackRes);
+            }
+          } catch {
+            if (primaryUrl !== fallbackUrl) {
+              try {
+                const fallbackRes = await fetch(fallbackUrl);
+                if (fallbackRes.ok) await cache.put(fallbackUrl, fallbackRes);
+              } catch {}
+            }
+          }
         }
+
         setDownloadedCount(i + 1);
       }
     } catch {}
     setIsDownloading(false);
-  }, [surah, getAudioUrl, isDownloading]);
+  }, [surah, getAudioUrl, getFallbackAudioUrl, isDownloading]);
 
   // ─── Start recording ───
   const startRecording = useCallback(() => {
@@ -565,10 +607,13 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
           onRetry={retryAyah}
           onNext={nextAyah}
           onListenAyah={() => {
-            fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
-              .then(r => r.json())
-              .then(data => { if (data.data?.audio) safePlay(data.data.audio); })
-              .catch(() => {});
+            const primaryUrl = getAudioUrl(surah.number, currentAyah.number);
+            const fallbackUrl = getFallbackAudioUrl(surah.number, currentAyah.number);
+            safePlay(primaryUrl).then((started) => {
+              if (!started && primaryUrl !== fallbackUrl) {
+                safePlay(fallbackUrl);
+              }
+            });
           }}
           isLastAyah={currentAyahIdx + 1 >= totalAyahs}
           isChildMode={isChildMode}
