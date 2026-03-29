@@ -3,7 +3,7 @@ import useAntiDoubleAudio from "@/hooks/useAntiDoubleAudio";
 import { analyzeAyahTajwid } from "@/data/tajwidRules";
 import { motion } from "framer-motion";
 import {
-  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft, Server,
+  Mic, MicOff, RotateCcw, AlertCircle, Volume2, ArrowLeft, Server, Download, CheckCircle2,
 } from "lucide-react";
 import { type Surah } from "@/data/surahs";
 import { Switch } from "@/components/ui/switch";
@@ -62,6 +62,22 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
   const totalAyahs = surah.ayahs.length;
   const progress = Math.round((completedAyahs.size / totalAyahs) * 100);
 
+  // everyayah.com reciter mapping
+  const EVERYAYAH_RECITERS: Record<string, string> = {
+    "ar.husary": "Husary_128kbps",
+    "ar.alafasy": "Alafasy_128kbps",
+    "ar.minshawi": "Minshawy_Murattal_128kbps",
+    "ar.abdulbasitmurattal": "Abdul_Basit_Murattal_128kbps",
+    "ar.abdurrahmaansudais": "Abdurrahmaan_As-Sudais_192kbps",
+  };
+
+  const getAudioUrl = useCallback((surahNum: number, ayahNum: number) => {
+    const folder = EVERYAYAH_RECITERS[reciter.apiEdition] || "Alafasy_128kbps";
+    const s = String(surahNum).padStart(3, "0");
+    const a = String(ayahNum).padStart(3, "0");
+    return `https://everyayah.com/data/${folder}/${s}${a}.mp3`;
+  }, [reciter]);
+
   // Single-ayah arrays for live feedback
   const singleAyahTexts = useMemo(() => currentAyah ? [currentAyah.arabic] : [], [currentAyah]);
   const { liveWords, totalMatched } = useLiveWordFeedback(singleAyahTexts, liveTranscript);
@@ -81,43 +97,54 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
 
   // ─── Listen to current ayah ───
   const [isPreListening, setIsPreListening] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadedCount, setDownloadedCount] = useState(0);
 
   const playCurrentAyah = useCallback(() => {
     if (!currentAyah) return;
-    // Stop any existing audio
     if (preListenAudioRef.current) {
       preListenAudioRef.current.pause();
       preListenAudioRef.current = null;
     }
     setIsPreListening(true);
 
-    // iOS Safari: create & unlock Audio synchronously in user-gesture context
-    const audio = new Audio();
+    const url = getAudioUrl(surah.number, currentAyah.number);
+    const audio = new Audio(url);
     audio.preload = "auto";
     preListenAudioRef.current = audio;
 
-    const done = (success: boolean) => {
+    const done = () => {
       preListenAudioRef.current = null;
       setIsPreListening(false);
       setHasListened(true);
     };
 
-    audio.onended = () => done(true);
-    audio.onerror = () => done(false);
+    audio.onended = done;
+    audio.onerror = done;
+    audio.play().catch(done);
+  }, [surah.number, currentAyah, getAudioUrl]);
 
-    // Fetch the audio URL then assign it
-    fetch(`https://api.alquran.cloud/v1/ayah/${surah.number}:${currentAyah.number}/${reciter.apiEdition}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.data?.audio) {
-          audio.src = data.data.audio;
-          audio.play().catch(() => done(false));
-        } else {
-          done(false);
+  // ─── Download all surah audio for offline use ───
+  const downloadSurahAudio = useCallback(async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    setDownloadedCount(0);
+    try {
+      const cache = await caches.open("offline-audio-v2");
+      for (let i = 0; i < surah.ayahs.length; i++) {
+        const url = getAudioUrl(surah.number, surah.ayahs[i].number);
+        const existing = await cache.match(url);
+        if (!existing) {
+          try {
+            const res = await fetch(url);
+            if (res.ok) await cache.put(url, res);
+          } catch {}
         }
-      })
-      .catch(() => done(false));
-  }, [surah.number, currentAyah, reciter]);
+        setDownloadedCount(i + 1);
+      }
+    } catch {}
+    setIsDownloading(false);
+  }, [surah, getAudioUrl, isDownloading]);
 
   // ─── Start recording ───
   const startRecording = useCallback(() => {
@@ -301,8 +328,25 @@ export default function DictationMode({ surah, onBack, isChildMode, onRequestNex
         <span className="text-xs font-mono text-muted-foreground">{progress}%</span>
       </div>
 
-      {/* Reciter picker */}
-      {ayahPhase === "listen" && <ReciterPicker selected={reciter} onChange={setReciter} compact />}
+      {/* Reciter picker + Download */}
+      {ayahPhase === "listen" && (
+        <div className="flex items-center gap-2">
+          <div className="flex-1"><ReciterPicker selected={reciter} onChange={setReciter} compact /></div>
+          <button
+            onClick={downloadSurahAudio}
+            disabled={isDownloading}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-card border border-border text-xs font-medium"
+          >
+            {isDownloading ? (
+              <><Download size={14} className="animate-bounce text-primary" /> {downloadedCount}/{totalAyahs}</>
+            ) : downloadedCount >= totalAyahs && downloadedCount > 0 ? (
+              <><CheckCircle2 size={14} className="text-success" /> Hors-ligne</>
+            ) : (
+              <><Download size={14} className="text-primary" /> {t("offline.download") || "Télécharger"}</>
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Force server STT toggle */}
       {(ayahPhase === "listen" || ayahPhase === "recite") && (
