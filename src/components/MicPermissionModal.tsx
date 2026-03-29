@@ -135,11 +135,14 @@ export default function MicPermissionModal({ onGranted, onDismissed }: MicPermis
   }, [onDismissed]);
 
   const openBrowserSettings = useCallback(() => {
-    // Can't programmatically open browser settings, but give guidance
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isAndroid = /Android/.test(navigator.userAgent);
 
-    if (isIOS) {
+    if (isCapacitorNative() && isIOS) {
+      alert("Sur iOS : Réglages → Taaloum → Microphone → Activer.\nPuis relance l'application.");
+    } else if (isCapacitorNative() && isAndroid) {
+      alert("Sur Android : Réglages → Applications → Taaloum → Autorisations → Microphone → Autoriser.");
+    } else if (isIOS) {
       alert("Sur iOS : Réglages → Safari → Microphone → Autoriser pour ce site.");
     } else if (isAndroid) {
       alert("Sur Android : Appuie sur l'icône 🔒 dans la barre d'adresse → Autorisations → Microphone → Autoriser.");
