@@ -3,6 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, X, Settings, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
+/** Detect if running inside a Capacitor native shell */
+function isCapacitorNative(): boolean {
+  return !!(window as any).Capacitor?.isNativePlatform?.();
+}
+
 const MIC_GRANTED_KEY = "micGranted";
 
 /**
