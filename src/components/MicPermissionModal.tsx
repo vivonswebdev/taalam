@@ -52,22 +52,41 @@ export default function MicPermissionModal({ onGranted, onDismissed }: MicPermis
   const alreadyShownRef = useRef(false);
 
   useEffect(() => {
-    // Don't show if already granted or already shown this session
     if (isMicGranted() || alreadyShownRef.current) return;
 
-    // Check if permission API is available to determine state
+    // On Capacitor native, use the native speech recognition permission API
+    if (isCapacitorNative()) {
+      import("@capacitor-community/speech-recognition").then(({ SpeechRecognition }) => {
+        SpeechRecognition.checkPermissions().then((result) => {
+          if (result.speechRecognition === "granted") {
+            localStorage.setItem(MIC_GRANTED_KEY, "true");
+            return;
+          }
+          alreadyShownRef.current = true;
+          setVisible(true);
+          if (result.speechRecognition === "denied") setDenied(true);
+        }).catch(() => {
+          alreadyShownRef.current = true;
+          setVisible(true);
+        });
+      }).catch(() => {
+        alreadyShownRef.current = true;
+        setVisible(true);
+      });
+      return;
+    }
+
+    // Web fallback: use Permissions API
     if (navigator.permissions) {
       navigator.permissions.query({ name: "microphone" as PermissionName }).then(status => {
         if (status.state === "granted") {
           localStorage.setItem(MIC_GRANTED_KEY, "true");
           return;
         }
-        // Show modal for "prompt" or "denied" states
         alreadyShownRef.current = true;
         setVisible(true);
         if (status.state === "denied") setDenied(true);
       }).catch(() => {
-        // Permissions API not supported (iOS Safari), show modal
         alreadyShownRef.current = true;
         setVisible(true);
       });
@@ -81,14 +100,27 @@ export default function MicPermissionModal({ onGranted, onDismissed }: MicPermis
     setRequesting(true);
     setDenied(false);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Cache the stream so dictation components can reuse without re-prompt
-      cachedStream = stream;
-      localStorage.setItem(MIC_GRANTED_KEY, "true");
-      setVisible(false);
-      onGranted?.();
+      if (isCapacitorNative()) {
+        // Use Capacitor native permission request
+        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+        const result = await SpeechRecognition.requestPermissions();
+        if (result.speechRecognition === "granted") {
+          localStorage.setItem(MIC_GRANTED_KEY, "true");
+          setVisible(false);
+          onGranted?.();
+        } else {
+          setDenied(true);
+        }
+      } else {
+        // Web: use getUserMedia
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        cachedStream = stream;
+        localStorage.setItem(MIC_GRANTED_KEY, "true");
+        setVisible(false);
+        onGranted?.();
+      }
     } catch (err: any) {
-      console.warn("[MicPermission] getUserMedia denied:", err);
+      console.warn("[MicPermission] Permission denied:", err);
       if (err?.name === "NotAllowedError" || err?.name === "PermissionDeniedError") {
         setDenied(true);
       }
