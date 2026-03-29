@@ -666,21 +666,30 @@ export default function FullSurahDictation({ surah, onBack, isChildMode, onReque
           </button>
         </div>
 
-        {/* Big start button */}
+        {/* Big start button — only enabled after pre-listen */}
         <div className="pt-2 pb-4">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => { stopListening(); currentAyahIdx > 0 ? startRecording() : startDictation(); }}
-            className={`w-full flex items-center justify-center gap-3 ${
-              isChildMode ? "py-6 text-xl" : "py-5 text-lg"
-            } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
-          >
-            <Mic size={24} />
-            {t("dictation.startDictation" as any)} {hardMode && "🔥"}
-          </motion.button>
-          <p className="text-[11px] text-muted-foreground text-center mt-2">
-            {hardMode ? t("dictation.textHiddenHintHard" as any) : t("dictation.textHiddenHint" as any)}
-          </p>
+          {hasPreListened ? (
+            <>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
+                <span className="text-sm font-bold text-foreground">{t("dictation.step2Title" as any)}</span>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                onClick={() => { stopListening(); currentAyahIdx > 0 ? startRecording() : startDictation(); }}
+                className={`w-full flex items-center justify-center gap-3 ${
+                  isChildMode ? "py-6 text-xl" : "py-5 text-lg"
+                } rounded-2xl bg-primary text-primary-foreground font-bold shadow-xl shadow-primary/25`}
+              >
+                <Mic size={24} />
+                {t("dictation.startDictation" as any)} {hardMode && "🔥"}
+              </motion.button>
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-2">
+              🎧 {t("dictation.listenFirstHint" as any)}
+            </p>
+          )}
         </div>
       </motion.div>
     );
