@@ -4,15 +4,16 @@ const config: CapacitorConfig = {
   appId: 'app.taalam.eu',
   appName: 'Taalam',
   webDir: 'dist',
-  server: {
-    url: 'https://afbca4fe-3b15-45a0-9b71-9cc1d9ed9493.lovableproject.com?forceHideBadge=true',
-    cleartext: true,
-  },
+  // ✅ Version ajoutée pour App Store Connect
+  // Incrémenter versionCode à chaque build soumis
+  version: '1.0.0',
   ios: {
     minVersion: '16.0',
   },
   android: {
     minWebViewVersion: '80',
+    // versionCode Android (entier, incrémental)
+    versionCode: 1,
   },
   plugins: {
     SplashScreen: {
