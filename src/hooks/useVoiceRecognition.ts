@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
+import { normalizeArabic, similarityScore } from "@/lib/arabicMatch";
+import { startNativeSpeech, type NativeSpeechSession } from "@/lib/nativeSpeech";
 
 export interface WordResult {
   word: string;
@@ -19,7 +21,9 @@ const isNativePlatform = Capacitor.isNativePlatform();
 
 // ─── Constants for server fallback ──────────────────────────
 const MAX_RECORDING_DURATION_MS = 60_000;
-const TIMESLICE_MS = 1_000;
+// Each segment is a complete, standalone audio file (timeslice chunks after the
+// first one have no container header and can't be decoded by the STT backend)
+const SEGMENT_MS = 4_000;
 const MIN_CHUNK_SIZE = 1;
 const NATIVE_SILENCE_TIMEOUT_MS = 8_000; // Allow natural pauses between verses
 const MAX_NATIVE_RETRIES = 5; // More retries before forcing server fallback
@@ -43,6 +47,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const maxDurationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const segmentTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transcriptRef = useRef("");
   const chunkQueueRef = useRef<Blob[]>([]);
   const processingPromiseRef = useRef<Promise<void> | null>(null);
@@ -59,6 +64,8 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
 
   // ─── Capacitor native speech recognition refs ─────────────
   const capacitorListeningRef = useRef(false);
+  const capacitorSessionRef = useRef<NativeSpeechSession | null>(null);
+  const capacitorGenRef = useRef(0); // ignores callbacks from a previous session
 
   useEffect(() => { onResultRef.current = onResult; }, [onResult]);
   useEffect(() => { onEndRef.current = onEnd; }, [onEnd]);
@@ -86,11 +93,11 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
       try { recognitionRef.current?.abort(); } catch {}
       cleanupServer();
       // Cleanup Capacitor speech
+      capacitorGenRef.current++;
       if (capacitorListeningRef.current) {
-        import("@capacitor-community/speech-recognition").then(({ SpeechRecognition }) => {
-          SpeechRecognition.stop().catch(() => {});
-        }).catch(() => {});
         capacitorListeningRef.current = false;
+        void capacitorSessionRef.current?.stop();
+        capacitorSessionRef.current = null;
       }
     };
   }, []);
@@ -100,6 +107,10 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     if (maxDurationTimeoutRef.current) {
       clearTimeout(maxDurationTimeoutRef.current);
       maxDurationTimeoutRef.current = null;
+    }
+    if (segmentTimerRef.current) {
+      clearTimeout(segmentTimerRef.current);
+      segmentTimerRef.current = null;
     }
     try {
       if (mediaRecorderRef.current?.state === "recording") mediaRecorderRef.current.stop();
@@ -147,7 +158,7 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
           const res = await fetch(`${supabaseUrl}/functions/v1/stt-chunk`, {
             method: "POST",
             headers,
-            body: JSON.stringify({ audio: base64, lang: lang.split("-")[0] }),
+            body: JSON.stringify({ audio: base64, lang: lang.split("-")[0], mimeType: blob.type.split(";")[0] || "audio/webm" }),
           });
 
           if (res.status === 401 || res.status === 403) {
@@ -196,24 +207,36 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
         ? "audio/webm;codecs=opus"
         : MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm"
         : MediaRecorder.isTypeSupported("audio/mp4") ? "audio/mp4" : "";
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
-      mediaRecorderRef.current = recorder;
-      recorder.ondataavailable = (e) => {
-        if (e.data.size >= MIN_CHUNK_SIZE) {
-          chunkQueueRef.current.push(e.data);
-          void processQueue();
-        }
+      const startSegment = () => {
+        const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        mediaRecorderRef.current = recorder;
+        recorder.ondataavailable = (e) => {
+          if (e.data.size >= MIN_CHUNK_SIZE) {
+            chunkQueueRef.current.push(e.data);
+            void processQueue();
+          }
+        };
+        recorder.onstop = () => {
+          if (segmentTimerRef.current) { clearTimeout(segmentTimerRef.current); segmentTimerRef.current = null; }
+          // Segment rotation: keep recording with a fresh recorder on the same stream
+          if (isListeningRef.current && !serverStoppingRef.current && mediaStreamRef.current === stream) {
+            startSegment();
+            return;
+          }
+          void processQueue().finally(() => {
+            serverStoppingRef.current = false;
+            activeEngineRef.current = null;
+            cleanupServer();
+            setIsListening(false);
+            onEndRef.current?.();
+          });
+        };
+        recorder.start();
+        segmentTimerRef.current = setTimeout(() => {
+          if (recorder.state === "recording") recorder.stop();
+        }, SEGMENT_MS);
       };
-      recorder.onstop = () => {
-        void processQueue().finally(() => {
-          serverStoppingRef.current = false;
-          activeEngineRef.current = null;
-          cleanupServer();
-          setIsListening(false);
-          onEndRef.current?.();
-        });
-      };
-      recorder.start(TIMESLICE_MS);
+      startSegment();
       isListeningRef.current = true;
       setIsListening(true);
       maxDurationTimeoutRef.current = setTimeout(() => { if (isListeningRef.current) stop(); }, MAX_RECORDING_DURATION_MS);
@@ -238,10 +261,11 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
     }
 
     const recorder = mediaRecorderRef.current;
+    if (segmentTimerRef.current) {
+      clearTimeout(segmentTimerRef.current);
+      segmentTimerRef.current = null;
+    }
     if (recorder?.state === "recording") {
-      try {
-        recorder.requestData();
-      } catch {}
       try {
         recorder.stop();
       } catch {}
@@ -468,52 +492,60 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   // ─── Capacitor native speech recognition ──────────────────
   const startCapacitor = useCallback(async () => {
     console.info("[VoiceRecognition] Starting Capacitor SpeechRecognition");
-    try {
-      const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+    setTranscript("");
+    setPermissionDenied(false);
+    setMode("native");
+    isListeningRef.current = true;
+    capacitorListeningRef.current = true;
+    setIsListening(true);
+    const gen = ++capacitorGenRef.current;
 
-      const permResult = await SpeechRecognition.requestPermissions();
-      if (permResult.speechRecognition !== "granted") {
-        setPermissionDenied(true);
-        onErrorRef.current?.("not-allowed");
-        return;
-      }
+    const session = await startNativeSpeech({
+      lang,
+      continuous,
+      onTranscript: (text) => {
+        if (gen !== capacitorGenRef.current) return;
+        setTranscript(text);
+        onResultRef.current?.(text);
+      },
+      onEnd: () => {
+        if (gen !== capacitorGenRef.current) return;
+        capacitorSessionRef.current = null;
+        capacitorListeningRef.current = false;
+        isListeningRef.current = false;
+        setIsListening(false);
+        onEndRef.current?.();
+      },
+      onError: (code) => {
+        if (code === "not-allowed") setPermissionDenied(true);
+        onErrorRef.current?.(code);
+      },
+    });
 
-      setTranscript("");
-      setPermissionDenied(false);
-      isListeningRef.current = true;
-      capacitorListeningRef.current = true;
-      setIsListening(true);
-      setMode("native");
-
-      SpeechRecognition.addListener("partialResults", (data: any) => {
-        const partial = data?.matches?.[0] || data?.value || "";
-        if (partial) {
-          setTranscript(partial);
-          onResultRef.current?.(partial);
-        }
-      });
-
-      await SpeechRecognition.start({
-        language: lang,
-        partialResults: true,
-        popup: false,
-      });
-    } catch (e: any) {
-      console.error("[VoiceRecognition] Capacitor start error:", e);
+    if (gen !== capacitorGenRef.current) {
+      // stop() was requested or another session started while we were starting
+      void session?.stop();
+      return;
+    }
+    if (!session) {
       capacitorListeningRef.current = false;
       isListeningRef.current = false;
       setIsListening(false);
-      onErrorRef.current?.("capacitor-error");
+      return;
     }
-  }, [lang]);
+    capacitorSessionRef.current = session;
+  }, [lang, continuous]);
 
   const stopCapacitor = useCallback(async () => {
     console.info("[VoiceRecognition] Stopping Capacitor SpeechRecognition");
-    try {
-      const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
-      await SpeechRecognition.stop();
-      await SpeechRecognition.removeAllListeners();
-    } catch {}
+    const session = capacitorSessionRef.current;
+    if (session) {
+      // onEnd fires once the plugin has delivered its final transcription
+      await session.stop();
+      return;
+    }
+    // Still starting (permission prompt…): cancel it
+    capacitorGenRef.current++;
     capacitorListeningRef.current = false;
     isListeningRef.current = false;
     setIsListening(false);
@@ -569,30 +601,6 @@ export function useVoiceRecognition(options: UseVoiceRecognitionOptions = {}) {
   }, [stopCapacitor, stopNative, stopServer]);
 
   return { isListening, transcript, isSupported, permissionDenied, mode, start, stop };
-}
-
-// ─── Arabic text normalization & comparison ─────────────────
-function normalizeArabic(text: string): string {
-  return text
-    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7-\u06E8\u06EA-\u06ED\u0890-\u0891\u08D3-\u08FF]/g, "")
-    .replace(/[\u0622\u0623\u0625\u0671]/g, "\u0627")
-    .replace(/\u0629/g, "\u0647")
-    .replace(/\u0649/g, "\u064A")
-    .replace(/\u0640/g, "")
-    .replace(/[\u06D0-\u06D5\u06E5-\u06E6]/g, "")
-    .trim();
-}
-
-function similarityScore(a: string, b: string): number {
-  if (a === b) return 1;
-  const longer = a.length > b.length ? a : b;
-  const shorter = a.length > b.length ? b : a;
-  if (longer.length === 0) return 0;
-  let matches = 0;
-  for (let j = 0; j < shorter.length; j++) {
-    if (longer.includes(shorter[j])) matches++;
-  }
-  return matches / longer.length;
 }
 
 export function compareTexts(original: string, spoken: string): { results: WordResult[]; score: number } {
@@ -675,12 +683,15 @@ export function compareSurahDictation(
     spokenIdx++;
   }
 
-  let wordIdx = 0;
+  // Group by original word index ("extra" entries have none, so they can't shift ayah boundaries)
+  let ayahStart = 0;
   const ayahScores = originalAyahs.map((ayah, ayahIndex) => {
     const ayahWordCount = ayah.split(/\s+/).filter(Boolean).length;
-    const ayahResults = wordResults.slice(wordIdx, wordIdx + ayahWordCount).filter((r) => r.originalIndex !== undefined);
-    wordIdx += ayahWordCount;
-    const correct = ayahResults.filter((r) => r.status === "correct").length;
+    const ayahEnd = ayahStart + ayahWordCount;
+    const correct = wordResults.filter(
+      (r) => r.status === "correct" && r.originalIndex !== undefined && r.originalIndex >= ayahStart && r.originalIndex < ayahEnd,
+    ).length;
+    ayahStart = ayahEnd;
     const total = ayahWordCount;
     const score = total > 0 ? Math.round((correct / total) * 100) : 0;
     return { ayahIndex, score, correct: score >= 80 };

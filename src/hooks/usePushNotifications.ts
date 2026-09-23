@@ -14,74 +14,82 @@ export function usePushNotifications() {
   const { saveFcmToken } = useNotificationPreferences();
   const [pushState, setPushState] = useState<PushState>("default");
   const [loading, setLoading] = useState(false);
-  const navigateRef = useRef<ReturnType<typeof useNavigate> | null>(null);
-
-  // Safe navigate — only works inside Router context
-  try {
-    navigateRef.current = useNavigate();
-  } catch {
-    // Not inside Router — that's fine
-  }
+  const navigate = useNavigate();
+  // Refs so native listeners (registered once) always see the latest values
+  const navigateRef = useRef(navigate);
+  const userRef = useRef(user);
+  const saveFcmTokenRef = useRef(saveFcmToken);
+  useEffect(() => { navigateRef.current = navigate; }, [navigate]);
+  useEffect(() => { userRef.current = user; }, [user]);
+  useEffect(() => { saveFcmTokenRef.current = saveFcmToken; }, [saveFcmToken]);
 
   useEffect(() => {
     if (isNative) {
-      initNative();
-    } else {
-      // Web fallback
-      if (!("Notification" in window) || !("serviceWorker" in navigator)) {
-        setPushState("unsupported");
-        return;
-      }
-      setPushState(Notification.permission as PushState);
+      let cancelled = false;
+      const handles: { remove: () => Promise<void> }[] = [];
+      initNative(handles, () => cancelled);
+      return () => {
+        cancelled = true;
+        handles.forEach((h) => { h.remove().catch(() => {}); });
+      };
     }
+    // Web fallback
+    if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+      setPushState("unsupported");
+      return;
+    }
+    setPushState(Notification.permission as PushState);
   }, []);
 
   // ─── Native Capacitor Push ─────────────────────────────────
-  const initNative = useCallback(async () => {
+  async function initNative(handles: { remove: () => Promise<void> }[], isCancelled: () => boolean) {
     try {
       const { PushNotifications } = await import("@capacitor/push-notifications");
+
+      handles.push(
+        // Listen for registration success
+        await PushNotifications.addListener("registration", async (token) => {
+          console.log("[Push] Native token received");
+          if (userRef.current) {
+            await saveFcmTokenRef.current(token.value, `${Capacitor.getPlatform()}-native`);
+          }
+        }),
+        // Listen for registration error
+        await PushNotifications.addListener("registrationError", (err) => {
+          console.error("[Push] Registration error:", err);
+        }),
+        // Listen for push received (foreground)
+        await PushNotifications.addListener("pushNotificationReceived", (notification) => {
+          toast(notification.title || "📬 Notification", {
+            description: notification.body,
+          });
+        }),
+        // Listen for push action (tap)
+        await PushNotifications.addListener("pushNotificationActionPerformed", (action) => {
+          const data = action.notification.data;
+          if (data?.route) {
+            navigateRef.current(data.route);
+          }
+        }),
+      );
+      if (isCancelled()) {
+        handles.forEach((h) => { h.remove().catch(() => {}); });
+        return;
+      }
 
       const permResult = await PushNotifications.checkPermissions();
       if (permResult.receive === "granted") {
         setPushState("granted");
+        // Re-register on each launch: APNs tokens can change
+        await PushNotifications.register();
       } else if (permResult.receive === "denied") {
         setPushState("denied");
       }
-
-      // Listen for registration success
-      PushNotifications.addListener("registration", async (token) => {
-        console.log("[Push] Native token:", token.value);
-        if (user) {
-          await saveFcmToken(token.value, `${Capacitor.getPlatform()}-native`);
-        }
-      });
-
-      // Listen for registration error
-      PushNotifications.addListener("registrationError", (err) => {
-        console.error("[Push] Registration error:", err);
-      });
-
-      // Listen for push received (foreground)
-      PushNotifications.addListener("pushNotificationReceived", (notification) => {
-        console.log("[Push] Received in foreground:", notification);
-        toast(notification.title || "📬 Notification", {
-          description: notification.body,
-        });
-      });
-
-      // Listen for push action (tap)
-      PushNotifications.addListener("pushNotificationActionPerformed", (action) => {
-        console.log("[Push] Action performed:", action);
-        const data = action.notification.data;
-        if (data?.route && navigateRef.current) {
-          navigateRef.current(data.route);
-        }
-      });
     } catch (e) {
       console.error("[Push] Native init error:", e);
       setPushState("unsupported");
     }
-  }, [user, saveFcmToken]);
+  }
 
   // ─── Request Permission ────────────────────────────────────
   const requestPermission = useCallback(async () => {
