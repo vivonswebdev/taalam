@@ -1245,6 +1245,21 @@ export type Database = {
         }
         Relationships: []
       }
+      internal_secrets: {
+        Row: {
+          name: string
+          value: string
+        }
+        Insert: {
+          name: string
+          value: string
+        }
+        Update: {
+          name?: string
+          value?: string
+        }
+        Relationships: []
+      }
       listening_sessions: {
         Row: {
           created_at: string
@@ -1939,6 +1954,46 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_community_member_count: {
+        Args: { _community_id: string }
+        Returns: number
+      }
+      get_crush_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar_emoji: string
+          created_at: string
+          display_name: string
+          high_score: number
+          id: string
+          level: number
+          max_combo: number
+          total_cleared: number
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      get_kids_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          age: number
+          avatar_emoji: string
+          badges: Json
+          country_code: string
+          id: string
+          is_own: boolean
+          name: string
+          total_points: number
+        }[]
+      }
+      get_public_admin_settings: {
+        Args: never
+        Returns: {
+          hide_announcement: boolean
+          hide_daily_challenge: boolean
+          id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1956,6 +2011,10 @@ export type Database = {
       }
       is_classroom_teacher: {
         Args: { _classroom_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_community_member: {
+        Args: { _community_id: string; _user_id: string }
         Returns: boolean
       }
       is_family_member: {
