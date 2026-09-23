@@ -19,13 +19,43 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { audio_path, submission_id } = await req.json();
+    // Require a signed-in caller
+    const authHeader = req.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    const { data: callerData } = token ? await supabase.auth.getUser(token) : { data: { user: null } } as any;
+    const callerId: string | null = callerData?.user?.id ?? null;
+    if (!callerId) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    if (!audio_path || !submission_id) {
-      return new Response(JSON.stringify({ error: 'Missing audio_path or submission_id' }), {
+    const { submission_id } = await req.json();
+    if (!submission_id || typeof submission_id !== 'string') {
+      return new Response(JSON.stringify({ error: 'Missing submission_id' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Submission must belong to the caller (student) or to a class the caller teaches;
+    // audio path comes from the stored submission, never from the request.
+    const { data: submission } = await supabase
+      .from('task_submissions')
+      .select('id, student_id, class_id, audio_url')
+      .eq('id', submission_id)
+      .maybeSingle();
+    let allowed = !!submission && submission.student_id === callerId;
+    if (submission && !allowed) {
+      const { data: cls } = await supabase.from('classrooms').select('id')
+        .eq('id', submission.class_id).eq('teacher_id', callerId).maybeSingle();
+      allowed = !!cls;
+    }
+    if (!submission || !allowed || !submission.audio_url) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), {
+        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const audio_path = submission.audio_url as string;
 
     // Download audio from storage
     const { data: audioData, error: downloadError } = await supabase.storage

@@ -409,7 +409,7 @@ export default function FamilyDashboard() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-6" onClick={() => setShowJoin(false)}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} className="bg-card rounded-2xl p-6 w-full max-w-sm space-y-4" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-lg font-bold text-foreground">{t("family.joinTitle")}</h3>
-              <input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} placeholder={t("family.codePlaceholder")} maxLength={6} className="w-full bg-muted rounded-xl px-4 py-3 text-sm text-foreground font-mono text-center tracking-widest" autoFocus />
+              <input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} placeholder={t("family.codePlaceholder")} maxLength={12} className="w-full bg-muted rounded-xl px-4 py-3 text-sm text-foreground font-mono text-center tracking-widest" autoFocus />
               <div className="flex gap-3">
                 <button onClick={() => setShowJoin(false)} className="flex-1 bg-muted text-foreground rounded-xl py-2.5 text-sm font-semibold">{t("family.cancel")}</button>
                 <button onClick={handleJoin} className="flex-1 bg-primary text-primary-foreground rounded-xl py-2.5 text-sm font-bold">{t("family.join")}</button>

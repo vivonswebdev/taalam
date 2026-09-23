@@ -99,28 +99,17 @@ export default function KidsLeaderboardPage() {
   // Fetch all children profiles for leaderboard
   const fetchEntries = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("children_profiles")
-      .select("id, name, avatar_emoji, country_code, age, total_points, parent_id")
-      .order("total_points", { ascending: false })
-      .limit(200);
-    const profiles = (data as LeaderboardEntry[]) || [];
-
-    // Fetch badges
-    const childIds = profiles.map(p => p.id);
-    if (childIds.length > 0) {
-      const { data: badges } = await supabase
-        .from("child_achievements" as any)
-        .select("child_id, icon, rarity")
-        .in("child_id", childIds);
-      const badgeMap = new Map<string, { icon: string; rarity: string }[]>();
-      ((badges as any[]) || []).forEach((b: any) => {
-        const arr = badgeMap.get(b.child_id) || [];
-        arr.push({ icon: b.icon, rarity: b.rarity });
-        badgeMap.set(b.child_id, arr);
-      });
-      profiles.forEach(p => { p.badges = badgeMap.get(p.id) || []; });
-    }
+    const { data } = await supabase.rpc("get_kids_leaderboard" as any, { _limit: 200 });
+    const profiles: LeaderboardEntry[] = ((data as any[]) || []).map((r: any) => ({
+      id: r.id,
+      name: r.name,
+      avatar_emoji: r.avatar_emoji,
+      country_code: r.country_code,
+      age: r.age,
+      total_points: r.total_points,
+      parent_id: r.is_own && user ? user.id : "",
+      badges: r.badges || [],
+    })) as LeaderboardEntry[];
 
     // Merge real + seed (real first, deduplicate by id)
     const realIds = new Set(profiles.map(p => p.id));

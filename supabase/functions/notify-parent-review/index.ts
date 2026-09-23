@@ -31,7 +31,7 @@ serve(async (req) => {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!class_id || !["approved", "rejected", "needs_revision"].includes(String(status))) {
+    if (!class_id || typeof status !== "string" || status.length > 30) {
       return new Response(JSON.stringify({ error: "Invalid request" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
