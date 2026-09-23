@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Capacitor } from "@capacitor/core";
+import { normalizeArabic, similarityScore } from "@/lib/arabicMatch";
+import { startNativeSpeech, type NativeSpeechSession } from "@/lib/nativeSpeech";
 
 export type TarteelWordStatus = "correct" | "almost" | "wrong" | "pending";
 
@@ -11,27 +13,6 @@ export interface TarteelWordResult {
 interface UseTarteelAyahOptions {
   ayahs: string[];
   lang?: string;
-}
-
-function normalizeArabic(text: string): string {
-  return text
-    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7-\u06E8\u06EA-\u06ED\u0890-\u0891\u08D3-\u08FF]/g, "")
-    .replace(/[\u0622\u0623\u0625\u0671]/g, "\u0627")
-    .replace(/\u0629/g, "\u0647")
-    .replace(/\u0649/g, "\u064A")
-    .replace(/\u0640/g, "")
-    .replace(/[\u06D0-\u06D5\u06E5-\u06E6]/g, "")
-    .trim();
-}
-
-function similarityScore(a: string, b: string): number {
-  if (a === b) return 1;
-  if (!a || !b) return 0;
-  let matches = 0;
-  for (let i = 0; i < Math.min(a.length, b.length); i++) {
-    if (a[i] === b[i]) matches++;
-  }
-  return matches / Math.max(a.length, b.length);
 }
 
 function buildWordResults(originalAyah: string, spoken: string): TarteelWordResult[] {
@@ -70,6 +51,8 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const shouldKeepListeningRef = useRef(false);
   const activeAyahRef = useRef(0);
+  const nativeSessionRef = useRef<NativeSpeechSession | null>(null);
+  const nativeGenRef = useRef(0);
 
   const currentAyahText = useMemo(() => ayahs[currentAyahIndex] || "", [ayahs, currentAyahIndex]);
 
@@ -98,11 +81,15 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
 
   useEffect(() => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    setIsSupported(Boolean(SR));
+    // In the iOS/Android app, recognition goes through the Capacitor plugin
+    setIsSupported(Capacitor.isNativePlatform() || Boolean(SR));
 
     return () => {
       shouldKeepListeningRef.current = false;
       cleanupRecognition();
+      nativeGenRef.current++;
+      void nativeSessionRef.current?.stop();
+      nativeSessionRef.current = null;
     };
   }, [cleanupRecognition]);
 
@@ -112,15 +99,10 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
     cleanupRecognition();
 
     // Also stop native speech if running
-    if (Capacitor.isNativePlatform()) {
-      try {
-        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
-        await SpeechRecognition.stop();
-        await SpeechRecognition.removeAllListeners();
-      } catch {
-        // no-op
-      }
-    }
+    nativeGenRef.current++;
+    const session = nativeSessionRef.current;
+    nativeSessionRef.current = null;
+    await session?.stop();
   }, [cleanupRecognition]);
 
   const resetAyah = useCallback(() => {
@@ -156,40 +138,35 @@ export function useTarteelAyah({ ayahs, lang = "ar-SA" }: UseTarteelAyahOptions)
 
     // ─── Native Capacitor path ────────────────────────────
     if (Capacitor.isNativePlatform()) {
-      try {
-        const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
-
-        // Check & request permission first
-        const permStatus = await SpeechRecognition.checkPermissions();
-        if (permStatus.speechRecognition !== "granted") {
-          const req = await SpeechRecognition.requestPermissions();
-          if (req.speechRecognition !== "granted") {
-            setRecognitionError("not-allowed");
-            setIsListening(false);
-            return;
-          }
-        }
-
-        // Listen for partial results
-        await SpeechRecognition.addListener("partialResults", (data) => {
-          const text = data.matches?.[0] || "";
-          console.log("[Tarteel] native partial:", text);
+      const gen = ++nativeGenRef.current;
+      const session = await startNativeSpeech({
+        lang,
+        continuous: true,
+        onTranscript: (text) => {
+          if (gen !== nativeGenRef.current) return;
           setTranscript(text);
           setWordResults(buildWordResults(currentAyahText, text));
           setRecognitionError(null);
-        });
-
-        await SpeechRecognition.start({
-          language: lang,
-          popup: false,
-          partialResults: true,
-          maxResults: 1,
-        });
+        },
+        onEnd: () => {
+          if (gen !== nativeGenRef.current) return;
+          nativeSessionRef.current = null;
+          shouldKeepListeningRef.current = false;
+          setIsListening(false);
+        },
+        onError: (code) => setRecognitionError(code),
+      });
+      if (gen !== nativeGenRef.current) {
+        void session?.stop();
         return;
-      } catch (e) {
-        console.warn("[Tarteel] Native speech failed, falling back to Web API:", e);
-        // Fall through to Web API
       }
+      if (!session) {
+        setIsListening(false);
+        shouldKeepListeningRef.current = false;
+        return;
+      }
+      nativeSessionRef.current = session;
+      return;
     }
 
     // ─── Web Speech API path ──────────────────────────────

@@ -61,7 +61,7 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const { audio, lang = "ar" } = await req.json();
+    const { audio, lang = "ar", mimeType = "audio/webm" } = await req.json();
 
     // Input validation
     if (!audio || typeof audio !== 'string') {
@@ -78,6 +78,8 @@ serve(async (req) => {
     }
 
     const safeLang = ALLOWED_LANGS.includes(lang) ? lang : 'ar';
+    // Safari/iOS record audio/mp4, Chrome/Firefox audio/webm or audio/ogg
+    const safeMime = ['audio/webm', 'audio/mp4', 'audio/ogg', 'audio/wav', 'audio/mpeg'].includes(mimeType) ? mimeType : 'audio/webm';
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -98,7 +100,7 @@ serve(async (req) => {
               {
                 type: 'image_url',
                 image_url: {
-                  url: `data:audio/webm;base64,${audio}`,
+                  url: `data:${safeMime};base64,${audio}`,
                 },
               },
             ],
