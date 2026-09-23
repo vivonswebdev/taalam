@@ -77,12 +77,13 @@ export default function KidsSheytanGame() {
     setSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setSaving(false); return; }
       await supabase.from("sheytan_game_scores" as any).insert({
         player_name: playerName.trim().slice(0, 16),
         score: gameState.score,
         level: gameState.level + 1,
         verses_collected: gameState.collectedVerses,
-        user_id: user?.id || null,
+        user_id: user.id,
       } as any);
       setSaved(true);
     } catch { /* ignore */ }

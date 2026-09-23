@@ -18,14 +18,10 @@ export function useAdminSettings() {
   const [loading, setLoading] = useState(true);
 
   const fetch = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("admin_settings" as any)
-      .select("id, hide_announcement, hide_daily_challenge")
-      .limit(1)
-      .single();
-
-    if (!error && data) {
-      setSettings(data as any);
+    const { data, error } = await supabase.rpc("get_public_admin_settings" as any);
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!error && row) {
+      setSettings(row as any);
     }
     setLoading(false);
   }, []);

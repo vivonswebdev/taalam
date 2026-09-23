@@ -17,7 +17,32 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    const { student_id, status, assignment_title, teacher_note, class_id } = await req.json();
+    const { student_id, status, assignment_title: rawTitle, teacher_note: rawNote, class_id } = await req.json();
+    const assignment_title = typeof rawTitle === "string" ? rawTitle.slice(0, 120) : "";
+    const teacher_note = typeof rawNote === "string" ? rawNote.slice(0, 300) : "";
+
+    // Require a signed-in teacher of this class
+    const authHeader = req.headers.get("Authorization");
+    const callerToken = authHeader?.replace("Bearer ", "");
+    const { data: callerData } = callerToken ? await supabase.auth.getUser(callerToken) : { data: { user: null } } as any;
+    const callerId: string | null = callerData?.user?.id ?? null;
+    if (!callerId) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (!class_id || typeof status !== "string" || status.length > 30) {
+      return new Response(JSON.stringify({ error: "Invalid request" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: cls } = await supabase.from("classrooms").select("id").eq("id", class_id).eq("teacher_id", callerId).maybeSingle();
+    const { data: studentMember } = await supabase.from("classroom_members").select("id").eq("classroom_id", class_id).eq("user_id", student_id).maybeSingle();
+    if (!cls || !studentMember) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (!student_id || !status) {
       return new Response(JSON.stringify({ error: "Missing student_id or status" }), {
@@ -76,13 +101,7 @@ serve(async (req) => {
       // 1. In-app message via teacher_parent_messages
       if (class_id) {
         // Get teacher_id (the one who reviewed)
-        const authHeader = req.headers.get("Authorization");
-        const token = authHeader?.replace("Bearer ", "");
-        let teacherId: string | null = null;
-        if (token) {
-          const { data: { user: caller } } = await supabase.auth.getUser(token);
-          teacherId = caller?.id || null;
-        }
+        const teacherId: string | null = callerId;
 
         if (teacherId) {
           await supabase.from("teacher_parent_messages").insert({

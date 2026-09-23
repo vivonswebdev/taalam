@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
 };
 
 serve(async (req) => {
@@ -11,17 +11,19 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Authenticate: only allow calls with the service role key or a dedicated cron secret
-  const authHeader = req.headers.get("Authorization");
+  // Authenticate: only the scheduled job (private cron secret) or the service role may call this
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-
-  // Accept either service_role key or anon key (used by pg_net cron)
-  const expectedTokens = [serviceRoleKey, anonKey].filter(Boolean);
-  const token = authHeader?.replace("Bearer ", "");
-
-  if (!token || !expectedTokens.includes(token)) {
+  const adminClient = createClient(supabaseUrl, serviceRoleKey);
+  const bearer = req.headers.get("Authorization")?.replace("Bearer ", "");
+  const cronHeader = req.headers.get("x-cron-secret");
+  let authorized = !!bearer && bearer === serviceRoleKey;
+  if (!authorized && cronHeader) {
+    const { data: secretRow } = await adminClient
+      .from("internal_secrets").select("value").eq("name", "cron_secret").maybeSingle();
+    authorized = !!secretRow?.value && secretRow.value === cronHeader;
+  }
+  if (!authorized) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

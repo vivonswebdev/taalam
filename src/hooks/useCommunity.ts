@@ -69,7 +69,7 @@ export function useCommunityList(filters?: { search?: string; category?: string;
     // Get member counts and user membership status
     const enriched: Community[] = [];
     for (const c of data || []) {
-      const { count } = await supabase.from("community_members").select("*", { count: "exact", head: true }).eq("community_id", c.id);
+      const { data: count } = await supabase.rpc("get_community_member_count" as any, { _community_id: c.id });
 
       let user_role: string | null = null;
       let request_status: string | null = null;

@@ -21,11 +21,7 @@ export function useCrushLeaderboard() {
 
   const fetchLeaderboard = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("crush_scores")
-      .select("*")
-      .order("high_score", { ascending: false })
-      .limit(50);
+    const { data, error } = await supabase.rpc("get_crush_leaderboard" as any, { _limit: 50 }) as { data: any[] | null; error: any };
 
     if (!error && data) {
       setLeaderboard(data as CrushLeaderboardEntry[]);
