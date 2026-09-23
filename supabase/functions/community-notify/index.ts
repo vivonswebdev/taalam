@@ -49,9 +49,30 @@ serve(async (req) => {
   const admin = createClient(supabaseUrl, serviceRoleKey);
 
   try {
-    const { type, community_id, community_name, author_name, message_preview } = await req.json();
+    const { type, community_id, message_preview } = await req.json();
+    if (typeof community_id !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid request" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // Community name comes from the database, not the caller
+    const { data: community } = await admin.from("communities").select("name").eq("id", community_id).maybeSingle();
+    if (!community) {
+      return new Response(JSON.stringify({ error: "Not found" }), {
+        status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const community_name = community.name;
 
     if (type === "join_request") {
+      // Caller must have a pending join request for this community
+      const { data: reqRow } = await admin.from("community_join_requests")
+        .select("id").eq("community_id", community_id).eq("user_id", userId).eq("status", "pending").maybeSingle();
+      if (!reqRow) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       // Notify all admins of the community
       const { data: admins } = await admin
         .from("community_members")
@@ -78,6 +99,16 @@ serve(async (req) => {
     }
 
     if (type === "new_message") {
+      // Caller must be a member of the community; author name comes from their profile
+      const { data: membership } = await admin.from("community_members")
+        .select("id").eq("community_id", community_id).eq("user_id", userId).maybeSingle();
+      if (!membership) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const { data: authorProfile } = await admin.from("profiles").select("display_name").eq("user_id", userId).maybeSingle();
+      const author_name = authorProfile?.display_name || "";
       // Notify all members except the author
       const { data: members } = await admin
         .from("community_members")
