@@ -3,7 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { FEATURES } from "./config/features";
 import { HelmetProvider } from "react-helmet-async";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { ActiveChildProvider } from "@/hooks/useActiveChild";
@@ -198,7 +199,7 @@ const App = () => (
                   <Route path="/quran" element={<Quran />} />
                   <Route path="/tarteel" element={<TarteelSelector />} />
                   <Route path="/tarteel/easy" element={<TarteelEasyPage />} />
-                  <Route path="/tarteel/offline" element={<TarteelOfflinePage />} />
+                  <Route path="/tarteel/offline" element={FEATURES.tarteelOffline ? <TarteelOfflinePage /> : <Navigate to="/tarteel" replace />} />
                   <Route path="/recitation" element={<Quran />} />
                   <Route path="/reading" element={<Reading />} />
                   <Route path="/prayers" element={<Prayers />} />

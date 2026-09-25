@@ -3,6 +3,8 @@
 
 export function normalizeArabic(text: string): string {
   return text
+    // Invisible direction marks: iOS prefixes transcripts with U+200F
+    .replace(/[\u200B-\u200F\u061C\u202A-\u202E\u2066-\u2069\uFEFF]/g, "")
     .replace(/[ؐ-ًؚ-ٰٟۖ-ۜ۟-ۤۧ-۪ۨ-ۭ࢐-࢑࣓-ࣿ]/g, "")
     .replace(/[آأإٱ]/g, "ا")
     .replace(/ة/g, "ه")
@@ -37,4 +39,13 @@ export function similarityScore(a: string, b: string): number {
   const maxLen = Math.max(a.length, b.length);
   if (maxLen === 0) return 0;
   return 1 - levenshtein(a, b) / maxLen;
+}
+
+const BASMALA = ["بسم", "الله", "الرحمن", "الرحيم"];
+
+/** Most reciters start with the basmala, which is not an ayah (except in Al-Fatiha). */
+export function stripLeadingBasmala(transcript: string): string {
+  const words = normalizeArabic(transcript).split(/\s+/).filter(Boolean);
+  const head = words.slice(0, 4);
+  return BASMALA.every((w, i) => head[i] === w) ? words.slice(4).join(" ") : transcript;
 }
