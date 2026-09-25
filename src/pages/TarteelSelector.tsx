@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Zap, Target, ArrowLeft, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
+import { FEATURES } from "@/config/features";
 
 export default function TarteelSelector() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function TarteelSelector() {
       onClick: () => navigate("/tarteel/offline"),
       badge: "Beta",
     },
-  ];
+  ].filter((mode) => mode.id !== "offline" || FEATURES.tarteelOffline);
 
   return (
     <div className="min-h-screen bg-background pb-24">

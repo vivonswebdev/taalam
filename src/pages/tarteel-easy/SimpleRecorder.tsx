@@ -4,7 +4,10 @@ import { toast } from "sonner";
 import { useXP } from "@/hooks/useXP";
 import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { getSurahText, normalizeArabic, splitArabicText } from "@/utils/arabicUtils";
+import { useVoiceRecognition, compareSurahDictation } from "@/hooks/useVoiceRecognition";
+import { getSurahText } from "@/utils/arabicUtils";
+import { getSurahAyahs } from "@/hooks/useMushafPageData";
+import { stripLeadingBasmala } from "@/lib/arabicMatch";
 import MicPermissionHelp from "./MicPermissionHelp";
 import type { VerifiedVerse } from "./LiveTranscriptionPanel";
 
@@ -24,245 +27,125 @@ interface SimpleRecorderProps {
   onRecordingStop?: () => void;
 }
 
-export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript, onVerseVerified, onRecordingStart, onRecordingStop }: SimpleRecorderProps) {
+const MAX_RECORDING_S = 120;
+// Web Speech API doesn't fire onEnd after an explicit stop: don't wait forever
+const FINAL_TRANSCRIPT_WAIT_MS = 1500;
+export default function SimpleRecorder({ surahNumber, onScore, onLiveTranscript, onRecordingStart, onRecordingStop }: SimpleRecorderProps) {
   const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [audioLevel, setAudioLevel] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  // Visual only: the mic is owned by the speech engine (native on iOS), so no analyser node
+  const audioLevel = isRecording ? 0.35 : 0;
 
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const animationFrameRef = useRef<number>();
   const timerRef = useRef<ReturnType<typeof setInterval>>();
-  const chunksRef = useRef<BlobPart[]>([]);
-  const speechRecRef = useRef<SpeechRecognition | null>(null);
-  const keepListeningRef = useRef(false);
+  const finalizeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const transcriptRef = useRef("");
+  const awaitingResultRef = useRef(false);
+  const engineStartedRef = useRef(false);
   const { addXP } = useXP();
 
-  const getSupportedMimeType = () => {
-    const types = [
-      "audio/webm;codecs=opus",
-      "audio/webm",
-      "audio/ogg;codecs=opus",
-      "audio/mp4",
-      "audio/aac",
-      "",
-    ];
-    for (const type of types) {
-      if (type === "" || MediaRecorder.isTypeSupported(type)) return type;
+  // Score the real transcript against the selected surah
+  const analyze = useCallback(async () => {
+    if (!awaitingResultRef.current) return;
+    awaitingResultRef.current = false;
+    if (finalizeTimerRef.current) clearTimeout(finalizeTimerRef.current);
+
+    const detected = transcriptRef.current.trim();
+    if (!detected) {
+      toast.error(t("tarteel.emptyRecording" as any));
+      setIsAnalyzing(false);
+      return;
     }
-    return "";
-  };
 
-  const updateAudioLevel = useCallback(() => {
-    if (!analyserRef.current) return;
-    const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
-    analyserRef.current.getByteFrequencyData(dataArray);
-    const average = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-    setAudioLevel(average / 255);
-    animationFrameRef.current = requestAnimationFrame(updateAudioLevel);
-  }, []);
-
-  const startRecording = async () => {
+    let ayahs: string[] = [];
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-      });
-
-      const audioContext = new AudioContext();
-      const source = audioContext.createMediaStreamSource(stream);
-      const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 256;
-      source.connect(analyser);
-      audioContextRef.current = audioContext;
-      analyserRef.current = analyser;
-      updateAudioLevel();
-
-      const mimeType = getSupportedMimeType();
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: mimeType || undefined,
-        audioBitsPerSecond: 128000,
-      });
-
-      chunksRef.current = [];
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunksRef.current, { type: mimeType || "audio/webm" });
-        stream.getTracks().forEach((track) => track.stop());
-        audioContext.close().catch(() => {});
-
-        if (blob.size === 0) {
-          toast.error(t("tarteel.emptyRecording" as any));
-          setIsAnalyzing(false);
-          return;
-        }
-        await analyzeAudio(blob);
-      };
-
-      mediaRecorder.start();
-      mediaRecorderRef.current = mediaRecorder;
-      setIsRecording(true);
-      setRecordingTime(0);
-      onRecordingStart?.();
-
-      // Start native SpeechRecognition for live transcription
-      startLiveSpeechRecognition();
-
-      timerRef.current = setInterval(() => {
-        setRecordingTime((prev) => {
-          if (prev >= 120) {
-            stopRecording();
-            return 120;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-
-      toast.success(t("tarteel.recordingStarted" as any));
-    } catch (err) {
-      console.error("Mic error:", err);
-      toast.error(t("tarteel.micError" as any));
-      setShowHelp(true);
+      ayahs = await getSurahAyahs(surahNumber);
+    } catch (e) {
+      console.warn("[TarteelEasy] mushaf text unavailable:", e);
     }
-  };
-
-  const startLiveSpeechRecognition = useCallback(() => {
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) return;
-
-    const rec: SpeechRecognition = new SR();
-    rec.lang = "ar-SA";
-    rec.continuous = true;
-    rec.interimResults = true;
-    rec.maxAlternatives = 1;
-    keepListeningRef.current = true;
-
-    const expectedText = getSurahText(surahNumber);
-    const expectedWords = splitArabicText(expectedText);
-
-    rec.onresult = (event: SpeechRecognitionEvent) => {
-      let interim = "";
-      let finalText = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        if (result.isFinal) {
-          finalText += result[0].transcript + " ";
-        } else {
-          interim += result[0].transcript;
-        }
-      }
-
-      if (interim) {
-        onLiveTranscript?.(interim.trim());
-      }
-
-      if (finalText.trim()) {
-        onLiveTranscript?.("");
-        // Check similarity with expected words
-        const spokenWords = splitArabicText(finalText.trim());
-        const matchCount = spokenWords.filter((w, i) => {
-          const exp = expectedWords[i] || "";
-          return normalizeArabic(w) === normalizeArabic(exp);
-        }).length;
-        const similarity = spokenWords.length > 0 ? matchCount / Math.max(spokenWords.length, 1) : 0;
-        onVerseVerified?.({ text: finalText.trim(), correct: similarity >= 0.6 });
-      }
-    };
-
-    rec.onerror = (event: any) => {
-      const err = event?.error || "unknown";
-      if (err === "no-speech" || err === "audio-capture") {
-        // Auto-restart on silence
-        if (keepListeningRef.current) {
-          setTimeout(() => {
-            try { rec.start(); } catch {}
-          }, 300);
-        }
-        return;
-      }
-      console.log("[LiveSTT] error:", err);
-    };
-
-    rec.onend = () => {
-      if (keepListeningRef.current) {
-        try { rec.start(); } catch {}
-      }
-    };
-
-    try {
-      rec.start();
-      speechRecRef.current = rec;
-    } catch {}
-  }, [surahNumber, onLiveTranscript, onVerseVerified]);
-
-  const stopRecording = () => {
-    // Stop speech recognition
-    keepListeningRef.current = false;
-    if (speechRecRef.current) {
-      try { speechRecRef.current.stop(); } catch {}
-      speechRecRef.current = null;
-    }
-
-    if (mediaRecorderRef.current?.state === "recording") {
-      mediaRecorderRef.current.stop();
-    }
-    setIsRecording(false);
-    setIsAnalyzing(true);
-    onRecordingStop?.();
-    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    if (timerRef.current) clearInterval(timerRef.current);
-  };
-
-  const analyzeAudio = async (_blob: Blob) => {
-    // TODO: replace with real API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Utiliser la sourate sélectionnée (pas hardcodé)
-    const mockExpected = getSurahText(surahNumber);
-    const allWords = splitArabicText(mockExpected);
-    const detectedWordCount = Math.floor(allWords.length * (0.6 + Math.random() * 0.2));
-    const mockDetected = allWords.slice(0, detectedWordCount).join(" ");
-
-    const expectedWords = splitArabicText(mockExpected);
-    const detectedWords = splitArabicText(mockDetected);
-
-    const matches = expectedWords.map((word, i) => ({
-      word,
-      correct: i < detectedWords.length
-        ? normalizeArabic(word) === normalizeArabic(detectedWords[i])
-        : false,
-    }));
-
-    const correctCount = matches.filter((m) => m.correct).length;
-    const score = Math.round((correctCount / expectedWords.length) * 100);
-
-    const mockTranscription: TranscriptionData = {
-      detected: mockDetected,
-      expected: mockExpected,
-      score,
-      matches,
-    };
+    if (ayahs.length === 0) ayahs = [getSurahText(surahNumber)];
+    const expected = ayahs.join(" ");
+    const spoken = surahNumber === 1 ? detected : stripLeadingBasmala(detected);
+    const { wordResults, totalScore } = compareSurahDictation(ayahs, spoken);
+    const matches = wordResults
+      .filter((r) => r.originalIndex !== undefined)
+      .map((r) => ({ word: r.word, correct: r.status === "correct" }));
 
     addXP(10);
     setIsAnalyzing(false);
-    onScore(score, mockTranscription);
+    onScore(totalScore, { detected, expected, score: totalScore, matches });
+  }, [surahNumber, addXP, onScore, t]);
+
+  const voice = useVoiceRecognition({
+    lang: "ar-SA",
+    continuous: true,
+    onResult: (text) => {
+      transcriptRef.current = text;
+      onLiveTranscript?.(text);
+    },
+    onEnd: () => { void analyze(); },
+    onError: (code) => {
+      if (code === "not-allowed" || code === "mic-error" || code === "capacitor-error") {
+        toast.error(t("tarteel.micError" as any));
+        setShowHelp(true);
+      }
+    },
+  });
+
+  // The engine stopped by itself without us asking (permission refused, iOS error…)
+  useEffect(() => {
+    if (voice.isListening) {
+      engineStartedRef.current = true;
+      return;
+    }
+    if (isRecording && engineStartedRef.current && !awaitingResultRef.current) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      setIsRecording(false);
+      onRecordingStop?.();
+      if (transcriptRef.current.trim()) {
+        awaitingResultRef.current = true;
+        setIsAnalyzing(true);
+        void analyze();
+      }
+    }
+  }, [voice.isListening, isRecording, analyze, onRecordingStop]);
+
+  const startRecording = () => {
+    transcriptRef.current = "";
+    awaitingResultRef.current = false;
+    engineStartedRef.current = false;
+    voice.start();
+    setIsRecording(true);
+    setRecordingTime(0);
+    onRecordingStart?.();
+
+    timerRef.current = setInterval(() => {
+      setRecordingTime((prev) => prev + 1);
+    }, 1000);
+
+    toast.success(t("tarteel.recordingStarted" as any));
   };
+
+  const stopRecording = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    awaitingResultRef.current = true;
+    setIsRecording(false);
+    setIsAnalyzing(true);
+    onRecordingStop?.();
+    voice.stop();
+    finalizeTimerRef.current = setTimeout(() => { void analyze(); }, FINAL_TRANSCRIPT_WAIT_MS);
+  }, [voice, analyze, onRecordingStop]);
+
+  useEffect(() => {
+    if (isRecording && recordingTime >= MAX_RECORDING_S) stopRecording();
+  }, [isRecording, recordingTime, stopRecording]);
 
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (timerRef.current) clearInterval(timerRef.current);
-      keepListeningRef.current = false;
-      if (speechRecRef.current) {
-        try { speechRecRef.current.stop(); } catch {}
-        speechRecRef.current = null;
-      }
+      if (finalizeTimerRef.current) clearTimeout(finalizeTimerRef.current);
     };
   }, []);
 

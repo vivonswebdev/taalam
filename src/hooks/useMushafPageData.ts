@@ -54,6 +54,27 @@ async function loadMushafJson(): Promise<MushafPageRaw[]> {
   return loadingPromise;
 }
 
+/** All ayahs of a surah, in order, from the bundled mushaf text. */
+export async function getSurahAyahs(surahNumber: number): Promise<string[]> {
+  const pages = await loadMushafJson();
+  const ayahs: { n: number; text: string }[] = [];
+  for (const raw of pages) {
+    if (!raw) continue;
+    for (const [key, value] of Object.entries(raw)) {
+      if (key === "juzNumber") continue;
+      const chapter = value as MushafChapter;
+      if (Number(chapter.chapterNumber) !== surahNumber) continue;
+      for (const verse of chapter.text) ayahs.push({ n: Number(verse.verseNumber), text: verse.text.trim() });
+    }
+  }
+  // A surah spanning two pages appears twice: dedupe by verse number
+  const seen = new Set<number>();
+  return ayahs
+    .sort((a, b) => a.n - b.n)
+    .filter((a) => (seen.has(a.n) ? false : (seen.add(a.n), true)))
+    .map((a) => a.text);
+}
+
 function parsePage(raw: MushafPageRaw, pageNum: number): MushafPageData {
   const ayahs: MushafPageAyah[] = [];
   const surahsSet = new Map<number, { nameAr: string; nameEn: string }>();
