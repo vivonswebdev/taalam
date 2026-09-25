@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ISLAMIC_STORIES, type IslamicStory } from "@/data/islamicStories";
 import { generateTTS } from "@/services/elevenLabsTTS";
+import { AuthRequiredError } from "@/lib/edgeFunctionAuth";
+import { toast } from "sonner";
 
 /* ────── Voice config ────── */
 const VOICE_CONFIG = {
@@ -123,11 +125,12 @@ function StoryPlayer({ story, onClose }: { story: IslamicStory; onClose: () => v
       await audio.play();
     } catch (err) {
       console.error("TTS playback error:", err);
+      if (err instanceof AuthRequiredError) toast.error(t("stories.loginRequired"));
       setIsLoading(false);
       setIsPlaying(false);
       playingRef.current = false;
     }
-  }, [getAudioUrl, story.dialogue.length]);
+  }, [getAudioUrl, story.dialogue.length, t]);
 
   const handlePlay = () => {
     playingRef.current = true;

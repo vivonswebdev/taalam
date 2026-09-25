@@ -516,6 +516,8 @@ const translations = {
   "tahaddi.hintUsed": { fr: "indice utilisé", en: "hint used", nl: "hint gebruikt", ar: "تم استخدام التلميح", tr: "ipucu kullanıldı", ur: "اشارہ استعمال ہوا" },
 
   // Find Ayah (voice search)
+  "stories.loginRequired": { fr: "Demande à un parent de se connecter pour écouter l'histoire", en: "Ask a parent to log in to listen to the story", nl: "Vraag een ouder om in te loggen om het verhaal te beluisteren", ar: "اطلب من أحد والديك تسجيل الدخول للاستماع إلى القصة", tr: "Hikâyeyi dinlemek için bir ebeveynden giriş yapmasını iste", ur: "کہانی سننے کے لیے والدین سے لاگ ان کرنے کو کہیں" },
+  "findAyah.loginRequired": { fr: "Connecte-toi pour retrouver une ayah par la voix", en: "Log in to find an ayah by voice", nl: "Log in om een ayah met je stem te vinden", ar: "سجّل الدخول للعثور على آية بصوتك", tr: "Sesle ayet bulmak için giriş yap", ur: "آواز سے آیت تلاش کرنے کے لیے لاگ ان کریں" },
   "findAyah.title": { fr: "Trouver mon ayah", en: "Find my Ayah", nl: "Vind mijn Ayah", ar: "اعثر على آيتي", tr: "Ayetimi Bul", ur: "میری آیت تلاش کریں" },
   "findAyah.subtitle": { fr: "Récitez et identifiez le verset", en: "Recite and identify the verse", nl: "Reciteer en identificeer het vers", ar: "اتلُ وحدد الآية", tr: "Oku ve ayeti tanımla", ur: "پڑھیں اور آیت شناخت کریں" },
   "findAyah.heroSubtitle": { fr: "Récite, on retrouve pour toi la sourate et l'ayah exacte", en: "Recite, we'll find the exact surah and ayah for you", nl: "Reciteer, wij vinden de exacte soera en ayah voor je", ar: "اتلُ، وسنجد لك السورة والآية بالضبط", tr: "Oku, senin için tam sureyi ve ayeti bulalım", ur: "پڑھیں، ہم آپ کے لیے صحیح سورۃ اور آیت تلاش کریں گے" },

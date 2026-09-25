@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { normalizeArabic, similarityScore as charSimilarity } from "@/lib/arabicMatch";
 
 // ─── Types ──────────────────────────────────────────────────
 export type TahaddiAyahStatus = "hidden" | "revealed" | "failed";
@@ -32,18 +33,6 @@ export interface TahaddiSessionSummary {
   ayahStates: TahaddiAyahState[];
 }
 
-// ─── Arabic normalization ───────────────────────────────────
-function normalizeArabic(text: string): string {
-  return text
-    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7-\u06E8\u06EA-\u06ED\u0890-\u0891\u08D3-\u08FF]/g, "")
-    .replace(/[\u0622\u0623\u0625\u0671]/g, "\u0627")
-    .replace(/\u0629/g, "\u0647")
-    .replace(/\u0649/g, "\u064A")
-    .replace(/\u0640/g, "")
-    .replace(/[\u06D0-\u06D5\u06E5-\u06E6]/g, "")
-    .trim();
-}
-
 function computeSimilarity(original: string, spoken: string): number {
   const origWords = normalizeArabic(original).split(/\s+/).filter(Boolean);
   const spokenWords = normalizeArabic(spoken).split(/\s+/).filter(Boolean);
@@ -64,18 +53,6 @@ function computeSimilarity(original: string, spoken: string): number {
     }
   }
   return Math.round((matched / origWords.length) * 100);
-}
-
-function charSimilarity(a: string, b: string): number {
-  if (a === b) return 1;
-  const longer = a.length > b.length ? a : b;
-  const shorter = a.length > b.length ? b : a;
-  if (longer.length === 0) return 0;
-  let matches = 0;
-  for (const ch of shorter) {
-    if (longer.includes(ch)) matches++;
-  }
-  return matches / longer.length;
 }
 
 // ─── XP Calculation ─────────────────────────────────────────

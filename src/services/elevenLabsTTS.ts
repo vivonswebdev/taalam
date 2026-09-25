@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import { getEdgeFunctionHeaders, AuthRequiredError } from "@/lib/edgeFunctionAuth";
 
 /* ────── IndexedDB schema for TTS audio cache ────── */
 interface TTSCacheEntry {
@@ -80,16 +81,14 @@ export async function generateTTS(
     return `data:audio/mpeg;base64,${legacyCached}`;
   }
 
-  // 3. Fetch from edge function
+  // 3. Fetch from edge function (requires a signed-in user)
+  const headers = await getEdgeFunctionHeaders();
+  if (!headers) throw new AuthRequiredError();
   const response = await fetch(
     `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
+      headers,
       body: JSON.stringify({
         text,
         voiceId,
