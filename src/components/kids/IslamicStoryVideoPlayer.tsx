@@ -12,6 +12,8 @@ import {
   type IslamicStoryVideo, type SubtitleLine,
 } from "@/data/islamicStoriesVideo";
 import { generateTTS } from "@/services/elevenLabsTTS";
+import { AuthRequiredError } from "@/lib/edgeFunctionAuth";
+import { toast } from "sonner";
 
 /* ────── helpers ────── */
 type LangKey = "fr" | "en" | "ar" | "nl" | "tr" | "ur";
@@ -147,11 +149,12 @@ function VideoPlayer({
       setGeneratedAudios((prev) => ({ ...prev, [idx]: url }));
     } catch (err) {
       console.error("TTS error:", err);
+      if (err instanceof AuthRequiredError) toast.error(t("stories.loginRequired"));
     } finally {
       setTtsLoading(false);
       setTtsLineIdx(-1);
     }
-  }, [generatedAudios, subLang]);
+  }, [generatedAudios, subLang, t]);
 
   // Generate all lines
   const generateAll = useCallback(async () => {
@@ -168,11 +171,15 @@ function VideoPlayer({
         setGeneratedAudios((prev) => ({ ...prev, [i]: url }));
       } catch (err) {
         console.error("TTS error line", i, err);
+        if (err instanceof AuthRequiredError) {
+          toast.error(t("stories.loginRequired"));
+          break;
+        }
       }
     }
     setTtsLoading(false);
     setTtsLineIdx(-1);
-  }, [story.subtitles, generatedAudios, subLang]);
+  }, [story.subtitles, generatedAudios, subLang, t]);
 
   // Play audio when subtitle changes and audio exists
   useEffect(() => {

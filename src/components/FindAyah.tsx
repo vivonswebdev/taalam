@@ -6,6 +6,7 @@ import {
   Award, Loader2, ChevronDown, X,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getEdgeFunctionHeaders } from "@/lib/edgeFunctionAuth";
 
 // ─── Types ──────────────────────────────────────────────────
 interface FindAyahResult {
@@ -123,16 +124,16 @@ export default function FindAyah({ onBack, onOpenSurah, onStartHifz, isChildMode
         new Uint8Array(arrayBuffer).reduce((d, b) => d + String.fromCharCode(b), "")
       );
 
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const headers = await getEdgeFunctionHeaders();
+      if (!headers) {
+        setError(t("findAyah.loginRequired"));
+        setPhase("idle");
+        return;
+      }
 
-      const res = await fetch(`${supabaseUrl}/functions/v1/find-ayah`, {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/find-ayah`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${supabaseKey}`,
-          "apikey": supabaseKey,
-        },
+        headers,
         body: JSON.stringify({ audio: base64, scope }),
       });
 
