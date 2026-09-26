@@ -132,8 +132,10 @@ npx tsc -p tsconfig.app.json --noEmit
 npm test                  # 18 tests
 npm run build && npx cap sync ios
 cd ios/App && xcodebuild -project App.xcodeproj -scheme App -configuration Debug \
-  -destination "platform=iOS Simulator,name=iPhone 16 Pro" CODE_SIGNING_ALLOWED=NO build
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.3.1" CODE_SIGNING_ALLOWED=NO build
 ```
+
+Sur le Mac mini (Xcode 27), le simulateur utilisé est l'iPhone 17 Pro sous iOS 26.3.
 
 **Tester la voix sans parler :** lancer un enregistrement dans l'app, puis sur le Mac :
 `say -v Majed -r 120 "قل أعوذ برب الناس. ملك الناس. إله الناس."`
@@ -148,6 +150,8 @@ Le simulateur écoute le micro du Mac. Au tout premier lancement, macOS demande 
 - `src/types/capacitor-plugins.d.ts` a été supprimé exprès : il masquait les vrais types des plugins.
 - Règle i18n du projet : jamais de texte en dur, tout via `t("clé")` dans les 6 langues (fr, en, nl, ar, tr, ur).
 - Style de `StatusBar` : `Style.Light` = texte **foncé** (c'est correct pour le fond clair).
+- **Pas d'apostrophe dans le chemin du projet.** Avec un dossier comme `Ta'alam`, `npm run build` échoue : workbox (service worker PWA) écrit le chemin dans du JavaScript sans échapper l'apostrophe. Sur le Mac mini, le projet est dans `~/Developer/taaloum-app`.
+- Simulateurs sur le Mac mini (constaté le 26/09) : sous iOS 27.0, WebKit n'affiche rien, même dans Safari. Sous iOS 26.3, les emojis et certains caractères s'affichent en « ? », dans Safari aussi. Ces défauts viennent du simulateur, pas de l'app : ne pas les « corriger » dans le code. À vérifier sur un vrai iPhone.
 
 ## 8. Fichiers clés ajoutés ou modifiés par cette session
 
